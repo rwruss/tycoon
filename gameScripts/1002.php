@@ -9,8 +9,8 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 
 echo '<script>
-useDeskTop.newPane("military");
-thisDiv = useDeskTop.getPane("military");';
+useDeskTop.newPane("businessObjects");
+thisDiv = useDeskTop.getPane("businessObjects");';
 
 if ($thisBusiness->get('ownedObjects') > 0) {
 	$ownedObjects = new itemSlot($thisBusiness->get('ownedObjects'), $slotFile, 40);

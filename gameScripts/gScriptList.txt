@@ -2,3 +2,8 @@
 1002 - Show objects that a business owns
 1003 - Object detail and options screen
 1004 - Show business details
+1005 - PROCESS: Change production at a factory
+1006 - MENU: Purchase options dialog for goods at a factory
+1007 - PROCESS: Show Purchase options for a factory
+
+http://playdosgamesonline.com/capitalism.html

@@ -86,7 +86,7 @@ class business extends object {
 }
 
 class factory extends object {
-	protected $inputIndex, $inputInventoryIndex, $productIndex, $productInventoryIndex, $templateDat;
+	protected $resourceStores, $templateDat, $materialOrders;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -141,15 +141,132 @@ class factory extends object {
 
 		$inputIndex = 1;
 		$inputInventoryIndex = 61;
-		$productIndex = 1;
 
 		// Load template information
 		fseek($file, $dat[9]*$defaultBlockSize);
 		$this->templateDat = unpack('i*', fread($file, 200));
+		
+		$this->resourceStores = [];
+		for ($i=0; $i<20; $i++) {
+			array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
+		}
 	}
 
 	function updateStocks() {
-		$elapsed = time() - $this->get('lastUpdate');
+		// load production requirements
+		fseek($this->linkFile, $this->get('currentProd')*$defaultBlockSize;
+		$productInfo = unpack('i*', $this->linkFile, 200);
+		
+		// Sort material requirements into the storage index for the factory
+		$referenceList = array_fill(0, 20, 0);
+		for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
+			for ($j=0; $j<20; $j++) {  // j is the index of the storage location at the factory
+				if ($this->resourceStores[$j] == $productInfo[$i+18]) {
+					$referenceList[$j] = $productInfor[$i+28];  // Record the usage rate for the store location (units per item produced)
+					break;
+				}
+			}
+		}
+		
+		// Load pending deliveries
+		$now = time();
+		$deleteOrder = [];
+		$events = [$this->get('lastUpdate'), 0, 0];
+		for ($i=0; $i<10; $i++) {
+			if ($this->objDat[60+$i*3] <= $now) {
+				array_push($events, $this->objDat[60+$i*3], $this->objDat[61+$i*3], $this->objDat[62+$i*3]);
+				$this->objDat[60+$i*3] = 0;
+				$this->objDat[61+$i*3] = 0;
+				$this->objDat[62+$i*3] = 0;
+			}
+		}
+		
+		for ($i=0; $i<sizeof($events)/3; $i++) {
+			$timeList[$i] = $events[$i*3];
+		}
+		array_push($events, $now, 0, 0);
+		
+		asort($timeList);
+		$eventOrder = array_keys($timeList);
+		$totalProduction = 0;
+		for ($i=1; $i<sizeof($eventOrder); $i++) {
+			$elpased = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
+			
+			// Check for limiting resource or time
+			$checkQty = [];
+			$checkQty[] = $elapsed/$this->get('currentRate');
+			for ($i=0; $i<20; $i++) {
+				$checkQty[] = $this->resourceStores[$i]/$referenceList[$i];
+			}
+			
+			$produced = min($checkQt]);
+			for ($i=0; $i<20; $i++) {
+				$this-resourceStores[$i] -= $produced*$referenceList[$i];
+			}
+			$totalProduction += $produced;
+			
+			// Add material from arrived order
+			$this-objDat[] += 
+		}
+		//Find product index
+		for ($i=0; $i<5; $i++){
+			if ($this->templateDat[11+$i] == $this->get('currentProd')) {
+				$productIndex = $i;
+				break;
+			}
+		}
+	
+		// Record updated product stocks and input stocks
+		$this->objDat[51+$productIndex] += $totalProduction;
+		for ($i=0; $i<20; $i++) {
+			$this->objDat[31+$i] = $this->resourceStores[$i];
+		}
+		
+		// Delete orders that have arrived - done above
+		$this->set('lastUpdate', $now);
+		$this->saveAll();
+	}
+	
+	function materialOrders() {
+		return array_slice($this->objDat, 56, 30);
+	}
+}
+
+class product extends object() {
+	protected $reqMaterials, $reqLabor;
+	function __construct($id, $dat, $file) {
+		parent::__construct($id, $dat, $file);
+		
+		$this->attrList['numMaterial'] = 11;
+		$this->attrList['numLabor'] = 12;
+		$this->attrList['matReq1'] = 18;
+		$this->attrList['matReq2'] = 19;
+		$this->attrList['matReq3'] = 20;
+		$this->attrList['matReq4'] = 21;
+		$this->attrList['matReq5'] = 22;
+		$this->attrList['matReq6'] = 23;
+		$this->attrList['matReq7'] = 24;
+		$this->attrList['matReq8'] = 25;
+		$this->attrList['matReq9'] = 26;
+		$this->attrList['matReq10'] = 27;
+		$this->attrList['matQty1'] = 28;
+		$this->attrList['matQty2'] = 29;
+		$this->attrList['matQty3'] = 30;
+		$this->attrList['matQty4'] = 31;
+		$this->attrList['matQty5'] = 32;
+		$this->attrList['matQty6'] = 33;
+		$this->attrList['matQty7'] = 34;
+		$this->attrList['matQty8'] = 35;
+		$this->attrList['matQty9'] = 36;
+		$this->attrList['matQty10'] = 37;
+		
+		$this->reqMaterials = [];
+		$this->reqLabor = [];
+		
+		for ($i=0; $i<10; $i++) {
+			if ($this->objDat[18+$i] > 0) array_push($this->reqMaterials, $this->objDat[18+$i], $this->objDat[28+$i]);
+			if ($this->objDat[38+$i] > 0) $this->reqLabor[] = $this->objDat[38+$i];
+		}
 	}
 }
 
