@@ -1,0 +1,4 @@
+1001 - Game join options
+1002 - Show objects that a business owns
+1003 - Object detail and options screen
+1004 - Show business details

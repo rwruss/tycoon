@@ -1,0 +1,744 @@
+.selected {
+	border:1px solid red;
+}
+
+.unselected {
+	border: 1px solid black;
+}
+
+.button {
+		position:relative;
+		padding: 5px;
+		display:inline-block;
+		text-align: center;
+}
+
+.bldgImg {
+	position:absolute;
+	left:0;
+	top:0;
+	width:75;
+	height:75;
+}
+
+.bldgLvl {
+	position:absolute;
+	left:125;
+	top:0;
+	width:25;
+	height:25;
+}
+
+.bldgDesc {
+	text-align: center;
+	position:absolute;
+	left:0;
+	top:125;
+	width:125;
+	height:25;
+}
+
+.charSummary {
+	position:relative;
+	border: 1px solid black;
+	width:150;
+	height:150;
+}
+
+.cBox {
+	position:absolute;
+	border: 1px solid black;
+	width:250;
+
+	left:250;
+	top:250;
+	float:left;
+	background:#FFFFFF;
+	display:block;
+	text-align: center;
+}
+
+.cButtons {
+		position:relative;
+		width:100%;
+		display:block;
+		text-align: center;
+}
+
+.cBoxA {
+	display:inline-block;
+	height:30;
+	background:#00F000;
+	padding:5px;
+	margin:5px auto;
+}
+
+.cBoxD {
+	display:inline-block;
+	height:30;
+	background:#F00000;
+	padding:5px;
+}
+
+.cBoxMsg {
+	float:left;
+	margin:auto;
+	text-align: center;
+	width:100%;
+	padding:5px;
+}
+
+.fullBar {
+	margin: 0 auto;
+	height: auto;
+	text-align: center;
+	position:relative;
+	float:left;
+	width:99%;
+	//border: 1px solid black;
+}
+
+.sumDtlBut {
+	position:absolute;
+	right:0;
+	top:0;
+	width:25;
+	height:25;
+	border:1px solid black;
+}
+
+.sumImg {
+	position:absolute;
+	left:0;
+	top:0;
+	width:75;
+	height:75;
+	border:1px solid black;
+}
+
+.sumName {
+	position:absolute;
+	left:0;
+	bottom:0;
+	width:150;
+	height:20;
+	border:1px solid black;
+}
+
+.sumAct {
+	position:absolute;
+	left:25;
+	top:110;
+	height:8;
+}
+
+.sumStr {
+	position:absolute;
+	left:25;
+	top:90;
+	height:8;
+}
+
+.charSummary .cSAvatar {
+	position:absolute;
+	left:5;
+	top:5;
+	width:90;
+	height:90;
+}
+
+.charSummary .cSDtlButton {
+	position:absolute;
+	left:5;
+	bottom:5;
+	width:140;
+	height:20;
+}
+
+.charSummary .cSRankButton {
+	position:absolute;
+	right:5;
+	top:5;
+	width:45;
+	height:45;
+}
+
+.charSummary .cSName {
+	position:absolute;
+	left:5;
+	top:120;
+	width:140;
+	height:20;
+}
+
+.eqBox {
+	position:absolute;
+	border:1px solid Red;
+	width:50;
+	height:50;
+}
+
+.eqBox.eq1 {
+	left:225;
+	top:50;
+}
+
+.eqBox.eq2 {
+	left:150;
+	top:150;
+}
+
+.eqBox.eq3 {
+	left:225;
+	top:150;
+}
+
+.eqBox.eq4 {
+	left:300;
+	top:150;
+}
+
+.eqBox.eq5 {
+	left:100;
+	top:250;
+}
+
+.eqBox.eq6 {
+	left:175;
+	top:250;
+}
+
+.eqBox.eq7 {
+	left:275;
+	top:250;
+}
+
+.eqBox.eq8 {
+	left:350;
+	top:250;
+}
+
+.mbContain {
+	position:relative;
+	float:left;
+	width:200;
+	height:225;
+	border:1px solid Blue;
+}
+
+.mbBL {
+	position:absolute;
+	left:0;
+	top:150;
+	width:50;
+	height:50;
+}
+
+.mbBC {
+	position:absolute;
+	left:75;
+	top:150;
+	width:50;
+	height:50;
+}
+
+.mbBR {
+	position:absolute;
+	left:150;
+	top:150;
+	width:50;
+	height:50;
+}
+
+.mbCL {
+	position:absolute;
+	left:0;
+	top:75;
+	width:50;
+	height:50;
+}
+
+.mbCR {
+	position:absolute;
+	left:150;
+	top:75;
+	width:50;
+	height:50;
+}
+
+.mbTL {
+	position:absolute;
+	left:0;
+	top:0;
+	width:50;
+	height:50;
+}
+
+.mbTC {
+	position:absolute;
+	left:75;
+	top:0;
+	width:50;
+	height:50;
+}
+
+.mbTR {
+	position:absolute;
+	left:150;
+	top:0;
+	width:50;
+	height:50;
+}
+
+.mbBK {
+	position:absolute;
+	left:0;
+	top:200;
+	width:50;
+	height:25;
+}
+
+.mbClear {
+	position:absolute;
+	left:75;
+	top:200;
+	width:50;
+	height:25;
+}
+
+.mbSend {
+	position:absolute;
+	left:150;
+	top:200;
+	width:50;
+	height:25;
+}
+
+.msgSum_1 {
+	font-weight: bold;
+}
+
+.optionHolder {
+	position:absolute;
+	left:500;
+	top:250;
+	width:100%;
+	height:100%;
+}
+
+.optionPrompt {
+	position:absolute;
+	top:0;
+	left:0;
+}
+
+.optionAccept {
+	position:absolulte;
+	background:#FF00FF;
+	bottom:0;
+	left:0;
+}
+
+.optionDecline {
+	position:absolulte;
+	background:#FF0000;
+	bottom:0;
+	right:0;
+}
+
+.reqBox1 {
+	display:inline-block;
+	//float:left;
+	background:#00F000;
+	margin:5;
+}
+
+.reqBox2 {
+	display:inline-block;
+	//float:left;
+	background:#F00000;
+	margin: 5;
+}
+
+.reqHolder {
+	margin:auto;
+	float:left;
+	width:100%;
+	display:block;
+	text-align: center;
+}
+
+.reqImg {
+	display:inline;
+	float:left;
+	width:25;
+	height:25;
+}
+
+.reqText {
+	display:inline;
+	height:25;
+}
+
+.stdFloatDiv {
+	width:100%;
+	position:relative;
+	float:left;
+}
+
+.tabBox {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:#FFFFFF;
+	opacity:1;
+	overflow:auto;
+	visibility:hidden;
+}
+
+.taskHeader {
+	position:absolute;
+	top:0;
+	width:100%;
+	height:150;
+}
+
+.textBlob {
+	width:auto;
+}
+
+.centeredmenu {
+	top:150;
+   float:left;
+   width:100%;
+   background:#fff;
+   border-bottom:4px solid #000;
+   overflow:hidden;
+   position:absolute;
+}
+.centeredmenu ul {
+   //clear:left;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   //left:50%;
+   text-align:center;
+}
+.centeredmenu ul li {
+   display:block;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding-left:5;
+   position:relative;
+   border: 1px solid #000000;
+}
+.centeredmenu ul li a {
+   display:block;
+   margin:0 0 0 1px;
+   padding:3px 10px;
+   background:#ddd;
+   color:#000;
+   text-decoration:none;
+   line-height:1.3em;
+}
+.centeredmenu ul li:hover {
+	cursor:pointer;
+   background:#369;
+   color:#fff;
+}
+.centeredmenu ul li a.active,
+.centeredmenu ul li a.active:hover {
+   color:#fff;
+   background:#000;
+   font-weight:bold;
+}
+
+.plotDesc {
+	position:relative;
+	float:left;
+	width:99%;
+	border: 1px solid black;
+}
+
+.plotPoints {
+	position: absolute;
+	height:20;
+	left:20;
+	top:20;
+}
+
+.plotSummary {
+	position:relative;
+	float:left;
+	width:99%;
+	border: 1px solid black;
+}
+
+.plotTarget {
+	position:relative;
+	float:left;
+	height:150;
+	width:150;
+	border: 1px solid black;
+}
+
+.plotDtl {
+	position:relative;
+	float:left;
+	height: 150;
+	width: calc (100% - 150px);
+	border: 1px solid black;
+}
+
+.stdContainer {
+	position:relative;
+	float:left;
+	display:inline-block;
+	overflow:auto;
+	width:100%;
+}
+
+.halfContain {
+	display:inline-block;
+	overflow:auto;
+	width:50%;
+}
+
+
+
+.taskTabHolder {
+	display:inline;
+	position:absolute;
+	top:150;
+	width:100%;
+	height:20;
+}
+
+.taskOptions {
+	position:absolute;
+	top:170;
+	width:100%;
+	height:300;
+	overflow:hidden;
+}
+
+.tdHolder {
+	position:relative;
+	float:left;
+	width:99%;
+	height:150;
+	border: 1px solid black;
+}
+
+.tdImg {
+	position:absolute;
+	left:10;
+	top:0;
+	width:75;
+	height:75;
+}
+
+.charHolder{
+	position:relative;
+	float:left;
+	width:150;
+	height:150;
+	border: 1px solid black;
+}
+
+.udHolder {
+	position:relative;
+	float:left;
+	width:150;
+	height:150;
+	border: 1px solid black;
+}
+
+.udAvatar {
+	position:absolute;
+	left:0;
+	top:0;
+	width:75;
+	height:75;
+}
+
+.udExp {
+	position:absolute;
+	left:0;
+	top:115;
+	height:8;
+}
+
+.udAct {
+	position:absolute;
+	left:0;
+	top:105;
+	height:8;
+}
+
+
+.udName {
+	position:absolute;
+	left:0;
+	top:130;
+	width:150;
+	height:25;
+}
+
+.udType {
+	position:absolute;
+	left:125;
+	top:0;
+	width:25;
+	height:25;
+}
+
+.udLvl {
+	position:absolute;
+	left:125;
+	top:25;
+	width:25;
+	height:25;
+}
+
+.udGoto {
+	position:absolute;
+	left:125;
+	top:75;
+	width:25;
+	height:25;
+}
+
+.hPane {
+	height:250;
+	width:500;
+	top:250;
+	left:250;
+	position:absolute;
+	border:1px Solid #000000;
+	background: #B0B0B0;
+}
+
+.regPane {
+	height:500;
+	width:500;
+	top:250;
+	left:250;
+	position:absolute;
+	border:1px Solid #000000;
+	background: #B0B0B0;
+}
+
+.paneCloseButton {
+	position:absolute;
+	height:20;
+	right:0;
+	top:0;
+	border: 1px solid #FFFFFF;
+}
+
+.paneContent {
+	position:absolute;
+	height: calc(100% - 20px);
+	top:20;
+	width:100%;
+	background:#F0F0F0;
+	border:1px solid #00FF00;
+}
+
+.selectContain {
+	position:relative;
+	float:left;
+	border: 1px solid black;
+	text-align:center;
+	margin:5;
+}
+
+.slideContain {
+	display:inline-block;
+	border:1px solid blue;
+	width:300px;
+}
+
+.slideMin {
+	width:40px;
+	float:left;
+}
+
+.slideBar {
+	width:100px;
+	float:left;
+}
+
+.slideTitle {
+	width:100%;
+	float: left;
+}
+
+.slideVal {
+	width: 50%;
+	float:left;
+	clear:left;
+}
+
+.optionScreen {
+	width: 100%;
+	height: 100%;
+	background-color:#F0F0F0;
+	opacity:0.5;
+}
+
+.rscImg {
+	height:100;
+	width:100;
+}
+
+.selectMenu {
+	position:absolute;
+	left:0;
+	top:0;
+	background-color:#000000;
+	opacity:0.70;
+	width:100%;
+	height:100%;
+	z-Index:9999;
+}
+.selectHead {
+	width:100%;
+	height:500;
+	border:1px solid red;
+}
+
+.rscContain {
+	width:100;
+	height:150;
+	border: 2px solid green;
+	float: left;
+}
+
+.objContain {
+	width:200;
+	height:200;
+	border: 2px solid green;
+	float: left;
+}
+
+.objContainSelected {
+	display: table; text-align: center;
+	width:200;
+	height:200;
+	border: 2px solid red;
+	float: left;
+}
+
+.objContent {
+	width:200;
+	height:100;
+	border: 2px solid yellow;
+	float: left;
+}
