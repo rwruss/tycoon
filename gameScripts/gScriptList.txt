@@ -5,5 +5,6 @@
 1005 - PROCESS: Change production at a factory
 1006 - MENU: Purchase options dialog for goods at a factory
 1007 - PROCESS: Show Purchase options for a factory
+1008 - PROCESS: Build a facility (from 1002)
 
 http://playdosgamesonline.com/capitalism.html

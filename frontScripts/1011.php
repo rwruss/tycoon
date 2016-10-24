@@ -46,11 +46,18 @@ if ($handle = opendir('../scenarios/'.$postVals[1]))
 	}
 // Add basic player info and unstarted status
 $playerFile = fopen("../games/".$newGameId."/objects.dat", "r+b");
-fseek($playerFile, 400+399);
-fwrite($playerFile, pack("C", 0));
+fseek($playerFile, 0, SEEK_END);
+
+$pGameID = max(1,ftell($playerFile)/100);
+echo 'Set player ID to '.$pGameID.'<br>';
+
+fseek($playerFile, $pGameID*100+12);
+fwrite($playerFile, pack('i', 1));
+fseek($playerFile, $pGameID*100+399);
+fwrite($playerFile, pack("C", 99));
 
 // Add this player to the file
-$pGameID = 1;
+
 //fseek($playerFile, $pGameID*100);
 //fwrite($playerFile, pack('i*', 0, 0, 0, 1));
 fclose($playerFile);
@@ -64,7 +71,7 @@ fseek($gameSlotFile, 0);
 //Create list of players in game
 
 $newFile = fopen("../games/".$newGameId."/players.Dat", "wb");
-fwrite($newFile, pack("i*", $_SESSION['playerId'], -1));
+fwrite($newFile, pack("i*", $_SESSION['playerId'], -$pGameID));
 
 
 fclose($newFile);

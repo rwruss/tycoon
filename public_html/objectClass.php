@@ -145,7 +145,7 @@ class factory extends object {
 		// Load template information
 		fseek($file, $dat[9]*$defaultBlockSize);
 		$this->templateDat = unpack('i*', fread($file, 200));
-		
+
 		$this->resourceStores = [];
 		for ($i=0; $i<20; $i++) {
 			array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
@@ -154,9 +154,9 @@ class factory extends object {
 
 	function updateStocks() {
 		// load production requirements
-		fseek($this->linkFile, $this->get('currentProd')*$defaultBlockSize;
+		fseek($this->linkFile, $this->get('currentProd')*$defaultBlockSize);
 		$productInfo = unpack('i*', $this->linkFile, 200);
-		
+
 		// Sort material requirements into the storage index for the factory
 		$referenceList = array_fill(0, 20, 0);
 		for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
@@ -167,7 +167,7 @@ class factory extends object {
 				}
 			}
 		}
-		
+
 		// Load pending deliveries
 		$now = time();
 		$deleteOrder = [];
@@ -180,33 +180,33 @@ class factory extends object {
 				$this->objDat[62+$i*3] = 0;
 			}
 		}
-		
+
 		for ($i=0; $i<sizeof($events)/3; $i++) {
 			$timeList[$i] = $events[$i*3];
 		}
 		array_push($events, $now, 0, 0);
-		
+
 		asort($timeList);
 		$eventOrder = array_keys($timeList);
 		$totalProduction = 0;
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elpased = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
-			
+
 			// Check for limiting resource or time
 			$checkQty = [];
 			$checkQty[] = $elapsed/$this->get('currentRate');
 			for ($i=0; $i<20; $i++) {
 				$checkQty[] = $this->resourceStores[$i]/$referenceList[$i];
 			}
-			
-			$produced = min($checkQt]);
+
+			$produced = min($checkQt);
 			for ($i=0; $i<20; $i++) {
-				$this-resourceStores[$i] -= $produced*$referenceList[$i];
+				$this->resourceStores[$i] -= $produced*$referenceList[$i];
 			}
 			$totalProduction += $produced;
-			
+
 			// Add material from arrived order
-			$this-objDat[] += 
+			//$this->objDat[] +=
 		}
 		//Find product index
 		for ($i=0; $i<5; $i++){
@@ -215,28 +215,28 @@ class factory extends object {
 				break;
 			}
 		}
-	
+
 		// Record updated product stocks and input stocks
 		$this->objDat[51+$productIndex] += $totalProduction;
 		for ($i=0; $i<20; $i++) {
 			$this->objDat[31+$i] = $this->resourceStores[$i];
 		}
-		
+
 		// Delete orders that have arrived - done above
 		$this->set('lastUpdate', $now);
 		$this->saveAll();
 	}
-	
+
 	function materialOrders() {
 		return array_slice($this->objDat, 56, 30);
 	}
 }
 
-class product extends object() {
+class product extends object {
 	protected $reqMaterials, $reqLabor;
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->attrList['numMaterial'] = 11;
 		$this->attrList['numLabor'] = 12;
 		$this->attrList['matReq1'] = 18;
@@ -259,10 +259,10 @@ class product extends object() {
 		$this->attrList['matQty8'] = 35;
 		$this->attrList['matQty9'] = 36;
 		$this->attrList['matQty10'] = 37;
-		
+
 		$this->reqMaterials = [];
 		$this->reqLabor = [];
-		
+
 		for ($i=0; $i<10; $i++) {
 			if ($this->objDat[18+$i] > 0) array_push($this->reqMaterials, $this->objDat[18+$i], $this->objDat[28+$i]);
 			if ($this->objDat[38+$i] > 0) $this->reqLabor[] = $this->objDat[38+$i];
@@ -278,9 +278,11 @@ class labor extends object {
 
 function loadObject($id, $file, $size) {
 	global $defaultBlockSize;
+	//echo 'Seek to '.($id*$defaultBlockSize);
 
 	fseek($file, $id*$defaultBlockSize);
 	$dat = unpack('i*', fread($file, $size));
+	//print_r($dat);
 	switch($dat[4]) {
 		case 1:
 			return new business($id, $dat, $file);

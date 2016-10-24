@@ -20,7 +20,16 @@ if ($thisBusiness->get('ownedObjects') > 0) {
 		echo 'Object '.$ownedObjects->slotData[$i].'<br>';
 	}
 } else {
-	echo 'textBlob("", thisDiv, "You do not own anything yet - start buying!")';
+	echo '
+	textBlob("", thisDiv, "You do not own anything yet - start buying!");
+	optionBox1 = defaultBuildings.SLsingleButton(thisDiv);
+
+	sendButton = newButton(thisDiv, function () {
+		let setVal=SLreadSelection(optionBox1);
+		if (setVal.slice(-1) != "0")	scrMod("1008,"+SLreadSelection(optionBox1));
+	});
+	sendButton.innerHTML = "Build This";
+	';
 }
 echo '</script>';
 fclose($slotFile);

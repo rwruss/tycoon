@@ -8,14 +8,15 @@ if (!isset($_SESSION["playerId"])) echo "<script>window.location.replace(./index
 if (!isset($_GET["gameID"])) echo "<script>window.location.replace(./index.php)</script>";
 
 // Read game file to determine player number and status.
-print_r($_SESSION);
-echo 'Look for player '.$_SESSION["playerId"].'in game <p>';
+//print_r($_SESSION);
+//echo 'Look for player '.$_SESSION["playerId"].'in game <p>';
 $playerList = unpack("i*", file_get_contents("../games/".$_GET["gameID"]."/players.dat"));
-print_r($playerList);
+//print_r($playerList);
 $playerListLoc = array_search($_SESSION["playerId"], $playerList);
 $pGameID = $playerList[$playerListLoc+1]*-1;
 $_SESSION["instance"] = $_GET["gameID"];
 //echo "PLAYER GAME ID IS ".$pGameID;
+
 if ($pGameID == FALSE) {
 	echo "<p><p><p><p>Not alrady in game(".$_SESSION["playerId"].")";
 	print_r($playerList);
@@ -40,7 +41,7 @@ $_SESSION['game_'.$gameID]['scenario'] = 1;
 $_SESSION['game_'.$gameID]['culture'] = 1; // Set and record player culture
 fclose($paramFile);
 
-echo 'You are player '.$pGameID;
+//echo 'You are player '.$pGameID;
 $gamePath = "../games/".$gameID;
 $scnPath = "../scenarios/".$_SESSION['game_'.$gameID]['scenario'];
 // Read player info
@@ -49,7 +50,7 @@ $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 //$playerDat = file_get_contents($gamePath."/unitDat.dat", NULL, NULL, $pGameID*400, 400);
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
-echo "thisplayer is a ".get_class ($thisPlayer);
+//echo "thisplayer is a ".get_class ($thisPlayer);
 //$playerDat = unpack("i*", file_get_contents($gamePath."/unitDat.dat", NULL, NULL, $pGameID*100, 400));
 
 /*
@@ -63,6 +64,7 @@ echo '
 <script type="text/javascript" src="webgl-utils.js"></script>
 <script type="text/javascript" src="templates.js"></script>
 <script type="text/javascript" src="selectList.js"></script>
+<script type="text/javascript" src="tycoonObjects.js"></script>
 
 <script id="shader-fs" type="x-shader/x-fragment">
 </script>
@@ -986,6 +988,12 @@ echo '
 		document.onkeyup = handleKeyUp;
 
 		initShaders();
+		defaultBuildings = new uList([new factory({unitType:factory, objID:1, objName:"item 1"}),
+		new factory({unitType:factory, objID:2, objName:"item 2"}),
+		new factory({unitType:factory, objID:3, objName:"item 3"}),
+		new factory({unitType:factory, objID:4, objName:"item 4"}),
+		new factory({unitType:factory, objID:5, objName:"item 5"})
+	]);
 		}
 
 	function showDiagnostics() {
@@ -1003,11 +1011,10 @@ echo '
 	function getDescription(trg, info, src) {
 		info = info  + ","+document.getElementById(src).value;
 		passClick(info, trg);
-	}';
+	}
 
+var defaultBuildings;
 
-
-echo '
 window.addEventListener("load", webGLStart);
 </script>
 
