@@ -65,7 +65,7 @@ while (($line = fgets($productFile)) !== false) {
 
 // Assign storage spots to factories
 $factoryFile = fopen('../scenarios/'.$scenario.'/factoryDesc.csv', 'rb');
-$count = 1;
+// $count = 1; Factories need to be added to the count total since they need unique IDs from the products
 echo '<p>';
 $factoryInventories = [];
 while (($line = fgets($factoryFile)) !== false) {

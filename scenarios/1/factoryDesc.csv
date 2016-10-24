@@ -1,3 +1,8 @@
 Grain Farm,Wheat,Corn,None,None,None
 Chicken Farm,Chicken,None,None,None,None
 Ranch,Cattle,None,None,None,None
+Meat Processor,Chicken Parts,Cattle,Pigs,None,None
+Fruit Farm,Grapes,Berries,None,None,None
+Brewery,Wine,Beer,Spirirts,None,None
+Metal Mill,Steel,Aluminum Cans,None,None,None
+Electronics Plant,Computer Parts,CPUs,Computers,None,None
