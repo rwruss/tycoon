@@ -35,7 +35,17 @@ for (var i=0; i<productMaterial.length; i+=2) {
 textBlob("", thisDiv, "Current orders");
 for (var i=0; i<materialOrder.length; i+=3) {
 	var thisBox = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], thisDiv);
-	thisBox.addEventListener("click", function () {scrMod("1005,'.$postVals[1].'")});
+	if (materialOrder[i]) == 0) thisBox.addEventListener("click", function () {
+		useDeskTop.newPane("orderPane");
+		orderPane = useDeskTop.getPane("orderPane");
+		
+		textBlob("", thisDiv, "Select which item you want to order");
+		orderBox1 = prodList.SLsingleButton(materialInv);
+		
+		orderSelectButton = newButton(thisDiv, function () {scrMod("1009,'.$postVals[1].', SLreadSelection(optionBox1).")});
+		orderSelectButton.innerHTML = "Select Item";
+		//scrMod("1009,'.$postVals[1].'")
+		});
 }
 
 </script>';

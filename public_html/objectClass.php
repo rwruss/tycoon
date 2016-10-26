@@ -91,53 +91,54 @@ class factory extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
-		$this->attrList['currentProd'] = 19; // which inventory item is being produced
+		$this->attrList['currentProd'] = 19; // which inventory item is being produced - NOT the product ID
 		$this->attrList['currentRate'] = 20;
-		$this->attrList['prodOpt1'] = 31;
-		$this->attrList['prodOpt2'] = 32;
-		$this->attrList['prodOpt3'] = 33;
-		$this->attrList['prodOpt4'] = 34;
-		$this->attrList['prodOpt5'] = 35;
-		$this->attrList['inputInv1'] = 36;
-		$this->attrList['inputInv2'] = 37;
-		$this->attrList['inputInv3'] = 38;
-		$this->attrList['inputInv4'] = 39;
-		$this->attrList['inputInv5'] = 40;
-		$this->attrList['inputInv6'] = 41;
-		$this->attrList['inputInv7'] = 42;
-		$this->attrList['inputInv8'] = 43;
-		$this->attrList['inputInv9'] = 44;
-		$this->attrList['inputInv10'] = 45;
-		$this->attrList['inputInv11'] = 46;
-		$this->attrList['inputInv12'] = 47;
-		$this->attrList['inputInv13'] = 48;
-		$this->attrList['inputInv14'] = 49;
-		$this->attrList['inputInv15'] = 50;
-		$this->attrList['inputInv16'] = 51;
-		$this->attrList['inputInv17'] = 52;
-		$this->attrList['inputInv18'] = 53;
-		$this->attrList['inputInv19'] = 54;
-		$this->attrList['inputInv20'] = 55;
-		$this->attrList['invItem1'] = 61;
-		$this->attrList['invItem2'] = 62;
-		$this->attrList['invItem3'] = 63;
-		$this->attrList['invItem4'] = 64;
-		$this->attrList['invItem5'] = 65;
-		$this->attrList['invItem6'] = 66;
-		$this->attrList['invItem7'] = 67;
-		$this->attrList['invItem8'] = 68;
-		$this->attrList['invItem9'] = 69;
-		$this->attrList['invItem10'] = 70;
-		$this->attrList['invItem11'] = 71;
-		$this->attrList['invItem12'] = 72;
-		$this->attrList['invItem13'] = 73;
-		$this->attrList['invItem14'] = 74;
-		$this->attrList['invItem15'] = 75;
-		$this->attrList['invItem16'] = 76;
-		$this->attrList['invItem17'] = 77;
-		$this->attrList['invItem18'] = 78;
-		$this->attrList['invItem19'] = 79;
-		$this->attrList['invItem20'] = 80;
+		$this->attrList['labor1'] = 21;
+		$this->attrList['labor2'] = 22;
+		$this->attrList['labor3'] = 23;
+		$this->attrList['labor4'] = 24;
+		$this->attrList['labor5'] = 25;
+		$this->attrList['labor6'] = 26;
+		$this->attrList['labor7'] = 27;
+		$this->attrList['labor8'] = 28;
+		$this->attrList['labor9'] = 29;
+		$this->attrList['labor10'] = 30;
+		$this->attrList['inputInv1'] = 31;
+		$this->attrList['inputInv2'] = 32;
+		$this->attrList['inputInv3'] = 33;
+		$this->attrList['inputInv4'] = 34;
+		$this->attrList['inputInv5'] = 35;
+		$this->attrList['inputInv6'] = 36;
+		$this->attrList['inputInv7'] = 37;
+		$this->attrList['inputInv8'] = 38;
+		$this->attrList['inputInv9'] = 39;
+		$this->attrList['inputInv10'] = 40;
+		$this->attrList['inputInv11'] = 41;
+		$this->attrList['inputInv12'] = 42;
+		$this->attrList['inputInv13'] = 43;
+		$this->attrList['inputInv14'] = 44;
+		$this->attrList['inputInv15'] = 45;
+		$this->attrList['inputInv16'] = 46;
+		$this->attrList['inputInv17'] = 47;
+		$this->attrList['inputInv18'] = 48;
+		$this->attrList['inputInv19'] = 49;
+		$this->attrList['inputInv20'] = 50;
+		$this->attrList['prodInv1'] = 51;
+		$this->attrList['prodInv2'] = 52;
+		$this->attrList['prodInv3'] = 53;
+		$this->attrList['prodInv4'] = 54;
+		$this->attrList['prodInv5'] = 55;
+		
+		$this->attrList['orderItem1'] = 57;
+		$this->attrList['orderItem2'] = 60;
+		$this->attrList['orderItem3'] = 63;
+		$this->attrList['orderItem4'] = 66;
+		$this->attrList['orderItem5'] = 69;
+		$this->attrList['orderItem6'] = 72;
+		$this->attrList['orderItem7'] = 75;
+		$this->attrList['orderItem8'] = 78;
+		$this->attrList['orderItem9'] = 81;
+		$this->attrList['orderItem10'] = 84;
 
 		$inputIndex = 1;
 		$inputInventoryIndex = 61;
@@ -150,6 +151,13 @@ class factory extends object {
 		for ($i=0; $i<20; $i++) {
 			array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
 		}
+	}
+	
+	function productionOptions() {
+		return ([$this->get('prodOpt1'), $this->get('prodOpt2'), $this->get('prodOpt3'), $this->get('prodOpt4'), $this->get('prodOpt5')]);
+	}
+	
+	function inventoryOptions() {
 	}
 
 	function updateStocks() {

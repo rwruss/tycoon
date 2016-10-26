@@ -6,6 +6,7 @@
 1006 - MENU: Purchase options dialog for goods at a factory
 1007 - PROCESS: Show Purchase options for a factory
 1008 - PROCESS: Build a facility (from 1002)
+1009 - MENU: Order new material for a factory
 
 http://playdosgamesonline.com/capitalism.html
 
