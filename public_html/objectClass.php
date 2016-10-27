@@ -1,5 +1,6 @@
 <?php
 
+$templateBlockSize = 1000;
 class object {
 	protected $linkFile, $unitBin, $id, $attrList;
 
@@ -144,8 +145,8 @@ class factory extends object {
 		$inputInventoryIndex = 61;
 
 		// Load template information
-		fseek($file, $dat[9]*$defaultBlockSize);
-		$this->templateDat = unpack('i*', fread($file, 200));
+		fseek($file, $dat[9]*$templateBlockSize);
+		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
 
 		$this->resourceStores = [];
 		for ($i=0; $i<20; $i++) {

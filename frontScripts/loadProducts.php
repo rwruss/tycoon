@@ -1,5 +1,7 @@
 <?php
 
+$dataBlockSize = 1000;
+
 $scenario = 1;
 $objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'r+b');
 
@@ -31,9 +33,9 @@ while (($line = fgets($productFile)) !== false) {
     $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
   }
 
-  fseek($objFile, $count*100);
+  fseek($objFile, $count*$dataBlockSize);
   fwrite($objFile, packArray($productArray));
-  $count+=10;
+  $count++;
 }
 echo '<p>';
 print_R($productList);
@@ -126,10 +128,10 @@ while (($line = fgets($factoryFile)) !== false) {
   }
 
 
-  fseek($objFile, $count*100);
+  fseek($objFile, $count*$dataBlockSize);
   fwrite($objFile, packArray($factoryObj));
 
-  $count+=10;
+  $count++;
 }
 
 fclose($productFile);
