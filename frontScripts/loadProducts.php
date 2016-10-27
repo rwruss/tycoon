@@ -1,6 +1,7 @@
 <?php
 
 $scenario = 1;
+$objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'r+b');
 
 // Load labor descriptions
 $laborFile = fopen('../scenarios/'.$scenario.'/laborDesc.csv', 'rb');
@@ -21,7 +22,18 @@ $count = 0;
 while (($line = fgets($productFile)) !== false) {
   $lineItems = explode(',', $line);
   $productList[trim($lineItems[0])] = $count;
-  $count++;
+
+  // read ingredients into array
+  $productArray = array_fill(1, 250, 0);
+  for ($i=0; $i<10; $i++) {
+    $productArray[18+$i] = $lineItems[1+$i];
+    $productArray[28+$i] = $lineItems[11+$i];
+    $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
+  }
+
+  fseek($objFile, $count*100);
+  fwrite($objFile, packArray($productArray));
+  $count+=10;
 }
 echo '<p>';
 print_R($productList);
@@ -42,7 +54,6 @@ while (($line = fgets($productFile)) !== false) {
   $productReqs[trim($lineItems[0])][7] = $productList[$lineItems[8]];
   $productReqs[trim($lineItems[0])][8] = $productList[$lineItems[9]];
   $productReqs[trim($lineItems[0])][9] = $productList[$lineItems[10]];
-  $count++;
 }
 
 echo '<p>PRODUCT REQUIREMENTS<Br>';
@@ -52,7 +63,7 @@ echo '<p>';
 fseek($productFile, 0);
 fgets($productFile);
 while (($line = fgets($productFile)) !== false) {
-  echo $line.'<br>';
+  //echo $line.'<br>';
   $lineItems = explode(',', $line);
 
   $lineArray = array_fill(0, 100, 0);
@@ -60,7 +71,7 @@ while (($line = fgets($productFile)) !== false) {
   for ($i=0; $i<10; $i++) {
     $lineArray[37+$i] = $laborItems[$lineItems[21+$i]];
   }
-  print_r($lineArray);
+  //print_r($lineArray);
 }
 
 // Assign storage spots to factories
@@ -73,10 +84,15 @@ while (($line = fgets($factoryFile)) !== false) {
   $lineItems = explode(',', $line);
   $prodReq = array_fill(0, 10, 0);
   $factoryInventories[$lineItems[0]] = array_fill(0,10,0);
+  $factoryObj = array_fill(1, 250, 0);
+  // set object type and subtype
+  $factoryObj[4] = 7;
+  $factoryObj[9] = $count;
   for ($i=1; $i<5; $i++) {
     $requiredProduct = trim($lineItems[$i]);
-    echo $lineItems[0].' produces '.$lineItems[$i].' which requires '.$productReqs[$requiredProduct][0].'<br>';
-    for ($prodReq = 0; $prodReq<10; $prodReq++) {
+    $factoryObj[10+$i] = $productList[$requiredProduct];
+    echo '#'.$count.' - '.$lineItems[0].' produces '.$lineItems[$i].' which requires '.$productReqs[$requiredProduct][0].'<br>';
+    for ($prodReq = 0; $prodReq<20; $prodReq++) {
       $inventoryCheck = true;
       echo 'Check '.$factoryInventories[$lineItems[0]][$prodReq].' vs '.$productReqs[$requiredProduct][0].'<br>';
       if (intval($factoryInventories[$lineItems[0]][$prodReq]) == intval($productReqs[$requiredProduct][0])) {
@@ -97,11 +113,36 @@ while (($line = fgets($factoryFile)) !== false) {
   echo '<p>';
   print_r($factoryInventories[$lineItems[0]]);
   echo '<p>';
-  $count++;
+
+
+  // record production options
+  for ($i=0; $i<5; $i++) {
+
+  }
+
+  // record inventories
+  for ($i=0; $i<20; $i++) {
+    $factoryObj[16+$i] = $factoryInventories[$lineItems[0]][0+$i];
+  }
+
+
+  fseek($objFile, $count*100);
+  fwrite($objFile, packArray($factoryObj));
+
+  $count+=10;
 }
 
 fclose($productFile);
 fclose($laborFile);
 fclose($factoryFile);
+fclose($objFile);
+
+function packArray($data) {
+  $str = '';
+  for ($i=1; $i<=sizeof($data); $i++) {
+    $str = $str.pack('i', $data[$i]);
+  }
+  return $str;
+}
 
 ?>

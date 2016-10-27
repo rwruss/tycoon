@@ -36,7 +36,7 @@ class factory extends object {
 		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
 		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
 
-		thisDiv.nameDiv.innerHTML = this.unitName + " - " + this.unitID;
+		thisDiv.nameDiv.innerHTML = this.unitName + " - " + this.objID;
 		return thisDiv;
 	}
 
@@ -49,5 +49,15 @@ setBar = function (id, desc, pct) {
 			thisList[n].style.width = pct*125/100;
 			thisList[n].style.backgroundColor = "rgb("+parseInt((100-pct)*2.55)+", "+parseInt(pct*2.55)+", 0)";
 		}
+	}
+}
+
+class offer {
+	constructor(details) {
+		this.qty = details[0];
+		this.seller = details[2];
+		this.quality = details[3];
+		this.pollution = details[4];
+		this.rights = details[5];
 	}
 }

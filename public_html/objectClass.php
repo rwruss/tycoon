@@ -128,7 +128,7 @@ class factory extends object {
 		$this->attrList['prodInv3'] = 53;
 		$this->attrList['prodInv4'] = 54;
 		$this->attrList['prodInv5'] = 55;
-		
+
 		$this->attrList['orderItem1'] = 57;
 		$this->attrList['orderItem2'] = 60;
 		$this->attrList['orderItem3'] = 63;
@@ -152,11 +152,11 @@ class factory extends object {
 			array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
 		}
 	}
-	
+
 	function productionOptions() {
 		return ([$this->get('prodOpt1'), $this->get('prodOpt2'), $this->get('prodOpt3'), $this->get('prodOpt4'), $this->get('prodOpt5')]);
 	}
-	
+
 	function inventoryOptions() {
 	}
 
@@ -284,6 +284,12 @@ class labor extends object {
 	}
 }
 
+class factoryTemplate extends object {
+	function __construct($id, $dat, $file) {
+		parent::__construct($id, $dat, $file);
+	}
+}
+
 function loadObject($id, $file, $size) {
 	global $defaultBlockSize;
 	//echo 'Seek to '.($id*$defaultBlockSize);
@@ -302,6 +308,10 @@ function loadObject($id, $file, $size) {
 
 		case 3:
 			return new factory($id, $dat, $file);
+		break;
+
+		case 7:
+			return new factoryTemplate($id, $dat, $file);
 		break;
 
 		default:

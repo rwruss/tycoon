@@ -620,23 +620,6 @@ addtion = function () {
 	unitList.add(trg, "strength", amt);
 }
 
-
-class factory {
-	constructor (object) {
-		super(object);
-	}
-}
-
-class offer {
-	constructor(details) {
-		this.qty = details[0];
-		this.seller = details[2];
-		this.quality = details[3];
-		this.pollution = details[4];
-		this.rights = details[5];
-	}
-}
-
 class unitList {
 
 	newUnit (object) {

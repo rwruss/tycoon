@@ -988,11 +988,11 @@ echo '
 		document.onkeyup = handleKeyUp;
 
 		initShaders();
-		defaultBuildings = new uList([new factory({unitType:factory, objID:1, objName:"item 1"}),
-		new factory({unitType:factory, objID:2, objName:"item 2"}),
-		new factory({unitType:factory, objID:3, objName:"item 3"}),
-		new factory({unitType:factory, objID:4, objName:"item 4"}),
-		new factory({unitType:factory, objID:5, objName:"item 5"})
+		defaultBuildings = new uList([new factory({unitType:factory, objID:330, objName:"item 330"}),
+		new factory({unitType:factory, objID:340, objName:"item 340"}),
+		new factory({unitType:factory, objID:350, objName:"item 350"}),
+		new factory({unitType:factory, objID:360, objName:"item 360"}),
+		new factory({unitType:factory, objID:370, objName:"item 370"})
 	]);
 		}
 

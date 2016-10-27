@@ -25,8 +25,10 @@ if ($thisBusiness->get('ownedObjects') > 0) {
 	optionBox1 = defaultBuildings.SLsingleButton(thisDiv);
 
 	sendButton = newButton(thisDiv, function () {
+		console.log(SLreadSelection(optionBox1));
 		let setVal=SLreadSelection(optionBox1);
-		if (setVal.slice(-1) != "0")	scrMod("1008,"+SLreadSelection(optionBox1));
+		let checkSelection = setVal.split(',');
+		if (checkSelection[checkSelection.length-1] != "0")	scrMod("1008,"+SLreadSelection(optionBox1));
 	});
 	sendButton.innerHTML = "Build This";
 	';
