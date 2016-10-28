@@ -52,7 +52,18 @@ if ($optionCheck && $spotCheck > 0) {
 			echo 'offerList.push(new offer([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))';
 		
 	}
-	echo '</script>';
+	echo 'showOffers = new uList(offerList);
+		showOffers.addSort("price", "Price");
+		showOffers.addSort("quantity", "Amount");
+		showOffers.addSort("quality", "Quality");
+		showOffers.addSort("rights", Rights);
+		showOffers.addSort("pollution", "Pollution");
+		
+		orderBox1 = showOffers.SLsingleButton(orderPane);
+		
+		orderButton = newButton(thisDiv, function () {scrMod("1010,'.$postVals[1].', SLreadSelection(orderBox1).")});
+		orderButton.innerHTML = "Place Order";
+		</script>';
 }
 
 fclose($offerFile);

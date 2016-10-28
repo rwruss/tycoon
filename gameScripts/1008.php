@@ -19,12 +19,21 @@ if (flock($objFile, LOCK_EX)) {
 	$newObjDat = array_fill(1, 250, 0);
   $newObj = new factory($newID, $newObjDat, $objFile);
 
-	// Add unit to players list of objects
+	// Add unit to player's list of objects
   $thisBusiness = loadObject($pGameID, $objFile, 400);
   if ($thisBusiness->get('ownedObjects') > 0) {
     $thisBusiness->save('ownedObjects', newSlot($slotFile));
   }
   $ownedObjects = new itemSlot($thisBusiness->get('ownedObjects'), $slotFile, 40);
+  $ownedObjects->addItem($newID);
+  
+  /*
+  this.type = options.objType || 'unknown',
+		this.unitName = options.objName || 'unnamed',
+		this.status = options.status || 0,
+		this.objID = options.objID;
+  */
+  echo '<script>new factory({type:factory, status:1; objID:'.$newID.', prod:0, rate:0})</script>';
 
 	print_r($ownedObjects->slotData);
 	flock($objFile, LOCK_UN);

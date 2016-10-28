@@ -996,19 +996,19 @@ echo '
 		console.log(objNames);
 		var numProducts = '.$numProducts.';
 		var numFactories = '.$numFactories.';
+		
+		productArray = new Array();
+		for (var i=0; i<numProducts; i++) {
+			productArray.push(new product(unitType:product, objID:(i), objName:objNames[i]);
+		}
+		
 		factoryArray = new Array();
 		for (var i=0; i<numFactories; i++) {
 			factoryArray.push(new factory({unitType:factory, objID:(i+numProducts), objName:objNames[numProducts+i]}));
 		}
 		console.log(factoryArray);
 		defaultBuildings = new uList(factoryArray);
-		/*
-		defaultBuildings = new uList([new factory({unitType:factory, objID:1, objName:"item 330"}),
-		new factory({unitType:factory, objID:2, objName:"item 340"}),
-		new factory({unitType:factory, objID:3, objName:"item 350"}),
-		new factory({unitType:factory, objID:4, objName:"item 360"}),
-		new factory({unitType:factory, objID:5, objName:"item 370"})
-	]);*/
+		
 		}
 
 	function showDiagnostics() {

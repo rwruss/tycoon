@@ -41,7 +41,7 @@ for (var i=0; i<materialOrder.length; i+=3) {
 		
 		textBlob("", thisDiv, "Select which item you want to order");
 		orderBox1 = prodList.SLsingleButton(materialInv);
-		
+				
 		orderSelectButton = newButton(thisDiv, function () {scrMod("1009,'.$postVals[1].', SLreadSelection(optionBox1).")});
 		orderSelectButton.innerHTML = "Select Item";
 		//scrMod("1009,'.$postVals[1].'")

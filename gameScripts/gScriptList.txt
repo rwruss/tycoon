@@ -7,6 +7,7 @@
 1007 - PROCESS: Show Purchase options for a factory
 1008 - PROCESS: Build a facility (from 1002)
 1009 - MENU: Order new material for a factory
+1010 - PROCESS; Place an order for a factory
 
 http://playdosgamesonline.com/capitalism.html
 

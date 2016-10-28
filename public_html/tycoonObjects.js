@@ -3,13 +3,11 @@ class object {
 		this.type = options.objType || 'unknown',
 		this.unitName = options.objName || 'unnamed',
 		this.status = options.status || 0,
-		this.exp = options.exp || 1,
 		this.objID = options.objID;
 	}
 
 	update(object) {
 		this.status = object.status || this.status,
-		this.exp = object.exp || this.exp,
 		this.str = object.strength || this.str,
 		this.subType = object.subType || this.subType,
 		this.unitName = object.unitName || this.unitName,
@@ -19,6 +17,14 @@ class object {
 }
 
 class factory extends object {
+	constructor(options) {
+		super(options);
+		this.prod = options.prod || 0,
+		this.quality = options.quality || 0,
+		this.pollution = options.pol || 0,
+		this.rights = options.rights || 0,
+		this.rate = options.rate || 0;
+	}
 
 	renderSummary(target) {
 		//console.log('draw ' + this.type)
@@ -38,6 +44,10 @@ class factory extends object {
 
 		thisDiv.nameDiv.innerHTML = this.unitName + " - " + this.objID;
 		return thisDiv;
+	}
+	
+	renderDetail (target) {
+		
 	}
 
 }

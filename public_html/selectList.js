@@ -1,6 +1,16 @@
 class objectList {
 	constructor () {
-
+		this.sortOptions = [];
+		this.sortNames = [];
+		this.sortBy = null;
+		this.sortDir = 1;
+	}
+	
+	addSort(val, desc) {
+		this.sortOptions.push(val);
+		this.sortNames.push(desc);
+		
+		console.log(this.sortOptions);
 	}
 
 	SLsingleButton(target, opts) {
@@ -25,23 +35,59 @@ class objectList {
 		var showContain;
 		if (document.getElementById("selectMenu")) showContain = document.getElementById("selectMenu");
 		else showContain = addDiv("selectMenu", "selectMenu", "gmPnl");
-		showContain.innerHTML = "";
+		
+		showContain.sortBar = addDiv("", "button", showContain);
+		showContain.sortBar.style.backgroundColor = "white";
+		showContain.sortBar.style.position = "relateive";
+		showContain.sortBar.style.float = "left";
+		showContain.sortBar.style.width = "99%";
+		
+		
+		let sortTarget = this;
+		console.log(this.sortOptions);
+		for (var i=0; i<this.sortOptions.length; i++) {
+		var sortButton = addDiv("", "button", showContain.sortBar)
+		sortButton.innerHTML = this.sortNames[i];
+		var testVal = this.sortOptions[i];
+		sortButton.addEventListener("click", function () {
+				SLsortBy(sortTarget, testVal);
+				sortTarget.SLshowList(target, showContain.content);
+				});
+		}
+		
+		
+		showContain.content = addDiv("", "", showContain);
+		showContain.content.style.float = "left";
+		showContain.content.style.position = "relative";
+		console.log(showContain);
+		showContain.content.innerHTML = "";
+
+		
+		console.log(this);
+		
+		
+		this.SLshowList(target, showContain.content);
+	}
+	
+	SLshowList(target, selectContainer) {
+		console.log(target);
+		selectContainer.innerHTML = "";
 		for (var i=0; i<this.listItems.length; i++) {
 			if (this.parentList[this.listItems[i]] instanceof objectList) {
 				console.log("list of lists");
-				let object = this.parentList[this.listItems[i]].typeIcon(showContain);
+				let object = this.parentList[this.listItems[i]].typeIcon(selectContainer);
 				let subtarg = this.parentList[this.listItems[i]];
 				if (this.parentList[this.listItems[i]] != "undefined") object.addEventListener("click", function () {
 					subtarg.SLsingleSelect(target, function() {})
 					});
 			} else {
-				console.log("regular list");
-			let object = this.showItem(this.parentList[this.listItems[i]], showContain);
+			console.log(this);
+			let object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
 			object.owner = this;
 			object.objID = this.listItems[i];
 			object.addEventListener("click", function () {
 				console.log("set slected to " + object.objID)
-				object.parentNode.remove();
+				object.parentNode.parentNode.remove();
 				SlclearTarget(target);
 				this.owner.showSelected(object.objID, target);
 				});
@@ -153,7 +199,7 @@ class uList extends objectList {
 
 	showItem(id, trg) {
 		//console.log(this.parentList);
-		//console.log(id);
+		console.log(id);
 		var objBox = id.renderSummary(trg);
 		/*
 		let objBox = addDiv("", "objContain", trg);
@@ -243,4 +289,18 @@ SlclearTarget = function(trg) {
 SLreadSelection = function(trg) {
 	//console.log(trg);
 	return(trg.listItem.getValue(trg));
+}
+
+SLsortBy = function (listObj, prm) {
+	if (listObj.sortBy == prm) {
+		listObj.sortDir *= -1;
+	} else listObj.sortDir = 1;
+	
+	listObj.sortBy = prm;
+	console.log(listObj.parentList);
+	console.log("check against " + prm)
+	listObj.parentList.sort(function (a, b) {
+		console.log(a[prm] + " vs " + b[prm]);
+		return (a[prm] - b[prm])*listObj.sortDir});
+	//console.log(listObj.parentList);
 }
