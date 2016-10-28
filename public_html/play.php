@@ -1,5 +1,9 @@
 <?php
 
+$namesList = file_get_contents('../scenarios/1/objNames.dat');
+$numProducts = 33;
+$numFactories = 8;
+
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
@@ -988,12 +992,23 @@ echo '
 		document.onkeyup = handleKeyUp;
 
 		initShaders();
-		defaultBuildings = new uList([new factory({unitType:factory, objID:330, objName:"item 330"}),
-		new factory({unitType:factory, objID:340, objName:"item 340"}),
-		new factory({unitType:factory, objID:350, objName:"item 350"}),
-		new factory({unitType:factory, objID:360, objName:"item 360"}),
-		new factory({unitType:factory, objID:370, objName:"item 370"})
-	]);
+		objNames = ['.$namesList.'];
+		console.log(objNames);
+		var numProducts = '.$numProducts.';
+		var numFactories = '.$numFactories.';
+		factoryArray = new Array();
+		for (var i=0; i<numFactories; i++) {
+			factoryArray.push(new factory({unitType:factory, objID:(i+numProducts), objName:objNames[numProducts+i]}));
+		}
+		console.log(factoryArray);
+		defaultBuildings = new uList(factoryArray);
+		/*
+		defaultBuildings = new uList([new factory({unitType:factory, objID:1, objName:"item 330"}),
+		new factory({unitType:factory, objID:2, objName:"item 340"}),
+		new factory({unitType:factory, objID:3, objName:"item 350"}),
+		new factory({unitType:factory, objID:4, objName:"item 360"}),
+		new factory({unitType:factory, objID:5, objName:"item 370"})
+	]);*/
 		}
 
 	function showDiagnostics() {

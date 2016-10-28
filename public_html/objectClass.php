@@ -145,6 +145,7 @@ class factory extends object {
 		$inputInventoryIndex = 61;
 
 		// Load template information
+		global $templateBlockSize;
 		fseek($file, $dat[9]*$templateBlockSize);
 		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
 

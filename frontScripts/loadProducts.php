@@ -4,6 +4,7 @@ $dataBlockSize = 1000;
 
 $scenario = 1;
 $objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'r+b');
+$nameFile = fopen('../scenarios/'.$scenario.'/objNames.dat', 'w');
 
 // Load labor descriptions
 $laborFile = fopen('../scenarios/'.$scenario.'/laborDesc.csv', 'rb');
@@ -23,6 +24,8 @@ fgets($productFile);
 $count = 0;
 while (($line = fgets($productFile)) !== false) {
   $lineItems = explode(',', $line);
+  fwrite($nameFile, '"'.$lineItems[0].'",');
+
   $productList[trim($lineItems[0])] = $count;
 
   // read ingredients into array
@@ -81,15 +84,20 @@ $factoryFile = fopen('../scenarios/'.$scenario.'/factoryDesc.csv', 'rb');
 // $count = 1; Factories need to be added to the count total since they need unique IDs from the products
 echo '<p>';
 $factoryInventories = [];
+
 while (($line = fgets($factoryFile)) !== false) {
 
   $lineItems = explode(',', $line);
+  fwrite($nameFile, '"'.$lineItems[0].'",');
+
+
   $prodReq = array_fill(0, 10, 0);
-  $factoryInventories[$lineItems[0]] = array_fill(0,10,0);
+  $factoryInventories[$lineItems[0]] = array_fill(0,20,0);
   $factoryObj = array_fill(1, 250, 0);
   // set object type and subtype
   $factoryObj[4] = 7;
   $factoryObj[9] = $count;
+
   for ($i=1; $i<5; $i++) {
     $requiredProduct = trim($lineItems[$i]);
     $factoryObj[10+$i] = $productList[$requiredProduct];
@@ -138,6 +146,7 @@ fclose($productFile);
 fclose($laborFile);
 fclose($factoryFile);
 fclose($objFile);
+fclose($nameFile);
 
 function packArray($data) {
   $str = '';
