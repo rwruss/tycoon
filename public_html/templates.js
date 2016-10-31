@@ -485,27 +485,37 @@ setBarSize = function(id, pct, full) {
 	}
 }
 
-setUnitAction = function(id, pct) {
-	document.getElementById("Udtl_"+id+"_act").style.width = 150 * pct;
-	//document.getElementById("Udtl_"+id+"_act").style.color = 150 * pct;
-	var colorVal = 255*pct;
-	var r = parseInt(255*(1-pct));
-	var g = parseInt(255*pct);
-	var b = parseInt(0);
-	document.getElementById("Udtl_"+id+"_act").style.background = "rgb(" + r + "," + g + ",0)";
+laborBox = function (id, target) {
+	var thisLabor = addDiv("", "", target);
+	thisLabor.innerHTML = id;
 }
 
-setUnitExp = function(id, pct) {
-	//alert("exp set");
-	document.getElementById("Udtl_"+id+"_exp").style.width = 150 * pct;
-	//document.getElementById("Udtl_"+id+"_act").style.color = 150 * pct;
-	var colorVal = 255*pct;
-	var r = parseInt(255*(1-pct));
-	var g = parseInt(255*pct);
-	var b = parseInt(0);
-	//alert("rgb(" + r + "," + g + ",0)");
-	document.getElementById("Udtl_"+id+"_exp").style.background = "rgb(" + r + "," + g + ",0)";
+orderBox = function (id1, id2, id3, target) {
+	var thisOrder = addDiv("", "", target);
+	thisOrder.innerHTML = id1;
+
+	return thisOrder;
 }
+
+materialBox = function (id, qty, target) {
+	var thisDiv = addDiv(null, 'udHolder', target);
+	thisDiv.setAttribute("data-unitid", this.unitID);
+
+	thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
+	thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+	thisDiv.actDiv = addDiv("asdf", "sumAct", thisDiv);
+	thisDiv.actDiv.setAttribute("data-boxName", "apBar");
+	thisDiv.actDiv.setAttribute("data-boxunitid", this.unitID);
+
+	thisDiv.expDiv = addDiv("asdf", "sumStr", thisDiv);
+	thisDiv.expDiv.setAttribute("data-boxName", "strBar");
+	thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
+
+	thisDiv.nameDiv.innerHTML = qty + " of " +objNames[id];
+	return thisDiv;
+}
+
 bPos = [0,0];
 paneBox = function(bName, val, h, w, x, y) {
 	var newDiv = document.createElement('div');
@@ -606,12 +616,6 @@ newMoveBox = function(id, x, y, target) {
 	document.getElementById(target).appendChild(mBContain);
 }
 
-warDetail = function(id, target) {
-	var container = addDiv(id, "tdHolder", document.getElementById(target));
-	container.innerHTML = "War "+id;
-
-	container.addEventListener("click", function () {makeBox("warDtl", "1057,"+id, 500, 500, 200, 50);});
-}
 
 
 addtion = function () {

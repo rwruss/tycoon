@@ -28,16 +28,6 @@ while (($line = fgets($productFile)) !== false) {
 
   $productList[trim($lineItems[0])] = $count;
 
-  // read ingredients into array
-  $productArray = array_fill(1, 250, 0);
-  for ($i=0; $i<10; $i++) {
-    $productArray[18+$i] = $lineItems[1+$i];
-    $productArray[28+$i] = $lineItems[11+$i];
-    $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
-  }
-
-  fseek($objFile, $count*$dataBlockSize);
-  fwrite($objFile, packArray($productArray));
   $count++;
 }
 echo '<p>';
@@ -47,6 +37,7 @@ echo '<p>';
 // load product requirements
 fseek($productFile, 0);
 fgets($productFile);
+$count = 0;
 while (($line = fgets($productFile)) !== false) {
   $lineItems = explode(',', $line);
   $productReqs[trim($lineItems[0])][0] = $productList[$lineItems[1]];
@@ -59,6 +50,21 @@ while (($line = fgets($productFile)) !== false) {
   $productReqs[trim($lineItems[0])][7] = $productList[$lineItems[8]];
   $productReqs[trim($lineItems[0])][8] = $productList[$lineItems[9]];
   $productReqs[trim($lineItems[0])][9] = $productList[$lineItems[10]];
+
+  // read ingredients into array
+  $productArray = array_fill(1, 250, 0);
+  $productArray[4] = 4;
+  $productArray[9] = $count;
+  for ($i=0; $i<10; $i++) {
+
+    $productArray[18+$i] = $productList[$lineItems[1+$i]];
+    $productArray[28+$i] = $lineItems[11+$i];
+    $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
+  }
+
+  fseek($objFile, $count*$dataBlockSize);
+  fwrite($objFile, packArray($productArray));
+  $count++;
 }
 
 echo '<p>PRODUCT REQUIREMENTS<Br>';

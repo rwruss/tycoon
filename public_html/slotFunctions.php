@@ -283,7 +283,7 @@ class resourceSlot extends blockSlot {
 	function __construct($start, $slotFile, $size) {
 		parent::__construct($start, $slotFile, $size);
 	}
-	
+
 	function adjustRsc($rscID, $adjustVal);
 }
 */
@@ -399,6 +399,7 @@ function newSlot($slotFile) {
 	$slot_list_dat = fread($slotFile, 40);
 	echo 'Size of read dat:'.strlen($slot_list_dat);
 	$check_slot = unpack("N", substr($slot_list_dat, 0, 4));
+	print_r($check_slot);
 	if ($check_slot[1] == 0) // Need to create a new slot
 		{
 		if (flock($slotFile, LOCK_EX)) {

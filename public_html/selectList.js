@@ -5,11 +5,11 @@ class objectList {
 		this.sortBy = null;
 		this.sortDir = 1;
 	}
-	
+
 	addSort(val, desc) {
 		this.sortOptions.push(val);
 		this.sortNames.push(desc);
-		
+
 		console.log(this.sortOptions);
 	}
 
@@ -35,14 +35,14 @@ class objectList {
 		var showContain;
 		if (document.getElementById("selectMenu")) showContain = document.getElementById("selectMenu");
 		else showContain = addDiv("selectMenu", "selectMenu", "gmPnl");
-		
+
 		showContain.sortBar = addDiv("", "button", showContain);
 		showContain.sortBar.style.backgroundColor = "white";
 		showContain.sortBar.style.position = "relateive";
 		showContain.sortBar.style.float = "left";
 		showContain.sortBar.style.width = "99%";
-		
-		
+
+
 		let sortTarget = this;
 		console.log(this.sortOptions);
 		for (var i=0; i<this.sortOptions.length; i++) {
@@ -54,21 +54,21 @@ class objectList {
 				sortTarget.SLshowList(target, showContain.content);
 				});
 		}
-		
-		
+
+
 		showContain.content = addDiv("", "", showContain);
 		showContain.content.style.float = "left";
 		showContain.content.style.position = "relative";
 		console.log(showContain);
 		showContain.content.innerHTML = "";
 
-		
+
 		console.log(this);
-		
-		
+
+
 		this.SLshowList(target, showContain.content);
 	}
-	
+
 	SLshowList(target, selectContainer) {
 		console.log(target);
 		selectContainer.innerHTML = "";
@@ -189,7 +189,12 @@ class uList extends objectList {
 
 	existingValue(target, opts) {
 		console.log("ulist existing");
-		this.showSelected(opts.setVal, target);
+		for (var i=0; i<this.parentList.length; i++) {
+			if (this.parentList[i].objID = opts.setVal) {
+					this.showSelected(i, target);
+			}
+		}
+
 	}
 
 	getValue(trg) {
@@ -295,7 +300,7 @@ SLsortBy = function (listObj, prm) {
 	if (listObj.sortBy == prm) {
 		listObj.sortDir *= -1;
 	} else listObj.sortDir = 1;
-	
+
 	listObj.sortBy = prm;
 	console.log(listObj.parentList);
 	console.log("check against " + prm)

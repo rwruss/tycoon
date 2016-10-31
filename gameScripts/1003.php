@@ -10,7 +10,7 @@ $thisObj = loadObject($postVals[1], $objFile, 400);
 
 // confirm that the player owns this object
 if ($thisObj->get('owner') == $pGameID) {
-	include('./objects/obj_'.$thisObj->get('oType').'.php');
+	include('../gameScripts/objects/obj_'.$thisObj->get('oType').'.php');
 } else {
 	echo 'You do not own this object';
 }

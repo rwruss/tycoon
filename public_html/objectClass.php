@@ -22,7 +22,9 @@ class object {
 		$this->attrList['icon'] = 3;
 		$this->attrList['oType'] = 4;
 		$this->attrList['owner'] = 5;
+		$this->attrList['subType'] = 9;
 		$this->attrList['lastUpdate'] = 10;
+
 		/*
 
 
@@ -47,7 +49,7 @@ class object {
 
 	function set($desc, $val) {
 		if (array_key_exists($desc, $this->attrList)) {
-			echo 'Found '.$desc.' use spot '.$this->attrList[$desc].'.  Type: '.gettype ($this->objDat);
+			//echo 'Found '.$desc.' use spot '.$this->attrList[$desc].'.  Type: '.gettype ($this->objDat);
 			$this->objDat[$this->attrList[$desc]] = $val;
 		}
 	}
@@ -87,10 +89,12 @@ class business extends object {
 }
 
 class factory extends object {
-	protected $resourceStores, $templateDat, $materialOrders;
+	public $resourceStores, $templateDat, $materialOrders;
+	protected $tempList;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+
 
 		$this->attrList['currentProd'] = 19; // which inventory item is being produced - NOT the product ID
 		$this->attrList['currentRate'] = 20;
@@ -147,39 +151,60 @@ class factory extends object {
 		// Load template information
 		global $templateBlockSize;
 		fseek($file, $dat[9]*$templateBlockSize);
-		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
+		$tmpDat = unpack('i*', fread($file, $templateBlockSize));
+		//print_r($tmpDat);
+
+		$this->tempList['prod1'] = $tmpDat[11];
+		$this->tempList['prod2'] = $tmpDat[12];
+		$this->tempList['prod3'] = $tmpDat[13];
+		$this->tempList['prod4'] = $tmpDat[14];
+		$this->tempList['prod5'] = $tmpDat[15];
 
 		$this->resourceStores = [];
 		for ($i=0; $i<20; $i++) {
-			array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
+			if ($tmpDat[16+$i] > 0) array_push($this->resourceStores, $tmpDat[16+$i], $this->objDat[31+$i]);
 		}
 	}
 
 	function productionOptions() {
-		return ([$this->get('prodOpt1'), $this->get('prodOpt2'), $this->get('prodOpt3'), $this->get('prodOpt4'), $this->get('prodOpt5')]);
+		return ([$this->tempList['prod1'], $this->tempList['prod2'], $this->tempList['prod3'], $this->tempList['prod4'], $this->tempList['prod5']]);
 	}
 
 	function inventoryOptions() {
 	}
 
+	function getTemp($desc) {
+		if (isset($this->tempList[$desc])) return $this->tempList[$desc];
+		else echo $desc.' not found in the template';
+	}
+
 	function updateStocks() {
 		// load production requirements
-		fseek($this->linkFile, $this->get('currentProd')*$defaultBlockSize);
-		$productInfo = unpack('i*', $this->linkFile, 200);
+		fseek($this->linkFile, $this->get('currentProd')*1000);
+		$productInfo = unpack('i*', fread($this->linkFile, 200));
+
+		echo 'required rsc:';
+		print_r($productInfo);
+
+		// NEED TO DETERMINE PRODUCT INDEX
 
 		// Sort material requirements into the storage index for the factory
 		$referenceList = array_fill(0, 20, 0);
 		for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
 			for ($j=0; $j<20; $j++) {  // j is the index of the storage location at the factory
-				if ($this->resourceStores[$j] == $productInfo[$i+18]) {
-					$referenceList[$j] = $productInfor[$i+28];  // Record the usage rate for the store location (units per item produced)
+				if ($this->resourceStores[$j] == $productInfo[$i+18] && $this->resourceStores[$j] > 0) {
+					echo 'Resources spot '.$j.' which is '.$this->resourceStores[$j].' has a usage rate of something<br>';
+					$referenceList[$j] = $productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
 					break;
 				}
 			}
 		}
 
+		print_r($referenceList);
+
 		// Load pending deliveries
 		$now = time();
+		$elapsed = $now - $this->get('lastUpdate');
 		$deleteOrder = [];
 		$events = [$this->get('lastUpdate'), 0, 0];
 		for ($i=0; $i<10; $i++) {
@@ -204,7 +229,7 @@ class factory extends object {
 
 			// Check for limiting resource or time
 			$checkQty = [];
-			$checkQty[] = $elapsed/$this->get('currentRate');
+			$checkQty[] = $elapsed*$this->get('currentRate')/3600;
 			for ($i=0; $i<20; $i++) {
 				$checkQty[] = $this->resourceStores[$i]/$referenceList[$i];
 			}
@@ -243,7 +268,7 @@ class factory extends object {
 }
 
 class product extends object {
-	protected $reqMaterials, $reqLabor;
+	public $reqMaterials, $reqLabor;
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
@@ -273,6 +298,8 @@ class product extends object {
 		$this->reqMaterials = [];
 		$this->reqLabor = [];
 
+		//print_r($this->objDat);
+
 		for ($i=0; $i<10; $i++) {
 			if ($this->objDat[18+$i] > 0) array_push($this->reqMaterials, $this->objDat[18+$i], $this->objDat[28+$i]);
 			if ($this->objDat[38+$i] > 0) $this->reqLabor[] = $this->objDat[38+$i];
@@ -290,6 +317,13 @@ class factoryTemplate extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 	}
+}
+
+function loadProduct($id, $file, $size) {
+	fseek($file, $id*1000);
+	$dat = unpack('i*', fread($file, $size));
+
+	return new product($id, $dat, $file);
 }
 
 function loadObject($id, $file, $size) {
@@ -317,6 +351,7 @@ function loadObject($id, $file, $size) {
 		break;
 
 		default:
+			print_r($dat);
 			exit('error '.$dat[4]);
 		break;
 	}

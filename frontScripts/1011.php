@@ -63,7 +63,7 @@ fwrite($playerFile, pack("C", 99));
 fclose($playerFile);
 
 // Prep game slot file
-$gameSlotFile = fopen("../games/".$newGameId."/gameSlots.slt", "r+b");
+$gameSlotFile = fopen("../games/".$newGameId."/gameSlots.slt", "wb");
 fseek($gameSlotFile, 39);
 fwrite($gameSlotFile, pack("C", 0));
 fseek($gameSlotFile, 0);

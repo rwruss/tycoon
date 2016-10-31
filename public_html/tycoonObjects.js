@@ -19,6 +19,7 @@ class object {
 class factory extends object {
 	constructor(options) {
 		super(options);
+		this.factoryType = options.subType || 0,
 		this.prod = options.prod || 0,
 		this.quality = options.quality || 0,
 		this.pollution = options.pol || 0,
@@ -42,12 +43,12 @@ class factory extends object {
 		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
 		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
 
-		thisDiv.nameDiv.innerHTML = this.unitName + " - " + this.objID;
+		thisDiv.nameDiv.innerHTML = objNames[this.factoryType] + " - " + this.objID;
 		return thisDiv;
 	}
-	
+
 	renderDetail (target) {
-		
+
 	}
 
 }
@@ -69,5 +70,32 @@ class offer {
 		this.quality = details[3];
 		this.pollution = details[4];
 		this.rights = details[5];
+	}
+}
+
+class product {
+	constructor(details) {
+		this.objID = details.objID,
+		this.objName = details.objName;
+	}
+
+	renderSummary(target) {
+		//console.log('draw ' + this.type)
+		var thisDiv = addDiv(null, 'udHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.actDiv = addDiv("asdf", "sumAct", thisDiv);
+		thisDiv.actDiv.setAttribute("data-boxName", "apBar");
+		thisDiv.actDiv.setAttribute("data-boxunitid", this.unitID);
+
+		thisDiv.expDiv = addDiv("asdf", "sumStr", thisDiv);
+		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
+		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
+
+		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
+		return thisDiv;
 	}
 }

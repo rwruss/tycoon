@@ -31,6 +31,8 @@ if ($pGameID == FALSE) {
 $_SESSION["gameIDs"][$_GET["gameID"]] = $pGameID;
 
 
+
+
 $gamePath = "../games/".$_GET["gameID"];
 $gameID = $_GET["gameID"];
 // Read game parameters
@@ -54,6 +56,26 @@ $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 //$playerDat = file_get_contents($gamePath."/unitDat.dat", NULL, NULL, $pGameID*400, 400);
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
+
+// Load player factories
+$factoryList = [];
+
+if ($thisPlayer->get('ownedObjects') > 0) {
+	$ownedObjects = new itemSlot($thisPlayer->get('ownedObjects'), $slotFile, 40);
+
+	for ($i=1; $i<sizeof($ownedObjects->slotData); $i++) {
+		if ($ownedObjects->slotData[$i] > 0) {
+			//echo 'Object '.$ownedObjects->slotData[$i].'<br>';
+			$thisObject = loadObject($ownedObjects->slotData[$i], $unitFile, 400);
+			if ($thisObject->get('oType') == 3) {
+				array_push($factoryList, $thisObject->get('subType'), $thisObject->get('currentProd'), $thisObject->get('currentRate'), $ownedObjects->slotData[$i]);
+			}
+			else echo 'Cull object type '.$thisObject->get('oType');
+		}
+	}
+}
+
+print_r($factoryList);
 //echo "thisplayer is a ".get_class ($thisPlayer);
 //$playerDat = unpack("i*", file_get_contents($gamePath."/unitDat.dat", NULL, NULL, $pGameID*100, 400));
 
@@ -992,23 +1014,31 @@ echo '
 		document.onkeyup = handleKeyUp;
 
 		initShaders();
+
 		objNames = ['.$namesList.'];
 		console.log(objNames);
 		var numProducts = '.$numProducts.';
 		var numFactories = '.$numFactories.';
-		
+
+		playerFactories = new Array(';
+		if (sizeof($factoryList) > 0) echo 'new factory({subType:'.$factoryList[0].', prod:'.$factoryList[1].', rate:'.$factoryList[2].', objID:'.$factoryList[3].'})';
+		for ($i=4; $i<sizeof($factoryList); $i+=4) {
+			echo ', new factory({subType:'.$factoryList[$i].', prod:'.$factoryList[$i+1].', rate:'.$factoryList[$i+2].', objID:'.$factoryList[$i+3].'})';
+		}
+		echo ');
 		productArray = new Array();
 		for (var i=0; i<numProducts; i++) {
-			productArray.push(new product(unitType:product, objID:(i), objName:objNames[i]);
+			productArray.push(new product({objType:product, objID:(i), objName:objNames[i]}));
 		}
-		
+
 		factoryArray = new Array();
 		for (var i=0; i<numFactories; i++) {
-			factoryArray.push(new factory({unitType:factory, objID:(i+numProducts), objName:objNames[numProducts+i]}));
+			console.log("make factory " + objNames[numProducts+i]);
+			factoryArray.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i+numProducts)}));
 		}
 		console.log(factoryArray);
 		defaultBuildings = new uList(factoryArray);
-		
+
 		}
 
 	function showDiagnostics() {
