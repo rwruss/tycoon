@@ -31,6 +31,9 @@ optionBox1 = prodList.SLsingleButton(thisDiv'.$currentProduction.');
 sendButton = newButton(thisDiv, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(optionBox1))});
 sendButton.innerHTML = "Update production";
 
+priceButton = newButton(thisDiv, function () {scrMod("1011,'.$postVals[1]'"});
+priceButton.innerHTML = "Set Prices";
+
 textBlob("", thisDiv, "Per unit of production, this requires:");
 for (var i=0; i<productMaterial.length; i+=2) {
 	materialBox(productMaterial[i], productMaterial[i+1], thisDiv);
