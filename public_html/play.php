@@ -1034,7 +1034,7 @@ echo '
 		factoryArray = new Array();
 		for (var i=0; i<numFactories; i++) {
 			console.log("make factory " + objNames[numProducts+i]);
-			factoryArray.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i+numProducts)}));
+			factoryArray.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i+numProducts), items:[], prices[]}));
 		}
 		console.log(factoryArray);
 		defaultBuildings = new uList(factoryArray);
