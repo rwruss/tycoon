@@ -948,23 +948,27 @@ slideValBar = function (trg, slideID, low, hi) {
 	return contain;
 }
 
-priceBox = function (target, default) {
+priceBox = function (target, currentPrice) {
 	var newBox = document.createElement("input");
+	target.appendChild(newBox);
 	newBox.type = "number";
-	newBox.value = defautlt || 0;
-	
+	newBox.value = currentPrice || 0;
+
 	return newBox;
 }
 
 factoryPricing = function (factory, target) {
+	console.log(factory);
+	console.log("type: " + factory.factoryType);
 	var contain = addDiv("", "stdContain", target);
-	fromList = [];
-	
-	for (let i=1; i<6; i++) {
+	var formList = [];
+
+	console.log(factoryArray[factory.factoryType]);
+	for (let i=0; i<5; i++) {
 		var priceContain = addDiv("", "stdContain", contain);
-		productList[factoryArray[factory.factoryType].items[i]].renderSummary(priceContain);
-		formList.push(priceBox(target, factory.prices[i]));
+		productArray[factoryArray[factory.factoryType].items[i]].renderSummary(priceContain);
+		formList.push(priceBox(priceContain, factory.prices[i]));
 	}
-	
+
 	return formList;
 }

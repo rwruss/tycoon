@@ -1,6 +1,6 @@
 <?php
 
-$namesList = file_get_contents('../scenarios/1/objNames.dat');
+$namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $numProducts = 33;
 $numFactories = 8;
 
@@ -1015,17 +1015,22 @@ echo '
 
 		initShaders();
 
-		objNames = ['.$namesList.'];
+		objNames = ['.implode(',', array_slice($namesList, 0, $numProducts)).'];
+		factoryNames = ['.implode(',', array_slice($namesList, $numProducts)).'];
 		console.log(objNames);
+		console.log(factoryNames);
 		var numProducts = '.$numProducts.';
 		var numFactories = '.$numFactories.';
 
 		playerFactories = new Array(';
-		if (sizeof($factoryList) > 0) echo 'new factory({subType:'.$factoryList[0].', prod:'.$factoryList[1].', rate:'.$factoryList[2].', objID:'.$factoryList[3].'})';
+		if (sizeof($factoryList) > 0) echo 'new factory({subType:'.($factoryList[0]-$numProducts).', prod:'.$factoryList[1].', rate:'.$factoryList[2].', objID:'.$factoryList[3].'})';
 		for ($i=4; $i<sizeof($factoryList); $i+=4) {
-			echo ', new factory({subType:'.$factoryList[$i].', prod:'.$factoryList[$i+1].', rate:'.$factoryList[$i+2].', objID:'.$factoryList[$i+3].'})';
+			echo ', new factory({subType:'.($factoryList[$i]-$numProducts).', prod:'.$factoryList[$i+1].', rate:'.$factoryList[$i+2].', objID:'.$factoryList[$i+3].'})';
 		}
 		echo ');
+		console.log(playerFactories);
+
+
 		productArray = new Array();
 		for (var i=0; i<numProducts; i++) {
 			productArray.push(new product({objType:product, objID:(i), objName:objNames[i]}));
@@ -1034,7 +1039,7 @@ echo '
 		factoryArray = new Array();
 		for (var i=0; i<numFactories; i++) {
 			console.log("make factory " + objNames[numProducts+i]);
-			factoryArray.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i+numProducts), items:[], prices[]}));
+			factoryArray.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i), items:[1,2,3,4,5], prices:[6, 7, 8, 9, 10]}));
 		}
 		console.log(factoryArray);
 		defaultBuildings = new uList(factoryArray);

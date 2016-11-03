@@ -24,7 +24,9 @@ class factory extends object {
 		this.quality = options.quality || 0,
 		this.pollution = options.pol || 0,
 		this.rights = options.rights || 0,
-		this.rate = options.rate || 0;
+		this.rate = options.rate || 0,
+		this.items = options.items || [],
+		this.prices = options.prices || [];
 	}
 
 	renderSummary(target) {
@@ -43,7 +45,7 @@ class factory extends object {
 		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
 		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
 
-		thisDiv.nameDiv.innerHTML = objNames[this.factoryType] + " - " + this.objID;
+		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID;
 		return thisDiv;
 	}
 
@@ -99,4 +101,3 @@ class product {
 		return thisDiv;
 	}
 }
-
