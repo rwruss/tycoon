@@ -68,10 +68,30 @@ setBar = function (id, desc, pct) {
 class offer {
 	constructor(details) {
 		this.qty = details[0];
+		this.price = details[1];
 		this.seller = details[2];
 		this.quality = details[3];
 		this.pollution = details[4];
 		this.rights = details[5];
+	}
+	
+	renderSummary(target) {
+		var thisDiv = addDiv(null, 'udHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.actDiv = addDiv("asdf", "sumAct", thisDiv);
+		thisDiv.actDiv.setAttribute("data-boxName", "apBar");
+		thisDiv.actDiv.setAttribute("data-boxunitid", this.unitID);
+
+		thisDiv.expDiv = addDiv("asdf", "sumStr", thisDiv);
+		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
+		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
+
+		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100;
+		return thisDiv;
 	}
 }
 

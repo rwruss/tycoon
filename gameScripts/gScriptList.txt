@@ -9,6 +9,7 @@
 1009 - MENU: Order new material for a factory
 1010 - PROCESS; Place an order for a factory
 1011 - MENU: Set prices for goods at a factory
+1012 - PROCESS: Save prices set in script 1011
 
 http://playdosgamesonline.com/capitalism.html
 

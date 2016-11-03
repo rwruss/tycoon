@@ -144,6 +144,12 @@ class factory extends object {
 		$this->attrList['orderItem8'] = 78;
 		$this->attrList['orderItem9'] = 81;
 		$this->attrList['orderItem10'] = 84;
+		
+		$this->attrList['price1'] = 91;
+		$this->attrList['price2'] = 92;
+		$this->attrList['price3'] = 93;
+		$this->attrList['price4'] = 94;
+		$this->attrList['price5'] = 95;
 
 		$inputIndex = 1;
 		$inputInventoryIndex = 61;
