@@ -12,8 +12,15 @@ for (let i=0; i<playerFactories.length; i++) {
 		console.log(playerFactories[i]);
 		var defaultItem = factoryArray[playerFactories[i].subType];
 
-		factoryPricing(playerFactories[i], thisDiv);
-		sendPrices = newButton(thisDiv, "");
+		var priceForms = factoryPricing(playerFactories[i], thisDiv);
+		sendPrices = newButton(thisDiv, function () {
+			var formVals = priceForms[0].value;
+
+			for (let z=1; z<priceForms.length; z++) {
+				formVals += ","+priceForms[z].value;
+			}
+			scrMod("1012,'.$postVals[1].',"+formVals);
+		});
 	}
 }
 </script>';

@@ -960,15 +960,32 @@ priceBox = function (target, currentPrice) {
 factoryPricing = function (factory, target) {
 	console.log(factory);
 	console.log("type: " + factory.factoryType);
-	var contain = addDiv("", "stdContain", target);
+	var contain = addDiv("", "stdFloatDiv", target);
 	var formList = [];
 
 	console.log(factoryArray[factory.factoryType]);
 	for (let i=0; i<5; i++) {
-		var priceContain = addDiv("", "stdContain", contain);
+		var priceContain = addDiv("", "stdFloatDiv", contain);
 		productArray[factoryArray[factory.factoryType].items[i]].renderSummary(priceContain);
-		formList.push(priceBox(priceContain, factory.prices[i]));
+		formList.push(priceBox(priceContain, factory.prices[i]/100));
 	}
 
 	return formList;
+}
+
+updateFactory = function (object) {
+	for (i=0; i<playerFactories.length; i++) {
+		if (playerFactories[i].objID == object.objID) {
+			playerFactories[i].factoryType = object.subType || playerFactories[i].factoryType,
+			playerFactories[i].prod = object.prod || playerFactories[i].prod,
+			playerFactories[i].quality = object.quality || playerFactories[i].quality,
+			playerFactories[i].pollution = object.pol || playerFactories[i].pollution,
+			playerFactories[i].rights = object.rights || playerFactories[i].rights,
+			playerFactories[i].rate = object.rate || playerFactories[i].rate,
+			playerFactories[i].items = object.items || playerFactories[i].items,
+			playerFactories[i].prices = object.prices || playerFactories[i].prices;
+
+			console.log(playerFactories[i])
+		}
+	}
 }
