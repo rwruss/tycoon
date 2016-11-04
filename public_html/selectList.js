@@ -107,7 +107,7 @@ class objectList {
 }
 
 
-class resourceList extends objectList {
+class saleList extends objectList {
 	constructor(parentList, opts) {
 		super();
 		this.listItems = Object.keys(parentList);
@@ -150,11 +150,13 @@ class resourceList extends objectList {
 
 	showSelected(id, trg) {
 		SlclearTarget(trg);
-		trg.selectedValue = id;
+		trg.selectedValue = this.parentList[id].testVal;
 		trg.showBox = slideBox(trg,0);
-		trg.showBox.unitSpace.innerHTML = id;
+		//trg.showBox.unitSpace.innerHTML = id;
+		console.log(this.parentList[id]);
+		this.parentList[id].renderSummary(trg.showBox.unitSpace);
 		if (this.slideDefault) setSlideQty(trg.showBox, this.slideDefault);
-		else setSlideQty(trg.showBox, playerRsc[id]);
+		else setSlideQty(trg.showBox, this.parentList[id].qty);
 		trg.listItem = this;
 	}
 

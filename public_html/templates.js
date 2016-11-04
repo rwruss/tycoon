@@ -952,7 +952,7 @@ priceBox = function (target, currentPrice) {
 	var newBox = document.createElement("input");
 	target.appendChild(newBox);
 	newBox.type = "number";
-	newBox.value = currentPrice || 0;
+	newBox.value = currentPrice || 0.00;
 
 	return newBox;
 }

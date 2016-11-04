@@ -63,6 +63,9 @@ for (var i=0; i<materialOrder.length; i+=3) {
 		});
 }
 
+saleButton = newButton(thisDiv, function () {scrMod("1013,'.$postVals[1].'")});
+saleButton.innerHTML = "Set Prices";
+
 </script>';
 
 ?>
