@@ -82,11 +82,13 @@ class objectList {
 					});
 			} else {
 			console.log(this);
-			let object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
+			var object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
 			object.owner = this;
 			object.objID = this.listItems[i];
+			console.log(this.listItems[i]);
 			object.addEventListener("click", function () {
-				console.log("set slected to " + object.objID)
+				console.log(object);
+				console.log("set slected to " + object.objID + " which equals " + this.owner);
 				object.parentNode.parentNode.remove();
 				SlclearTarget(target);
 				this.owner.showSelected(object.objID, target);
@@ -150,7 +152,7 @@ class saleList extends objectList {
 
 	showSelected(id, trg) {
 		SlclearTarget(trg);
-		trg.selectedValue = this.parentList[id].testVal;
+		trg.selectedValue = this.parentList[id].objID;
 		trg.showBox = slideBox(trg,0);
 		//trg.showBox.unitSpace.innerHTML = id;
 		console.log(this.parentList[id]);
@@ -200,7 +202,8 @@ class uList extends objectList {
 	}
 
 	getValue(trg) {
-		//console.log(trg);
+		console.log("return a value of " + trg.selectedValue);
+		console.log(trg);
 		return "2,"+trg.selectedValue;
 	}
 
@@ -221,7 +224,8 @@ class uList extends objectList {
 		//trg.innerHTML = id;
 		trg.listItem = this;
 		trg.selectedValue = this.parentList[id].objID;
-		console.log(this.parentList[id]);
+		console.log(trg);
+		console.log("set value to " + this.parentList[id].objID);
 		this.parentList[id].renderSummary(trg);
 	}
 

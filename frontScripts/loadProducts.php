@@ -154,6 +154,13 @@ fclose($factoryFile);
 fclose($objFile);
 fclose($nameFile);
 
+// create sales file
+$salesFile = fopen('../scenarios/'.$scenario.'/saleOffers.slt', 'wb');
+fseek($salesFile, sizeof($productReqs)*1000*4-4);
+fwrite($salesFile, pack('i', 0));
+fclose($salesFile);
+
+
 function packArray($data) {
   $str = '';
   for ($i=1; $i<=sizeof($data); $i++) {

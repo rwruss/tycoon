@@ -18,6 +18,12 @@ productLabor = ['.implode(',', $productInfo->reqLabor).'];
 materialInv = ['.implode(',', $thisObj->resourceStores).'];
 materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
 
+inventoryItems = [];
+for (i=0; i<materialInv.length; i+=2) {
+	inventoryItems.push(new product({objID:materialInv[i]}));
+}
+invList = new uList(inventoryItems);
+
 textBlob("", thisDiv, "Currently Producting:" + objNames['.$thisObj->get('currentProd').']);
 
 prodList = new uList([new product({objID:'.$thisObj->getTemp('prod1').'})';
@@ -54,17 +60,17 @@ for (var i=0; i<materialOrder.length; i+=3) {
 		useDeskTop.newPane("orderPane");
 		orderPane = useDeskTop.getPane("orderPane");
 
-		textBlob("", thisDiv, "Select which item you want to order");
-		orderBox1 = prodList.SLsingleButton(materialInv);
+		console.log(invList);
+		textBlob("", orderPane, "Select which item you want to order");
+		orderBox1 = invList.SLsingleButton(orderPane);
 
-		orderSelectButton = newButton(thisDiv, function () {scrMod("1009,'.$postVals[1].', SLreadSelection(optionBox1).")});
+		orderSelectButton = newButton(orderPane, function () {scrMod("1009,'.$postVals[1].',"+ SLreadSelection(orderBox1))});
 		orderSelectButton.innerHTML = "Select Item";
-		//scrMod("1009,'.$postVals[1].'")
 		});
 }
 
 saleButton = newButton(thisDiv, function () {scrMod("1013,'.$postVals[1].'")});
-saleButton.innerHTML = "Set Prices";
+saleButton.innerHTML = "Sell Products";
 
 </script>';
 

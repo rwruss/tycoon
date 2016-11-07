@@ -14,7 +14,7 @@ $thisObj = loadObject($postVals[1], $objFile, 400);
 /// Locate product inventory numer in factory
 $productCheck = true;
 for ($i=1; $i<6; $i++) {
-	if ($thiObj->tempDat[11] == $postVals[2]) {
+	if ($thisObj->tempList['prod'.$i] == $postVals[3]) {
 		$inventorySlot = $i;
 		$productCheck = false;
 		break;
@@ -28,8 +28,8 @@ if ($productCheck) {
 }
 
 $invCheck = true;
-if ($thisObj->get('prodInv'.$inventorySlot) >= $postVals[3]) {
-	$newQty = get('prodInv'.$inventorySlot) - $postVals[3];
+if ($thisObj->get('prodInv'.$inventorySlot) >= $postVals[4]) {
+	$newQty = get('prodInv'.$inventorySlot) - $postVals[4];
 	$thisObj->save('prodInv'.$inventorySlot, $newQty);
 	$invCheck = false;
 }
@@ -40,11 +40,11 @@ if ($invCheck) {
 	exit();
 }
 
-$saleDat = pack('i*', $postVals[3], intval($postVals[4]*100), $pGameID, 100, 100, 100, time(), 0, 0, 0);
-if (flock($offerFile, LOCK_EX) {
-	$saleSlot = new blockSlot($postVals[2], $offerFile, 4000);
+$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $pGameID, 100, 100, 100, time(), 0, 0, 0);
+if (flock($offerFile, LOCK_EX)) {
+	$saleSlot = new blockSlot($postVals[3], $offerFile, 4000);
 	$location = sizeof($saleSlot->slotData);
-	for ($i=1; $i<sizeof(saleSlot->slotData); $i+=10) {
+	for ($i=1; $i<sizeof($saleSlot->slotData); $i+=10) {
 		$saleCheck = unpack('i', $saleSlot->slotData[$i]);
 		if ($saleCheck[1] == 0) {
 			$location = $i;

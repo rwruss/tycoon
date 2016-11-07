@@ -74,7 +74,7 @@ class offer {
 		this.pollution = details[4];
 		this.rights = details[5];
 	}
-	
+
 	renderSummary(target) {
 		var thisDiv = addDiv(null, 'udHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);
@@ -98,7 +98,8 @@ class offer {
 class product {
 	constructor(details) {
 		this.objID = details.objID,
-		this.objName = details.objName;
+		this.objName = details.objName,
+		this.qty = details.qty || 0;
 	}
 
 	renderSummary(target) {

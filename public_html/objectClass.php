@@ -89,8 +89,7 @@ class business extends object {
 }
 
 class factory extends object {
-	public $resourceStores, $templateDat, $materialOrders;
-	protected $tempList;
+	public $resourceStores, $templateDat, $materialOrders, $tempList;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -144,7 +143,7 @@ class factory extends object {
 		$this->attrList['orderItem8'] = 78;
 		$this->attrList['orderItem9'] = 81;
 		$this->attrList['orderItem10'] = 84;
-		
+
 		$this->attrList['price1'] = 91;
 		$this->attrList['price2'] = 92;
 		$this->attrList['price3'] = 93;
@@ -157,18 +156,18 @@ class factory extends object {
 		// Load template information
 		global $templateBlockSize;
 		fseek($file, $dat[9]*$templateBlockSize);
-		$tmpDat = unpack('i*', fread($file, $templateBlockSize));
+		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
 		//print_r($tmpDat);
 
-		$this->tempList['prod1'] = $tmpDat[11];
-		$this->tempList['prod2'] = $tmpDat[12];
-		$this->tempList['prod3'] = $tmpDat[13];
-		$this->tempList['prod4'] = $tmpDat[14];
-		$this->tempList['prod5'] = $tmpDat[15];
+		$this->tempList['prod1'] = $this->templateDat[11];
+		$this->tempList['prod2'] = $this->templateDat[12];
+		$this->tempList['prod3'] = $this->templateDat[13];
+		$this->tempList['prod4'] = $this->templateDat[14];
+		$this->tempList['prod5'] = $this->templateDat[15];
 
 		$this->resourceStores = [];
 		for ($i=0; $i<20; $i++) {
-			if ($tmpDat[16+$i] > 0) array_push($this->resourceStores, $tmpDat[16+$i], $this->objDat[31+$i]);
+			if ($this->templateDat[16+$i] > 0) array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
 		}
 	}
 
@@ -196,16 +195,20 @@ class factory extends object {
 
 		// Sort material requirements into the storage index for the factory
 		$referenceList = array_fill(0, 20, 0);
+		echo 'Resources stores<br>';
+		print_r($this->resourceStores);
 		for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
-			for ($j=0; $j<20; $j++) {  // j is the index of the storage location at the factory
-				if ($this->resourceStores[$j] == $productInfo[$i+18] && $this->resourceStores[$j] > 0) {
-					echo 'Resources spot '.$j.' which is '.$this->resourceStores[$j].' has a usage rate of something<br>';
+			echo 'Look for resource '.$productInfo[$i+18];
+			for ($j=0; $j<sizeof($this->resourceStores); $j+=2) {  // j is the index of the storage location at the factory
+				if ($this->resourceStores[$j] == $productInfo[$i+18]) {
+				//if ($this->resourceStores[$j] == $productInfo[$i+18] && $this->resourceStores[$j] > 0) {
+					echo 'Resources spot '.$j.' (type '.$this->resourceStores[$j].') which has a stock of '.$this->resourceStores[$j].' has a usage rate of something<br>';
 					$referenceList[$j] = $productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
 					break;
 				}
 			}
 		}
-
+		echo 'referene list<br>';
 		print_r($referenceList);
 
 		// Load pending deliveries
