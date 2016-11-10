@@ -45,7 +45,7 @@ if ($spotCheck === false) exit('error 9001-2');
 
 if ($optionCheck && $spotCheck !== false) {
 	// Search for new items to produce
-	$offerList = new blockSlot($productID, $offerFile, 4000);
+	$offerList = new blockSlot($productID, $offerFile, 4004);
 
 	// Sort offers based on price low to high
 	echo 'Offer Slot';
@@ -61,10 +61,12 @@ if ($optionCheck && $spotCheck !== false) {
 	offerList.push(new offer([0, 100, 299, 0, 50, 50, 50, '.time().', 8, 9, 10]));';
 
 
-	for ($i=1; $i<70; $i+=11) {
-	//for ($i=1; $i<=sizeof($offerList->slotData); $i+=10) {
-		if ($offerList->slotData[$i] > 0) echo 'offerList.push(new offer(['.$offerList->slotData[$i].', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));';
-
+	$numSlots = sizeof($offerList->slotList);
+	for ($i=1; $i<$numSlots; $i++) {
+		for ($slotItem=0; $slotItem<100; $slotItem++) {
+		//for ($i=1; $i<=sizeof($offerList->slotData); $i+=10) {
+			if ($offerList->slotData[$i*1000+$slotItem*10+1] > 0) echo 'offerList.push(new offer(['.$offerList->slotData[$i].', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));';
+		}
 	}
 	echo 'console.log(offerList);
 		showOffers = new uList(offerList);

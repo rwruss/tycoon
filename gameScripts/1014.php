@@ -40,11 +40,11 @@ if ($invCheck) {
 	exit();
 }
 
-$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $pGameID, 100, 100, 100, time(), 0, 0, 0);
+$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $pGameID, 100, 100, 100, time(), 0, 0, 0, 0);
 if (flock($offerFile, LOCK_EX)) {
-	$saleSlot = new blockSlot($postVals[3], $offerFile, 4000);
+	$saleSlot = new blockSlot($postVals[3], $offerFile, 4004);
 	$location = sizeof($saleSlot->slotData);
-	for ($i=1; $i<sizeof($saleSlot->slotData); $i+=10) {
+	for ($i=1; $i<sizeof($saleSlot->slotData); $i+=11) {
 		$saleCheck = unpack('i', $saleSlot->slotData[$i]);
 		if ($saleCheck[1] == 0) {
 			$location = $i;

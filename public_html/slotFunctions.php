@@ -279,108 +279,60 @@ class blockSlot extends dataSlot {
 	}
 }
 /*
-class resourceSlot extends blockSlot {
+class specificBlock extends blockSlot {
+	public $version;
 	function __construct($start, $slotFile, $size) {
 		parent::__construct($start, $slotFile, $size);
-	}
-
-	function adjustRsc($rscID, $adjustVal);
-}
-*/
-class mapEventSlot extends dataSlot {
-	public $numEffects, $version;
-	function __construct($start, $slotFile, $size) {
-		parent::__construct($start, $slotFile, $size);
-		$this->slotData = unpack('i*', $this->dataString);
-		$this->numEffects = $this->slotData[1];
-		$this->version = $this->slotData[2];
-
-		$this->slotData = array_slice($this->slotData, 0, $this->numEffects*6+2);
-		//$this->dataString = substr($this->dataString, 0, 4+$this->numEffects*24);
+		//$this->slotData = unpack('i*', $this->dataString);
 	}
 
 	function addItem($file, $data, $location) {
 		echo 'Slotlist:<br>';
 		print_r($this->slotList);
+	
 		echo 'data block length '.strlen($data).'<br>';
 		if (flock($file, LOCK_EX)) {  // acquire an exclusive lock
-			// Read the last item that was saved in this slot and version
-			fseek($file, $this->slotList[0]*$this->size+4);
-			$header = unpack('i*', fread($file, 8));
-			echo 'VERSION '.$header[2].'<p>';
-			if ($this->version != $header[2]) {
-				/*
-				// Reload the information so that you are working with the most current slot list
-				$this->slotList = array();
-				$nextIndex[1] = $this->start;
-				while ($nextIndex[1] > 0) {
-					$this->slotList[] = $nextIndex[1];
-					fseek($file, $nextIndex*$this->size);
-					$nextIndex = unpack('N', fread($file, 4));
-				}
-				*/
-			init($this->slotList[0], $file, $this->size);
-			}
-
 			if (!$location) $location = sizeof($this->slotData);
 			// Check if enough space is available for new items
 			$available = sizeof($this->slotList)*($this->size-4);
-			echo 'Available space: '.$available.', Need: '.($location*4+24).'<br>';
-			while ($available < $location*4+24) {
+			echo 'Available space: '.$available.', Need: '.($location*4+strlen($data)-4).'<br>';
+			while ($available < $location*4+strlen($data)) {
 				// Will need to get new slot
 				$oldEnd = end($this->slotList);
 
 				fseek($file, $this->size-4, SEEK_END);
 				fwrite($file, pack('i', 0));
-				$newLoc = ftell($file)/$this->size - 1;
+				$newLoc = ceil(ftell($file)/$this->size) - 1;
 				$this->slotList[] = $newLoc;
 
-				echo 'Add new slot: '.$newLoc.'<br>';
+				$testPack = pack('N', $newLoc);
+				$testVal = unpack('N', $testPack);
+				echo 'Add new slot: '.$newLoc.' ('.ftell($file).'/'.$this->size.') Record at old location '.$oldEnd.' = ('.$oldEnd*$this->size.') value is '.$testVal[1].'<p>';
+
 
 				fseek($file, $oldEnd*$this->size);
-				fwrite($file, pack('N', $newLoc));
+				echo '<p> Write '.fwrite($file, pack('N', $newLoc)).'<p>';
+				echo ftell($file).'<p>';
 
 				$available = sizeof($this->slotList)*($this->size-4);
 			}
 
-			$startBlock = intval(($location*4)/($this->size-4));
-			$endBlock = intval(($location*4+strlen($data)-1)/($this->size-4));
+			$startBlock = intval(($location-1)*4/($this->size-4));
+			$endBlock = intval((($location+strlen($data)/4-1))*4/($this->size-4));
 
 			if ($startBlock != $endBlock) {
-				echo 'Loc '.$location.' Split block -- '.$startBlock.' vs '.$endBlock.'<p>';
-				// Need to split the string up
-				$startOffset = ($location*4)%($this->size-4);
-				$part1 = ($this->size - 4) - $startOffset;
-				$part2 = strlen($data)-$part1;
-
-				echo ' is Start offset = '.$startOffset.', Part 1  = '.$part1.', Part 2 = '.$part2.'<br>';
-
-				$block1 = substr($data, 0, $part1);
-				$block2 = substr($data, $part1);
-				$seek1 = $this->slotList[$startBlock]*$this->size + $startOffset+4;
-				$seek2 = $this->slotList[$endBlock]*$this->size+4;
-				echo 'Write block 1 ('.strlen($block1).') at location '.$seek1.', and block 2 ('.strlen($block2).') at location '.$seek2.'<br>';
-
-				fseek($file,$this->slotList[$startBlock]*$this->size + $startOffset+4);
-				fwrite($file, $block1);
-
-				fseek($file, $this->slotList[$endBlock]*$this->size+4);
-				fwrite($file, $block2);
+				echo 'block write error';
 			} else {
-				$startOffset = ($location*4)%($this->size-4);
-				$seekto = $this->slotList[$startBlock]*$this->size + $startOffset+4;
+				$startOffset = ($location-$startBlock*($this->size-4)/4)*4;
+				$seekto = $this->slotList[$startBlock]*$this->size + $startOffset;
 				echo 'Write Data ('.strlen($data).') at slot ('.$this->slotList[$startBlock].') at pos ('.$seekto.'):';
 				print_r(unpack('i*', $data));
+				
+				// Replace the end of the data string with the locaiton it is written to
 
-				fseek($file, $this->slotList[$startBlock]*$this->size + $startOffset+4);
+				fseek($file, $this->slotList[$startBlock]*$this->size + $startOffset);
 				fwrite($file, $data);
 			}
-
-			// increment the update and count
-			$seekto = $this->slotList[0]*$this->size+4;
-			echo '<br>Go to '.$seekto.' and write header';
-			fseek($file, $this->slotList[0]*$this->size+4);
-			fwrite($file, pack('i*', $header[1]+1, $header[2]+1));
 
 			fflush($file);
 			flock($file, LOCK_UN);    // release the lock
@@ -388,9 +340,21 @@ class mapEventSlot extends dataSlot {
 	}
 
 	function deleteItem() {
+	}
 
+	function findLoc($trgVal, $blockSize) {
+		$loc = sizeof($this->slotData);
+		for ($i=1; $i<sizeof($this->slotData); $i+=$blockSize)  {
+			if ($this->slotData[$i] == $trgVal) {
+				$loc = $i;
+				break;
+			}
+		}
+		return $loc;
 	}
 }
+*/
+
 
 function newSlot($slotFile) {
 	echo "make a new slot<br>";
@@ -496,107 +460,58 @@ function writeBlocktoSlot($slotHandle, $checkSlot, $addData, $slotFile, $slotSiz
 	echo 'Block done';
 }
 // link to next slot at end
-/*
-function addtoSlotGen($slot_handle, $check_slot, $addData, $slot_file, $slotSize) {
-	// function where pointer to next slot is at the END of the string
+
+
+function addDataToSlot($slot_handle, $check_slot, $addData, $slot_file)
+	{
 	// Loop over slots until a space if found in a slot
 	echo "Adding to slot ".$check_slot;
 	$success = FALSE;
 	while ($check_slot)
 		{
-		fseek($slot_file, $check_slot*$slotSize);
-		$check_dat_bin = fread($slot_file, $slotSize);
-		$check_dat_a = unpack("N*", substr($check_dat_bin, 0, $slotSize-4));
+		fseek($slot_file, $check_slot*40);
+		$check_dat_bin = fread($slot_file, 40);
+		$check_dat_a = unpack("N*", substr($check_dat_bin, 4));
 		//print_r($check_dat_a);
 		$open_spot = array_search(0, $check_dat_a);
 		if ($open_spot)
 			{
-			fseek($slot_file, $check_slot*$slotSize + $open_spot*4-4);
-			$seek = $check_slot*$slotSize + $open_spot*4-4;
-			echo 'Write '.fwrite($slot_file, $addData);
+			fseek($slot_file, $check_slot*40 + $open_spot*4);
+			$seek = $check_slot*40 + $open_spot*4;
+			fwrite($slot_file, $addData);
 			$success = TRUE;
 			$check_slot = 0;
-			echo ' =>Found open spot '.$open_spot.' at '.$seek.'<br>';
+			echo "Found open spot<br>";
 			}
 		else
 			{
 			$prev_slot = $check_slot;
-			$next_slot_a = unpack("N", substr($check_dat_bin, $slotSize-4));
+			$next_slot_a = unpack("N", $check_dat_bin);
 			$check_slot = $next_slot_a[1];
-			echo "<br>Check Next Slot: ".$check_slot.", Read size of ".strlen($check_dat_bin);
+			echo "<br>Check Next Slot: ".$check_slot;
 			}
 		}
 	// If no slot is found add a new one
 	if (!$success)
 		{
-		$new_slot_id = max(1, (filesize($slot_handle))/$slotSize);
+		$new_slot_id = max(1, (filesize($slot_handle))/40);
 		// Write new item ID to the new slot
-		fseek($slot_file, $new_slot_id*$slotSize);
+		fseek($slot_file, $new_slot_id*40 + 4);
 		fwrite($slot_file, $addData);
 		// Fill the entire slot
-		fseek($slot_file, $new_slot_id*$slotSize + $slotSize - 1);
+		fseek($slot_file, $new_slot_id*40 + 4 + 35);
 		fwrite($slot_file, pack("C", 0));
+
 		// Write new slot pointer to last slot
-		fseek($slot_file, $prev_slot*$slotSize+$slotSize-4);
-		fwrite($slot_file, $addData);
+		fseek($slot_file, $prev_slot*40);
+		fwrite($slot_file, pack('N', $new_slot_id));
 		//echo "case 3";
 		echo "<br>Need a new slot : ".$new_slot_id." Write to slot ".$prev_slot."<br>";
 		}
 	//fclose($slot_file);
+
 	return TRUE;
 }
-*/
-
-	function addDataToSlot($slot_handle, $check_slot, $addData, $slot_file)
-		{
-		// Loop over slots until a space if found in a slot
-		echo "Adding to slot ".$check_slot;
-		$success = FALSE;
-		while ($check_slot)
-			{
-			fseek($slot_file, $check_slot*40);
-			$check_dat_bin = fread($slot_file, 40);
-			$check_dat_a = unpack("N*", substr($check_dat_bin, 4));
-			//print_r($check_dat_a);
-			$open_spot = array_search(0, $check_dat_a);
-			if ($open_spot)
-				{
-				fseek($slot_file, $check_slot*40 + $open_spot*4);
-				$seek = $check_slot*40 + $open_spot*4;
-				fwrite($slot_file, $addData);
-				$success = TRUE;
-				$check_slot = 0;
-				echo "Found open spot<br>";
-				}
-			else
-				{
-				$prev_slot = $check_slot;
-				$next_slot_a = unpack("N", $check_dat_bin);
-				$check_slot = $next_slot_a[1];
-				echo "<br>Check Next Slot: ".$check_slot;
-				}
-			}
-		// If no slot is found add a new one
-		if (!$success)
-			{
-			$new_slot_id = max(1, (filesize($slot_handle))/40);
-			// Write new item ID to the new slot
-			fseek($slot_file, $new_slot_id*40 + 4);
-			fwrite($slot_file, $addData);
-			// Fill the entire slot
-			fseek($slot_file, $new_slot_id*40 + 4 + 35);
-			fwrite($slot_file, pack("C", 0));
-
-			// Write new slot pointer to last slot
-			fseek($slot_file, $prev_slot*40);
-			fwrite($slot_file, pack('N', $new_slot_id));
-			//echo "case 3";
-			echo "<br>Need a new slot : ".$new_slot_id." Write to slot ".$prev_slot."<br>";
-			}
-		//fclose($slot_file);
-
-		return TRUE;
-	}
 
 function readSlotData($file, $slot_num, $slot_size)
 	{
@@ -616,6 +531,7 @@ function readSlotData($file, $slot_num, $slot_size)
 		}
 	return $slotData;
 	}
+	
 function readSingleSlot($file, $slot_num, $slot_size) {
 	$next_slot = $slot_num;
 	$slotData = "";
@@ -631,59 +547,7 @@ function readSingleSlot($file, $slot_num, $slot_size) {
 	//echo "Return ".strlen($slotData)."<br>";
 	return $slotData;
 }
-/*
-function readSlotDataEndKey($file, $slot_num, $slot_size)
-	{
-	$next_slot = $slot_num;
-	$slotData = "";
-	//echo "Next slot = ".$next_slot."<br>";
-	while ($next_slot > 0)
-		{
-		$seekTo = $next_slot*$slot_size;
-		fseek($file, $next_slot*$slot_size);
-		$slot_dat = fread($file, $slot_size);
-		$slotData .= substr($slot_dat, 0, $slot_size-4);
-		//echo 'Slot size is '.strlen($slot_dat).' <br>';
-		$slot_check = unpack("i*", substr($slot_dat, $slot_size-4));
-		$next_slot = $slot_check[1];
-		//echo "Seek Slot: ".$slot_check[1]."<br>";
-		}
-	//echo "Return ".strlen($slotData)."<br>";
-	return $slotData;
-	}
-*/
-/*
-function removeFromEndSlot($file, $startSlot, $slot_size, $targetVal) {
-	$next_slot = $startSlot;
-	//$slotData = "";
-	$looking = true;
-	//echo "Next slot = ".$next_slot."<br>";
-	$returnVal = 0;
-	while ($next_slot > 0 && $looking)		{
-		$seekTo = $next_slot*$slot_size;
-		fseek($file, $next_slot*$slot_size);
-		$slot_dat = fread($file, $slot_size);
-		$checkVals = unpack('i*', substr($slot_dat, 0, $slot_size-4));
-		echo '<p>Look for '.$targetVal.' in<br>';
-		print_r($checkVals);
-		$foundLoc = array_search($targetVal, $checkVals);
-		if ($foundLoc) {
-			echo 'Found at location '.$foundLoc;
-			// overwrite the value at that position
-			fseek($file, $next_slot*$slot_size+$foundLoc*4-4);
-			fwrite($file, pack('i', 0));
-			$returnVal = $foundLoc;
-			$looking = false;
-		} else {
-			//$slotData .= substr($slot_dat, 0, $slot_size-4);
-			//echo 'Slot size is '.strlen($slot_dat).' <br>';
-			$slot_check = unpack("i*", substr($slot_dat, $slot_size-4));
-			$next_slot = $slot_check[1];
-			//echo "Seek Slot: ".$slot_check[1]."<br>";
-		 	}
-		}
-return $returnVal;
-}*/
+
 function writeSlotPoint($slotFile, $startSlot, $targetPoint, $data, $slotSize) {
 		$blockNum = floor($targetPoint/($slotSize-4));
 		for ($i=0; $i<=$blockNum; $i++) {
