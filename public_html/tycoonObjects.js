@@ -67,15 +67,17 @@ setBar = function (id, desc, pct) {
 
 class offer {
 	constructor(details) {
-		this.qty = details[0];
-		this.price = details[1];
-		this.seller = details[2];
-		this.quality = details[3];
-		this.pollution = details[4];
-		this.rights = details[5];
+		this.objID = details[0];
+		this.qty = details[1];
+		this.price = details[2];
+		this.seller = details[3];
+		this.quality = details[4];
+		this.pollution = details[5];
+		this.rights = details[6];
 	}
 
 	renderSummary(target) {
+		//console.log(this);
 		var thisDiv = addDiv(null, 'udHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);
 

@@ -85,6 +85,7 @@ class business extends object {
 		parent::__construct($id, $dat, $file);
 
 		$this->attrList['ownedObjects'] = 11;
+		$this->attrList['money'] = 14;
 	}
 }
 
@@ -133,6 +134,17 @@ class factory extends object {
 		$this->attrList['prodInv4'] = 54;
 		$this->attrList['prodInv5'] = 55;
 
+		$this->attrList['orderTime1'] = 56;
+		$this->attrList['orderTime2'] = 59;
+		$this->attrList['orderTime3'] = 62;
+		$this->attrList['orderTime4'] = 65;
+		$this->attrList['orderTime5'] = 68;
+		$this->attrList['orderTime6'] = 71;
+		$this->attrList['orderTime7'] = 74;
+		$this->attrList['orderTime8'] = 77;
+		$this->attrList['orderTime9'] = 80;
+		$this->attrList['orderTime10'] = 83;
+
 		$this->attrList['orderItem1'] = 57;
 		$this->attrList['orderItem2'] = 60;
 		$this->attrList['orderItem3'] = 63;
@@ -143,6 +155,17 @@ class factory extends object {
 		$this->attrList['orderItem8'] = 78;
 		$this->attrList['orderItem9'] = 81;
 		$this->attrList['orderItem10'] = 84;
+
+		$this->attrList['orderQty1'] = 58;
+		$this->attrList['orderQty2'] = 61;
+		$this->attrList['orderQty3'] = 64;
+		$this->attrList['orderQty4'] = 67;
+		$this->attrList['orderQty5'] = 70;
+		$this->attrList['orderQty6'] = 73;
+		$this->attrList['orderQty7'] = 76;
+		$this->attrList['orderQty8'] = 79;
+		$this->attrList['orderQty9'] = 82;
+		$this->attrList['orderQty10'] = 85;
 
 		$this->attrList['price1'] = 91;
 		$this->attrList['price2'] = 92;
@@ -194,17 +217,23 @@ class factory extends object {
 		// NEED TO DETERMINE PRODUCT INDEX
 
 		// Sort material requirements into the storage index for the factory
-		$referenceList = array_fill(0, 20, 0);
+		//$referenceList = array_fill(0, 20, 0);
 		echo 'Resources stores<br>';
 		print_r($this->resourceStores);
+		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
+			$rscSpots[$this->resourceStores[$i]] = $i;
+		}
+		echo 'Resources spots<br>';
+		print_r($rscSpots);
 		for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
-			echo 'Look for resource '.$productInfo[$i+18];
-			for ($j=0; $j<sizeof($this->resourceStores); $j+=2) {  // j is the index of the storage location at the factory
-				if ($this->resourceStores[$j] == $productInfo[$i+18]) {
-				//if ($this->resourceStores[$j] == $productInfo[$i+18] && $this->resourceStores[$j] > 0) {
-					echo 'Resources spot '.$j.' (type '.$this->resourceStores[$j].') which has a stock of '.$this->resourceStores[$j].' has a usage rate of something<br>';
-					$referenceList[$j] = $productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
-					break;
+			if ($productInfo[$i+18] > 0) {
+				echo 'Look for resource '.$productInfo[$i+18];
+				for ($j=0; $j<sizeof($this->resourceStores); $j+=2) {  // j is the index of the storage location at the factory
+					if ($this->resourceStores[$j] == $productInfo[$i+18]) {
+						echo 'Resources spot '.$j.' (type '.$this->resourceStores[$j].') which has a stock of '.$this->resourceStores[$j+1].' has a usage rate of '.$productInfo[$i+28].'<br>';
+						$referenceList[$j] = $productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
+						break;
+					}
 				}
 			}
 		}
@@ -215,16 +244,18 @@ class factory extends object {
 		$now = time();
 		$elapsed = $now - $this->get('lastUpdate');
 		$deleteOrder = [];
-		$events = [$this->get('lastUpdate'), 0, 0];
+		$events = [$this->get('lastUpdate'), 0, 0, $now, 0, 0];
 		for ($i=0; $i<10; $i++) {
-			if ($this->objDat[60+$i*3] <= $now) {
-				array_push($events, $this->objDat[60+$i*3], $this->objDat[61+$i*3], $this->objDat[62+$i*3]);
-				$this->objDat[60+$i*3] = 0;
-				$this->objDat[61+$i*3] = 0;
-				$this->objDat[62+$i*3] = 0;
-			}
+			echo 'Check '.$this->objDat[56+$i*3].'<br>';
+			if ($this->objDat[56+$i*3] <= $now) {
+				array_push($events, $this->objDat[56+$i*3], $this->objDat[57+$i*3], $this->objDat[58+$i*3]);
+				$this->objDat[56+$i*3] = 0;
+				$this->objDat[57+$i*3] = 0;
+				$this->objDat[58+$i*3] = 0;
+			} else echo $this->objDat[56+$i*3].' > '.$now.'<br>';
 		}
-
+		echo 'List of events: ('.$now.')<br>';
+		print_r($events);
 		for ($i=0; $i<sizeof($events)/3; $i++) {
 			$timeList[$i] = $events[$i*3];
 		}
@@ -233,25 +264,37 @@ class factory extends object {
 		asort($timeList);
 		$eventOrder = array_keys($timeList);
 		$totalProduction = 0;
+		echo 'List of tuimes: ('.$now.')<br>';
+		print_r($timeList);
+		echo 'List of events:<br>';
+		print_r($eventOrder);
+		$this->set('currentRate', 3600);
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
-			$elpased = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
-
+			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
+			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].' = )'.$elapsed.'<br>';
 			// Check for limiting resource or time
 			$checkQty = [];
 			$checkQty[] = $elapsed*$this->get('currentRate')/3600;
-			for ($i=0; $i<20; $i++) {
-				$checkQty[] = $this->resourceStores[$i]/$referenceList[$i];
+			for ($j=0; $j<sizeof($referenceList); $j++) {
+				$checkQty[] = $this->resourceStores[$j*2+1]/$referenceList[$j];
 			}
 
-			$produced = min($checkQt);
-			for ($i=0; $i<20; $i++) {
-				$this->resourceStores[$i] -= $produced*$referenceList[$i];
+			$produced = min($checkQty);
+			echo 'Produce '.$produced.' items';
+			print_r($checkQty);
+			for ($j=0; $j<sizeof($referenceList); $j++) {
+				$this->resourceStores[$j*2+1] -= $produced*$referenceList[$j];
 			}
-			$totalProduction += $produced;
 
 			// Add material from arrived order
-			//$this->objDat[] +=
+			if ($events[$eventOrder[$i]*3+1] > 0) {
+				$this->resourceStores[$rscSpots[$events[$eventOrder[$i]*3+1]]*2+1] += $events[$eventOrder[$i]*3+2];
+				echo 'adjusted stores:';
+				print_r($this->resourceStores);
+			}
+			$totalProduction += $produced;
 		}
+
 		//Find product index
 		for ($i=0; $i<5; $i++){
 			if ($this->templateDat[11+$i] == $this->get('currentProd')) {
@@ -261,18 +304,22 @@ class factory extends object {
 		}
 
 		// Record updated product stocks and input stocks
+		echo 'Add a total of '.$totalProduction.' at index '.$productIndex;
 		$this->objDat[51+$productIndex] += $totalProduction;
-		for ($i=0; $i<20; $i++) {
-			$this->objDat[31+$i] = $this->resourceStores[$i];
+		for ($i=0; $i<sizeof($referenceList); $i++) {
+			$this->objDat[28+$i] = $this->resourceStores[$i];
 		}
 
 		// Delete orders that have arrived - done above
 		$this->set('lastUpdate', $now);
-		$this->saveAll();
+		echo 'final info:<br>';
+		print_r($this->objDat);
+		$this->saveAll($this->linkFile);
+
 	}
 
 	function materialOrders() {
-		return array_slice($this->objDat, 56, 30);
+		return array_slice($this->objDat, 55, 30);
 	}
 }
 

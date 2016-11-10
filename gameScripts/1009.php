@@ -22,7 +22,6 @@ for ($i=0; $i<20; $i++) {
 		break;
 	}
 }
-print_R($thisObj->templateDat);
 // Load product information
 //$thisProduct = loadObject($productID, $objFile, 1000);
 echo 'loaded a '.$productID;
@@ -49,31 +48,39 @@ if ($optionCheck && $spotCheck !== false) {
 	$offerList = new blockSlot($productID, $offerFile, 4000);
 
 	// Sort offers based on price low to high
-	$offerSize = sizeof($offerList->slotList);
-	for ($i=1; $i<=$offerSize; $i+=10) {
-		if ($offerList->slotList[$i] > 0) {
-			$priceList[$i] = $offerList->slotList[$i+1];
+	echo 'Offer Slot';
+	//print_r();
+	$offerSize = sizeof($offerList->slotData);
+	for ($i=1; $i<=$offerSize; $i+=11) {
+		if ($offerList->slotData[$i] > 0) {
+			$priceList[$i] = $offerList->slotData[$i+1];
 		}
 	}
 
-	echo '<script>offerList = [];';
+	echo '<script>offerList = [];
+	offerList.push(new offer([0, 100, 299, 0, 50, 50, 50, '.time().', 8, 9, 10]));';
 
 
-	for ($i=1; $i<=$offerSize; $i+=10) {
-
-			echo 'offerList.push(new offer([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))';
+	for ($i=1; $i<70; $i+=11) {
+	//for ($i=1; $i<=sizeof($offerList->slotData); $i+=10) {
+		if ($offerList->slotData[$i] > 0) echo 'offerList.push(new offer(['.$offerList->slotData[$i].', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));';
 
 	}
-	echo 'showOffers = new uList(offerList);
+	echo 'console.log(offerList);
+		showOffers = new uList(offerList);
+		console.log("parentList");
+		console.log(showOffers.parentList);
 		showOffers.addSort("price", "Price");
 		showOffers.addSort("quantity", "Amount");
 		showOffers.addSort("quality", "Quality");
-		showOffers.addSort("rights", Rights);
+		showOffers.addSort("rights", "Rights");
 		showOffers.addSort("pollution", "Pollution");
 
-		orderBox1 = showOffers.SLsingleButton(orderPane);
+		orderBox2 = showOffers.SLsingleButton(offerContainer);
+		orderBox2.click();
 
-		orderButton = newButton(thisDiv, function () {scrMod("1010,'.$postVals[1].', SLreadSelection(orderBox1).")});
+		//orderButton = newButton(offerContainer, function () {console.log(SLreadSelection(orderBox1))});
+		orderButton = newButton(offerContainer, function () {scrMod("1010,'.$postVals[1].'," + SLreadSelection(orderBox1) + "," +  SLreadSelection(orderBox2))});
 		orderButton.innerHTML = "Place Order";
 		</script>';
 }

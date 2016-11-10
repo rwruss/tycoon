@@ -9,8 +9,6 @@ class objectList {
 	addSort(val, desc) {
 		this.sortOptions.push(val);
 		this.sortNames.push(desc);
-
-		console.log(this.sortOptions);
 	}
 
 	SLsingleButton(target, opts) {
@@ -23,11 +21,9 @@ class objectList {
 		selectButton.selectedValue = 0;
 		if (typeof opts !== "undefined") {
 			if (opts.setVal) {
-				console.log("set existing");
 				this.existingValue(selectButton, opts);
 			}
 		}
-		console.log(selectButton);
 		return selectButton;
 	}
 
@@ -44,7 +40,6 @@ class objectList {
 
 
 		let sortTarget = this;
-		console.log(this.sortOptions);
 		for (var i=0; i<this.sortOptions.length; i++) {
 		var sortButton = addDiv("", "button", showContain.sortBar)
 		sortButton.innerHTML = this.sortNames[i];
@@ -59,11 +54,7 @@ class objectList {
 		showContain.content = addDiv("", "", showContain);
 		showContain.content.style.float = "left";
 		showContain.content.style.position = "relative";
-		console.log(showContain);
 		showContain.content.innerHTML = "";
-
-
-		console.log(this);
 
 
 		this.SLshowList(target, showContain.content);
@@ -74,20 +65,19 @@ class objectList {
 		selectContainer.innerHTML = "";
 		for (var i=0; i<this.listItems.length; i++) {
 			if (this.parentList[this.listItems[i]] instanceof objectList) {
-				console.log("list of lists");
+
 				let object = this.parentList[this.listItems[i]].typeIcon(selectContainer);
 				let subtarg = this.parentList[this.listItems[i]];
 				if (this.parentList[this.listItems[i]] != "undefined") object.addEventListener("click", function () {
 					subtarg.SLsingleSelect(target, function() {})
 					});
 			} else {
-			console.log(this);
-			var object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
+			let object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
 			object.owner = this;
 			object.objID = this.listItems[i];
-			console.log(this.listItems[i]);
+			//console.log(this.listItems[i]);
 			object.addEventListener("click", function () {
-				console.log(object);
+
 				console.log("set slected to " + object.objID + " which equals " + this.owner);
 				object.parentNode.parentNode.remove();
 				SlclearTarget(target);
@@ -209,7 +199,7 @@ class uList extends objectList {
 
 	showItem(id, trg) {
 		//console.log(this.parentList);
-		console.log(id);
+		//console.log(id);
 		var objBox = id.renderSummary(trg);
 		/*
 		let objBox = addDiv("", "objContain", trg);
@@ -224,7 +214,7 @@ class uList extends objectList {
 		//trg.innerHTML = id;
 		trg.listItem = this;
 		trg.selectedValue = this.parentList[id].objID;
-		console.log(trg);
+		console.log("select item " + id);
 		console.log("set value to " + this.parentList[id].objID);
 		this.parentList[id].renderSummary(trg);
 	}

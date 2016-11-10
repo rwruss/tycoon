@@ -1,5 +1,6 @@
 <?php
 
+$thisObj->updateStocks();
 if ($thisObj->get('currentProd') > 0) {
 	$currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 } else $currentProduction = '';
@@ -53,19 +54,25 @@ for (var i=0; i<materialInv.length; i+=2) {
 	materialBox(materialInv[i], materialInv[i+1], thisDiv);
 }
 
-textBlob("", thisDiv, "Current orders");
+var orderSection = addDiv("", "stdContain", thisDiv);
+var orderHead = addDiv("", "stdContain", orderSection);
+var orderItems = addDiv("", "stdContain", orderSection);
+textBlob("", orderHead, "Current orders");
 for (var i=0; i<materialOrder.length; i+=3) {
-	var thisBox = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], thisDiv);
+	let thisBox = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], orderItems);
 	if (materialOrder[i] == 0) thisBox.addEventListener("click", function () {
 		useDeskTop.newPane("orderPane");
 		orderPane = useDeskTop.getPane("orderPane");
+
 
 		console.log(invList);
 		textBlob("", orderPane, "Select which item you want to order");
 		orderBox1 = invList.SLsingleButton(orderPane);
 
 		orderSelectButton = newButton(orderPane, function () {scrMod("1009,'.$postVals[1].',"+ SLreadSelection(orderBox1))});
-		orderSelectButton.innerHTML = "Select Item";
+		orderSelectButton.innerHTML = "Find Offers";
+
+		offerContainer = addDiv("", "stdContain", orderPane);
 		});
 }
 

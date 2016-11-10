@@ -1066,10 +1066,11 @@ echo '
 var defaultBuildings;
 
 window.addEventListener("load", webGLStart);
+
 </script>
 
 	<html>
-	<body>
+	<body id="pageBody">
 	<div id="ltPnl" style="position:absolute; top:15; left:10; height:675; width:100; border:1px solid #000000">
 		ID: '.$pGameID.'<br>
 		<a href="javascript:void(0);" onclick="scrMod(1004)">Financial</a>

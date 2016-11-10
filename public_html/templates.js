@@ -490,9 +490,16 @@ laborBox = function (id, target) {
 	thisLabor.innerHTML = id;
 }
 
-orderBox = function (id1, id2, id3, target) {
-	var thisOrder = addDiv("", "", target);
-	thisOrder.innerHTML = id1;
+orderBox = function (time, rscID, qty, target) {
+
+	var thisOrder = addDiv("", "selectContain", target);
+	materialBox(rscID, qty, thisOrder);
+	var timeBox = addDiv("", "selectContain", thisOrder);
+	if (time > 0) {
+		timeBox.runClock = true;
+		countDownClock(time, timeBox);
+		//thisOrder.innerHTML = rscID + " - " + time + "-" + qty;
+	}
 
 	return thisOrder;
 }
@@ -711,12 +718,17 @@ class pane {
 		this.deskHolder = desktop;
 		//this.element.childNodes[0].parentObj = this;
 		this.element.parentObj = this;
+		this.element.destructFunctions = [];
 		this.deskHolder.arrangePanes();
 		this.nodeType = "pane";
 
 		this.element.addEventListener("click", function(event) {this.parentObj.toTop()});
 		this.element.childNodes[0].addEventListener("click", function (event) {
 			//console.log("destroying " + this.parentNode.parentObj.nodeType + "  via " + this);
+			for (var i=0; i<this.parentNode.destructFunctions.length; i++) {
+				console.log("run desfunc " + i);
+				this.parentNode.destructFunctions[i]();
+			}
 			this.parentNode.parentObj.destroyWindow();
 			event.stopPropagation();
 			});
@@ -733,7 +745,10 @@ class pane {
 	destroyWindow() {
 		//console.log("remove " + this.desc)
 		this.element.remove();
+		//var tmp = this.element.parentNode.removeChild(this.element);
+		//console.log(tmp);
 		this.deskHolder.removePane(this);
+		delete this;
 		//console.log("final " + Object.keys(this.deskHolder.paneList));
 	}
 
@@ -988,4 +1003,35 @@ updateFactory = function (object) {
 			console.log(playerFactories[i])
 		}
 	}
+}
+
+countDownClock = function (endTime, target) {
+	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj)}, 1000);
+	checkNode = target.parentNode;
+	while (checkNode) {
+		if (checkNode.destructFunctions) {
+			console.log("add to " + checkNode);
+			checkNode.destructFunctions.push(function () {
+				console.log("stop clock");
+				clearInterval(target.clockObj);})
+			break;
+		}
+		checkNode = checkNode.parentNode;
+	}
+
+	//target.addEventListener("DOMNodeRemoved", function () {console.log("remove");clearInterval(target.clockObj);}, false);
+}
+
+runClock = function (endTime, target) {
+	//console.log(target);
+	var date = new Date();
+	var remaining = (endTime - Math.floor(date.getTime()/1000));
+	//console.log(endTime + " - " + Math.floor(date.getTime()/1000) + " = " + (remaining) );
+
+	var hrs = Math.floor(remaining/3600);
+	var mins = Math.floor((remaining - hrs*3600)/60);
+	var secs = remaining%60;
+
+	target.innerHTML = ("0" + hrs).slice(-2) + " : " + ("0" + mins).slice(-2) + " : " + ("0" + secs).slice(-2);
+	//if (!target.runClock) clearInterval(target.clockObj);
 }
