@@ -17,7 +17,7 @@ materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
 
 prodList = new saleList([new product({objID:'.$thisObj->getTemp('prod1').', qty:'.$thisObj->get('prodInv1').'})';
 for ($i=2; $i<6; $i++) {
-	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
+	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).', qty:'.$thisObj->get('prodInv'.$i).'})';
 }
 echo ']);
 

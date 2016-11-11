@@ -99,9 +99,11 @@ class offer {
 
 class product {
 	constructor(details) {
+
 		this.objID = details.objID,
 		this.objName = details.objName,
 		this.qty = details.qty || 0;
+		//console.log('create product ' + this.objID);
 	}
 
 	renderSummary(target) {

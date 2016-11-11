@@ -1,7 +1,7 @@
 Grain Farm,Wheat,Corn,None,None,None
 Chicken Farm,Chicken,None,None,None,None
 Ranch,Cattle,None,None,None,None
-Meat Processor,Packaged Chicken,Cattle,Pigs,None,None
+Meat Processor,Packaged Chicken,Packaged Beef,Pigs,None,None
 Fruit Farm,Grapes,Berries,None,None,None
 Brewery,Wine,Beer,Spirits,None,None
 Metal Mill,Steel,Aluminum Cans,None,None,None

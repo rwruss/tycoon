@@ -1,34 +1,34 @@
-Desc,Req1,Req2,Req3,Req4,Req5,Req6,Req7,Req8,Req9,Req10,Qty1,Qty2,Qty3,Qty4,Qty5,Qty6,Qty7,Qty8,Qty9,Qty10,Labor 1,Labor 2,Labor 3,Labor 4,Labor 5,Labor 6,Labor 7,Labor 8,Labor 9,Labor 10,EndChar
-None,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,None,None,None,None,None,None,None,None,None,None,x
-Wheat,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,x
-Corn,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,x
-Chicken,Wheat,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,x
-Cattle,Corn,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Rancher,None,None,None,None,None,None,None,None,None,x
-Pigs,Corn,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Rancher,None,None,None,None,None,None,None,None,None,x
-Packaged Beef,Cattle,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Meat Processor,None,None,None,None,None,None,None,None,None,x
-Bacon,Pigs,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Meat Processor,None,None,None,None,None,None,None,None,None,x
-Packaged Chicken,Chicken,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Meat Processor,None,None,None,None,None,None,None,None,None,x
-Eggs,Wheat,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,x
-Coal,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,x
-Iron,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,x
-Copper,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,x
-Aluminum,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,x
-Steel,Iron,Coal,None,None,None,None,None,None,None,None,1,1,0,0,0,0,0,0,0,0,Millworker,Millworker,None,None,None,None,None,None,None,None,x
-Rare Elements,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,x
-Grapes,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,x
-Berries,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,x
-Beer,Grains,Aluminum Cans,None,None,None,None,None,None,None,None,2,1,0,0,0,0,0,0,0,0,Brewer,None,None,None,None,None,None,None,None,None,x
-Grains,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,x
-Wine,Grapes,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Brewer,None,None,None,None,None,None,None,None,None,x
-Spirits,Grains,None,None,None,None,None,None,None,None,None,2,0,0,0,0,0,0,0,0,0,Brewer,None,None,None,None,None,None,None,None,None,x
-Aluminum Cans,Aluminum,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Millworker,Millworker,None,None,None,None,None,None,None,None,x
-Sugar,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,x
-Soda,Sugar,Aluminum Cans,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Brewer,None,None,None,None,None,None,None,None,None,x
-Jewels,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,x
-Gold,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,x
-Silver,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,x
-Computer Parts,Copper,Gold,Rare Elements,None,None,None,None,None,None,None,5,2,1,0,0,0,0,0,0,0,Computer Tech,Electrical Engineer,None,None,None,None,None,None,None,None,x
-CPUs,Copper,Gold,Rare Elements,None,None,None,None,None,None,None,6,3,2,0,0,0,0,0,0,0,Computer Tech,Electrical Engineer,None,None,None,None,None,None,None,None,x
-Computers,CPUs,Computer Parts,Plastic,None,None,None,None,None,None,None,1,3,3,0,0,0,0,0,0,0,Computer Tech,Electrical Engineer,None,None,None,None,None,None,None,None,x
-Oil,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Oil Hand,Petroleum Engineer,None,None,None,None,None,None,None,None,x
-Plastic,Oil,None,None,None,None,None,None,None,None,None,2,0,0,0,0,0,0,0,0,0,Factory Worker,Chemist,None,None,None,None,None,None,None,None,x
+Desc,Req1,Req2,Req3,Req4,Req5,Req6,Req7,Req8,Req9,Req10,11 - Qty1,12 - Qty2,Qty3,Qty4,Qty5,Qty6,Qty7,Qty8,Qty9,Qty10,Labor 1,Labor 2,Labor 3,Labor 4,Labor 5,Labor 6,Labor 7,Labor 8,Labor 9,Labor 10,32 - Base Prod,EndChar
+None,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,None,None,None,None,None,None,None,None,None,None,,x
+Wheat,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,,x
+Corn,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,,x
+Chicken,Wheat,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,,x
+Cattle,Corn,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Rancher,None,None,None,None,None,None,None,None,None,,x
+Pigs,Corn,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Rancher,None,None,None,None,None,None,None,None,None,,x
+Packaged Beef,Cattle,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Meat Processor,None,None,None,None,None,None,None,None,None,,x
+Bacon,Pigs,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Meat Processor,None,None,None,None,None,None,None,None,None,,x
+Packaged Chicken,Chicken,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Meat Processor,None,None,None,None,None,None,None,None,None,,x
+Eggs,Wheat,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,,x
+Coal,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,,x
+Iron,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,,x
+Copper,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,,x
+Aluminum,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,,x
+Steel,Iron,Coal,None,None,None,None,None,None,None,None,1,1,0,0,0,0,0,0,0,0,Millworker,Millworker,None,None,None,None,None,None,None,None,,x
+Rare Elements,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,,x
+Grapes,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,,x
+Berries,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,,x
+Beer,Grains,Aluminum Cans,None,None,None,None,None,None,None,None,2,1,0,0,0,0,0,0,0,0,Brewer,None,None,None,None,None,None,None,None,None,,x
+Grains,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,,x
+Wine,Grapes,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Brewer,None,None,None,None,None,None,None,None,None,,x
+Spirits,Grains,None,None,None,None,None,None,None,None,None,2,0,0,0,0,0,0,0,0,0,Brewer,None,None,None,None,None,None,None,None,None,,x
+Aluminum Cans,Aluminum,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Millworker,Millworker,None,None,None,None,None,None,None,None,,x
+Sugar,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,,x
+Soda,Sugar,Aluminum Cans,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Brewer,None,None,None,None,None,None,None,None,None,,x
+Jewels,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,,x
+Gold,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,,x
+Silver,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,,x
+Computer Parts,Copper,Gold,Rare Elements,None,None,None,None,None,None,None,5,2,1,0,0,0,0,0,0,0,Computer Tech,Electrical Engineer,None,None,None,None,None,None,None,None,,x
+CPUs,Copper,Gold,Rare Elements,None,None,None,None,None,None,None,6,3,2,0,0,0,0,0,0,0,Computer Tech,Electrical Engineer,None,None,None,None,None,None,None,None,,x
+Computers,CPUs,Computer Parts,Plastic,None,None,None,None,None,None,None,1,3,3,0,0,0,0,0,0,0,Computer Tech,Electrical Engineer,None,None,None,None,None,None,None,None,,x
+Oil,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Oil Hand,Petroleum Engineer,None,None,None,None,None,None,None,None,,x
+Plastic,Oil,None,None,None,None,None,None,None,None,None,2,0,0,0,0,0,0,0,0,0,Factory Worker,Chemist,None,None,None,None,None,None,None,None,,x

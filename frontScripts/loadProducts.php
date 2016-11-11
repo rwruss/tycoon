@@ -55,6 +55,7 @@ while (($line = fgets($productFile)) !== false) {
   $productArray = array_fill(1, 250, 0);
   $productArray[4] = 4;
   $productArray[9] = $count;
+  $productArray[11] = $lineItems[32];
   for ($i=0; $i<10; $i++) {
 
     $productArray[18+$i] = $productList[$lineItems[1+$i]];
@@ -156,7 +157,7 @@ fclose($nameFile);
 
 // create sales file
 $salesFile = fopen('../scenarios/'.$scenario.'/saleOffers.slt', 'wb');
-fseek($salesFile, sizeof($productReqs)*1000*4-4);
+fseek($salesFile, sizeof($productReqs)*1001*4-4);
 fwrite($salesFile, pack('i', 0));
 fclose($salesFile);
 

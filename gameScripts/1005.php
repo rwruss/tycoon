@@ -26,8 +26,13 @@ if ($optionCheck) {
 	// Update current production
 	if ($thisObj->get('currentProd') > 1)	$thisObj->updateStocks();
 
+	// Read product Data
+	fseek($objFile, $postVals[3]*1000);
+	$productInfo = unpack('i*', fread($objFile, 200));
+
 	// Set new item production
 	$thisObj->save('currentProd', $postVals[3]);
+	$thisObj->save('currentRate', $productInfo[11]);
 } else {
 	echo 'Not able to set';
 }

@@ -207,6 +207,8 @@ class factory extends object {
 	}
 
 	function updateStocks() {
+		if ($this->get('currentProd') == 0) return;
+
 		// load production requirements
 		fseek($this->linkFile, $this->get('currentProd')*1000);
 		$productInfo = unpack('i*', fread($this->linkFile, 200));
@@ -220,11 +222,13 @@ class factory extends object {
 		//$referenceList = array_fill(0, 20, 0);
 		echo 'Resources stores<br>';
 		print_r($this->resourceStores);
+		$rscSpots = [];
 		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
 			$rscSpots[$this->resourceStores[$i]] = $i;
 		}
 		echo 'Resources spots<br>';
 		print_r($rscSpots);
+		$referenceList=[];
 		for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
 			if ($productInfo[$i+18] > 0) {
 				echo 'Look for resource '.$productInfo[$i+18];
@@ -268,7 +272,7 @@ class factory extends object {
 		print_r($timeList);
 		echo 'List of events:<br>';
 		print_r($eventOrder);
-		$this->set('currentRate', 3600);
+		if ($this->get('currentRate') == 0)		$this->set('currentRate', 1);
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
 			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].' = )'.$elapsed.'<br>';
@@ -283,6 +287,7 @@ class factory extends object {
 			echo 'Produce '.$produced.' items';
 			print_r($checkQty);
 			for ($j=0; $j<sizeof($referenceList); $j++) {
+				echo $this->resourceStores[$j*2+1].' - '.$produced*$referenceList[$j].'<Br>';
 				$this->resourceStores[$j*2+1] -= $produced*$referenceList[$j];
 			}
 
@@ -306,8 +311,15 @@ class factory extends object {
 		// Record updated product stocks and input stocks
 		echo 'Add a total of '.$totalProduction.' at index '.$productIndex;
 		$this->objDat[51+$productIndex] += $totalProduction;
+/*
+		$this->resourceStores = [];
+		for ($i=0; $i<20; $i++) {
+			if ($this->templateDat[16+$i] > 0) array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[51+$i]);
+		}
+*/
 		for ($i=0; $i<sizeof($referenceList); $i++) {
-			$this->objDat[28+$i] = $this->resourceStores[$i];
+			echo 'set store spot '.$i.' to a value of '.$this->resourceStores[$i*2+1];
+			$this->objDat[31+$i] = $this->resourceStores[$i*2+1];
 		}
 
 		// Delete orders that have arrived - done above

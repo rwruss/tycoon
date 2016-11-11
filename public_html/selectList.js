@@ -21,6 +21,7 @@ class objectList {
 		selectButton.selectedValue = 0;
 		if (typeof opts !== "undefined") {
 			if (opts.setVal) {
+				console.log("set value");
 				this.existingValue(selectButton, opts);
 			}
 		}
@@ -172,6 +173,7 @@ class saleList extends objectList {
 class uList extends objectList {
 	constructor(parentList, opts) {
 		super();
+		console.log(parentList);
 		this.listItems = Object.keys(parentList);
 		if (typeof opts !== "undefined") {
 			//if (opts.items.length > 0) this.listItems = opts.items;
@@ -179,12 +181,13 @@ class uList extends objectList {
 			this.prefix = opts[1] || 1;
 		}
 		this.parentList = parentList;
+
 	}
 
 	existingValue(target, opts) {
 		console.log("ulist existing");
 		for (var i=0; i<this.parentList.length; i++) {
-			if (this.parentList[i].objID = opts.setVal) {
+			if (this.parentList[i].objID == opts.setVal) {
 					this.showSelected(i, target);
 			}
 		}

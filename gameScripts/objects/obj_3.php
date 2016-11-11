@@ -26,12 +26,16 @@ for (i=0; i<materialInv.length; i+=2) {
 invList = new uList(inventoryItems);
 
 textBlob("", thisDiv, "Currently Producting:" + objNames['.$thisObj->get('currentProd').']);
-
+var someProduct = new product({objID:999});
+console.log(someProduct);
 prodList = new uList([new product({objID:'.$thisObj->getTemp('prod1').'})';
+
 for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
 }
-echo '])
+echo ']);
+//console.log(someProduct);
+//prodList = new uList([someProduct]);
 
 optionBox1 = prodList.SLsingleButton(thisDiv'.$currentProduction.');
 
@@ -41,20 +45,22 @@ sendButton.innerHTML = "Update production";
 priceButton = newButton(thisDiv, function () {scrMod("1011,'.$postVals[1].'")});
 priceButton.innerHTML = "Set Prices";
 
-textBlob("", thisDiv, "Per unit of production, this requires:");
+var reqBox = addDiv("", "stdContain", thisDiv);
+textBlob("", reqBox, "Per unit of production, this requires:");
 for (var i=0; i<productMaterial.length; i+=2) {
-	materialBox(productMaterial[i], productMaterial[i+1], thisDiv);
+	materialBox(productMaterial[i], productMaterial[i+1], reqBox);
 }
 for (var i=0; i<productLabor.length; i++) {
-	laborBox(productLabor[i], thisDiv);
+	laborBox(productLabor[i], reqBox);
 }
 
-textBlob("", thisDiv, "Current resource stores:");
+var storesSection = addDiv("", "stdContainer", thisDiv);
+textBlob("", storesSection, "Current resource stores:");
 for (var i=0; i<materialInv.length; i+=2) {
-	materialBox(materialInv[i], materialInv[i+1], thisDiv);
+	materialBox(materialInv[i], materialInv[i+1], storesSection);
 }
 
-var orderSection = addDiv("", "stdContain", thisDiv);
+var orderSection = addDiv("", "stdContainer", thisDiv);
 var orderHead = addDiv("", "stdContain", orderSection);
 var orderItems = addDiv("", "stdContain", orderSection);
 textBlob("", orderHead, "Current orders");
