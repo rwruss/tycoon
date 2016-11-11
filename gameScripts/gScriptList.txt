@@ -12,6 +12,7 @@
 1012 - PROCESS: Save prices set in script 1011
 1013 - MENU: Sell items from a factory
 1014 - PROCESS: Create a sale offering
+1015 - MENU: Sell to a city
 
 http://playdosgamesonline.com/capitalism.html
 

@@ -95,7 +95,7 @@ class factory extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
-
+		$this->attrList['remainderTime'] = 14;
 		$this->attrList['currentProd'] = 19; // which inventory item is being produced - NOT the product ID
 		$this->attrList['currentRate'] = 20;
 		$this->attrList['labor1'] = 21;
@@ -251,6 +251,7 @@ class factory extends object {
 		$events = [$this->get('lastUpdate'), 0, 0, $now, 0, 0];
 		for ($i=0; $i<10; $i++) {
 			echo 'Check '.$this->objDat[56+$i*3].'<br>';
+			// if event has occured, load it then delete it
 			if ($this->objDat[56+$i*3] <= $now) {
 				array_push($events, $this->objDat[56+$i*3], $this->objDat[57+$i*3], $this->objDat[58+$i*3]);
 				$this->objDat[56+$i*3] = 0;
@@ -276,9 +277,15 @@ class factory extends object {
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
 			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].' = )'.$elapsed.'<br>';
-			// Check for limiting resource or time
+			
+			// Check for limiting resource or time			
 			$checkQty = [];
-			$checkQty[] = $elapsed*$this->get('currentRate')/3600;
+			
+			// Get max amount produced in time and save remainder time
+			$checkQty[] = ($elapsed+$this->get('remainderTime'))/$this->get('currentRate');
+			$this->set('remainderTime', $elapsed+$this->get('remainderTime')%$this->get('currentRate'));
+			
+			// Get max amount produced by each input
 			for ($j=0; $j<sizeof($referenceList); $j++) {
 				$checkQty[] = $this->resourceStores[$j*2+1]/$referenceList[$j];
 			}
@@ -308,21 +315,19 @@ class factory extends object {
 			}
 		}
 
-		// Record updated product stocks and input stocks
+		// Record updated product stocks
 		echo 'Add a total of '.$totalProduction.' at index '.$productIndex;
 		$this->objDat[51+$productIndex] += $totalProduction;
-/*
-		$this->resourceStores = [];
-		for ($i=0; $i<20; $i++) {
-			if ($this->templateDat[16+$i] > 0) array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[51+$i]);
-		}
-*/
+		
+		// Record updated input stocks
 		for ($i=0; $i<sizeof($referenceList); $i++) {
 			echo 'set store spot '.$i.' to a value of '.$this->resourceStores[$i*2+1];
 			$this->objDat[31+$i] = $this->resourceStores[$i*2+1];
 		}
 
 		// Delete orders that have arrived - done above
+		
+		// Save updated information
 		$this->set('lastUpdate', $now);
 		echo 'final info:<br>';
 		print_r($this->objDat);
@@ -387,6 +392,7 @@ class factoryTemplate extends object {
 	}
 }
 
+
 function loadProduct($id, $file, $size) {
 	fseek($file, $id*1000);
 	$dat = unpack('i*', fread($file, $size));
@@ -416,6 +422,10 @@ function loadObject($id, $file, $size) {
 
 		case 7:
 			return new factoryTemplate($id, $dat, $file);
+		break;
+		
+		case 8:
+			return new city($id, $dat, $file);
 		break;
 
 		default:
