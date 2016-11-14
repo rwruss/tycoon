@@ -18,6 +18,7 @@ productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
 productLabor = ['.implode(',', $productInfo->reqLabor).'];
 materialInv = ['.implode(',', $thisObj->resourceStores).'];
 materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
+factoryLabor = [];
 
 inventoryItems = [];
 for (i=0; i<materialInv.length; i+=2) {
@@ -44,6 +45,12 @@ sendButton.innerHTML = "Set production";
 priceButton = newButton(thisDiv, function () {scrMod("1011,'.$postVals[1].'")});
 priceButton.innerHTML = "Set Prices";
 */
+var laborSection = addDiv("", "stdFloatDiv", thisDiv);
+textBlob("", laborSection, "Labor Pool - show available labor");
+for (var i=0; i<factoryLabor.length; i++) {
+	laborBox(factoryLabor[i], laborSection);
+}
+
 var reqBox = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", reqBox, "Per unit of production, this requires:");
 reqBox.materials = addDiv("", "stdFloatDiv", reqBox);

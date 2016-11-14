@@ -13,6 +13,8 @@
 1013 - MENU: Sell items from a factory
 1014 - PROCESS: Create a sale offering
 1015 - MENU: Sell to a city
+1016 - Output pricing for items at a city
+1017 - PROCESS: Selling items to a city
 
 http://playdosgamesonline.com/capitalism.html
 
