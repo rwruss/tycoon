@@ -49,7 +49,7 @@ if ($optionCheck && $spotCheck !== false) {
 
 	// Sort offers based on price low to high
 	echo 'Offer Slot';
-	print_r($offerList->slotData);
+	//print_r($offerList->slotData);
 	$offerSize = sizeof($offerList->slotData);
 	for ($i=1; $i<=$offerSize; $i+=10) {
 		if ($offerList->slotData[$i] > 0) {
@@ -58,13 +58,13 @@ if ($optionCheck && $spotCheck !== false) {
 	}
 
 	echo '<script>offerList = [];
-	offerList.push(new offer([0, 100, 299, 0, 50, 50, 50, '.time().', 8, 9, 10]));';
+	offerList.push(new offer([0, 100, 299, 0, 50, 50, 50, '.$productID.', 8, 9, 10]));';
 
 
 	$numItems = sizeof($offerList->slotData);
 	for ($slotItem=1; $slotItem<$numItems; $slotItem+=10) {
 		$placeNum = $offerList->slotList[floor($slotItem/1000)]*4004+$slotItem%1000;
-		if ($offerList->slotData[$slotItem] > 0) echo 'offerList.push(new offer(['.$placeNum.', '.$offerList->slotData[$slotItem].', '.$offerList->slotData[$slotItem+1].', 3, 4, 5, 6, 7, 8, 9, 10]));';
+		if ($offerList->slotData[$slotItem] > 0) echo 'offerList.push(new offer(['.$placeNum.', '.$offerList->slotData[$slotItem].', '.$offerList->slotData[$slotItem+1].', 3, 4, 5, 6, '.$productID.', 8, 9, 10]));';
 	}
 
 	echo 'console.log(offerList);

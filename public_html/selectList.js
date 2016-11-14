@@ -33,11 +33,8 @@ class objectList {
 		if (document.getElementById("selectMenu")) showContain = document.getElementById("selectMenu");
 		else showContain = addDiv("selectMenu", "selectMenu", "gmPnl");
 
-		showContain.sortBar = addDiv("", "button", showContain);
-		showContain.sortBar.style.backgroundColor = "white";
-		showContain.sortBar.style.position = "relateive";
-		showContain.sortBar.style.float = "left";
-		showContain.sortBar.style.width = "99%";
+		showContain.sortBar = addDiv("", "selectSort", showContain);
+
 
 
 		let sortTarget = this;
@@ -135,6 +132,8 @@ class saleList extends objectList {
 		let objBox = addDiv("", "rscContain", trg);
 		let objContent = addDiv("", "rscImg", objBox);
 		let newImg = addImg(id, "rscImg", objContent);
+		objBox.style.background = "white";
+		objContent.innerHTML = id.objID;
 		newImg.src = "./rscImages/"+id+".png";
 		newImg.alt = id;
 

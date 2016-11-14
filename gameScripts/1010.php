@@ -3,8 +3,8 @@
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 $thisObj = loadObject($postVals[1], $objFile, 400);

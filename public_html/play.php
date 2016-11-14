@@ -23,7 +23,7 @@ $_SESSION["instance"] = $_GET["gameID"];
 
 if ($pGameID == FALSE) {
 	echo "<p><p><p><p>Not alrady in game(".$_SESSION["playerId"].")";
-	print_r($playerList);
+	//print_r($playerList);
 	include("../gameScripts/1001.php");
 
 	exit;}
@@ -75,7 +75,7 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 	}
 }
 
-print_r($factoryList);
+//print_r($factoryList);
 //echo "thisplayer is a ".get_class ($thisPlayer);
 //$playerDat = unpack("i*", file_get_contents($gamePath."/unitDat.dat", NULL, NULL, $pGameID*100, 400));
 
@@ -977,12 +977,12 @@ echo '
 		}
 
 	var genCharList = [];
+	var thisPlayer;
 	function webGLStart() {
 		document.getElementById("readMsg").addEventListener("click", function(event) {console.log(event);makeBox(\'inBox\', 1099, 500, 500, 200, 50)});
 
+		thisPlayer = new gamePlayer(['.$thisPlayer->get('money').']);
 		useDeskTop = new deskTop;
-		taskList = new unitList();
-		unitList = new unitList();
 		setClick([0], "auto")
 		var canvas = document.getElementById("lesson03-canvas");
 		canvasInit();
@@ -1036,6 +1036,11 @@ echo '
 			productArray.push(new product({objType:product, objID:(i), objName:objNames[i]}));
 		}
 
+		laborArray = new Array();
+		for (var i=0; i<100; i++) {
+			laborArray.push(new labor({objType:product, objID:(i), objName:"labor " + i}));
+		}
+
 		factoryArray = new Array();
 		for (var i=0; i<numFactories; i++) {
 			console.log("make factory " + objNames[numProducts+i]);
@@ -1082,8 +1087,11 @@ window.addEventListener("load", webGLStart);
 	<div id="botPnl" style="position:absolute; top:690; left:10; height:40; width:1400; border:1px solid #000000">
 		<a href="javascript:void(0);" id="readMsg">Read Messages</a>
 	</div>
-	<div id="gmPnl" style="position:absolute; top:15; left:110; height:675; width:1200; border:1px solid #000000; overflow:hidden">
+	<div id="gmPnl" style="position:absolute; top:40; left:110; height:650; width:1200; border:1px solid #000000; overflow:hidden">
 		<canvas style="position:absolute" id="lesson03-canvas" style="border: none; " width=1200 height=700></canvas>
+	</div>
+	<div id="topBar" style="position:absolute; top:15; left:110; height:25; width:1200; border:1px solid #000000; overflow:hidden">
+		<div id="cashBox" style="position:absolute; top:0; left:0; height:25; border:1px solid #000000; padding-right:5; overflow:hidden"></div>
 	</div>
 
 	<div id="scrBox" style="width:0; height:0; overflow:hidden;">

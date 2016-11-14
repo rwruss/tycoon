@@ -486,15 +486,16 @@ setBarSize = function(id, pct, full) {
 }
 
 laborBox = function (id, target) {
-	var thisLabor = addDiv("", "", target);
-	thisLabor.innerHTML = id;
+	laborArray[id].renderSummary(target);
+	//var thisLabor = addDiv("", "", target);
+	//thisLabor.innerHTML = id;
 }
 
 orderBox = function (time, rscID, qty, target) {
 
-	var thisOrder = addDiv("", "selectContain", target);
+	var thisOrder = addDiv("", "orderContain", target);
 	materialBox(rscID, qty, thisOrder);
-	var timeBox = addDiv("", "selectContain", thisOrder);
+	var timeBox = addDiv("", "orderTime", thisOrder);
 	if (time > 0) {
 		timeBox.runClock = true;
 		countDownClock(time, timeBox);
@@ -505,6 +506,9 @@ orderBox = function (time, rscID, qty, target) {
 }
 
 materialBox = function (id, qty, target) {
+	let thisRsc = productArray[id].renderSummary(target);
+	thisRsc.qtyDiv.innerHTML = qty;
+	return thisRsc;/*
 	var thisDiv = addDiv(null, 'udHolder', target);
 	thisDiv.setAttribute("data-unitid", this.unitID);
 
@@ -519,8 +523,8 @@ materialBox = function (id, qty, target) {
 	thisDiv.expDiv.setAttribute("data-boxName", "strBar");
 	thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
 
-	thisDiv.nameDiv.innerHTML = qty + " of " +objNames[id];
-	return thisDiv;
+	thisDiv.nameDiv.innerHTML = qty + " of " +objNames[id];*/
+
 }
 
 bPos = [0,0];
@@ -530,14 +534,14 @@ paneBox = function(bName, val, h, w, x, y) {
 
 	newDiv.addEventListener("drag", function (event) {
 		if (event.clientX > 0) {
-		console.log("drag start");
+		//console.log("drag start");
 		this.style.left = bPos[0] - bPos[2] + event.clientX;
 		this.style.top = bPos[1] - bPos[3] + event.clientY;
 		}
 	});
 	newDiv.addEventListener("dragend", function (event) {
 		event = event || window.event;
-		console.log(event + " = " + event.clientX + ", " + event.clientY);
+		//console.log(event + " = " + event.clientX + ", " + event.clientY);
 		this.style.left = bPos[0] - bPos[2] + event.clientX;
 		this.style.top = bPos[1] - bPos[3] + event.clientY;
 	});
@@ -555,75 +559,6 @@ paneBox = function(bName, val, h, w, x, y) {
 	newDiv.appendChild(newContent);
 	return newDiv;
 }
-
-newMoveBox = function(id, x, y, target) {
-	moveString[0] = id;
-	drawLoc = [x, y, x, y];
-
-	var mBContain = document.createElement("div");
-	mBContain.id = "moveBox_"+id;
-	mBContain.className = "mbContain";
-
-	var mbBL = document.createElement("img");
-	mbBL.className = "mbBL";
-	mbBL.addEventListener("click", function() {move(1)});
-	mBContain.appendChild(mbBL);
-
-	var mbBC = document.createElement("img");
-	mbBC.className = "mbBC";
-	mbBC.addEventListener("click", function() {move(2)});
-	mBContain.appendChild(mbBC);
-
-	var mbBR = document.createElement("img");
-	mbBR.className = "mbBR";
-	mbBR.addEventListener("click", function() {move(3)});
-	mBContain.appendChild(mbBR);
-
-	var mBTL = document.createElement("img");
-	mBTL.className = "mbTL";
-	mBTL.addEventListener("click", function() {move(7)});
-	mBContain.appendChild(mBTL);
-
-	var mBCL = document.createElement("img");
-	mBCL.className = "mbCL";
-	mBCL.addEventListener("click", function() {move(4)});
-	mBContain.appendChild(mBCL);
-
-	var mBCR = document.createElement("img");
-	mBCR.className = "mbCR";
-	mBCR.addEventListener("click", function() {move(6)});
-	mBContain.appendChild(mBCR);
-
-	var mBTC = document.createElement("img");
-	mBTC.className = "mbTC";
-	mBTC.addEventListener("click", function() {move(8)});
-	mBContain.appendChild(mBTC);
-
-	var mBTR = document.createElement("img");
-	mBTR.className = "mbTR";
-	mBTR.addEventListener("click", function() {move(9)});
-	mBContain.appendChild(mBTR);
-
-	var mBBK = document.createElement("img");
-	mBBK.className = "mbBK";
-	mBBK.addEventListener("click", function() {move(10)});
-	mBContain.appendChild(mBBK);
-
-	var mBClear = document.createElement("img");
-	mBClear.className = "mbClear";
-	mBClear.addEventListener("click", function() {move(11)});
-	mBContain.appendChild(mBClear);
-
-	var mBSend = document.createElement("img");
-	mBSend.className = "mbSend";
-	mBSend.addEventListener("click", function() {orderMove()});
-	mBContain.appendChild(mBSend);
-
-
-	document.getElementById(target).appendChild(mBContain);
-}
-
-
 
 addtion = function () {
 	var trg = document.getElementById("objNum").value;

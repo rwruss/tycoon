@@ -65,39 +65,7 @@ setBar = function (id, desc, pct) {
 	}
 }
 
-class offer {
-	constructor(details) {
-		this.objID = details[0];
-		this.qty = details[1];
-		this.price = details[2];
-		this.seller = details[3];
-		this.quality = details[4];
-		this.pollution = details[5];
-		this.rights = details[6];
-	}
-
-	renderSummary(target) {
-		//console.log(this);
-		var thisDiv = addDiv(null, 'udHolder', target);
-		thisDiv.setAttribute("data-unitid", this.unitID);
-
-		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
-
-		thisDiv.actDiv = addDiv("asdf", "sumAct", thisDiv);
-		thisDiv.actDiv.setAttribute("data-boxName", "apBar");
-		thisDiv.actDiv.setAttribute("data-boxunitid", this.unitID);
-
-		thisDiv.expDiv = addDiv("asdf", "sumStr", thisDiv);
-		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
-		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
-
-		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100;
-		return thisDiv;
-	}
-}
-
-class product {
+class city {
 	constructor(details) {
 
 		this.objID = details.objID,
@@ -122,7 +90,99 @@ class product {
 		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
 		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
 
+		thisDiv.nameDiv.innerHTML = this.objName + " - " + this.objID;
+		return thisDiv;
+	}
+}
+
+class offer {
+	constructor(details) {
+		this.objID = details[0];
+		this.qty = details[1];
+		this.price = details[2];
+		this.seller = details[3];
+		this.quality = details[4];
+		this.pollution = details[5];
+		this.rights = details[6];
+		this.productID = details[7]
+	}
+
+	renderSummary(target) {
+		//console.log(this);
+		var thisDiv = addDiv(null, 'udHolder', target);
+		console.log("render product " + this.productID);
+		console.log(productArray[this.productID])
+		productArray[this.productID].renderSummary(thisDiv);
+
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100;
+		return thisDiv;
+	}
+}
+
+class product {
+	constructor(details) {
+
+		this.objID = details.objID,
+		this.objName = details.objName,
+		this.qty = details.qty || 0;
+		//console.log('create product ' + this.objID);
+	}
+
+	renderSummary(target) {
+		//console.log('draw ' + this.type)
+		var thisDiv = addDiv(null, 'productHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
+		thisDiv.qtyDiv.innerHTML = this.qty;
+
 		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
 		return thisDiv;
+	}
+}
+
+class labor {
+	constructor(details) {
+
+		this.objID = details.objID,
+		this.objName = details.objName,
+		this.qty = details.qty || 0;
+		//console.log('create product ' + this.objID);
+	}
+
+	renderSummary(target) {
+		//console.log('draw ' + this.type)
+		var thisDiv = addDiv(null, 'productHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
+		thisDiv.qtyDiv.innerHTML = this.qty;
+
+		thisDiv.nameDiv.innerHTML = "Labor - " + this.objID;
+		return thisDiv;
+	}
+}
+
+class gamePlayer {
+	constructor(data) {
+		this.cash = data[0] || 0;
+		this.money = this.cash;
+	}
+
+	set money (x) {
+		console.log("setting player money to " + x);
+		this.cash = x;
+		document.getElementById("cashBox").innerHTML = "$" + (this.cash/100).toFixed(2);
 	}
 }

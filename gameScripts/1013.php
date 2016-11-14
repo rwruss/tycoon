@@ -19,13 +19,19 @@ prodList = new saleList([new product({objID:'.$thisObj->getTemp('prod1').', qty:
 for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).', qty:'.$thisObj->get('prodInv'.$i).'})';
 }
-echo ']);
+echo '])
+var lotSection = addDiv("", "standardContain", thisDiv);
+textBlob("", lotSection, "Sell on Market");
+saleBox1 = prodList.SLsingleButton(lotSection);
+salePrice = priceBox(lotSection,0.00);
 
-saleBox1 = prodList.SLsingleButton(thisDiv);
-salePrice = priceBox(thisDiv,0.00);
-
-sendButton = newButton(thisDiv, function () {scrMod("1014,'.$postVals[1].',"+ SLreadSelection(saleBox1) + "," + salePrice.value)});
+sendButton = newButton(lotSection, function () {scrMod("1014,'.$postVals[1].',"+ SLreadSelection(saleBox1) + "," + salePrice.value)});
 sendButton.innerHTML = "Create Offer";
+
+var citySales = addDiv("", "standardContain", thisDiv);
+textBlob("", citySales, "Sell in Cities");
+citySB = newButton(citySales, function () {scrMod("1015,'.$postVals[1].'")});
+citySB.innerHTML = "Sell to City";
 </script>';
 
 fclose($objFile);

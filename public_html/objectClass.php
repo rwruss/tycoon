@@ -277,14 +277,14 @@ class factory extends object {
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
 			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].' = )'.$elapsed.'<br>';
-			
-			// Check for limiting resource or time			
+
+			// Check for limiting resource or time
 			$checkQty = [];
-			
+
 			// Get max amount produced in time and save remainder time
 			$checkQty[] = ($elapsed+$this->get('remainderTime'))/$this->get('currentRate');
 			$this->set('remainderTime', $elapsed+$this->get('remainderTime')%$this->get('currentRate'));
-			
+
 			// Get max amount produced by each input
 			for ($j=0; $j<sizeof($referenceList); $j++) {
 				$checkQty[] = $this->resourceStores[$j*2+1]/$referenceList[$j];
@@ -318,7 +318,7 @@ class factory extends object {
 		// Record updated product stocks
 		echo 'Add a total of '.$totalProduction.' at index '.$productIndex;
 		$this->objDat[51+$productIndex] += $totalProduction;
-		
+
 		// Record updated input stocks
 		for ($i=0; $i<sizeof($referenceList); $i++) {
 			echo 'set store spot '.$i.' to a value of '.$this->resourceStores[$i*2+1];
@@ -326,7 +326,7 @@ class factory extends object {
 		}
 
 		// Delete orders that have arrived - done above
-		
+
 		// Save updated information
 		$this->set('lastUpdate', $now);
 		echo 'final info:<br>';
@@ -338,6 +338,61 @@ class factory extends object {
 	function materialOrders() {
 		return array_slice($this->objDat, 55, 30);
 	}
+}
+
+class city extends object {
+	private $dRateOffset, $dLevelOffset, $cityBlockSize;
+
+	function __construct($id, $dat, $file) {
+		parent::__construct($id, $dat, $file);
+
+		$this->dRateOffset = 50;
+		$this->dLevelOffset = 500;
+		$this->cityBlockSize = 4000;
+
+		$this->attrList['population'] = 12;
+
+	}
+
+	function demandRate($productID) {
+		return $this->objDat[$this->dRateOffset+$productID];
+		}
+
+	function saveDRate($productID, $val) {
+		fseek($this->linkFile, $this->unitID*$this->cityBlockSize + ($this->dLevelOffset+$productID)*4-4);
+		fwrite($this->linkFile, pack('i', $val));
+		echo 'ID: '.$this->unitID;
+		echo 'Save '.$val.' at spot '.($this->unitID*$this->cityBlockSize + ($this->dLevelOffset+$productID)*4-4);
+		$this->objDat[$this->dLevelOffset+$productID] = $val;
+	}
+
+	function demandLevel($productID) {
+		return $this->objDat[$this->dLevelOffset+$productID];
+	}
+
+	function save($desc, $val) {
+
+		if (array_key_exists($desc, $this->attrList)) {
+			fseek($this->linkFile, $this->unitID*$this->cityBlockSize + $this->attrList[$desc]*4-4);
+			fwrite($this->linkFile, pack('i', $val));
+			echo 'ID: '.$this->unitID;
+			echo 'Save '.$val.' at spot '.($this->unitID*$this->cityBlockSize + $this->attrList[$desc]*4-4);
+			$this->objDat[$this->attrList[$desc]] = $val;
+		} else {
+			return false;
+		}
+	}
+
+	function baseDemand($productNumber) {
+		// production per million people per hour x 2 days
+		return ($this->get('population')*$this->demandRate($productNumber)*48/1000000);
+	}
+
+	function currentDemand($productNumber, $now) {
+		$elapsed = $now-$this->get('lastUpdate');
+		return(min($elapsed*$this->demandRate($productNumber)/(3600*1000000)+$this->demandLevel($productNumber), 2.0*$this->baseDemand($productNumber)));
+	}
+
 }
 
 class product extends object {
@@ -400,6 +455,13 @@ function loadProduct($id, $file, $size) {
 	return new product($id, $dat, $file);
 }
 
+function loadCity($id, $file, $size) {
+	fseek($file, $id*$size);
+	$dat = unpack('i*', fread($file, $size));
+
+	return new city($id, $dat, $file);
+}
+
 function loadObject($id, $file, $size) {
 	global $defaultBlockSize;
 	//echo 'Seek to '.($id*$defaultBlockSize);
@@ -420,12 +482,12 @@ function loadObject($id, $file, $size) {
 			return new factory($id, $dat, $file);
 		break;
 
+		case 5:
+			return new city($id, $dat, $file);
+		break;
+
 		case 7:
 			return new factoryTemplate($id, $dat, $file);
-		break;
-		
-		case 8:
-			return new city($id, $dat, $file);
 		break;
 
 		default:
