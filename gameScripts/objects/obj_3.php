@@ -47,6 +47,8 @@ priceButton.innerHTML = "Set Prices";
 */
 var laborSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", laborSection, "Labor Pool - show available labor");
+laborAdj = newButton(laborSection, function () {scrMod("1018,'.$postVals[1].'")});
+laborAdj.innerHTML = "Set labor";
 for (var i=0; i<factoryLabor.length; i++) {
 	laborBox(factoryLabor[i], laborSection);
 }
