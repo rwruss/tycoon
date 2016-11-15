@@ -45,13 +45,14 @@ sendButton.innerHTML = "Set production";
 priceButton = newButton(thisDiv, function () {scrMod("1011,'.$postVals[1].'")});
 priceButton.innerHTML = "Set Prices";
 */
+
 var laborSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", laborSection, "Labor Pool - show available labor");
-laborAdj = newButton(laborSection, function () {scrMod("1018,'.$postVals[1].'")});
-laborAdj.innerHTML = "Set labor";
 for (var i=0; i<factoryLabor.length; i++) {
 	laborBox(factoryLabor[i], laborSection);
 }
+laborButton = newButton(thisDiv, function () {scrMod("1018,'.$postVals[1].'")});
+sendButton.innerHTML = "Adjust Labor";
 
 var reqBox = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", reqBox, "Per unit of production, this requires:");
