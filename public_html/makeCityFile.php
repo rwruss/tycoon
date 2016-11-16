@@ -2,20 +2,31 @@
 
 $cityFile = fopen('cities.dat', 'wb');
 
-$cityArray = array_fill(1, 1000, 1000);
+$numProducts = 10000;
+$numLabor = 1000;
+$extra = 250;
+
+$now = time();
+
+$cityArray = array_fill(1, $extra+($numProducts+$numLabor)*2, 1000);
 $cityArray[5] = 5;
-$cityArray[11] = 10;
-$cityArray[12] = 1000000;
-$cityArray[13] = 0;
-$cityArray[14] = 0;
+$cityArray[10] = $now;  // update time
+$cityArray[11] = 10; // size tier
+$cityArray[12] = 1000000; // population
+$cityArray[13] = 0; // education levle
+$cityArray[14] = 0; // affluence
+$cityArray[15] = $now; // labor update time
+$cityArray[16] = $now; // base labor time
 
 
 $cityData = packArray($cityArray);
 $dataCheck = unpack('i*', $cityData);
-print_R($dataCheck);
+$dataSize = strlen($cityData);
+//print_R($dataCheck);
+echo 'Data block size is '.$dataSize;
 
-for ($i=0; $i<1000; $i++) {
-  fseek($cityFile, $i*4000);
+for ($i=0; $i<500; $i++) {
+  fseek($cityFile, $i*$dataSize);
   fwrite($cityFile, $cityData);
 }
 

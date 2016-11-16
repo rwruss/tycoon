@@ -15,6 +15,9 @@
 1015 - MENU: Sell to a city
 1016 - Output pricing for items at a city
 1017 - PROCESS: Selling items to a city
+1018 - Assign labor to factory
+1019 - MENU: Hire labor
+1020 - PROCESS: Load labor available at city
 
 http://playdosgamesonline.com/capitalism.html
 
@@ -29,3 +32,6 @@ http://www.bbc.com/earth/story/20161021-why-there-could-be-many-copies-of-you
 
 Graphics
 https://www.quora.com/Whats-the-coolest-thing-you-can-get-a-computer-to-do-in-10-lines-of-code/answer/Liber-Liu
+
+cities
+https://en.wikipedia.org/wiki/List_of_urban_areas_by_population

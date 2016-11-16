@@ -5,6 +5,7 @@ require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 
@@ -28,5 +29,6 @@ laborAdj.innerHTML = "Hire labor";';
 
 fclose($objFile);
 fclose($slotFile);
+fclose($cityFile);
 
 ?>

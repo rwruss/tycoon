@@ -342,17 +342,21 @@ class factory extends object {
 }
 
 class city extends object {
-	private $dRateOffset, $dLevelOffset, $cityBlockSize;
+	private $dRateOffset, $dLevelOffset, $cityBlockSize, $laborDemandOffset, $laborStoreOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
-		$this->dRateOffset = 50;
-		$this->dLevelOffset = 500;
-		$this->cityBlockSize = 4000;
+		// Total of 22250 items
+		$this->dRateOffset = 250;
+		$this->dLevelOffset = 10250;
+		$this->laborDemandOffset = 20250;
+		$this->laborStoreOffset = 21250;
+		$this->cityBlockSize = 89000;
 
 		$this->attrList['population'] = 12;
-
+		$this->attrList['baseTime'] = 15;
+		$this->attrList['laborUpdateTime'] = 16;
 	}
 
 	function demandRate($productID) {
@@ -392,6 +396,18 @@ class city extends object {
 	function currentDemand($productNumber, $now) {
 		$elapsed = $now-$this->get('lastUpdate');
 		return(min($elapsed*$this->demandRate($productNumber)/(3600*1000000)+$this->demandLevel($productNumber), 2.0*$this->baseDemand($productNumber)));
+	}
+
+	function updateLabor($now) {
+		echo 'Item size: '.sizeof($this->objDat);
+		$newTime = $now - $this->get('baseTime');
+		$pvsTime = $this->get('laborUpdateTime') - $this->get('baseTime');
+
+		for ($i=0; $i<1000; $i++) {
+			$addAmt = intval($newTime/$this->objDat[$this->laborDemandOffset+$i]) - intval($pvsTime/$this->objDat[$this->laborDemandOffset+$i]);
+			$this->objDat[$this->laborStoreOffset+$i] += $addAmt;
+			//echo '('.$newTime.'/'.$pvsTime.') ->> ('.intval($newTime/$this->objDat[$this->laborDemandOffset+$i]).')/('.intval($pvsTime/$this->objDat[$this->laborDemandOffset+$i]).') divisor: '.$this->objDat[$this->laborDemandOffset+$i].' Add '.$addAmt.' to labor item #'.$i;
+		}
 	}
 
 }
@@ -456,9 +472,9 @@ function loadProduct($id, $file, $size) {
 	return new product($id, $dat, $file);
 }
 
-function loadCity($id, $file, $size) {
-	fseek($file, $id*$size);
-	$dat = unpack('i*', fread($file, $size));
+function loadCity($id, $file) {
+	fseek($file, $id*89000);
+	$dat = unpack('i*', fread($file, 89000));
 
 	return new city($id, $dat, $file);
 }

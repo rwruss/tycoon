@@ -8,7 +8,7 @@ $offerFile = fopen($gamePath.'/saleOffers.slt', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
 // Load the city information
-$thisCity = loadCity($postVals[2], $cityFile, 4000);
+$thisCity = loadCity($postVals[2], $cityFile);
 
 // Calculate the current demands for each product at the city and the corresponding price
 $now = time();
