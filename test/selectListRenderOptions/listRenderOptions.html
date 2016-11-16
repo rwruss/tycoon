@@ -1,0 +1,63 @@
+<link rel="stylesheet" type="text/css" href="e:/websites/ib3/public_html/ib3styles.css">
+<script src="e:/websites/tycoon/public_html/templates.js"></script>
+<script src="e:/websites/tycoon/public_html/selectList.js"></script>
+<script>
+
+class testObject {
+	constructor(val) {
+		this.testVal = val[0],
+		this.price = val[1];
+		this.qty = val[2];
+	}
+	
+	renderSummary(trg) {
+		let thisSummary = addDiv("", "button", trg);
+		thisSummary.style.backgroundColor = "white";
+		thisSummary.innerHTML = this.testVal + ' -> ' + this.price;
+		return thisSummary;
+	}
+	
+	renderFunction2(trg, qty) {
+		let thisSummary = addDiv("", "button", trg);
+		thisSummary.style.backgroundColor = "white";
+		thisSummary.innerHTML = "item " + this.testVal + " qty render" + qty;
+		return thisSummary;
+	}
+}
+
+var qtyArray = [10, 11, 12];
+
+function initTest() {
+	
+	objectList = [new testObject([1, 2, 3]), 
+	new testObject([4, 5, 6]),
+	new testObject([7, 8, 9])];
+	objectUList = new uList(objectList);
+	objectUList.addSort("testVal", "Test Options");
+	objectUList.addSort("price", "Price");
+	playerResources = [10,1,2,3,4,6,7];
+	otherResources = [2,3,4,5,6,7,8,9,0];
+	
+	testRenderFunction = function (x, y, z) {
+		console.log("item #" + z);
+		return x.renderFunction2(y, qtyArray[z]);
+	}
+	
+	selectButton1 = objectUList.SLsingleButton("gmPnl");
+	selectButton1.innerHTML = "Button 1";
+	selectButton2 = objectUList.SLsingleButton("gmPnl", {renderFunction:testRenderFunction});
+	selectButton2.innerHTML = "Button 2";
+	
+	sendButton = newButton("gmPnl", function () {
+      console.log(SLreadSelection(selectButton1));
+      console.log("1126,"+SLreadSelection(selectButton1));
+    });
+	sendButton.innerHTML = "Send Button";
+}
+
+window.addEventListener("load", initTest);
+</script>
+
+<div id="gmPnl" class="container"></div>
+
+

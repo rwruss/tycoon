@@ -409,6 +409,10 @@ class city extends object {
 			//echo '('.$newTime.'/'.$pvsTime.') ->> ('.intval($newTime/$this->objDat[$this->laborDemandOffset+$i]).')/('.intval($pvsTime/$this->objDat[$this->laborDemandOffset+$i]).') divisor: '.$this->objDat[$this->laborDemandOffset+$i].' Add '.$addAmt.' to labor item #'.$i;
 		}
 	}
+	
+	function availableLabor() {
+		return array_slice($this->objDat, $laborStoreOffset, 1000);
+	}
 
 }
 

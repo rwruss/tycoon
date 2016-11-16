@@ -17,18 +17,35 @@ class objectList {
 		selectButton.innerHTML = "button";
 		let item = this;
 		selectButton.listItem = this;
-		selectButton.addEventListener("click", function () {item.SLsingleSelect(selectButton)});
+		//selectButton.addEventListener("click", function () {item.SLsingleSelect(selectButton)});
 		selectButton.selectedValue = 0;
+		var renderFunction = function(x, y) {
+				return item.showItem(x, y);
+			}
 		if (typeof opts !== "undefined") {
 			if (opts.setVal) {
 				console.log("set value");
 				this.existingValue(selectButton, opts);
 			}
+			if (opts.renderFunction) {
+				
+				//selectButton.addEventListener("click", function () {item.SLsingleSelect(selectButton, opts.renderFunction)});
+				renderFunction = opts.renderFunction;
+			} else {
+
+			}
 		}
+		//console.log("Make a button with this function");
+		//console.log(renderFunction);
+		selectButton.addEventListener("click", function () {
+			//console.log("passing function " + renderFunction + " from button " + selectButton.innerHTML);
+			item.SLsingleSelect(selectButton, renderFunction)
+			});
 		return selectButton;
 	}
 
-	SLsingleSelect(target) {
+	SLsingleSelect(target, renderFunction) {
+		//console.log("SLSELECT: " + target.innerHTML + " function is " + renderFunction)
 		var showContain;
 		if (document.getElementById("selectMenu")) showContain = document.getElementById("selectMenu");
 		else showContain = addDiv("selectMenu", "selectMenu", "gmPnl");
@@ -54,11 +71,12 @@ class objectList {
 		showContain.content.style.position = "relative";
 		showContain.content.innerHTML = "";
 
-
-		this.SLshowList(target, showContain.content);
+		//console.log("pass this function");
+		//console.log(renderFunction);
+		this.SLshowList(target, showContain.content, renderFunction);
 	}
 
-	SLshowList(target, selectContainer) {
+	SLshowList(target, selectContainer, renderFunction) {
 		console.log(target);
 		selectContainer.innerHTML = "";
 		for (var i=0; i<this.listItems.length; i++) {
@@ -70,7 +88,11 @@ class objectList {
 					subtarg.SLsingleSelect(target, function() {})
 					});
 			} else {
-			let object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
+			//let object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
+			console.log(renderFunction);
+			let object = renderFunction(this.parentList[this.listItems[i]], selectContainer, i);
+			console.log("created object " + object)
+			console.log(this.parentList[this.listItems[i]]);
 			object.owner = this;
 			object.objID = this.listItems[i];
 			//console.log(this.listItems[i]);
@@ -79,7 +101,8 @@ class objectList {
 				console.log("set slected to " + object.objID + " which equals " + this.owner);
 				object.parentNode.parentNode.remove();
 				SlclearTarget(target);
-				this.owner.showSelected(object.objID, target);
+				//this.owner.showSelected(object.objID, target);
+				renderFunction(object.owner.parentList[object.objID], target);
 				});
 			}
 		}
@@ -200,14 +223,8 @@ class uList extends objectList {
 	}
 
 	showItem(id, trg) {
-		//console.log(this.parentList);
-		//console.log(id);
 		var objBox = id.renderSummary(trg);
-		/*
-		let objBox = addDiv("", "objContain", trg);
-		let objContent = addDiv("", "objContent", objBox);
-		objContent.innerHTML = id;
-		*/
+		console.log("Show the default uList item " + objBox)
 		return objBox;
 	}
 

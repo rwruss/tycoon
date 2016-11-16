@@ -12,6 +12,10 @@ $thisCity = loadCity($postVals[1], $cityFile);
 $now = time();
 $thisCity->updateLabor($now);
 
+echo '<script>
+availableLabor = new uList(makeLaborItems('.implode(',', $thisCity->availableLabor().'));
+</script>';
+
 fclose($objFile);
 fclose($slotFile);
 fclose($cityFile);
