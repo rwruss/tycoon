@@ -54,13 +54,39 @@ class objectList {
 
 		let sortTarget = this;
 		for (var i=0; i<this.sortOptions.length; i++) {
-		var sortButton = addDiv("", "button", showContain.sortBar)
-		sortButton.innerHTML = this.sortNames[i];
-		var testVal = this.sortOptions[i];
-		sortButton.addEventListener("click", function () {
+			var sortButton = addDiv("", "button", showContain.sortBar);
+			sortButton.innerHTML = this.sortNames[i];
+			var testVal = this.sortOptions[i];
+			sortButton.addEventListener("click", function () {
 				SLsortBy(sortTarget, testVal);
 				sortTarget.SLshowList(target, showContain.content);
-				});
+			});
+		}
+		for (var i=0; i<this.filterOptions.length; i++) {			
+			var filterBox = addDropMenu("", "", showContain.sortBar);
+			let filterTarget = this;
+			let prop = this.filterOptions[i];
+
+			// Get list of options
+			let itemList = ["None"];
+			for (var itemNum = 0; itemNum<this.listItems.length; itemNum++) {
+				if (itemList.indexOf(this.listItems[itemNum][prop]) == -1) {
+					itemList.push(this.listItems[itemNum][prop]);
+					let newOpt = document.createElement("option");
+					newOpt.text = this.listItems[itemNum][prop];
+					filterBox.add(newOpt);
+				}
+			}		
+		}
+		
+		if (this.filterOptions.length > 0) {
+			var filterButton = addDiv("", "button", showContain.sortBar);
+			sortButton.innerHTML = "Apply Filters";
+			
+			sortButton.addEventListener("change", function () {
+				SLFilterBy(filterTaget, prop this.value);
+				filterTarget.SLshowList(target, showContain.content);
+			});
 		}
 
 
@@ -326,4 +352,14 @@ SLsortBy = function (listObj, prm) {
 		console.log(a[prm] + " vs " + b[prm]);
 		return (a[prm] - b[prm])*listObj.sortDir});
 	//console.log(listObj.parentList);
+}
+
+SLfilterBy = function(listObj, prop, val) {
+	let showList = [];
+	for (var i=0; i<listObj.listItems.length; i++) {
+		if (listObj.listItems[i][prop] == val) {
+			showList.push(listObj.listItems[i]);
+		}
+	}
+	listObj.listItems = showList;
 }

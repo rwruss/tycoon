@@ -51,6 +51,19 @@ addImg = function(id, useClassName, target) {
 	return newImg;
 }
 
+addSelect = function(id, useClassName, target) {
+	var trg;
+	if (typeof(target) == "string") trg = document.getElementById(target);
+	else trg = target;
+	
+	var newSelect = document.createElement("select");
+	newSelect.className = useClassName;
+	
+	trg.appendChild(newSelect);
+	
+	return newSelect;
+}
+
 confirmBox = function (msg, prm, type, trg, aSrc, dSrc) {
 	var boxHolder = addDiv("confirmBox", "cBox", document.getElementsByTagName('body')[0]);
 	boxHolder.style.zIndex = zCount+9999;
@@ -969,4 +982,13 @@ runClock = function (endTime, target) {
 
 	target.innerHTML = ("0" + hrs).slice(-2) + " : " + ("0" + mins).slice(-2) + " : " + ("0" + secs).slice(-2);
 	//if (!target.runClock) clearInterval(target.clockObj);
+}
+
+filterDuplicates(a) {
+	var dupList = [];
+	if (dupList.indexOf(a) == -1) {
+		dupList.push(a);
+		return true;
+	}
+	return false;
 }
