@@ -13,7 +13,11 @@ $now = time();
 $thisCity->updateLabor($now);
 
 echo '<script>
-availableLabor = new uList(makeLaborItems('.implode(',', $thisCity->availableLabor().'));
+
+laborSelect = new uList(laborArray, {useItems:[1, 5, 7, 9]});
+laborBox1 = laborSelect.SLsingleButton(showLaborArea, {renderFunction: (function (x, y, z) {
+  console.log("item #" + z);
+  return x.renderQty(y, 100);})});
 </script>';
 
 fclose($objFile);

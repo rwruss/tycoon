@@ -159,6 +159,7 @@ class labor {
 	}
 
 	renderSummary(target) {
+		console.log("rendum");
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);
@@ -166,8 +167,20 @@ class labor {
 		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
+		thisDiv.nameDiv.innerHTML = "Labor - " + this.objID;
+		return thisDiv;
+	}
+
+	renderQty(target, qty) {
+		console.log("renderdqty");
+		var thisDiv = addDiv(null, 'productHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
 		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
-		thisDiv.qtyDiv.innerHTML = this.qty;
+		thisDiv.qtyDiv.innerHTML = qty;
 
 		thisDiv.nameDiv.innerHTML = "Labor - " + this.objID;
 		return thisDiv;

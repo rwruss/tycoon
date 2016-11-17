@@ -28,7 +28,7 @@ class objectList {
 				this.existingValue(selectButton, opts);
 			}
 			if (opts.renderFunction) {
-				
+
 				//selectButton.addEventListener("click", function () {item.SLsingleSelect(selectButton, opts.renderFunction)});
 				renderFunction = opts.renderFunction;
 			} else {
@@ -51,8 +51,6 @@ class objectList {
 		else showContain = addDiv("selectMenu", "selectMenu", "gmPnl");
 
 		showContain.sortBar = addDiv("", "selectSort", showContain);
-
-
 
 		let sortTarget = this;
 		for (var i=0; i<this.sortOptions.length; i++) {
@@ -77,7 +75,7 @@ class objectList {
 	}
 
 	SLshowList(target, selectContainer, renderFunction) {
-		console.log(target);
+		//console.log(target);
 		selectContainer.innerHTML = "";
 		for (var i=0; i<this.listItems.length; i++) {
 			if (this.parentList[this.listItems[i]] instanceof objectList) {
@@ -89,10 +87,9 @@ class objectList {
 					});
 			} else {
 			//let object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
-			console.log(renderFunction);
+			//console.log(renderFunction);
 			let object = renderFunction(this.parentList[this.listItems[i]], selectContainer, i);
-			console.log("created object " + object)
-			console.log(this.parentList[this.listItems[i]]);
+
 			object.owner = this;
 			object.objID = this.listItems[i];
 			//console.log(this.listItems[i]);
@@ -198,10 +195,16 @@ class uList extends objectList {
 		console.log(parentList);
 		this.listItems = Object.keys(parentList);
 		if (typeof opts !== "undefined") {
+			console.log("review otts")
 			//if (opts.items.length > 0) this.listItems = opts.items;
 			this.listItems = opts.items || this.listItems;
 			this.prefix = opts[1] || 1;
+			if (opts.useItems) {
+				console.log("select list items");
+				this.listItems = opts.useItems;
+			}
 		}
+
 		this.parentList = parentList;
 
 	}
@@ -224,7 +227,7 @@ class uList extends objectList {
 
 	showItem(id, trg) {
 		var objBox = id.renderSummary(trg);
-		console.log("Show the default uList item " + objBox)
+		//console.log("Show the default uList item " + objBox)
 		return objBox;
 	}
 

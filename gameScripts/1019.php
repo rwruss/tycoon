@@ -19,7 +19,7 @@ cityBox1 = citySelect.SLsingleButton(thisDiv);
 cityButton = newButton(thisDiv, function () {scrMod("1020,'.$postVals[1].',"+ SLreadSelection(cityBox1))})
 cityButton.innerHTML = "select this city";
 
-var showLaborArea = addDiv("productArea", "standardContain", thisDiv);
+var showLaborArea = addDiv("showLaborArea", "standardContain", thisDiv);
 textBlob("", showLaborArea, "Options in this city");';
 
 fclose($objFile);

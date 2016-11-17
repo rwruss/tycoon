@@ -51,8 +51,8 @@ textBlob("", laborSection, "Labor Pool - show available labor");
 for (var i=0; i<factoryLabor.length; i++) {
 	laborBox(factoryLabor[i], laborSection);
 }
-laborButton = newButton(thisDiv, function () {scrMod("1018,'.$postVals[1].'")});
-sendButton.innerHTML = "Adjust Labor";
+laborButton = newButton(laborSection, function () {scrMod("1018,'.$postVals[1].'")});
+laborButton.innerHTML = "Adjust Labor";
 
 var reqBox = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", reqBox, "Per unit of production, this requires:");

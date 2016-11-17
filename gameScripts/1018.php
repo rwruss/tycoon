@@ -20,11 +20,16 @@ thisDiv = useDeskTop.getPane("laborPane");
 var addLabor = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", addLabor, "Labor Pool - show available labor");
 
-laborSelect = new uList(laborArray);
-laborBox1 = laborSelect.SLsingleButton(addLabor);
+useFunction = function (x, y, z) {
+  console.log("item #" + z);
+  return x.renderQty(y, 100);}
+laborSelect = new uList(laborArray, {useItems:[1, 5, 7, 9]});
+laborBox1 = laborSelect.SLsingleButton(addLabor, {renderFunction: (function (x, y, z) {
+  console.log("item #" + z);
+  return x.renderQty(y, 100);})});
 
 laborAdj = newButton(addLabor, function () {scrMod("1019,'.$postVals[1].'")});
-laborAdj.innerHTML = "Hire labor";';
+laborAdj.innerHTML = "Hire labor";</script>';
 
 
 fclose($objFile);
