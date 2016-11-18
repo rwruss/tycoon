@@ -1,6 +1,8 @@
 class objectList {
 	constructor () {
 		this.sortOptions = [];
+		this.filterOptions = [];
+		this.filterNames = [];
 		this.sortNames = [];
 		this.sortBy = null;
 		this.sortDir = 1;
@@ -11,6 +13,11 @@ class objectList {
 		this.sortNames.push(desc);
 	}
 
+	addFilter(val, desc) {
+		this.filterOptions.push(val);
+		this.filterNames.push(desc);
+	}
+
 	SLsingleButton(target, opts) {
 
 		var selectButton = addDiv("b1", "button", target);
@@ -18,7 +25,7 @@ class objectList {
 		let item = this;
 		selectButton.listItem = this;
 		//selectButton.addEventListener("click", function () {item.SLsingleSelect(selectButton)});
-		selectButton.selectedValue = 0;
+		selectButton.selectedValue = false;
 		var renderFunction = function(x, y) {
 				return item.showItem(x, y);
 			}
@@ -59,33 +66,45 @@ class objectList {
 			var testVal = this.sortOptions[i];
 			sortButton.addEventListener("click", function () {
 				SLsortBy(sortTarget, testVal);
-				sortTarget.SLshowList(target, showContain.content);
+				sortTarget.SLshowList(target, showContain.content, renderFunction);
 			});
 		}
-		for (var i=0; i<this.filterOptions.length; i++) {			
-			var filterBox = addDropMenu("", "", showContain.sortBar);
-			let filterTarget = this;
+		let filterTarget = this;
+		var filterBox;
+		for (var i=0; i<this.filterOptions.length; i++) {
+			console.log("filter for property " + this.filterOptions[i]);
+			filterBox = addSelect("", "", showContain.sortBar);
+
 			let prop = this.filterOptions[i];
 
 			// Get list of options
 			let itemList = ["None"];
 			for (var itemNum = 0; itemNum<this.listItems.length; itemNum++) {
-				if (itemList.indexOf(this.listItems[itemNum][prop]) == -1) {
-					itemList.push(this.listItems[itemNum][prop]);
+				console.log(this.parentList[this.listItems[itemNum]])
+				console.log("CHeck " + this.parentList[this.listItems[itemNum]] + " for prop " + prop)
+				if (itemList.indexOf(this.parentList[this.listItems[itemNum]][prop]) == -1) {
+					itemList.push(this.parentList[this.listItems[itemNum]][prop]);
 					let newOpt = document.createElement("option");
-					newOpt.text = this.listItems[itemNum][prop];
+					newOpt.text = this.parentList[this.listItems[itemNum]][prop];
 					filterBox.add(newOpt);
 				}
-			}		
+			}
 		}
-		
+
 		if (this.filterOptions.length > 0) {
 			var filterButton = addDiv("", "button", showContain.sortBar);
-			sortButton.innerHTML = "Apply Filters";
-			
-			sortButton.addEventListener("change", function () {
-				SLFilterBy(filterTaget, prop this.value);
-				filterTarget.SLshowList(target, showContain.content);
+			filterButton.innerHTML = "Apply Filters";
+
+			filterButton.addEventListener("click", function () {
+				console.log("apply filters");
+				for (var p=0; p<filterTarget.filterOptions.length; p++) {
+					filterTarget.listItems = filterTarget.startItems;
+					SLFilterBy(filterTarget, filterTarget.filterOptions[p], filterBox.value);
+					console.log("fitlered list " + filterTarget.listItems);
+					console.log(filterTarget);
+
+					filterTarget.SLshowList(target, showContain.content, renderFunction);
+				}
 			});
 		}
 
@@ -124,6 +143,8 @@ class objectList {
 				console.log("set slected to " + object.objID + " which equals " + this.owner);
 				object.parentNode.parentNode.remove();
 				SlclearTarget(target);
+				console.log(this.owner);
+				target.selectedValue = this.owner.parentList[object.objID].objID;
 				//this.owner.showSelected(object.objID, target);
 				renderFunction(object.owner.parentList[object.objID], target);
 				});
@@ -230,7 +251,7 @@ class uList extends objectList {
 				this.listItems = opts.useItems;
 			}
 		}
-
+		this.startItems = this.listItems;
 		this.parentList = parentList;
 
 	}
@@ -249,6 +270,8 @@ class uList extends objectList {
 		console.log("return a value of " + trg.selectedValue);
 		console.log(trg);
 		return "2,"+trg.selectedValue;
+		//if (trg.selectedValue) return "2,"+trg.selectedValue;
+		//return false;
 	}
 
 	showItem(id, trg) {
@@ -354,11 +377,15 @@ SLsortBy = function (listObj, prm) {
 	//console.log(listObj.parentList);
 }
 
-SLfilterBy = function(listObj, prop, val) {
+SLFilterBy = function(listObj, prop, val) {
+	console.log("run filter");
 	let showList = [];
 	for (var i=0; i<listObj.listItems.length; i++) {
-		if (listObj.listItems[i][prop] == val) {
+		if (listObj.parentList[listObj.listItems[i]][prop] == val) {
+			console.log(listObj.parentList[listObj.listItems[i]][prop] + " = " + val);
 			showList.push(listObj.listItems[i]);
+		} else {
+			console.log(listObj.parentList[listObj.listItems[i]][prop] + " != " + val)
 		}
 	}
 	listObj.listItems = showList;

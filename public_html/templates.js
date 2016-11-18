@@ -55,12 +55,12 @@ addSelect = function(id, useClassName, target) {
 	var trg;
 	if (typeof(target) == "string") trg = document.getElementById(target);
 	else trg = target;
-	
+
 	var newSelect = document.createElement("select");
 	newSelect.className = useClassName;
-	
+
 	trg.appendChild(newSelect);
-	
+
 	return newSelect;
 }
 
@@ -984,7 +984,7 @@ runClock = function (endTime, target) {
 	//if (!target.runClock) clearInterval(target.clockObj);
 }
 
-filterDuplicates(a) {
+filterDuplicates = function (a) {
 	var dupList = [];
 	if (dupList.indexOf(a) == -1) {
 		dupList.push(a);

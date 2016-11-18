@@ -1037,8 +1037,9 @@ echo '
 		}
 
 		laborArray = new Array();
+		descSwith = ["dumbasses", "not dumbasses"];
 		for (var i=0; i<100; i++) {
-			laborArray.push(new labor({objType:product, objID:(i), objName:"labor " + i}));
+			laborArray.push(new labor({objType:product, objID:(i), objName:"labor " + i, edClass:(descSwith[i%2])}));
 		}
 
 		factoryArray = new Array();

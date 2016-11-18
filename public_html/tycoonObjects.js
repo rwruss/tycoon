@@ -155,6 +155,7 @@ class labor {
 		this.objID = details.objID,
 		this.objName = details.objName,
 		this.qty = details.qty || 0;
+		this.edClass = details.edClass || "None";
 		//console.log('create product ' + this.objID);
 	}
 

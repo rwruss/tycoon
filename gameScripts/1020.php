@@ -14,10 +14,18 @@ $thisCity->updateLabor($now);
 
 echo '<script>
 
-laborSelect = new uList(laborArray, {useItems:[1, 5, 7, 9]});
+laborSelect = new uList(laborArray, {useItems:[1, 5, 7, 8, 9]});
+laborSelect.addFilter("edClass", "Education");
 laborBox1 = laborSelect.SLsingleButton(showLaborArea, {renderFunction: (function (x, y, z) {
   console.log("item #" + z);
   return x.renderQty(y, 100);})});
+hireButton =  newButton(thisDiv, function () {
+  let readCheck = SLreadSelection(laborBox1);
+  //console.log("readcheck is " + readCheck);
+  if (readCheck)  scrMod("1021,'.$postVals[1].',"+ readCheck);
+  else console.log("no value");
+})
+hireButton.innerHTML = "Hire";
 </script>';
 
 fclose($objFile);
