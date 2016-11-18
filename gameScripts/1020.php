@@ -9,12 +9,26 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
 $thisCity = loadCity($postVals[1], $cityFile);
 
+// Update city labor to show latest items
 $now = time();
-$thisCity->updateLabor($now);
+$citySchools = new itemSlot($thisCity->get('schoolSlot'), $slotFile, 40);
+$cityLaborSlot = $thisCity->updateLabor($now, $citySchools, $laborRates, $slotFile);
+
 
 echo '<script>
 
-laborSelect = new uList(laborArray, {useItems:[1, 5, 7, 8, 9]});
+laborList = ['.;
+
+if (sizeof($cityLaborSlot->slotData) > 9) {
+	echo 'new laborItem(1, 2, 3, 4, 5, 6, 7, 8, 9)';
+}
+for ($i=11; $i<cityLaborSlot->slotData; $i++) {
+	echo ', new laborItem(1, 2, 3, 4, 5, 6, 7, 8, 9)';
+}
+
+echo '];
+
+laborSelect = new uList(laborList);
 laborSelect.addFilter("edClass", "Education");
 laborBox1 = laborSelect.SLsingleButton(showLaborArea, {renderFunction: (function (x, y, z) {
   console.log("item #" + z);
@@ -22,7 +36,7 @@ laborBox1 = laborSelect.SLsingleButton(showLaborArea, {renderFunction: (function
 hireButton =  newButton(thisDiv, function () {
   let readCheck = SLreadSelection(laborBox1);
   //console.log("readcheck is " + readCheck);
-  if (readCheck)  scrMod("1021,'.$postVals[1].',"+ readCheck);
+  if (readCheck)  scrMod("1021,'.$postVals[1].','.$postVals[3].',"+ readCheck);
   else console.log("no value");
 })
 hireButton.innerHTML = "Hire";
