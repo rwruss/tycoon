@@ -14,9 +14,11 @@ $cityArray[10] = $now;  // update time
 $cityArray[11] = 10; // size tier
 $cityArray[12] = 1000000; // population
 $cityArray[13] = 0; // education levle
-$cityArray[14] = 0; // affluence
+$cityArray[14] = 100; // affluence
 $cityArray[15] = $now; // labor update time
 $cityArray[16] = $now; // base labor time
+$cityArray[17] = 0; // school slot
+$cityArray[18] = 0; // school slot
 
 
 $cityData = packArray($cityArray);

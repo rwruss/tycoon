@@ -3,36 +3,46 @@
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 
-$thisCity = loadCity($postVals[1], $cityFile);
+$thisCity = loadCity($postVals[3], $cityFile);
 
 // Update city labor to show latest items
+$laborRates = array_fill(0, 1000, 1000);
+$laborRates[1] = 3600;
 $now = time();
 $citySchools = new itemSlot($thisCity->get('schoolSlot'), $slotFile, 40);
-$cityLaborSlot = $thisCity->updateLabor($now, $citySchools, $laborRates, $slotFile);
 
+//insert testVal into schoolSlot
+$citySchools->slotData[1] = 1;
+print_r($citySchools->slotData);
+
+
+$cityLaborSlot = $thisCity->updateLabor($now, $citySchools, $laborRates, $slotFile);
+print_r($cityLaborSlot->slotData);
+
+$checkSlot = new blockSlot($thisCity->get('laborSlot'), $slotFile, 40);
+echo 'Slot Check:';
+print_R($checkSlot->slotData);
 
 echo '<script>
 
-laborList = ['.;
+laborList = [';
 
 if (sizeof($cityLaborSlot->slotData) > 9) {
-	echo 'new laborItem(1, 2, 3, 4, 5, 6, 7, 8, 9)';
+	echo 'new laborItem({objID:1, pay:'.$cityLaborSlot->slotData[6].', ability:'.$cityLaborSlot->slotData[8].', laborType:'.$cityLaborSlot->slotData[8+2].'})';
 }
-for ($i=11; $i<cityLaborSlot->slotData; $i++) {
-	echo ', new laborItem(1, 2, 3, 4, 5, 6, 7, 8, 9)';
+for ($i=11; $i<sizeof($cityLaborSlot->slotData); $i+=10) {
+  if ($cityLaborSlot->slotData[$i] > 0)	echo ', new laborItem({objID:'.$i.', pay:'.$cityLaborSlot->slotData[$i+5].', ability:'.$cityLaborSlot->slotData[$i+6].', laborType:'.$cityLaborSlot->slotData[$i+1].'})';
 }
 
 echo '];
 
 laborSelect = new uList(laborList);
 laborSelect.addFilter("edClass", "Education");
-laborBox1 = laborSelect.SLsingleButton(showLaborArea, {renderFunction: (function (x, y, z) {
-  console.log("item #" + z);
-  return x.renderQty(y, 100);})});
+laborBox1 = laborSelect.SLsingleButton(showLaborArea);
 hireButton =  newButton(thisDiv, function () {
   let readCheck = SLreadSelection(laborBox1);
   //console.log("readcheck is " + readCheck);

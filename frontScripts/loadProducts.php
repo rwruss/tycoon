@@ -5,6 +5,7 @@ $dataBlockSize = 1000;
 $scenario = 1;
 $objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'r+b');
 $nameFile = fopen('../scenarios/'.$scenario.'/objNames.dat', 'w');
+$laborNameFile = fopen('../scenarios/'.$scenario.'/laborNames.dat', 'w');
 
 // Load labor descriptions
 $laborFile = fopen('../scenarios/'.$scenario.'/laborDesc.csv', 'rb');
@@ -17,6 +18,13 @@ foreach ($laborItems as $key => $value) {
   echo 'Key '.$key.' has a length of '.strlen($key).' and a value of '.$value.'<br>';
 }
 print_R($laborItems);
+
+fseek($laborFile, 0);
+$line = fgets($laborFile);
+fwrite($laborNameFile, '"'.trim($line).'"');
+while (($line = fgets($laborFile)) !== false) {
+  fwrite($laborNameFile, ', "'.trim($line).'"');
+}
 
 // Load each product description into the product array
 $productFile = fopen('../scenarios/'.$scenario.'/products.csv', 'rb');
@@ -154,6 +162,7 @@ fclose($laborFile);
 fclose($factoryFile);
 fclose($objFile);
 fclose($nameFile);
+fclose($laborNameFile);
 
 // create sales file
 $salesFile = fopen('../scenarios/'.$scenario.'/saleOffers.slt', 'wb');

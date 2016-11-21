@@ -1,6 +1,7 @@
 <?php
 
 $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
+$laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
 $numProducts = 33;
 $numFactories = 8;
 
@@ -1017,6 +1018,7 @@ echo '
 
 		objNames = ['.implode(',', array_slice($namesList, 0, $numProducts)).'];
 		factoryNames = ['.implode(',', array_slice($namesList, $numProducts)).'];
+		laborNames = ['.$laborNameList.']
 		console.log(objNames);
 		console.log(factoryNames);
 		var numProducts = '.$numProducts.';
@@ -1039,7 +1041,7 @@ echo '
 		laborArray = new Array();
 		descSwith = ["dumbasses", "not dumbasses"];
 		for (var i=0; i<100; i++) {
-			laborArray.push(new labor({objType:product, objID:(i), objName:"labor " + i, edClass:(descSwith[i%2])}));
+			laborArray.push(new labor({objType:product, objID:(i), objName:"labor " + i, edClass:(descSwith[i%2]), laborType:(i)}));
 		}
 
 		factoryArray = new Array();

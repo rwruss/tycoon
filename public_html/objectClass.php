@@ -24,7 +24,7 @@ class object {
 		$this->attrList['owner'] = 5;
 		$this->attrList['subType'] = 9;
 		$this->attrList['lastUpdate'] = 10;
-		
+
 		$this->itemBlockSize = 100;
 	}
 
@@ -52,7 +52,7 @@ class object {
 			return false;
 		}
 	}
-	
+
 	function saveItem($loc, $val) {
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc*4-4);
 		fwrite($this->linkFile, pack('i', $val));
@@ -83,7 +83,7 @@ class business extends object {
 }
 
 class factory extends object {
-	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset; 
+	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -168,7 +168,7 @@ class factory extends object {
 
 		$inputIndex = 1;
 		$inputInventoryIndex = 61;
-		
+
 		$this->laborOffset = 131;
 
 		// Load template information
@@ -333,13 +333,13 @@ class factory extends object {
 	function materialOrders() {
 		return array_slice($this->objDat, 55, 30);
 	}
-	
+
 	function adjustLabor($laborSpot, $laborDat) {
-		$packDat = pack('i*', $laborDat[1], $laborDat[2], $laborDat[3], $laborDat[4] $laborDat[5], $laborDat[6], $laborDat[7], $laborDat[8], $laborDat[9], $laborDat[10]);
-		
+		$packDat = pack('i*', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->laborOffset+$laborSpot*10)*4-4);
 		fwrite($this->linkFile, $packDat);
-		
+
 		$this->objDat[$this->laborOffset+$laborSpot*10] = $laborDat[1];
 		$this->objDat[$this->laborOffset+$laborSpot*10+1] = $laborDat[2];
 		$this->objDat[$this->laborOffset+$laborSpot*10+2] = $laborDat[3];
@@ -368,8 +368,11 @@ class city extends object {
 		$this->itemBlockSize = 89000;
 
 		$this->attrList['population'] = 12;
+		$this->attrList['affluence'] = 14;
 		$this->attrList['baseTime'] = 15;
 		$this->attrList['laborUpdateTime'] = 16;
+		$this->attrList['schoolSlot'] = 17;
+		$this->attrList['laborSlot'] = 18;
 	}
 
 	function demandRate($productID) {
@@ -412,52 +415,76 @@ class city extends object {
 	}
 
 	function updateLabor($now, $schoolList, $baseRates, $slotFile) {
+		echo 'Number of schools: '.sizeof($schoolList->slotData);
+		print_r($schoolList->slotData);
 		$schoolTypes = array_fill(0, 100, 0);
-		for ($i=1; $i<sizeof($schoolList->slotData); $i++) {
+		for ($i=1; $i<=sizeof($schoolList->slotData); $i++) {
+			echo 'Add school type '.$schoolList->slotData[$i];
 			$schoolTypes[$schoolList->slotData[$i]]++;
 		}
+		//echo 'School types:';
+		//print_r($schoolTypes);
 		$addList = [];
 		for ($i=1; $i<sizeof($schoolTypes); $i++) {
 			if ($schoolTypes[$i] > 0) {
 				$thisSchool = new School($i);
+
 				$newTime = $now - $this->get('baseTime');
 				$pvsTime = $this->get('laborUpdateTime') - $this->get('baseTime');
-				
-				for ($t=1; $t<1000; $t++) {
-					$addAmt = $schoolTypes[$i]*(intval($newTime/$thisSchool->schoolRates[$t]) - intval($pvsTime/$thisSchool->schoolRates[$t]));
-					$addList[$t] = $addAmt;
+				echo 'NEwtime:'.$newTime.' - PvsTime '.$pvsTime;
+
+				foreach($thisSchool->schoolRates as $laborType => $trainRate) {
+					$addAmt = $schoolTypes[$i]*(intval($newTime/$trainRate) - intval($pvsTime/$trainRate));
+					$addList[$laborType] = $addAmt;
+					echo 'Schools train '.$addAmt.' of type '.$laborType.' with a rate of '.$trainRate;
 				}
 			}
-		}
-		
-		$laborSlot = new blockSlot($this->get('laborSlot'), $slotFile, 40);
-		$emptySpots = [];
-		for ($i=1; $i<$laborSlot->slotData; $i+=10) {
-			if ($laborSlot->slotData[$i] == 0) $emptySpots[] = $i;
 		}
 
-		for ($a=0; $a<1000; $a++) {
-			if ($addList[$a] > 0) {
-				for ($n=0; $n<$addList[$n]; $n++) {
-					$pay = intval($baseRates[$a]*$this->get('affluence')*rand(90,100)/(100*1000));
-					
-					$loc = array_pop($emptySpots);
-					$dat = pack('i*', 0, $a, 0, 0, 0, $pay, $now, 0, 0, 0);  // education level, type, ability, start time, home region, expected pay, last update time, target upgrade
-					if (is_null($loc)) {
-						$laborSlot->addItem($slotFile, $dat);
-					} else {
-						$laborSlot->addItem($slotFile, $dat, $loc);
-					}					
+		if ($this->get('laborSlot') == 0) {
+			echo 'Make a new slot';
+			$this->save('laborSlot', newSlot($slotFile));
+		}
+		echo 'Labor slot is '.$this->get('laborSlot');
+		$laborSlot = new blockSlot($this->get('laborSlot'), $slotFile, 40);
+		print_R($laborSlot->slotData);
+
+		$emptySpots = [];
+		for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
+			if ($laborSlot->slotData[$i] == 0) $emptySpots[] = $i;
+		}
+		echo 'Empty Spots:';
+		print_r($emptySpots);
+
+		echo 'Add list:';
+		print_r($addList);
+		foreach ($addList as $laborID => $addAmount) {
+			echo 'Add '.$addAmount.' of labor type '.$laborID;
+			for ($n=0; $n<$addAmount; $n++) {
+				$pay = intval($baseRates[$laborID]*$this->get('affluence')*rand(90,110)/(10000));
+				echo 'Pay:'.$pay.' ('.$baseRates[$laborID].' * '.$this->get('affluence').')';
+				$loc = array_pop($emptySpots);
+				$dat = pack('i*', 1, $laborID, 0, 0, 0, $pay, $now, 0, 0, 0);  // education level, type, ability, start time, home region, expected pay, last update time, target upgrade
+				//$dat = pack('i*', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);  // education level, type, ability, start time, home region, expected pay, last update time, target upgrade
+				if (is_null($loc)) {
+					echo 'Add to end';
+					$laborSlot->addItem($slotFile, $dat, 0);
+				} else {
+
+					echo 'Add to loc '.$loc;
+					$laborSlot->addItem($slotFile, $dat, $loc);
 				}
 			}
 		}
+	// Record updated time
+	$this->save('laborUpdateTime', $now);
 	return ($laborSlot);
 	}
-	
+
 	function availableLabor() {
 		return array_slice($this->objDat, $this->laborStoreOffset, 1000);
 	}
-	
+
 	function saveLabor($id, $delta) {
 		$loc = $this->laborStoreOffset + $id;
 		$newVal = $this->objDat[$loc] + $delta;
@@ -515,6 +542,17 @@ class labor extends object {
 class factoryTemplate extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+	}
+}
+
+class school {
+	public $schoolRates;
+	function __construct($schoolType) {
+		switch($schoolType) {
+			case 1:
+				$this->schoolRates = array_fill(1, 4, 3600);
+			break;
+		}
 	}
 }
 

@@ -155,7 +155,8 @@ class labor {
 		this.objID = details.objID,
 		this.objName = details.objName,
 		this.qty = details.qty || 0;
-		this.edClass = details.edClass || "None";
+		this.edClass = details.edClass || "None",
+		this.laborType = details.laborType;
 		//console.log('create product ' + this.objID);
 	}
 
@@ -168,7 +169,7 @@ class labor {
 		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
-		thisDiv.nameDiv.innerHTML = "Labor - " + this.objID;
+		thisDiv.nameDiv.innerHTML = "Labor - " + laborNames[this.laborType];
 		return thisDiv;
 	}
 
@@ -183,7 +184,27 @@ class labor {
 		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
 		thisDiv.qtyDiv.innerHTML = qty;
 
-		thisDiv.nameDiv.innerHTML = "Labor - " + this.objID;
+		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
+		return thisDiv;
+	}
+}
+
+class laborItem extends labor {
+	constructor(details) {
+		super(details);
+		this.pay = details.pay;
+	}
+
+	renderSummary(target) {
+		console.log("rendum");
+		//console.log('draw ' + this.type)
+		var thisDiv = addDiv(null, 'productHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "Payasad: " + this.pay;
 		return thisDiv;
 	}
 }

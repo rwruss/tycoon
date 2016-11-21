@@ -7,18 +7,19 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
-$thisCity = loadCity($postVals[1], $cityFile);
-$thisFactory = loadObject($postVals[3], $objFile 400);
+$thisCity = loadCity($postVals[2], $cityFile);
+$thisFactory = loadObject($postVals[1], $objFile, 400);
 
 $laborSlot = new blockSlot($thisCity->get('laborSlot'), $slotFile, 40);
 
 // Read object dat for player storage
-$laborDat = pack()
+//$laborDat = pack()
 
 // Overwrite existing data with empty spot
 $laborSlot->addItem($slotFile, pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), $postVals[4]);
+print_R($laborSlot->slotData);
 
-echo 'Hire labor list item '.$postVals[4].' from city '.$postVals[2].' for factory '.$postVals[3];
+echo 'Hire labor list item '.$postVals[4].' from city '.$postVals[2].' for factory '.$postVals[1];
 /*
 // confirm there is enough labor of this type to hire
 $laborCheck = true;
@@ -46,10 +47,10 @@ $now = time();
 $laborDat[7] = $now;
 
 if ($laborSpotCheck) {
-	// Add the labor and associated parameters to the factory labor 
+	// Add the labor and associated parameters to the factory labor
 	$thisFactory->adjustLabor($laborLoc, $laborDat);
 } else {
-	// Add the labor and associated parameters to the business labor 
+	// Add the labor and associated parameters to the business labor
 	$thisBusiness = loadObject($pGameID, $objFile, 400);
 }
 
