@@ -59,6 +59,11 @@ class object {
 		echo 'ID: '.$this->unitID;
 		echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $loc*4-4);
 	}
+	
+	function saveBlock($loc, $str) {
+		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc*4);
+		fwrite($this->linkFile, $str);		
+	}
 
 
 	function saveAll($file) {
@@ -355,7 +360,7 @@ class factory extends object {
 }
 
 class city extends object {
-	private $dRateOffset, $dLevelOffset, $cityBlockSize, $laborDemandOffset;
+	private $dRateOffset, $dLevelOffset, $laborDemandOffset;
 	public $laborStoreOffset;
 
 	function __construct($id, $dat, $file) {
@@ -366,7 +371,6 @@ class city extends object {
 		$this->dLevelOffset = 10250;
 		$this->laborDemandOffset = 20250;
 		$this->laborStoreOffset = 21250;
-		$this->cityBlockSize = 105000;
 		$this->itemBlockSize = 105000;
 
 		$this->attrList['population'] = 12;
@@ -382,10 +386,10 @@ class city extends object {
 		}
 
 	function saveDRate($productID, $val) {
-		fseek($this->linkFile, $this->unitID*$this->cityBlockSize + ($this->dLevelOffset+$productID)*4-4);
+		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4);
 		fwrite($this->linkFile, pack('i', $val));
 		echo 'ID: '.$this->unitID;
-		echo 'Save '.$val.' at spot '.($this->unitID*$this->cityBlockSize + ($this->dLevelOffset+$productID)*4-4);
+		echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4);
 		$this->objDat[$this->dLevelOffset+$productID] = $val;
 	}
 
@@ -396,10 +400,10 @@ class city extends object {
 	function save($desc, $val) {
 
 		if (array_key_exists($desc, $this->attrList)) {
-			fseek($this->linkFile, $this->unitID*$this->cityBlockSize + $this->attrList[$desc]*4-4);
+			fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4);
 			fwrite($this->linkFile, pack('i', $val));
 			echo 'ID: '.$this->unitID;
-			echo 'Save '.$val.' at spot '.($this->unitID*$this->cityBlockSize + $this->attrList[$desc]*4-4);
+			echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4);
 			$this->objDat[$this->attrList[$desc]] = $val;
 		} else {
 			return false;
@@ -481,18 +485,6 @@ class city extends object {
 					$this->objDat[$offset+7] = 0; // home
 					$this->objDat[$offset+8] = 0; // ability
 					$this->objDat[$offset+9] = 0; // target upgrade
-					/*
-					$this->objDat[$offset] = 1; // education level
-					$this->objDat[$offset+1] = 2; // type
-					$this->objDat[$offset+2] = 3; // ability
-					$this->objDat[$offset+3] = 4; // start
-					$this->objDat[$offset+4] = 5; // time
-					$this->objDat[$offset+5] = 6; // expected pay
-					$this->objDat[$offset+6] = 7; // region last update time
-					$this->objDat[$offset+7] = 8; // home
-					$this->objDat[$offset+8] = 9; // ability
-					$this->objDat[$offset+9] = 10; // target upgrade
-					*/
 				}
 			}
 		}
@@ -501,6 +493,12 @@ class city extends object {
 	//print_r($this->objDat);
 	$this->set('laborUpdateTime', $now);
 	$this->saveAll($this->linkFile);
+	}
+	
+	function changeLaborItem($spotNumber, $attrArray){
+		$datStr = pack('i*', $attrArray[0], $attrArray[1], $attrArray[2], $attrArray[3], $attrArray[4], $attrArray[5], $attrArray[6], $attrArray[7], $attrArray[8], $attrArray[9]);
+		$fileOffset = $this->laborStoreOffset+$spotNumber*10;
+		$this->saveBlock($fileOffset, $datStr);
 	}
 
 	function availableLabor() {

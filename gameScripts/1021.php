@@ -10,16 +10,16 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $thisCity = loadCity($postVals[2], $cityFile);
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
-
-
-// Read object dat for player storage
-//$laborDat = pack()
-
-// Overwrite existing data with empty spot
-
-
 echo 'Hire labor list item '.$postVals[4].' from city '.$postVals[2].' for factory '.$postVals[1];
 $laborDat = array_slice($thisCity->objDat, $thisCity->laborStoreOffset+$postVals[4]*10, 10);
+
+// Confirm labor object still exists
+$availableCheck = false;
+if ($laborDat[0] == 0) $availableCheck = true;
+
+if (!$availableCheck) exit('This unit is no longer available');
+
+
 print_r($laborDat);
 // Load labor Dat and adjust parameters
 $now = time();
@@ -39,16 +39,33 @@ if ($laborSpotCheck) {
 	// Add the labor and associated parameters to the business labor
 	echo 'add to business';
 	$thisBusiness = loadObject($pGameID, $objFile, 400);
+	
+	$laborSlot = $thisBusiness->get('laborSlot');
+	if ($laborSlot == 0) {
+		$laborSlot = newSlot($slotFile);
+		$thisBusiness->save('laborSlot', $laborSlot);
+	}
+	$laborList = new blockSlot($laborSlot, $slotFile, 40);
+	
+	$location = 0;
+	for ($i=1; $i<sizeof($laborList->slotData); $i+=10;) {
+		if ($laborList->slotData[$i] == 0) {
+			$location = $i;
+			break;
+		}
+	}
+	$laborList->addItem($slotFile, $laborStr, $location);
 }
 
-/*
-$laborTemplateFile = fopen($scnPath.'/laborTemplate.dat', 'rb');
-fseek($laborTemplateFile, $postVals[4]*8);
+// Delete the reference to the labor in the city labor inventory
+$emptyDat = pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+if (flock($cityFile, LOCK_EX)) {
+	$thisCity->changeLaborItem($postVals[4], [0,0,0,0,0,0,0,0,0,0]);
+	
+	flock($cityFile, LOCK_UN);
+}
 
-$laborSlot = new blockSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
-$now = time();
-$blockDat = fread($laborTemplateFile, 8).pack('i*', 0, 0, $thisCity->get('region'), 100, $now, 0, 0, 0); // ability, start time, home region, expected pay, last update
-*/
+
 fclose($objFile);
 fclose($slotFile);
 fclose($cityFile);

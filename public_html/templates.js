@@ -992,3 +992,12 @@ filterDuplicates = function (a) {
 	}
 	return false;
 }
+
+function switchGroups(group1, group2, function1, function2) {
+	if (this.parentNode == group1) {
+		group2.appendChild(this);
+	}
+	else if (this.parentNode == group2) {
+		group1.appendChild(this);
+	}
+}

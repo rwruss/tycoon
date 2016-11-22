@@ -100,6 +100,136 @@ echo '
 </script>
 
 <script type="text/javascript">
+	var companyLabor;
+	var playerUnits;
+	var moveString = new Array();
+	var umList = [];
+	var umFauxVerts = [];
+	var drawLoc = [];
+	var zCount=0;
+	var groupList = new Array();
+	var gl;
+	var ANGLEia;
+	var tileNormals = new Array();
+	var tileForrests = new Array();
+	var forrestSizes = new Array();
+	var heightMaps = new Array();
+	var tileTextures = new Array();
+	var textureList = new Array();
+	var defaultBuildings;
+	var loadedImages = 0;
+	var requiredImages = 0;
+	var shaderProgram;
+    var bufferProgram;
+	var riverProgram;
+	var colorProgram;
+	var unitProgram;
+	var treeProgram;
+	var areaProgram;
+	var oceanTexProgram;
+	var mvMatrix = mat4.create();
+    var bbMatrix = mat4.create();
+    var pMatrix = mat4.create();
+	var tileBuffers;
+	var texCoordBuffer;
+	var drawPoints = 0;
+	var baseMap = [4800, 5260];
+
+	var zoomLvl = 8;
+	var drawLength = 0;
+	var mapScale = 1.0;
+	var borderBuffer;
+	var baseNormal;
+	var riverPoints = [];
+	var riverCenter = [];
+	var riverFauxVerts = [];
+	var riverLine;
+	var drawRiverLength = [];
+	var moveLength=0;
+	var moveLine;
+	var moveVerts;
+	var gridUnits = [];
+	var gridUnitsLength = [];
+	var gridUniforms = [];
+	var gridUnitLists = [];
+	var riverLength = 0;
+	var indexBuffer;
+	var unitIndexBuffer;
+	var simpleBox;
+	var treeBuffer;
+	var treeOffsets;
+	var baseTile = new Array(Math.round(baseMap[0]/(120*zoomLvl)), Math.round(baseMap[1]/(120*zoomLvl)));
+	var locTr = new Array(0, 0, 1, 1, 1);
+	var baseOffset = new Array((baseMap[0]-baseTile[0]*120*zoomLvl)/(12*zoomLvl), (baseTile[1]*120*zoomLvl-baseMap[1])/(12*zoomLvl), 1, 1, 1);
+
+	var areaBuffer;
+	var areaCenters;
+	var areaColors;
+
+	var unitBox;
+	var rY = 0.0;
+	var rotShift = [0,0];
+	var testXShift = [-30, -20, -10, 0, 10, 20,
+						-30, -20, -10, 0, 10, 20,
+						-30, -20, -10, 0, 10, 20,
+						-30, -20, -10, 0, 10, 20,
+						-30, -20, -10, 0, 10, 20,
+						-30, -20, -10, 0, 10, 20,
+						-30, -20, -10, 0, 10, 20,
+						-30, -20, -10, 0, 10, 20,
+					  ];
+	var testZShift = [-30, -30, -30, -30, -30, -30,
+					-20, -20, -20, -20, -20, -20,
+					-10, -10, -10, -10, -10, -10,
+					0, 0, 0, 0, 0, 0,
+					10, 10, 10, 10, 10, 10,
+					20, 20, 20, 20, 20, 20];
+	var drawOrder = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	var zoomRot = [0, 3, 2, 0, 1, 0, 0, 0, 0];
+	
+	var lastTime = 0;
+	var wY = 0;
+	var xSpeed = 0;
+	var zSpeed = 0;
+	var viewAngle;
+	var currentlyPressedKeys = {};
+	
+	var rttFramebuffer;
+	var rttTexture;
+	var terFramebuffer;
+	var terTexture;
+	var oceanFrameBuffer;
+	var oceanTexture;
+	
+	var tileCanvas;
+	var ctx;
+
+	var elList = new Array();
+	var terList = new Array();
+	var aspectX = new Array();
+	var aspectY = new Array();
+
+	var loaded = 0;
+	var loadTarg = 0;
+	
+	var drawList = [];
+	drawList[0] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	drawList[1] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	drawList[2] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	drawList[3] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	drawList[4] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	drawList[5] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	drawList[6] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	drawList[7] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
+	drawList[8] = drawList[0];
+	var clickParams = [];
+	var clickTarg = "";
+	
+	var genCharList = [];
+	var thisPlayer;
+	var numProducts = '.$numProducts.';
+	var numFactories = '.$numFactories.';
+
 	function ncode_div(el_id) {
 				if (typeof(el_id) == "string") trg = document.getElementById(el_id);
 				else trg = el_id;
@@ -117,7 +247,7 @@ echo '
                  }
          }
 
-	var groupList = new Array();
+	
 	function groupSelect(selNum) {
 		dupe = false;
 		for (i=0; i<groupList.length; i++) {
@@ -133,13 +263,6 @@ echo '
 			document.getElementById("selOpt_"+selNum).className="selected";
 		}
 	}
-	var playerUnits;
-	var moveString = new Array();
-	var umList = [];
-	var umFauxVerts = [];
-	var drawLoc = [];
-
-
 
 	function passClick(val, trg) {
 		params = "val1="+val;
@@ -179,7 +302,7 @@ echo '
 		xmlhttp.send(params);
 		}
 
-	var zCount=0;
+	
 	function makeBox(bName, val, h, w, x, y) {
 		console.log(arguments);
 		e = window.event || arguments[0];
@@ -212,12 +335,6 @@ echo '
 		testNode.parentNode.parentObj.destroyWindow();
 	}
 
-    var gl;
-	var ANGLEia;
-	var tileNormals = new Array();
-	var tileForrests = new Array();
-	var forrestSizes = new Array();
-
     function initGL(canvas) {
         try {
             gl = canvas.getContext("webgl");
@@ -231,8 +348,7 @@ echo '
         }
     }
 
-	function getData(rTrg, prm, tTrg)
-		{
+	function getData(rTrg, prm, tTrg) {
 		var tot_length = 0;
 		params = "val1="+prm.join();
 		var xmlhttp = new XMLHttpRequest();
@@ -252,8 +368,6 @@ echo '
 		//return xmlhttp.response.byteLength;
 		}
 
-
-	var heightMaps = new Array();
 	function handleMapTextures(texture, x, y, tileNum) {
 		var imageDat = ctx.getImageData(x, y, 128, 128);
 		var pixDat = imageDat.data;
@@ -294,12 +408,8 @@ echo '
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(newForrest), gl.STATIC_DRAW);
 		forrestSizes[tileNum] = newForrest.length/3;
 		}
-
-
-    var tileTextures = new Array();
-	var textureList = new Array();
+		
     function mapTextures(i, x, y) {
-
         tileTextures[i] = gl.createTexture();
 		handleMapTextures(tileTextures[i], x, y, i);
         tileTextures.image = tileCanvas;
@@ -312,11 +422,8 @@ echo '
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.bindTexture(gl.TEXTURE_2D, null);
-
 		}
-
-	var loadedImages = 0;
-	var requiredImages = 0;
+		
 	function loadTexture(textureNumber, src) {
 		requiredImages++;
 		textureList[textureNumber].image = new Image();
@@ -362,16 +469,6 @@ echo '
 
         return shader;
     }
-
-
-    var shaderProgram;
-    var bufferProgram;
-	var riverProgram;
-	var colorProgram;
-	var unitProgram;
-	var treeProgram;
-	var areaProgram;
-	var oceanTexProgram;
 
     function initShaders() {/*
         shaderProgram = gl.createProgram();
@@ -421,11 +518,6 @@ echo '
 		shaderProgram.maskUniform = gl.getUniformLocation(shaderProgram, "uMaskSampler");*/
 		}
 
-
-    var mvMatrix = mat4.create();
-    var bbMatrix = mat4.create();
-    var pMatrix = mat4.create();
-
     function setMatrixUniforms() {
         gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
         gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
@@ -446,43 +538,7 @@ echo '
         gl.uniformMatrix4fv(areaProgram.mvMatrixUniform, false, mvMatrix);
 		}
 	//alert(mvMatrix[0] + mvMatrix[1] + mvMatrix[2] + mvMatrix[3] + mvMatrix[4] + mvMatrix[5] + mvMatrix[6] + mvMatrix[7] + mvMatrix[8] + mvMatrix[9] + mvMatrix[10] + mvMatrix[11] + mvMatrix[12] + mvMatrix[13] + mvMatrix[14] + mvMatrix[15]);
-	var tileBuffers;
-	var texCoordBuffer;
-	var drawPoints = 0;
-	var baseMap = [4800, 5260];
-
-	var zoomLvl = 8;
-	var drawLength = 0;
-	var mapScale = 1.0;
-	var borderBuffer;
-	var baseNormal;
-	var riverPoints = [];
-	var riverCenter = [];
-	var riverFauxVerts = [];
-	var riverLine;
-	var drawRiverLength = [];
-	var moveLength=0;
-	var moveLine;
-	var moveVerts;
-	var gridUnits = [];
-	var gridUnitsLength = [];
-	var gridUniforms = [];
-	var gridUnitLists = [];
-	var riverLength = 0;
-	var indexBuffer;
-	var unitIndexBuffer;
-	var simpleBox;
-	var treeBuffer;
-	var treeOffsets;
-	var baseTile = new Array(Math.round(baseMap[0]/(120*zoomLvl)), Math.round(baseMap[1]/(120*zoomLvl)));
-	var locTr = new Array(0, 0, 1, 1, 1);
-	var baseOffset = new Array((baseMap[0]-baseTile[0]*120*zoomLvl)/(12*zoomLvl), (baseTile[1]*120*zoomLvl-baseMap[1])/(12*zoomLvl), 1, 1, 1);
-
-	var areaBuffer;
-	var areaCenters;
-	var areaColors;
-
-	var unitBox;
+	
 
 	baseOffset[0] = (baseMap[0]-baseTile[0]*120*zoomLvl)/(12*zoomLvl)
 	baseOffset[1] = -(baseTile[1]*120*zoomLvl-baseMap[1])/(12*zoomLvl);
@@ -550,33 +606,8 @@ echo '
         return degrees * Math.PI / 180;
 		}
 
-	var rY = 0.0;
-	var rotShift = [0,0];
-	var testXShift = [-30, -20, -10, 0, 10, 20,
-						-30, -20, -10, 0, 10, 20,
-						-30, -20, -10, 0, 10, 20,
-						-30, -20, -10, 0, 10, 20,
-						-30, -20, -10, 0, 10, 20,
-						-30, -20, -10, 0, 10, 20,
-						-30, -20, -10, 0, 10, 20,
-						-30, -20, -10, 0, 10, 20,
-					  ];
-	var testZShift = [-30, -30, -30, -30, -30, -30,
-					-20, -20, -20, -20, -20, -20,
-					-10, -10, -10, -10, -10, -10,
-					0, 0, 0, 0, 0, 0,
-					10, 10, 10, 10, 10, 10,
-					20, 20, 20, 20, 20, 20];
-	var drawOrder = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	var zoomRot = [0, 3, 2, 0, 1, 0, 0, 0, 0];
-
     function drawScene() {
 	}
-
-	var lastTime = 0;
-	var wY = 0;
-	var xSpeed = 0;
-	var zSpeed = 0;
 
 	function tileSwitch() {
 		if (switchOption == 0) {
@@ -645,7 +676,7 @@ echo '
 			}
 		else if (switchOption == 6) loadTiles();
 		}
-	var viewAngle;
+	
     function animate() {
         var timeNow = new Date().getTime();
         if (lastTime != 0) {
@@ -716,9 +747,6 @@ echo '
         lastTime = timeNow;
 		}
 
-
-	var currentlyPressedKeys = {};
-
 	function handleKeyDown(event) {
         currentlyPressedKeys[event.keyCode] = true;
 		}
@@ -762,23 +790,13 @@ echo '
 		}
 
 
-  function tick() {
-	  requestAnimFrame(tick);
-	  handleKeys();
-      drawScene();
-      animate();
-  }
+	function tick() {
+		requestAnimFrame(tick);
+		handleKeys();
+		drawScene();
+		animate();
+	}
 
-	var tileCanvas;
-	var ctx;
-
-	var elList = new Array();
-	var terList = new Array();
-	var aspectX = new Array();
-	var aspectY = new Array();
-
-	var loaded = 0;
-	var loadTarg = 0;
 	function checkLoad() {
 		loaded++;
 		//alert(num + ": " + src);
@@ -791,8 +809,6 @@ echo '
 
 	function loadTiles() {
 		}
-
-
 
 	function MouseWheelHandler(e) {
 		// cross-browser wheel delta
@@ -850,13 +866,6 @@ echo '
 			}
 		}
 
-	var rttFramebuffer;
-	var rttTexture;
-	var terFramebuffer;
-	var terTexture;
-	var oceanFrameBuffer;
-	var oceanTexture;
-
 	function initTextureFramebuffer(trg, trgTex, width, height) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, trg);
 
@@ -880,18 +889,6 @@ echo '
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
-	var drawList = [];
-	drawList[0] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	drawList[1] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	drawList[2] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	drawList[3] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	drawList[4] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	drawList[5] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	drawList[6] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	drawList[7] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
-	drawList[8] = drawList[0];
-	var clickParams = [];
-	var clickTarg = "";
 	function handleClick(event)	{
 		//alert(clickParams);
 		document.body.style.cursor = "auto";
@@ -976,9 +973,7 @@ echo '
 
 		return texture;
 		}
-
-	var genCharList = [];
-	var thisPlayer;
+		
 	function webGLStart() {
 		document.getElementById("readMsg").addEventListener("click", function(event) {console.log(event);makeBox(\'inBox\', 1099, 500, 500, 200, 50)});
 
@@ -1021,9 +1016,7 @@ echo '
 		laborNames = ['.$laborNameList.']
 		console.log(objNames);
 		console.log(factoryNames);
-		var numProducts = '.$numProducts.';
-		var numFactories = '.$numFactories.';
-
+		
 		playerFactories = new Array(';
 		if (sizeof($factoryList) > 0) echo 'new factory({subType:'.($factoryList[0]-$numProducts).', prod:'.$factoryList[1].', rate:'.$factoryList[2].', objID:'.$factoryList[3].'})';
 		for ($i=4; $i<sizeof($factoryList); $i+=4) {
@@ -1031,7 +1024,6 @@ echo '
 		}
 		echo ');
 		console.log(playerFactories);
-
 
 		productArray = new Array();
 		for (var i=0; i<numProducts; i++) {
@@ -1071,7 +1063,7 @@ echo '
 		passClick(info, trg);
 	}
 
-var defaultBuildings;
+
 
 window.addEventListener("load", webGLStart);
 
