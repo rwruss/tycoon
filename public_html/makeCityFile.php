@@ -4,11 +4,12 @@ $cityFile = fopen('cities.dat', 'wb');
 
 $numProducts = 10000;
 $numLabor = 1000;
+$laborStorage = 100;
 $extra = 250;
 
 $now = time();
 
-$cityArray = array_fill(1, $extra+($numProducts+$numLabor)*2, 1000);
+$cityArray = array_fill(1, $extra+($numProducts+$numLabor)*2 + $laborStorage*40, 1000);
 $cityArray[5] = 5;
 $cityArray[10] = $now;  // update time
 $cityArray[11] = 10; // size tier
@@ -19,6 +20,11 @@ $cityArray[15] = $now; // labor update time
 $cityArray[16] = $now; // base labor time
 $cityArray[17] = 0; // school slot
 $cityArray[18] = 0; // school slot
+
+$offset = $numProducts*2 + $numLabor + $extra;
+for ($i=1; $i<=1000; $i++) {
+  $cityArray[$offset+$i] = 0;
+}
 
 
 $cityData = packArray($cityArray);

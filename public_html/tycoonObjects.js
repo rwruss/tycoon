@@ -204,7 +204,7 @@ class laborItem extends labor {
 		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
-		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "Payasad: " + this.pay;
+		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "Pay: " + this.pay;
 		return thisDiv;
 	}
 }

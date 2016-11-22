@@ -57,7 +57,10 @@ class objectList {
 		if (document.getElementById("selectMenu")) showContain = document.getElementById("selectMenu");
 		else showContain = addDiv("selectMenu", "selectMenu", "gmPnl");
 
+
 		showContain.sortBar = addDiv("", "selectSort", showContain);
+		showContain.closeButton = addDiv("", "paneCloseButton", showContain);
+		showContain.closeButton.innerHTML = "X";
 
 		let sortTarget = this;
 		for (var i=0; i<this.sortOptions.length; i++) {

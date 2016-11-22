@@ -20,22 +20,25 @@ $citySchools->slotData[1] = 1;
 print_r($citySchools->slotData);
 
 
-$cityLaborSlot = $thisCity->updateLabor($now, $citySchools, $laborRates, $slotFile);
-print_r($cityLaborSlot->slotData);
-
-$checkSlot = new blockSlot($thisCity->get('laborSlot'), $slotFile, 40);
-echo 'Slot Check:';
-print_R($checkSlot->slotData);
-
+$thisCity->updateLabor($now, $citySchools, $laborRates, $slotFile);
+//print_r($thisCity->objDat);
 echo '<script>
 
 laborList = [';
-
-if (sizeof($cityLaborSlot->slotData) > 9) {
-	echo 'new laborItem({objID:1, pay:'.$cityLaborSlot->slotData[6].', ability:'.$cityLaborSlot->slotData[8].', laborType:'.$cityLaborSlot->slotData[8+2].'})';
+$startSpot = 0;
+for ($i=0; $i<100; $i++) {
+	$offset = $thisCity->laborStoreOffset+$i*10+1;
+	if ($thisCity->objDat[$offset] > 0) {
+		echo 'new laborItem({objID:'.$i.', pay:'.$thisCity->objDat[$offset+5].', ability:'.$thisCity->objDat[$offset+8].', laborType:'.$thisCity->objDat[$offset+1].'})';
+		$startSpot = $i+1;
+		break;
+	}
 }
-for ($i=11; $i<sizeof($cityLaborSlot->slotData); $i+=10) {
-  if ($cityLaborSlot->slotData[$i] > 0)	echo ', new laborItem({objID:'.$i.', pay:'.$cityLaborSlot->slotData[$i+5].', ability:'.$cityLaborSlot->slotData[$i+6].', laborType:'.$cityLaborSlot->slotData[$i+1].'})';
+for ($i=$startSpot; $i<100; $i++) {
+	$offset = $thisCity->laborStoreOffset+$i*10+1;
+	if ($thisCity->objDat[$offset] > 0) {
+		echo ', new laborItem({objID:'.$i.', pay:'.$thisCity->objDat[$offset+5].', ability:'.$thisCity->objDat[$offset+8].', laborType:'.$thisCity->objDat[$offset+1].'})';
+	}
 }
 
 echo '];

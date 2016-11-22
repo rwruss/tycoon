@@ -67,8 +67,9 @@ class object {
 		foreach ($this->objDat as $value) {
 			$packStr.=pack('i', $value);
 		}
-		fseek($file, $this->unitID*100);
+		fseek($file, $this->unitID*$this->itemBlockSize);
 		$saveLen = fwrite($file, $packStr);
+		echo "SAVED ".$saveLen." at location ".($this->unitID*$this->itemBlockSize);
 	}
 }
 
@@ -335,26 +336,27 @@ class factory extends object {
 	}
 
 	function adjustLabor($laborSpot, $laborDat) {
-		$packDat = pack('i*', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+		$packDat = pack('i*', $laborDat[0], $laborDat[1], $laborDat[2], $laborDat[3], $laborDat[4], $laborDat[5], $laborDat[6], $laborDat[7], $laborDat[8], $laborDat[9]);
 
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->laborOffset+$laborSpot*10)*4-4);
 		fwrite($this->linkFile, $packDat);
 
-		$this->objDat[$this->laborOffset+$laborSpot*10] = $laborDat[1];
-		$this->objDat[$this->laborOffset+$laborSpot*10+1] = $laborDat[2];
-		$this->objDat[$this->laborOffset+$laborSpot*10+2] = $laborDat[3];
-		$this->objDat[$this->laborOffset+$laborSpot*10+3] = $laborDat[4];
-		$this->objDat[$this->laborOffset+$laborSpot*10+4] = $laborDat[5];
-		$this->objDat[$this->laborOffset+$laborSpot*10+5] = $laborDat[6];
-		$this->objDat[$this->laborOffset+$laborSpot*10+6] = $laborDat[7];
-		$this->objDat[$this->laborOffset+$laborSpot*10+7] = $laborDat[8];
-		$this->objDat[$this->laborOffset+$laborSpot*10+8] = $laborDat[9];
-		$this->objDat[$this->laborOffset+$laborSpot*10+9] = $laborDat[10];
+		$this->objDat[$this->laborOffset+$laborSpot*10] = $laborDat[0];
+		$this->objDat[$this->laborOffset+$laborSpot*10+1] = $laborDat[1];
+		$this->objDat[$this->laborOffset+$laborSpot*10+2] = $laborDat[2];
+		$this->objDat[$this->laborOffset+$laborSpot*10+3] = $laborDat[3];
+		$this->objDat[$this->laborOffset+$laborSpot*10+4] = $laborDat[4];
+		$this->objDat[$this->laborOffset+$laborSpot*10+5] = $laborDat[5];
+		$this->objDat[$this->laborOffset+$laborSpot*10+6] = $laborDat[6];
+		$this->objDat[$this->laborOffset+$laborSpot*10+7] = $laborDat[7];
+		$this->objDat[$this->laborOffset+$laborSpot*10+8] = $laborDat[8];
+		$this->objDat[$this->laborOffset+$laborSpot*10+9] = $laborDat[9];
 	}
 }
 
 class city extends object {
-	private $dRateOffset, $dLevelOffset, $cityBlockSize, $laborDemandOffset, $laborStoreOffset;
+	private $dRateOffset, $dLevelOffset, $cityBlockSize, $laborDemandOffset;
+	public $laborStoreOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -364,8 +366,8 @@ class city extends object {
 		$this->dLevelOffset = 10250;
 		$this->laborDemandOffset = 20250;
 		$this->laborStoreOffset = 21250;
-		$this->cityBlockSize = 89000;
-		$this->itemBlockSize = 89000;
+		$this->cityBlockSize = 105000;
+		$this->itemBlockSize = 105000;
 
 		$this->attrList['population'] = 12;
 		$this->attrList['affluence'] = 14;
@@ -435,7 +437,7 @@ class city extends object {
 
 				foreach($thisSchool->schoolRates as $laborType => $trainRate) {
 					$addAmt = $schoolTypes[$i]*(intval($newTime/$trainRate) - intval($pvsTime/$trainRate));
-					$addList[$laborType] = $addAmt;
+					$addList[$laborType] = $addAmt+1;
 					echo 'Schools train '.$addAmt.' of type '.$laborType.' with a rate of '.$trainRate;
 				}
 			}
@@ -445,17 +447,14 @@ class city extends object {
 			echo 'Make a new slot';
 			$this->save('laborSlot', newSlot($slotFile));
 		}
-		echo 'Labor slot is '.$this->get('laborSlot');
-		$laborSlot = new blockSlot($this->get('laborSlot'), $slotFile, 40);
-		print_R($laborSlot->slotData);
 
 		$emptySpots = [];
-		for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
-			if ($laborSlot->slotData[$i] == 0) $emptySpots[] = $i;
+		for ($i=0; $i<100; $i++) {
+			if ($this->objDat[$this->laborStoreOffset+$i*10+1] == 0) $emptySpots[] = $i;
+			else {
+				echo 'End at '.$i.'/('.($this->laborStoreOffset+$i*10+1).') ->> '.$this->objDat[$this->laborStoreOffset+$i*10+1];
+			}
 		}
-		echo 'Empty Spots:';
-		print_r($emptySpots);
-
 		echo 'Add list:';
 		print_r($addList);
 		foreach ($addList as $laborID => $addAmount) {
@@ -463,22 +462,45 @@ class city extends object {
 			for ($n=0; $n<$addAmount; $n++) {
 				$pay = intval($baseRates[$laborID]*$this->get('affluence')*rand(90,110)/(10000));
 				echo 'Pay:'.$pay.' ('.$baseRates[$laborID].' * '.$this->get('affluence').')';
-				$loc = array_pop($emptySpots);
-				$dat = pack('i*', 1, $laborID, 0, 0, 0, $pay, $now, 0, 0, 0);  // education level, type, ability, start time, home region, expected pay, last update time, target upgrade
+				$loc = array_shift($emptySpots);
+				//$dat = pack('i*', 1, $laborID, 0, 0, 0, $pay, $now, 0, 0, 0);  , , ,  ,  , ,  ,
 				//$dat = pack('i*', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);  // education level, type, ability, start time, home region, expected pay, last update time, target upgrade
 				if (is_null($loc)) {
-					echo 'Add to end';
-					$laborSlot->addItem($slotFile, $dat, 0);
+					echo 'no more space ';
+					break 2;
 				} else {
-
+					$offset = $this->laborStoreOffset+$loc*10+1;
 					echo 'Add to loc '.$loc;
-					$laborSlot->addItem($slotFile, $dat, $loc);
+					$this->objDat[$offset] = 1; // education level
+					$this->objDat[$offset+1] = $laborID; // type
+					$this->objDat[$offset+2] = 0; // ability
+					$this->objDat[$offset+3] = 0; // start
+					$this->objDat[$offset+4] = 0; // time
+					$this->objDat[$offset+5] = $pay; // expected pay
+					$this->objDat[$offset+6] = $now; // region last update time
+					$this->objDat[$offset+7] = 0; // home
+					$this->objDat[$offset+8] = 0; // ability
+					$this->objDat[$offset+9] = 0; // target upgrade
+					/*
+					$this->objDat[$offset] = 1; // education level
+					$this->objDat[$offset+1] = 2; // type
+					$this->objDat[$offset+2] = 3; // ability
+					$this->objDat[$offset+3] = 4; // start
+					$this->objDat[$offset+4] = 5; // time
+					$this->objDat[$offset+5] = 6; // expected pay
+					$this->objDat[$offset+6] = 7; // region last update time
+					$this->objDat[$offset+7] = 8; // home
+					$this->objDat[$offset+8] = 9; // ability
+					$this->objDat[$offset+9] = 10; // target upgrade
+					*/
 				}
 			}
 		}
+
 	// Record updated time
-	$this->save('laborUpdateTime', $now);
-	return ($laborSlot);
+	//print_r($this->objDat);
+	$this->set('laborUpdateTime', $now);
+	$this->saveAll($this->linkFile);
 	}
 
 	function availableLabor() {
@@ -565,8 +587,8 @@ function loadProduct($id, $file, $size) {
 }
 
 function loadCity($id, $file) {
-	fseek($file, $id*89000);
-	$dat = unpack('i*', fread($file, 89000));
+	fseek($file, $id*105000);
+	$dat = unpack('i*', fread($file, 105000));
 
 	return new city($id, $dat, $file);
 }
