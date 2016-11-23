@@ -993,11 +993,12 @@ filterDuplicates = function (a) {
 	return false;
 }
 
-function switchGroups(group1, group2, function1, function2) {
-	if (this.parentNode == group1) {
-		group2.appendChild(this);
+function switchGroups(item, group1, group2, function1, function2) {
+	console.log(item.parentNode);
+	if (item.parentNode == group1) {
+		group2.appendChild(item);
 	}
-	else if (this.parentNode == group2) {
-		group1.appendChild(this);
+	else if (item.parentNode == group2) {
+		group1.appendChild(item);
 	}
 }
