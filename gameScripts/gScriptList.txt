@@ -19,7 +19,7 @@
 1019 - MENU: Hire labor
 1020 - PROCESS: Load labor available at city
 1021 - PROCESS: Hire labor from a city to a factory or a company
-1022 - 
+1022 - PROCESS: Move labor from company to factory or VV (from 1018)
 
 http://playdosgamesonline.com/capitalism.html
 

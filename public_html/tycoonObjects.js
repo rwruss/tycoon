@@ -164,7 +164,8 @@ class labor {
 		console.log("rendum");
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'productHolder', target);
-		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.ownerObject = this.objID;
 
 		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
@@ -199,7 +200,9 @@ class laborItem extends labor {
 		console.log("rendum");
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'productHolder', target);
-		thisDiv.setAttribute("data-unitid", this.unitID);
+		thisDiv.setAttribute('ownerObject', this.objID);
+		//thisDiv.ownerObject = this.objID;
+		//console.log(thisDiv.ownerObject);
 
 		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");

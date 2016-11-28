@@ -30,14 +30,15 @@ setSlideQty = function(trg, max) {
 }
 
 addDiv = function(id, useClassName, target) {
-	var trg;
-	if (typeof(target) == "string") trg = document.getElementById(target);
-	else trg = target;
-
 	var newDiv = document.createElement("div");
 	newDiv.className = useClassName;
 	newDiv.id = id;
-	trg.appendChild(newDiv);
+	var trg;
+	if (target !== null) {
+		if (typeof(target) == "string") trg = document.getElementById(target);
+		else trg = target;
+		trg.appendChild(newDiv);
+	}
 	return newDiv;
 }
 
@@ -993,12 +994,36 @@ filterDuplicates = function (a) {
 	return false;
 }
 
-function switchGroups(item, group1, group2, function1, function2) {
+function switchGroupsUnlimited(item, group1, group2, function1, function2) {
 	console.log(item.parentNode);
 	if (item.parentNode == group1) {
 		group2.appendChild(item);
 	}
 	else if (item.parentNode == group2) {
 		group1.appendChild(item);
+	}
+}
+
+function switchGroups(item, group1, group2, emptyItem, group1Limit) {
+	//console.log(item);
+	if (item.parentNode == group1 && item.getAttribute('ownerObject') != "empty") {
+		console.log(item.getAttribute('ownerObject') + " vs " + emptyItem.getAttribute('ownerObject'))
+		group2.appendChild(item);
+		let emptyObj = emptyItem.cloneNode(true);
+		console.log("added empty item with oo of : " + emptyObj.getAttribute('ownerObject') + " from oo of " + emptyItem.getAttribute('ownerObject'))
+		group1.appendChild(emptyObj);
+	}
+	else if (item.parentNode == group2) {
+		let numNodes = group1.childNodes.length;
+		for (var i=0; i<numNodes; i++) {
+			if (group1.childNodes[i].getAttribute('ownerObject') == "empty") {
+				//group1.childNodes[i].parentNode.removeChild(group1.childNodes[i]);
+				group1.insertBefore(item, group1.childNodes[i]);
+				group1.childNodes[i].parentNode.removeChild(group1.childNodes[i+1]);
+				//group1.childNodes[i] = item;
+				break;
+			}
+		}
+		if (numNodes  < group1Limit)	group1.appendChild(item);
 	}
 }

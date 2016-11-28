@@ -3,7 +3,7 @@
 $templateBlockSize = 1000;
 class object {
 	protected $linkFile, $unitBin, $id, $attrList, $itemBlockSize;
-
+	public $objDat;
 	function __construct($id, $dat, $file) {
 		$this->linkFile = $file;
 
@@ -59,10 +59,10 @@ class object {
 		echo 'ID: '.$this->unitID;
 		echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $loc*4-4);
 	}
-	
+
 	function saveBlock($loc, $str) {
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc*4);
-		fwrite($this->linkFile, $str);		
+		fwrite($this->linkFile, $str);
 	}
 
 
@@ -494,7 +494,7 @@ class city extends object {
 	$this->set('laborUpdateTime', $now);
 	$this->saveAll($this->linkFile);
 	}
-	
+
 	function changeLaborItem($spotNumber, $attrArray){
 		$datStr = pack('i*', $attrArray[0], $attrArray[1], $attrArray[2], $attrArray[3], $attrArray[4], $attrArray[5], $attrArray[6], $attrArray[7], $attrArray[8], $attrArray[9]);
 		$fileOffset = $this->laborStoreOffset+$spotNumber*10;
