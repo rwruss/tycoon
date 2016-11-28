@@ -274,7 +274,23 @@ class factory extends object {
 		print_r($timeList);
 		echo 'List of events:<br>';
 		print_r($eventOrder);
-		if ($this->get('currentRate') == 0)		$this->set('currentRate', 1);
+		
+		// Establish production rate based on available labor
+		if ($this->get('currentRate') == 0)	$this->set('currentRate', 1);
+		$productionRate = $this->get('currentRate');
+		
+		/// Cross reference the required labor to the actual labor and add in for ability/labor level
+		
+		/// Load product labor equivalencies
+		$laborRates = array_fill(0, 100, 1.0);
+		$laborTotal = 0;
+		for ($i=0; $i<10; $i++) {			
+			if ($productInfo[18+$i]>0) {
+				$laborTotal += $laborRates[$this->objDat[$this->laborOffset+$i]];
+			}
+		}
+		
+		
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
 			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].' = )'.$elapsed.'<br>';
@@ -283,8 +299,8 @@ class factory extends object {
 			$checkQty = [];
 
 			// Get max amount produced in time and save remainder time
-			$checkQty[] = ($elapsed+$this->get('remainderTime'))/$this->get('currentRate');
-			$this->set('remainderTime', $elapsed+$this->get('remainderTime')%$this->get('currentRate'));
+			$checkQty[] = ($elapsed+$this->get('remainderTime'))/$productionRate;
+			$this->set('remainderTime', $elapsed+$this->get('remainderTime')%$productionRate);
 
 			// Get max amount produced by each input
 			for ($j=0; $j<sizeof($referenceList); $j++) {

@@ -42,7 +42,7 @@ echo '<p>';
 print_R($productList);
 echo '<p>';
 
-// load product requirements
+// load product requirements into an array indexed by product description
 fseek($productFile, 0);
 fgets($productFile);
 $count = 0;
