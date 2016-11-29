@@ -89,7 +89,7 @@ class business extends object {
 }
 
 class factory extends object {
-	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset;
+	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -193,6 +193,13 @@ class factory extends object {
 		for ($i=0; $i<20; $i++) {
 			if ($this->templateDat[16+$i] > 0) array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
 		}
+
+		$this->productStores[] = $this->objDat[51];
+		$this->productStores[] = $this->objDat[52];
+		$this->productStores[] = $this->objDat[53];
+		$this->productStores[] = $this->objDat[54];
+		$this->productStores[] = $this->objDat[55];
+
 	}
 
 	function productionOptions() {
@@ -213,16 +220,18 @@ class factory extends object {
 		// load production requirements
 		fseek($this->linkFile, $this->get('currentProd')*1000);
 		$productInfo = unpack('i*', fread($this->linkFile, 200));
-
+		/*
 		echo 'required rsc:';
 		print_r($productInfo);
-
+		*/
 		// NEED TO DETERMINE PRODUCT INDEX
 
 		// Sort material requirements into the storage index for the factory
 		//$referenceList = array_fill(0, 20, 0);
+		/*
 		echo 'Resources stores<br>';
 		print_r($this->resourceStores);
+		*/
 		$rscSpots = [];
 		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
 			$rscSpots[$this->resourceStores[$i]] = $i;
@@ -242,9 +251,10 @@ class factory extends object {
 				}
 			}
 		}
+		/*
 		echo 'referene list<br>';
 		print_r($referenceList);
-
+		*/
 		// Load pending deliveries
 		$now = time();
 		$elapsed = $now - $this->get('lastUpdate');
@@ -260,8 +270,9 @@ class factory extends object {
 				$this->objDat[58+$i*3] = 0;
 			} else echo $this->objDat[56+$i*3].' > '.$now.'<br>';
 		}
+		/*
 		echo 'List of events: ('.$now.')<br>';
-		print_r($events);
+		print_r($events);*/
 		for ($i=0; $i<sizeof($events)/3; $i++) {
 			$timeList[$i] = $events[$i*3];
 		}
@@ -270,37 +281,45 @@ class factory extends object {
 		asort($timeList);
 		$eventOrder = array_keys($timeList);
 		$totalProduction = 0;
+		/*
 		echo 'List of tuimes: ('.$now.')<br>';
 		print_r($timeList);
 		echo 'List of events:<br>';
 		print_r($eventOrder);
-		
+		*/
+		/// Load product labor equivalencies
+		$laborRates = array_fill(0, 100, 0.0);
+		$laborTotal = 0;
+		$laborCount = 0;
+
+		for ($i=0; $i<10; $i++) {
+			if ($productInfo[18+$i]>0) {
+				$laborCount++;
+			}
+			$laborTotal += $laborRates[$this->objDat[$this->laborOffset+$i*10]];
+		}
+		$laborModifier = $laborTotal/max(1.0, $laborCount);
+		$laborModifier = 1.0; //override
+		echo 'LABOR MOD OF '.$laborModifier;
+
 		// Establish production rate based on available labor
 		if ($this->get('currentRate') == 0)	$this->set('currentRate', 1);
-		$productionRate = $this->get('currentRate');
-		
+		$productionRate = $this->get('currentRate')*$laborModifier;
+
 		/// Cross reference the required labor to the actual labor and add in for ability/labor level
-		
-		/// Load product labor equivalencies
-		$laborRates = array_fill(0, 100, 1.0);
-		$laborTotal = 0;
-		for ($i=0; $i<10; $i++) {			
-			if ($productInfo[18+$i]>0) {
-				$laborTotal += $laborRates[$this->objDat[$this->laborOffset+$i]];
-			}
-		}
-		
-		
+
+
+
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
-			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].' = )'.$elapsed.'<br>';
+			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].') = '.$elapsed.' + '.$this->get('remainderTime').'<br>';
 
 			// Check for limiting resource or time
 			$checkQty = [];
 
 			// Get max amount produced in time and save remainder time
 			$checkQty[] = ($elapsed+$this->get('remainderTime'))/$productionRate;
-			$this->set('remainderTime', $elapsed+$this->get('remainderTime')%$productionRate);
+			$this->set('remainderTime', ($elapsed+$this->get('remainderTime'))%$productionRate);
 
 			// Get max amount produced by each input
 			for ($j=0; $j<sizeof($referenceList); $j++) {
@@ -346,8 +365,8 @@ class factory extends object {
 
 		// Save updated information
 		$this->set('lastUpdate', $now);
-		echo 'final info:<br>';
-		print_r($this->objDat);
+		//echo 'final info:<br>';
+		//print_r($this->objDat);
 		$this->saveAll($this->linkFile);
 
 	}

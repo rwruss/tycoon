@@ -141,8 +141,19 @@ class product {
 		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
+		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
+		return thisDiv;
+	}
+
+	renderQty(target, qty) {
+		var thisDiv = addDiv(null, 'productHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
 		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
-		thisDiv.qtyDiv.innerHTML = this.qty;
+		thisDiv.qtyDiv.innerHTML = qty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 
 		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
 		return thisDiv;

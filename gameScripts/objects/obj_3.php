@@ -14,6 +14,7 @@ $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
 
 echo '<script>
 thisDiv.innerHTML = "";
+productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).']
 productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
 productLabor = ['.implode(',', $productInfo->reqLabor).'];
 materialInv = ['.implode(',', $thisObj->resourceStores).'];
@@ -45,6 +46,13 @@ sendButton.innerHTML = "Set production";
 priceButton = newButton(thisDiv, function () {scrMod("1011,'.$postVals[1].'")});
 priceButton.innerHTML = "Set Prices";
 */
+
+var productInvSection = addDiv("", "stdFloatDiv", thisDiv);
+for (var i=0; i<5; i++) {
+	if (productStores[i]>0) {
+		productArray[productStores[i]].renderQty(productInvSection, productStores[i+5]);
+	}
+}
 
 var laborSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", laborSection, "Labor Pool - show available labor");
