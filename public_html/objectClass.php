@@ -288,15 +288,17 @@ class factory extends object {
 		print_r($eventOrder);
 		*/
 		/// Load product labor equivalencies
-		$laborRates = array_fill(0, 100, 0.0);
 		$laborTotal = 0;
 		$laborCount = 0;
 
-		for ($i=0; $i<10; $i++) {
+		for ($i=0; $i<8; $i++) {
 			if ($productInfo[18+$i]>0) {
-				$laborCount++;
+				$offset = 50+$i*25;
+				$laborCount += $productInfo[$offset];
+				for ($j=0; $j<10; $j++) {
+					if ($productInfo[$offset+$j*2] == $this->objDat[$this->laborOffset+$i*10]) $laborTotal += $productInfo[$offset+$j*2+1];
+				}
 			}
-			$laborTotal += $laborRates[$this->objDat[$this->laborOffset+$i*10]];
 		}
 		$laborModifier = $laborTotal/max(1.0, $laborCount);
 		$laborModifier = 1.0; //override
