@@ -287,31 +287,8 @@ class factory extends object {
 		echo 'List of events:<br>';
 		print_r($eventOrder);
 		*/
-		/// Load product labor equivalencies
-		$laborTotal = 0;
-		$laborCount = 1;
-		/*
-		for ($i=0; $i<8; $i++) {
-			if ($productInfo[18+$i]>0) {
-				$offset = 50+$i*25;
-				$laborCount += $productInfo[$offset];
-				for ($j=0; $j<10; $j++) {
-					if ($productInfo[$offset+$j*2] == $this->objDat[$this->laborOffset+$i*10]) $laborTotal += $productInfo[$offset+$j*2+1];
-				}
-			}
-		}*/
-		$laborModifier = $laborTotal/max(1.0, $laborCount);
-		$laborModifier = 1.0; //override
-		echo 'LABOR MOD OF '.$laborModifier;
-
-		// Establish production rate based on available labor
-		if ($this->get('currentRate') == 0)	$this->set('currentRate', 1);
-		$productionRate = $this->get('currentRate')*$laborModifier;
-
-		/// Cross reference the required labor to the actual labor and add in for ability/labor level
-
-
-
+		
+		$productionRate = $this->get('currentRate')/100;
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
 			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].') = '.$elapsed.' + '.$this->get('remainderTime').'<br>';

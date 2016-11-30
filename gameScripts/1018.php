@@ -58,8 +58,25 @@ var factoryLaborItems = addDiv("factoryLabor", "stdFloatDiv", factoryLaborSectio
 
 var laborOptionList = new uList(factoryLabor.concat(companyLabor));
 console.log(laborOptionList);
-optionBox1 = laborOptionList.SLsingleButton(factoryLaborSection);
-optionBox2 = laborOptionList.SLsingleButton(factoryLaborSection);
+laborSpot1 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:1});
+laborSpot2 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:2});
+laborSpot3 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:3});
+laborSpot4 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:4});
+laborSpot5 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:5});
+laborSpot6 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:6});
+laborSpot7 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:7});
+laborSpot8 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:8});
+laborSpot9 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:9});
+laborSpot10 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:10`});
+
+saveLabor = newButton(thisDiv, function () {
+	let results = "";
+	for (let i=0; i<10; i++) {
+		results += "," + SLreadSelection("laborSpot"+i);
+	}
+	scrMod("1022,'.$postVals[1].'" + results);
+});
+saveLabor.innerHTML = "Save Labor";
 ';
 
 /*
