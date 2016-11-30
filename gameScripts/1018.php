@@ -56,6 +56,24 @@ var factoryLaborSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("factoryLabor", factoryLaborSection, "Current labor at this facility");
 var factoryLaborItems = addDiv("factoryLabor", "stdFloatDiv", factoryLaborSection);
 
+var laborOptionList = new uList(factoryLabor.concat(companyLabor));
+console.log(laborOptionList);
+optionBox1 = laborOptionList.SLsingleButton(factoryLaborSection);
+optionBox2 = laborOptionList.SLsingleButton(factoryLaborSection);
+';
+
+/*
+Snip 1
+*/
+
+
+
+
+fclose($objFile);
+fclose($slotFile);
+fclose($cityFile);
+
+/* Snip 1
 var addLabor = addDiv("companyLabor", "stdFloatDiv", thisDiv);
 textBlob("", addLabor, "Company Labor Pool");
 var companyLaborItems = addDiv("", "stdFloatDiv", addLabor);
@@ -99,10 +117,6 @@ return x.renderQty(y, 100);})});
 
 laborAdj = newButton(addLabor, function () {scrMod("1019,'.$postVals[1].'")});
 laborAdj.innerHTML = "Hire labor";</script>';
-
-
-fclose($objFile);
-fclose($slotFile);
-fclose($cityFile);
+*/
 
 ?>

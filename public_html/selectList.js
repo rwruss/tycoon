@@ -62,6 +62,9 @@ class objectList {
 		showContain.closeButton = addDiv("", "paneCloseButton", showContain);
 		showContain.closeButton.innerHTML = "X";
 
+		showContain.closeButton.addEventListener("click", function () {
+			this.parentNode.remove()});
+
 		let sortTarget = this;
 		for (var i=0; i<this.sortOptions.length; i++) {
 			var sortButton = addDiv("", "button", showContain.sortBar);
@@ -72,6 +75,8 @@ class objectList {
 				sortTarget.SLshowList(target, showContain.content, renderFunction);
 			});
 		}
+
+		// Filter options for selection
 		let filterTarget = this;
 		var filterBox;
 		for (var i=0; i<this.filterOptions.length; i++) {
@@ -93,6 +98,7 @@ class objectList {
 				}
 			}
 		}
+		// End of filter options for SLreadSelection
 
 		if (this.filterOptions.length > 0) {
 			var filterButton = addDiv("", "button", showContain.sortBar);
@@ -136,21 +142,29 @@ class objectList {
 			} else {
 			//let object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
 			//console.log(renderFunction);
-			let object = renderFunction(this.parentList[this.listItems[i]], selectContainer, i);
+			//console.log(this.selectedItems);
+			if (this.selectedItems[i] == 0) {
+				let object = renderFunction(this.parentList[this.listItems[i]], selectContainer, i);
 
-			object.owner = this;
-			object.objID = this.listItems[i];
-			//console.log(this.listItems[i]);
-			object.addEventListener("click", function () {
+				object.owner = this;
+				object.objID = this.listItems[i];
+				//console.log(this.listItems[i]);
+				object.addEventListener("click", function () {
 
-				console.log("set slected to " + object.objID + " which equals " + this.owner);
-				object.parentNode.parentNode.remove();
-				SlclearTarget(target);
-				console.log(this.owner);
-				target.selectedValue = this.owner.parentList[object.objID].objID;
-				//this.owner.showSelected(object.objID, target);
-				renderFunction(object.owner.parentList[object.objID], target);
-				});
+					console.log("set slected to " + object.objID + " which equals " + this.owner);
+					object.parentNode.parentNode.remove();
+					SlclearTarget(target);
+
+					target.selectedValue = this.owner.parentList[object.objID].objID;
+
+					this.owner.selectedItems[target.selectedIndex] = 0;
+					this.owner.selectedItems[object.objID] = 1;
+					target.selectedIndex = object.objID;
+					//this.owner.showSelected(object.objID, target);
+					console.log(this.owner.selectedItems);
+					renderFunction(object.owner.parentList[object.objID], target);
+					});
+				}
 			}
 		}
 	}
@@ -244,6 +258,11 @@ class uList extends objectList {
 		super();
 		console.log(parentList);
 		this.listItems = Object.keys(parentList);
+		this.selectedItems = Array(this.listItems.length).fill(0);
+		//this.selectedItems.fill(0, 0, 10);
+
+		console.log("Selected items - " + this.listItems.length);
+		console.log(this.selectedItems);
 		if (typeof opts !== "undefined") {
 			console.log("review otts")
 			//if (opts.items.length > 0) this.listItems = opts.items;

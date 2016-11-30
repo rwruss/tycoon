@@ -521,6 +521,9 @@ orderBox = function (time, rscID, qty, target) {
 
 materialBox = function (id, qty, target) {
 	let thisRsc = productArray[id].renderSummary(target);
+
+	thisRsc.qtyDiv = addDiv("asdf", "productQty", thisDiv);
+
 	thisRsc.qtyDiv.innerHTML = qty;
 	return thisRsc;/*
 	var thisDiv = addDiv(null, 'udHolder', target);

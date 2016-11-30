@@ -208,8 +208,6 @@ class laborItem extends labor {
 	}
 
 	renderSummary(target) {
-		console.log("rendum");
-		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute('ownerObject', this.objID);
 		//thisDiv.ownerObject = this.objID;

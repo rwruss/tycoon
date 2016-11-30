@@ -289,8 +289,8 @@ class factory extends object {
 		*/
 		/// Load product labor equivalencies
 		$laborTotal = 0;
-		$laborCount = 0;
-
+		$laborCount = 1;
+		/*
 		for ($i=0; $i<8; $i++) {
 			if ($productInfo[18+$i]>0) {
 				$offset = 50+$i*25;
@@ -299,7 +299,7 @@ class factory extends object {
 					if ($productInfo[$offset+$j*2] == $this->objDat[$this->laborOffset+$i*10]) $laborTotal += $productInfo[$offset+$j*2+1];
 				}
 			}
-		}
+		}*/
 		$laborModifier = $laborTotal/max(1.0, $laborCount);
 		$laborModifier = 1.0; //override
 		echo 'LABOR MOD OF '.$laborModifier;
