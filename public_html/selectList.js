@@ -31,7 +31,6 @@ class objectList {
 			}
 		if (typeof opts !== "undefined") {
 			if (opts.setVal) {
-				console.log("set value");
 				this.existingValue(selectButton, opts);
 			}
 			if (opts.renderFunction) {
@@ -279,7 +278,8 @@ class uList extends objectList {
 	}
 
 	existingValue(target, opts) {
-		console.log("ulist existing");
+		//console.log("ulist existing to " + opts.setVal);
+		//console.log(target);
 		for (var i=0; i<this.parentList.length; i++) {
 			if (this.parentList[i].objID == opts.setVal) {
 					this.showSelected(i, target);
@@ -307,8 +307,8 @@ class uList extends objectList {
 		//trg.innerHTML = id;
 		trg.listItem = this;
 		trg.selectedValue = this.parentList[id].objID;
-		console.log("select item " + id);
-		console.log("set value to " + this.parentList[id].objID);
+		//console.log("select item " + id);
+		//console.log("set value to " + this.parentList[id].objID);
 		this.parentList[id].renderSummary(trg);
 	}
 

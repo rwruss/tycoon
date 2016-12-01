@@ -1,6 +1,6 @@
 <?php
 
-print_r($postVals);
+//print_r($postVals);
 
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
@@ -23,7 +23,7 @@ for ($i=2; $i<12; $i++) {
 
 }
 
-print_r($thisFactory->objDat);
+//print_r($thisFactory->objDat);
 
 echo 'Add to factory:';
 print_R($addList);
@@ -41,26 +41,28 @@ $businessLabor = new blockSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
 $usedItems = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 for ($i=0; $i<10; $i++) {
-	$newLaborID = $postVals[2+$i];
-	if ($newLaborID < 10) {
-		$usedITems[$newLaborID] = 1; // marks the unit as used so it is not added to the slot list
-		if ($newLaborID == $i) {
+	$newLaborID = $postVals[3+$i*2];
+	if ($newLaborID < 11) {
+		$usedItems[$newLaborID-1] = 1; // marks the unit as used so it is not added to the slot list
+		if ($newLaborID == $i+1) {
 		// No change to this unit
 		} else {
 			// Add a unit that is already in the factory
 			for ($datItem = 0; $datItem<10; $datItem++) {
 				$thisFactory->objDat[131 + $i*10+$datItem] = $startFactoryLabor[$newLaborID*10+$datItem];
 				$thisFactory->objDat[131 + $newLaborID*10 + $datItem] = 0;
-			}			
+			}
 		}
 	}
-	else 
+	else {}
 }
 
+echo 'Used items:';
+print_r($usedItems);
 
 /// load production requirements
-fseek($thisFactory->linkFile, $thisFactory->get('currentProd')*1000);
-$productInfo = unpack('i*', fread($thisFactory->linkFile, 200));
+fseek($objFile, $thisFactory->get('currentProd')*1000);
+$productInfo = unpack('i*', fread($objFile, 1000));
 
 /// Load product labor equivalencies
 $laborTotal = 0;

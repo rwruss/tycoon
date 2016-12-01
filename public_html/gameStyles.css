@@ -11,6 +11,7 @@
 		padding: 5px;
 		display:inline-block;
 		text-align: center;
+		border-radius:10;
 }
 
 .bldgImg {
@@ -760,6 +761,7 @@
 	border: 1px solid pink;
 	float:left;
 	background:pink;
+	border-radius:10px;
 }
 
 .productName {
@@ -785,6 +787,7 @@
 	border: 1px solid pink;
 	float:left;
 	background:white;
+	border-radius:10px;
 }
 
 .orderTime {

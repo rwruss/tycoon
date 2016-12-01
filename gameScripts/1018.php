@@ -10,6 +10,9 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
+$factoryLabor = array_slice($thisFactory->objDat, $thisFactory->laborOffset, 100);
+print_r($factoryLabor);
+
 // Load labor stdFloatDiv
 $laborSlot = new itemSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
 print_r($laborSlot->slotData);
@@ -40,11 +43,11 @@ if ($thisFactory->objDat[$thisFactory->laborOffset] == 0) {
 	$useID = 'empty';
 } else $useID = 1;
 echo 'new laborItem({objID:"'.$useID.'", pay:'.$thisFactory->objDat[$thisFactory->laborOffset+5].', ability:'.$thisFactory->objDat[$thisFactory->laborOffset+8].', laborType:'.$thisFactory->objDat[$thisFactory->laborOffset+1].'})';
-for ($i=10; $i<100; $i+=10) {
-	if ($thisFactory->objDat[$thisFactory->laborOffset + $i] == 0) {
-		$useID = 'empty';
-	} else $useID = 1+$i;
-	echo ', new laborItem({objID:"'.$useID.'", pay:'.$thisFactory->objDat[$thisFactory->laborOffset+5 + $i].', ability:'.$thisFactory->objDat[$thisFactory->laborOffset+8 + $i].', laborType:'.$thisFactory->objDat[$thisFactory->laborOffset+1 + $i].'})';
+for ($i=2; $i<=10; $i++) {
+	if ($thisFactory->objDat[$thisFactory->laborOffset + $i*10] == 0) {
+		$useID = $i;
+	} else $useID = $i;
+	echo ', new laborItem({objID:"'.$useID.'", pay:'.$thisFactory->objDat[$thisFactory->laborOffset+5 + $i*10].', ability:'.$thisFactory->objDat[$thisFactory->laborOffset+8 + $i*10].', laborType:'.$thisFactory->objDat[$thisFactory->laborOffset+1 + $i*10].'})';
 }
 
 echo '];
@@ -58,21 +61,22 @@ var factoryLaborItems = addDiv("factoryLabor", "stdFloatDiv", factoryLaborSectio
 
 var laborOptionList = new uList(factoryLabor.concat(companyLabor));
 console.log(laborOptionList);
-laborSpot1 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:1});
-laborSpot2 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:2});
-laborSpot3 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:3});
-laborSpot4 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:4});
-laborSpot5 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:5});
-laborSpot6 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:6});
-laborSpot7 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:7});
-laborSpot8 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:8});
-laborSpot9 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:9});
-laborSpot10 = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:10`});
+laborSpots = Array();
+laborSpots[0] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:1});
+laborSpots[1] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:2});
+laborSpots[2] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:3});
+laborSpots[3] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:4});
+laborSpots[4] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:5});
+laborSpots[5] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:6});
+laborSpots[6] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:7});
+laborSpots[7] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:8});
+laborSpots[8] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:9});
+laborSpots[9] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:10});
 
 saveLabor = newButton(thisDiv, function () {
 	let results = "";
 	for (let i=0; i<10; i++) {
-		results += "," + SLreadSelection("laborSpot"+i);
+		results += "," + SLreadSelection(laborSpots[i]);
 	}
 	scrMod("1022,'.$postVals[1].'" + results);
 });
