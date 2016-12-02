@@ -59,6 +59,7 @@ var factoryLaborItems = addDiv("factoryLabor", "stdFloatDiv", factoryLaborSectio
 var laborOptionList = new uList(factoryLabor.concat(companyLabor));
 console.log(laborOptionList);
 laborSpots = Array();
+laborOptionList.setEmpty(0);
 laborSpots[0] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:1});
 laborSpots[1] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:2});
 laborSpots[2] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:3});

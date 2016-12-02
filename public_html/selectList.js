@@ -6,6 +6,7 @@ class objectList {
 		this.sortNames = [];
 		this.sortBy = null;
 		this.sortDir = 1;
+		this.emptyItem = null;
 	}
 
 	addSort(val, desc) {
@@ -16,6 +17,10 @@ class objectList {
 	addFilter(val, desc) {
 		this.filterOptions.push(val);
 		this.filterNames.push(desc);
+	}
+	
+	setEmpty(key) {
+		this.emptyItem = key;
 	}
 
 	SLsingleButton(target, opts) {
@@ -34,17 +39,12 @@ class objectList {
 				this.existingValue(selectButton, opts);
 			}
 			if (opts.renderFunction) {
-
-				//selectButton.addEventListener("click", function () {item.SLsingleSelect(selectButton, opts.renderFunction)});
 				renderFunction = opts.renderFunction;
 			} else {
 
 			}
 		}
-		//console.log("Make a button with this function");
-		//console.log(renderFunction);
 		selectButton.addEventListener("click", function () {
-			//console.log("passing function " + renderFunction + " from button " + selectButton.innerHTML);
 			item.SLsingleSelect(selectButton, renderFunction)
 			});
 		return selectButton;
@@ -128,7 +128,6 @@ class objectList {
 	}
 
 	SLshowList(target, selectContainer, renderFunction) {
-		//console.log(target);
 		selectContainer.innerHTML = "";
 		for (var i=0; i<this.listItems.length; i++) {
 			if (this.parentList[this.listItems[i]] instanceof objectList) {
@@ -139,15 +138,12 @@ class objectList {
 					subtarg.SLsingleSelect(target, function() {})
 					});
 			} else {
-			//let object = this.showItem(this.parentList[this.listItems[i]], selectContainer);
-			//console.log(renderFunction);
-			//console.log(this.selectedItems);
-			if (this.selectedItems[i] == 0) {
+
+			if (this.selectedItems[i] == 0 || this.emptyItem == i) {
 				let object = renderFunction(this.parentList[this.listItems[i]], selectContainer, i);
 
 				object.owner = this;
 				object.objID = this.listItems[i];
-				//console.log(this.listItems[i]);
 				object.addEventListener("click", function () {
 
 					console.log("set slected to " + object.objID + " which equals " + this.owner);
