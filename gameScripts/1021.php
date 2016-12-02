@@ -48,6 +48,7 @@ if ($laborSpotCheck >= 0) {
 	if ($laborSlot == 0) {
 		$laborSlot = newSlot($slotFile);
 		$thisBusiness->save('laborSlot', $laborSlot);
+		echo 'Save new labor slot #'.$laborSlot;
 	}
 	$laborList = new blockSlot($laborSlot, $slotFile, 40);
 

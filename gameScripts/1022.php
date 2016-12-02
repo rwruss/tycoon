@@ -37,6 +37,8 @@ $startFactoryLabor = array_slice($thisFactory->objDat, $lOff, 100);
 // Load the business labor slot to get the relevant items
 $openSlotSpots = [];
 $businessLabor = new blockSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
+echo 'Labor slot Data:';
+print_r($businessLabor->slotData);
 
 $usedItems = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -56,24 +58,24 @@ for ($i=0; $i<10; $i++) {
 	}
 	else {
 		// Add item from the blockSlot to the factory and remove from the blockslot
-		$thisFactory->objDat[$lOff+$i*10] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+1] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+2] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+3] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+4] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+5] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+6] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+7] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+8] = $businessLabor[$newLaborID];
-		$thisFactory->objDat[$lOff+$i*10+9] = $businessLabor[$newLaborID];
-		
+		$thisFactory->objDat[$lOff+$i*10] = $businessLabor->slotData[$newLaborID];
+		$thisFactory->objDat[$lOff+$i*10+1] = $businessLabor->slotData[$newLaborID+1];
+		$thisFactory->objDat[$lOff+$i*10+2] = $businessLabor->slotData[$newLaborID+2];
+		$thisFactory->objDat[$lOff+$i*10+3] = $businessLabor->slotData[$newLaborID+3];
+		$thisFactory->objDat[$lOff+$i*10+4] = $businessLabor->slotData[$newLaborID+4];
+		$thisFactory->objDat[$lOff+$i*10+5] = $businessLabor->slotData[$newLaborID+5];
+		$thisFactory->objDat[$lOff+$i*10+6] = $businessLabor->slotData[$newLaborID+6];
+		$thisFactory->objDat[$lOff+$i*10+7] = $businessLabor->slotData[$newLaborID+7];
+		$thisFactory->objDat[$lOff+$i*10+8] = $businessLabor->slotData[$newLaborID+8];
+		$thisFactory->objDat[$lOff+$i*10+9] = $businessLabor->slotData[$newLaborID+9];
+
 		$openSlotSpots[] = $newLaborID;
 	}
 }
 
 echo 'Used items:';
 print_r($usedItems);
-
+/*
 // Move items from the company slot into the factory
 
 // Move unused items from the factory into the slots
@@ -83,7 +85,7 @@ for($i=0; $i<10; $i++) {
 		$laborDat = pack('i*', $startFactoryLabor[$val], $startFactoryLabor[$val+1], $startFactoryLabor[$val+2], $startFactoryLabor[$val+3], $startFactoryLabor[$val+4], $startFactoryLabor[$val+5], $startFactoryLabor[$val+6], $startFactoryLabor[$val7], $startFactoryLabor[$val+8], $startFactoryLabor[$val+9]);
 		$loc = array_shift($openSlotSpots);
 		if (is_null($loc)) $loc = 0;
-		
+
 		$businessLabor->addItem($slotFile, $laborDat, $loc);
 	}
 }
@@ -121,6 +123,13 @@ echo 'LABOR MOD OF '.$laborModifier;
 
 $thisFactory->saveAll($objFile);
 
+$endFactoryLabor = array_slice($thisFactory->objDat, $lOff, 100);
+echo 'Final factory labort:';
+print_r($endFactoryLabor);
+
+echo 'Final slot labor';
+print_r($businessLabor->slotData);
+*/
 fclose($objFile);
 fclose($slotFile);
 fclose($cityFile);

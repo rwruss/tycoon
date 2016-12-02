@@ -11,9 +11,10 @@ $thisBusiness = loadObject($pGameID, $objFile, 400);
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
 $factoryLabor = array_slice($thisFactory->objDat, $thisFactory->laborOffset, 100);
-print_r($factoryLabor);
+//print_r($factoryLabor);
 
 // Load labor stdFloatDiv
+echo 'Labor in slot '.$thisBusiness->get('laborSlot');
 $laborSlot = new itemSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
 print_r($laborSlot->slotData);
 
@@ -38,12 +39,8 @@ for ($i=$startSpot; $i<sizeof($laborSlot->slotData); $i+=10) {
 
 echo 'new laborItem({objID:11, pay:1000, ability:50, laborType:4}), new laborItem({objID:12, pay:1000, ability:50, laborType:6}),new laborItem({objID:13, pay:1000, ability:50, laborType:5})];
 
-factoryLabor = [';
-if ($thisFactory->objDat[$thisFactory->laborOffset] == 0) {
-	$useID = 'empty';
-} else $useID = 1;
-echo 'new laborItem({objID:"'.$useID.'", pay:'.$thisFactory->objDat[$thisFactory->laborOffset+5].', ability:'.$thisFactory->objDat[$thisFactory->laborOffset+8].', laborType:'.$thisFactory->objDat[$thisFactory->laborOffset+1].'})';
-for ($i=2; $i<=10; $i++) {
+factoryLabor = [new laborItem({objID:"empty", pay:0, ability:0, laborType:0})';
+for ($i=0; $i<10; $i++) {
 	if ($thisFactory->objDat[$thisFactory->laborOffset + $i*10] == 0) {
 		$useID = $i;
 	} else $useID = $i;
@@ -81,6 +78,14 @@ saveLabor = newButton(thisDiv, function () {
 	scrMod("1022,'.$postVals[1].'" + results);
 });
 saveLabor.innerHTML = "Save Labor";
+
+var addLabor = addDiv("companyLabor", "stdFloatDiv", thisDiv);
+textBlob("", addLabor, "Company Labor Pool");
+var companyLaborItems = addDiv("", "stdFloatDiv", addLabor);
+
+laborAdj = newButton(addLabor, function () {scrMod("1019,'.$postVals[1].'")});
+laborAdj.innerHTML = "Hire labor";</script>
+
 ';
 
 /*
@@ -95,9 +100,7 @@ fclose($slotFile);
 fclose($cityFile);
 
 /* Snip 1
-var addLabor = addDiv("companyLabor", "stdFloatDiv", thisDiv);
-textBlob("", addLabor, "Company Labor Pool");
-var companyLaborItems = addDiv("", "stdFloatDiv", addLabor);
+
 
 emptyObject = new laborItem({objID:"empty", pay:0, ability:0, laborType:0});
 emptyItem = emptyObject.renderSummary(null);
@@ -136,8 +139,7 @@ laborBox1 = laborSelect.SLsingleButton(addLabor, {renderFunction: (function (x, 
 console.log("item #" + z);
 return x.renderQty(y, 100);})});
 
-laborAdj = newButton(addLabor, function () {scrMod("1019,'.$postVals[1].'")});
-laborAdj.innerHTML = "Hire labor";</script>';
+';
 */
 
 ?>

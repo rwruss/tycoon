@@ -157,6 +157,7 @@ class objectList {
 					target.selectedValue = this.owner.parentList[object.objID].objID;
 
 					this.owner.selectedItems[target.selectedIndex] = 0;
+					console.log("unselect item " + target.selectedIndex);
 					this.owner.selectedItems[object.objID] = 1;
 					target.selectedIndex = object.objID;
 					//this.owner.showSelected(object.objID, target);
@@ -282,7 +283,11 @@ class uList extends objectList {
 		//console.log(target);
 		for (var i=0; i<this.parentList.length; i++) {
 			if (this.parentList[i].objID == opts.setVal) {
+					this.selectedItems[i] = 1;
 					this.showSelected(i, target);
+
+					target.selectedValue = this.parentList[i].objID;
+					target.selectedIndex = i;
 			}
 		}
 
