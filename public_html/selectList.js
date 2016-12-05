@@ -18,36 +18,41 @@ class objectList {
 		this.filterOptions.push(val);
 		this.filterNames.push(desc);
 	}
-	
+
 	setEmpty(key) {
 		this.emptyItem = key;
 	}
 
 	SLsingleButton(target, opts) {
-
+		console.log(this.selectedItems);
 		var selectButton = addDiv("b1", "button", target);
 		selectButton.innerHTML = "button";
 		let item = this;
 		selectButton.listItem = this;
 		//selectButton.addEventListener("click", function () {item.SLsingleSelect(selectButton)});
 		selectButton.selectedValue = false;
+
+		// Set default render
 		var renderFunction = function(x, y) {
 				return item.showItem(x, y);
 			}
+		// Apply options
 		if (typeof opts !== "undefined") {
-			if (opts.setVal) {
+			if (opts.setVal >= 0) {
 				this.existingValue(selectButton, opts);
 			}
 			if (opts.renderFunction) {
 				renderFunction = opts.renderFunction;
 			} else {
-
 			}
 		}
+
 		selectButton.addEventListener("click", function () {
 			item.SLsingleSelect(selectButton, renderFunction)
 			});
 		return selectButton;
+
+
 	}
 
 	SLsingleSelect(target, renderFunction) {
@@ -139,9 +144,10 @@ class objectList {
 					});
 			} else {
 
-			if (this.selectedItems[i] == 0 || this.emptyItem == i) {
+			if ((this.selectedItems[i] == 0 && this.parentList[this.listItems[i]].objID != this.parentList[this.emptyItem].objID) || (this.emptyItem == i)) {
 				let object = renderFunction(this.parentList[this.listItems[i]], selectContainer, i);
-
+				console.log("empty Item " + this.emptyItem + " vs " + i);
+				console.log("2 check " + this.parentList[this.listItems[i]].objID + " vs " + this.parentList[this.emptyItem].objID)
 				object.owner = this;
 				object.objID = this.listItems[i];
 				object.addEventListener("click", function () {
@@ -257,8 +263,6 @@ class uList extends objectList {
 		this.selectedItems = Array(this.listItems.length).fill(0);
 		//this.selectedItems.fill(0, 0, 10);
 
-		console.log("Selected items - " + this.listItems.length);
-		console.log(this.selectedItems);
 		if (typeof opts !== "undefined") {
 			console.log("review otts")
 			//if (opts.items.length > 0) this.listItems = opts.items;
@@ -276,14 +280,16 @@ class uList extends objectList {
 
 	existingValue(target, opts) {
 		//console.log("ulist existing to " + opts.setVal);
-		//console.log(target);
+
 		for (var i=0; i<this.parentList.length; i++) {
 			if (this.parentList[i].objID == opts.setVal) {
+				console.log(opts.setVal + " found at " + i);
 					this.selectedItems[i] = 1;
 					this.showSelected(i, target);
 
 					target.selectedValue = this.parentList[i].objID;
 					target.selectedIndex = i;
+					break;
 			}
 		}
 
@@ -298,6 +304,7 @@ class uList extends objectList {
 	}
 
 	showItem(id, trg) {
+		console.log(id);
 		var objBox = id.renderSummary(trg);
 		//console.log("Show the default uList item " + objBox)
 		return objBox;

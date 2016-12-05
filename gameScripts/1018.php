@@ -37,12 +37,12 @@ for ($i=$startSpot; $i<sizeof($laborSlot->slotData); $i+=10) {
 }
 
 
-echo 'new laborItem({objID:11, pay:1000, ability:50, laborType:4}), new laborItem({objID:12, pay:1000, ability:50, laborType:6}),new laborItem({objID:13, pay:1000, ability:50, laborType:5})];
-
-factoryLabor = [new laborItem({objID:"empty", pay:0, ability:0, laborType:0})';
+//echo 'new laborItem({objID:11, pay:1000, ability:50, laborType:4}), new laborItem({objID:12, pay:1000, ability:50, laborType:6}),new laborItem({objID:13, pay:1000, ability:50, laborType:5})];
+echo '];
+factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0})';
 for ($i=0; $i<10; $i++) {
 	if ($thisFactory->objDat[$thisFactory->laborOffset + $i*10] == 0) {
-		$useID = $i;
+		$useID = 0;
 	} else $useID = $i;
 	echo ', new laborItem({objID:"'.$useID.'", pay:'.$thisFactory->objDat[$thisFactory->laborOffset+5 + $i*10].', ability:'.$thisFactory->objDat[$thisFactory->laborOffset+8 + $i*10].', laborType:'.$thisFactory->objDat[$thisFactory->laborOffset+1 + $i*10].'})';
 }
@@ -62,14 +62,14 @@ laborSpots = Array();
 laborOptionList.setEmpty(0);
 laborSpots[0] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:1});
 laborSpots[1] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:2});
-laborSpots[2] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:3});
-laborSpots[3] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:4});
-laborSpots[4] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:5});
-laborSpots[5] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:6});
-laborSpots[6] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:7});
-laborSpots[7] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:8});
-laborSpots[8] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:9});
-laborSpots[9] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:10});
+laborSpots[2] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:0});
+laborSpots[3] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:0});
+laborSpots[4] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:0});
+laborSpots[5] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:0});
+laborSpots[6] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:0});
+laborSpots[7] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:0});
+laborSpots[8] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:0});
+laborSpots[9] = laborOptionList.SLsingleButton(factoryLaborSection, {setVal:0});
 
 saveLabor = newButton(thisDiv, function () {
 	let results = "";
