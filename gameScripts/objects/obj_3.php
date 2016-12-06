@@ -90,17 +90,11 @@ if (invList.parentList.length > 0) {
 		if (materialOrder[i] == 0) thisBox.addEventListener("click", function () {
 			useDeskTop.newPane("orderPane");
 			orderPane = useDeskTop.getPane("orderPane");
-
-
-
-				console.log(invList);
-				textBlob("", orderPane, "Select which item you want to order");
-				orderBox1 = invList.SLsingleButton(orderPane);
-
-
+			console.log(invList);
+			textBlob("", orderPane, "Select which item you want to order");
+			orderBox1 = invList.SLsingleButton(orderPane);
 			orderSelectButton = newButton(orderPane, function () {scrMod("1009,'.$postVals[1].',"+ SLreadSelection(orderBox1))});
 			orderSelectButton.innerHTML = "Find Offers";
-
 			offerContainer = addDiv("", "stdContain", orderPane);
 			});
 	}

@@ -201,11 +201,12 @@ class blockSlot extends dataSlot {
 		echo 'Slotlist:<br>';
 		print_r($this->slotList);
 		echo 'data block length '.strlen($data).'<br>';
+		print_R($this->slotData);
 		if (flock($file, LOCK_EX)) {  // acquire an exclusive lock
 			// Read the last item that was saved in this slot and version
 			fseek($file, $this->slotList[0]*$this->size+4);
 
-			if ($location == 0) $location = sizeof($this->slotData)+1;
+			if ($location == 0) $location = max(sizeof($this->slotData)+1, ceil(strlen($data)/4)+1);
 
 			// Check if enough space is available for new items
 			$available = sizeof($this->slotList)*($this->size-4);

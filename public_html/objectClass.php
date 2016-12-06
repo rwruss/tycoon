@@ -287,7 +287,7 @@ class factory extends object {
 		echo 'List of events:<br>';
 		print_r($eventOrder);
 		*/
-		
+
 		$productionRate = $this->get('currentRate')/100;
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
@@ -370,6 +370,9 @@ class factory extends object {
 		$this->objDat[$this->laborOffset+$laborSpot*10+7] = $laborDat[7];
 		$this->objDat[$this->laborOffset+$laborSpot*10+8] = $laborDat[8];
 		$this->objDat[$this->laborOffset+$laborSpot*10+9] = $laborDat[9];
+
+		echo 'Write data:';
+		print_r($laborDat);
 	}
 }
 

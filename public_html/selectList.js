@@ -24,7 +24,7 @@ class objectList {
 	}
 
 	SLsingleButton(target, opts) {
-		console.log(this.selectedItems);
+		//console.log(this.selectedItems);
 		var selectButton = addDiv("b1", "button", target);
 		selectButton.innerHTML = "button";
 		let item = this;
@@ -143,11 +143,12 @@ class objectList {
 					subtarg.SLsingleSelect(target, function() {})
 					});
 			} else {
-
-			if ((this.selectedItems[i] == 0 && this.parentList[this.listItems[i]].objID != this.parentList[this.emptyItem].objID) || (this.emptyItem == i)) {
+			let emptyCheck = -1;
+			if (this.emptyItem !== null) emptyCheck = this.parentList[this.emptyItem].objID;
+			if ((this.selectedItems[i] == 0 && this.parentList[this.listItems[i]].objID != this.emptyItem) || (this.emptyItem == i)) {
 				let object = renderFunction(this.parentList[this.listItems[i]], selectContainer, i);
-				console.log("empty Item " + this.emptyItem + " vs " + i);
-				console.log("2 check " + this.parentList[this.listItems[i]].objID + " vs " + this.parentList[this.emptyItem].objID)
+				//console.log("empty Item " + this.emptyItem + " vs " + i);
+				//console.log("2 check " + this.parentList[this.listItems[i]].objID + " vs " + this.emptyItem
 				object.owner = this;
 				object.objID = this.listItems[i];
 				object.addEventListener("click", function () {
@@ -166,7 +167,7 @@ class objectList {
 					console.log(this.owner.selectedItems);
 					renderFunction(object.owner.parentList[object.objID], target);
 					});
-				}
+				} else console.log("case 33");
 			}
 		}
 	}
@@ -283,7 +284,7 @@ class uList extends objectList {
 
 		for (var i=0; i<this.parentList.length; i++) {
 			if (this.parentList[i].objID == opts.setVal) {
-				console.log(opts.setVal + " found at " + i);
+				//console.log(opts.setVal + " found at " + i);
 					this.selectedItems[i] = 1;
 					this.showSelected(i, target);
 
