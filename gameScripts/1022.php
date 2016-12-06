@@ -59,9 +59,9 @@ for ($i=0; $i<10; $i++) {
       } else {
         echo 'Move item '.$newLaborID.' into spot '.$i.' from elsewhere in factory';
         for ($datItem = 0; $datItem<10; $datItem++) {
-  				//$thisFactory->objDat[$lOff + $i*10+$datItem] = $startFactoryLabor[$newLaborID*10-10+$datItem];
+  				$thisFactory->objDat[$lOff + $i*10+$datItem] = $startFactoryLabor[$newLaborID*10-10+$datItem];
   				//$thisFactory->objDat[$lOff + $newLaborID*10-10 + $datItem] = 0;
-					echo ($lOff + $i*10+$datItem).' --> '.($startFactoryLabor[$newLaborID*10-10+$datItem]).' & '.($lOff + $newLaborID*10-10 + $datItem).' = 0<br>';
+				echo ($lOff + $i*10+$datItem).' --> '.($startFactoryLabor[$newLaborID*10-10+$datItem]).' & '.($lOff + $newLaborID*10-10 + $datItem).' = 0<br>';
         }
 			}
     } else {
