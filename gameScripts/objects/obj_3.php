@@ -35,17 +35,10 @@ for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
 }
 echo ']);
-//console.log(someProduct);
-//prodList = new uList([someProduct]);
-
 optionBox1 = prodList.SLsingleButton(thisDiv'.$currentProduction.');
 
 sendButton = newButton(thisDiv, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(optionBox1))});
 sendButton.innerHTML = "Set production";
-/*
-priceButton = newButton(thisDiv, function () {scrMod("1011,'.$postVals[1].'")});
-priceButton.innerHTML = "Set Prices";
-*/
 
 var productInvSection = addDiv("", "stdFloatDiv", thisDiv);
 for (var i=0; i<5; i++) {
@@ -57,7 +50,8 @@ for (var i=0; i<5; i++) {
 var laborSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", laborSection, "Labor Pool - show available labor");
 for (var i=0; i<factoryLabor.length; i++) {
-	laborBox(factoryLabor[i], laborSection);
+	let laborItem = laborBox(factoryLabor[i], laborSection);
+	laborItem.addEventListener("click", function () {scrMod("1023,'.$postVals[1].',"+i)});
 }
 laborButton = newButton(laborSection, function () {scrMod("1018,'.$postVals[1].'")});
 laborButton.innerHTML = "Adjust Labor";

@@ -463,12 +463,12 @@ class city extends object {
 				}
 			}
 		}
-
+		/*
 		if ($this->get('laborSlot') == 0) {
 			echo 'Make a new slot';
 			$this->save('laborSlot', newSlot($slotFile));
 		}
-
+		*/
 		$emptySpots = [];
 		for ($i=0; $i<100; $i++) {
 			if ($this->objDat[$this->laborStoreOffset+$i*10+1] == 0) $emptySpots[] = $i;
