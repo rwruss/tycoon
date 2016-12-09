@@ -19,7 +19,20 @@ productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
 productLabor = ['.implode(',', $productInfo->reqLabor).'];
 materialInv = ['.implode(',', $thisObj->resourceStores).'];
 materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
-factoryLabor = [];
+factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0})';
+$startVals = [];
+for ($i=0; $i<10; $i++) {
+	if ($thisObj->objDat[$thisObj->laborOffset + $i*10] == 0) {
+		$useID = 0;
+		$startVals[$i] = 0;
+	} else {
+		$startVals[$i] = $i+1;
+		$useID = $i+1;
+	}
+	echo ', new laborItem({objID:"'.$useID.'", pay:'.$thisObj->objDat[$thisObj->laborOffset+5 + $i*10].', ability:'.$thisObj->objDat[$thisObj->laborOffset+8 + $i*10].', laborType:'.$thisObj->objDat[$thisObj->laborOffset+1 + $i*10].'})';
+}
+
+echo '];
 
 inventoryItems = [];
 for (i=0; i<materialInv.length; i+=2) {
@@ -49,9 +62,13 @@ for (var i=0; i<5; i++) {
 
 var laborSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", laborSection, "Labor Pool - show available labor");
-for (var i=0; i<factoryLabor.length; i++) {
-	let laborItem = laborBox(factoryLabor[i], laborSection);
-	laborItem.addEventListener("click", function () {scrMod("1023,'.$postVals[1].',"+i)});
+for (var i=1; i<factoryLabor.length; i++) {
+
+	let laborItem = factoryLabor[i].renderSummary(laborSection);
+	//let laborItem = laborBox(factoryLabor[i], laborSection);
+	let itemNum = i;
+	console.log("item " + itemNum);
+	laborItem.addEventListener("click", function () {scrMod("1023,'.$postVals[1].',"+itemNum)});
 }
 laborButton = newButton(laborSection, function () {scrMod("1018,'.$postVals[1].'")});
 laborButton.innerHTML = "Adjust Labor";
