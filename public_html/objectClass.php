@@ -56,6 +56,7 @@ class object {
 	function saveItem($loc, $val) {
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc*4-4);
 		fwrite($this->linkFile, pack('i', $val));
+		$this->objDat[$loc] = $val;
 		echo 'ID: '.$this->unitID;
 		echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $loc*4-4);
 	}

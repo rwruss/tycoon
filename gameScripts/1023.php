@@ -5,7 +5,6 @@ require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
 // Load the factory and get the labor details for the item in question
@@ -28,10 +27,19 @@ textBlob("", payArea, "Current pay for this employee");
 newPay = payBox(payArea, 1000);
 newPay.slider.slide.step = ".01";
 setSlideVal(newPay, '.($laborDetails[5]/100).');
+payButton = newButton(payArea, scrMod("1024,'.$postVals[1].','.$postVals[2].',"+newPay.slider.slide.value);
+});
+
+promotionArea = addDiv("", "stdFloatDiv", thisDiv);
+textBlob("", promotionArea, "Promotion options");
+for (i=0; i<10; i++) {
+	let thisOption = laborArray[i].renderSummary(promotionArea);
+	thisOption.addEventListener("click", funciton())
+}
+promoteButton = newButton(promotionArea, scrMod("1025,'.$postVals[1].','.$postVals[2].',"+)
 </script>';
 
 fclose($cityFile);
-fclose($slotFile);
 fclose($objFile);
 
 ?>

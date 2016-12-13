@@ -21,6 +21,8 @@
 1021 - PROCESS: Hire labor from a city to a factory or a company
 1022 - PROCESS: Move labor from company to factory or Vice Versa (from 1018)
 1023 - Labor Item detail
+1024 - PROCESS: Save adjusted pay rate for a worker
+1025 - PROCESS: Save adjust job titele for a worker
 
 
 TO DO:
