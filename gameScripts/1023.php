@@ -27,16 +27,14 @@ textBlob("", payArea, "Current pay for this employee");
 newPay = payBox(payArea, 1000);
 newPay.slider.slide.step = ".01";
 setSlideVal(newPay, '.($laborDetails[5]/100).');
-payButton = newButton(payArea, scrMod("1024,'.$postVals[1].','.$postVals[2].',"+newPay.slider.slide.value);
-});
+payButton = newButton(payArea, function() {scrMod("1024,'.$postVals[1].','.$postVals[2].',"+newPay.slider.slide.value)});
 
 promotionArea = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", promotionArea, "Promotion options");
-for (i=0; i<10; i++) {
-	let thisOption = laborArray[i].renderSummary(promotionArea);
-	thisOption.addEventListener("click", funciton())
-}
-promoteButton = newButton(promotionArea, scrMod("1025,'.$postVals[1].','.$postVals[2].',"+)
+proOpts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+proSelect = new uList(laborArray, {items:[0,1,2,3,4,5]});
+proSelectButton = proSelect.SLsingleButton(promotionArea, {setVal:0});
+savePromote = newButton(promotionArea, function () {scrMod("1025,'.$postVals[1].','.$postVals[2].',"+SLreadSelection(proSelectButton))});
 </script>';
 
 fclose($cityFile);

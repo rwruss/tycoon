@@ -38,7 +38,8 @@ class objectList {
 			}
 		// Apply options
 		if (typeof opts !== "undefined") {
-			if (opts.setVal >= 0) {
+			console.log(opts);
+			if (opts.setVal !== "undefined") {
 				this.existingValue(selectButton, opts);
 			}
 			if (opts.renderFunction) {
@@ -259,7 +260,7 @@ class saleList extends objectList {
 class uList extends objectList {
 	constructor(parentList, opts) {
 		super();
-		console.log(parentList);
+		console.log(opts);
 		this.listItems = Object.keys(parentList);
 		this.selectedItems = Array(this.listItems.length).fill(0);
 		//this.selectedItems.fill(0, 0, 10);
