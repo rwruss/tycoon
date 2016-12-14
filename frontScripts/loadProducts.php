@@ -6,12 +6,14 @@ $scenario = 1;
 $objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'r+b');
 $nameFile = fopen('../scenarios/'.$scenario.'/objNames.dat', 'w');
 $laborNameFile = fopen('../scenarios/'.$scenario.'/laborNames.dat', 'w');
+$laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w')
 
 // Load labor descriptions
 $laborFile = fopen('../scenarios/'.$scenario.'/laborDesc.csv', 'rb');
 $count = 0;
 while (($line = fgets($laborFile)) !== false) {
-  $laborItems[trim($line)] = $count;
+	$lineItems = explode(',', $line);
+  $laborItems[trim($lineItems[0])] = $count;
   $count++;
 }
 foreach ($laborItems as $key => $value) {
@@ -20,10 +22,22 @@ foreach ($laborItems as $key => $value) {
 print_R($laborItems);
 
 fseek($laborFile, 0);
-$line = fgets($laborFile);
-fwrite($laborNameFile, '"'.trim($line).'"');
+//$line = fgets($laborFile);
+//$lineItems = explode(',', $line);
+//fwrite($laborNameFile, '"'.trim($lineItems[0]).'"');
+$laborCount = 0;
 while (($line = fgets($laborFile)) !== false) {
-  fwrite($laborNameFile, ', "'.trim($line).'"');
+	$lineItems = explode(',', $line);
+	fwrite($laborNameFile, '"'.trim($lineItems[0]).'"');
+	
+	// REcord promotion options for each labor items
+	$promotionDat = '';
+	for ($i=1; $i<11; $i++) {
+		$promotionDat .= pack('i', $laborItems[trim($lineItems[$i])]);
+	}
+	fseek($laborDetailFile, $laborCount*1000+4);
+	fwrite($laborDetailFile, $promotionDat);
+	$laborCount++;
 }
 
 // Load each product description into the product array
@@ -163,6 +177,7 @@ fclose($factoryFile);
 fclose($objFile);
 fclose($nameFile);
 fclose($laborNameFile);
+fclose($laborDetailFile);
 
 // create sales file
 $salesFile = fopen('../scenarios/'.$scenario.'/saleOffers.slt', 'wb');

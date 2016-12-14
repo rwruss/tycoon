@@ -11,6 +11,14 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 $laborDetails = array_slice($thisFactory->objDat, $thisFactory->laborOffset + ($postVals[2]-1)*10 - 1, 10); // correction to post vals since it starts at index 1
 
+$promoDat = unpack('i*', file_get_contents('../scenarios/1/laborDetails.dat', NULL, NULL, $laborDetails[0]*1000; 44));
+$promoOpts = [];
+
+// Check if ability is high enough to allow promotion
+if ($laborDetails[8]/518400 > $promoDat[1]) {
+	$promoOpts = [$promoDat[2], $promoDat[3], $promoDat[4], $promoDat[5], $promoDat[6], $promoDat[7], $promoDat[8], $promoDat[9], $promoDat[10], $promoDat[11]];
+}
+
 print_r($laborDetails);
 
 // Out put promotion options and set pay...
@@ -31,8 +39,8 @@ payButton = newButton(payArea, function() {scrMod("1024,'.$postVals[1].','.$post
 
 promotionArea = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", promotionArea, "Promotion options");
-proOpts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-proSelect = new uList(laborArray, {items:[0,1,2,3,4,5]});
+
+proSelect = new uList(laborArray, {items:['.implode(',', $promoOpts).']});
 proSelectButton = proSelect.SLsingleButton(promotionArea, {setVal:0});
 savePromote = newButton(promotionArea, function () {scrMod("1025,'.$postVals[1].','.$postVals[2].',"+SLreadSelection(proSelectButton))});
 </script>';

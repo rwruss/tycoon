@@ -26,8 +26,8 @@
 
 
 TO DO:
-Labor experience and leveling up
-Adjust production rates based on labor
+Labor experience and leveling up - Daily processing of an update
+Adjust production rates based on labor - Do this in the labor and production change scripts
 
 DONE - Assigning labor to production tasks at factory
 
@@ -41,6 +41,7 @@ http://www.jameco.com/z/RF-500TB-18280-R-Nichibo-Taiwan-3-Volt-Dc-Motor-2104-Rpm
 
 Other
 http://www.bbc.com/earth/story/20161021-why-there-could-be-many-copies-of-you
+http://www.bbcgoodfood.com/howto/guide/5-mulled-drinks-you-can-make-minutes
 
 Graphics
 https://www.quora.com/Whats-the-coolest-thing-you-can-get-a-computer-to-do-in-10-lines-of-code/answer/Liber-Liu

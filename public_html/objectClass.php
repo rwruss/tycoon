@@ -221,18 +221,10 @@ class factory extends object {
 		// load production requirements
 		fseek($this->linkFile, $this->get('currentProd')*1000);
 		$productInfo = unpack('i*', fread($this->linkFile, 200));
-		/*
-		echo 'required rsc:';
-		print_r($productInfo);
-		*/
+
 		// NEED TO DETERMINE PRODUCT INDEX
 
 		// Sort material requirements into the storage index for the factory
-		//$referenceList = array_fill(0, 20, 0);
-		/*
-		echo 'Resources stores<br>';
-		print_r($this->resourceStores);
-		*/
 		$rscSpots = [];
 		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
 			$rscSpots[$this->resourceStores[$i]] = $i;
@@ -252,10 +244,7 @@ class factory extends object {
 				}
 			}
 		}
-		/*
-		echo 'referene list<br>';
-		print_r($referenceList);
-		*/
+
 		// Load pending deliveries
 		$now = time();
 		$elapsed = $now - $this->get('lastUpdate');
@@ -271,9 +260,7 @@ class factory extends object {
 				$this->objDat[58+$i*3] = 0;
 			} else echo $this->objDat[56+$i*3].' > '.$now.'<br>';
 		}
-		/*
-		echo 'List of events: ('.$now.')<br>';
-		print_r($events);*/
+
 		for ($i=0; $i<sizeof($events)/3; $i++) {
 			$timeList[$i] = $events[$i*3];
 		}
@@ -282,15 +269,9 @@ class factory extends object {
 		asort($timeList);
 		$eventOrder = array_keys($timeList);
 		$totalProduction = 0;
-		/*
-		echo 'List of tuimes: ('.$now.')<br>';
-		print_r($timeList);
-		echo 'List of events:<br>';
-		print_r($eventOrder);
-		*/
 
-		$productionRate = $this->get('currentRate')/100;
-		$productionRate = 1;
+		$productionRate = $this->get('currentRate')/100;		
+		$productionRate = 1;  // Rate override
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
 			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].') = '.$elapsed.' + '.$this->get('remainderTime').'<br>';
@@ -346,10 +327,7 @@ class factory extends object {
 
 		// Save updated information
 		$this->set('lastUpdate', $now);
-		//echo 'final info:<br>';
-		//print_r($this->objDat);
 		$this->saveAll($this->linkFile);
-
 	}
 
 	function materialOrders() {
