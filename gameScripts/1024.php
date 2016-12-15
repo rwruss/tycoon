@@ -19,6 +19,7 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
 // Verify that player can make changes to this factory
+if ($thisFactory->get('owner') != $pGameID) exit("error 4201-2");
 
 // Verify that the new pay rate is in the range of 0 - 1000.00
 if ($postVals[3] < 0 || $postVals[3] > 1000) exit("error 4201-1");

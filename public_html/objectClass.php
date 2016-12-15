@@ -354,6 +354,21 @@ class factory extends object {
 		echo 'Write data:';
 		print_r($laborDat);
 	}
+	
+	function updateProductionRate() {
+		// Load product currently being produced
+		fseek($this->linkFile, $this->get('currentProd')*1000);
+		$productInfo = unpack('i*', fread($this->linkFile, 200));
+		
+		// Load labor rates and equivalencies
+		
+		// Adjust for labor experience and equivalencies
+		for ($i=0; $i<10; $i++) {
+			$multiplier = pow(1.1, intval($this->objDat[$this->laborOffset+$i*10]/518400));
+		}
+		
+		// Save the new result
+	}
 }
 
 class city extends object {
