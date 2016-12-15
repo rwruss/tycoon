@@ -10,10 +10,9 @@ PostVals:
 */
 
 // Show labot item detail at a factory
-require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
 // Load the factory and get the labor details for the item in question

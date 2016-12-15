@@ -6,7 +6,7 @@ $scenario = 1;
 $objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'r+b');
 $nameFile = fopen('../scenarios/'.$scenario.'/objNames.dat', 'w');
 $laborNameFile = fopen('../scenarios/'.$scenario.'/laborNames.dat', 'w');
-$laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w')
+$laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w');
 
 // Load labor descriptions
 $laborFile = fopen('../scenarios/'.$scenario.'/laborDesc.csv', 'rb');
@@ -21,15 +21,16 @@ foreach ($laborItems as $key => $value) {
 }
 print_R($laborItems);
 
+// Record first line separately as it has no prereqs
 fseek($laborFile, 0);
-//$line = fgets($laborFile);
-//$lineItems = explode(',', $line);
-//fwrite($laborNameFile, '"'.trim($lineItems[0]).'"');
+$line = fgets($laborFile);
+$lineItems = explode(',', $line);
+fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
 $laborCount = 0;
 while (($line = fgets($laborFile)) !== false) {
 	$lineItems = explode(',', $line);
-	fwrite($laborNameFile, '"'.trim($lineItems[0]).'"');
-	
+	fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
+
 	// REcord promotion options for each labor items
 	$promotionDat = '';
 	for ($i=1; $i<11; $i++) {

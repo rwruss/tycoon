@@ -11,7 +11,7 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 $laborDetails = array_slice($thisFactory->objDat, $thisFactory->laborOffset + ($postVals[2]-1)*10 - 1, 10); // correction to post vals since it starts at index 1
 
-$promoDat = unpack('i*', file_get_contents('../scenarios/1/laborDetails.dat', NULL, NULL, $laborDetails[0]*1000; 44));
+$promoDat = unpack('i*', file_get_contents('../scenarios/1/laborDetails.dat', NULL, NULL, $laborDetails[0]*1000, 44));
 $promoOpts = [];
 
 // Check if ability is high enough to allow promotion

@@ -54,6 +54,7 @@ sendButton = newButton(thisDiv, function () {scrMod("1005,'.$postVals[1].',"+ SL
 sendButton.innerHTML = "Set production";
 
 var productInvSection = addDiv("", "stdFloatDiv", thisDiv);
+textBlob("", productInvSection, "Output Inventory");
 for (var i=0; i<5; i++) {
 	if (productStores[i]>0) {
 		productArray[productStores[i]].renderQty(productInvSection, productStores[i+5]);

@@ -270,7 +270,7 @@ class factory extends object {
 		$eventOrder = array_keys($timeList);
 		$totalProduction = 0;
 
-		$productionRate = $this->get('currentRate')/100;		
+		$productionRate = $this->get('currentRate')/100;
 		$productionRate = 1;  // Rate override
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
@@ -545,7 +545,8 @@ class product extends object {
 
 		for ($i=0; $i<10; $i++) {
 			if ($this->objDat[18+$i] > 0) array_push($this->reqMaterials, $this->objDat[18+$i], $this->objDat[28+$i]);
-			if ($this->objDat[38+$i] > 0) $this->reqLabor[] = $this->objDat[38+$i];
+			//if ($this->objDat[38+$i] > 0) $this->reqLabor[] = $this->objDat[38+$i];
+			$this->reqLabor[] = $this->objDat[38+$i];
 		}
 	}
 }
