@@ -359,15 +359,26 @@ class factory extends object {
 		// Load product currently being produced
 		fseek($this->linkFile, $this->get('currentProd')*1000);
 		$productInfo = unpack('i*', fread($this->linkFile, 200));
-		
-		// Load labor rates and equivalencies
+		$baseRate = $productInfo[11];
 		
 		// Adjust for labor experience and equivalencies
+		$laborEqFile = fopen('../scenarios/1/laborEq.dat', 'rb');
+		$totalLaborWeight = 0;
+		$laborPoints = 0;
 		for ($i=0; $i<10; $i++) {
-			$multiplier = pow(1.1, intval($this->objDat[$this->laborOffset+$i*10]/518400));
+			$totalLaborWeight += $productInfo[48+$i];
+			fseek($laborEqFile, $productInfo[38+$i]*4000+$this->objDat[$this->laborOffset+$i*10]*4);
+			$eq = unpack('i', fread($laborEqFile, 4));
+			
+			$skillMultiplier = pow(1.1, intval($this->objDat[$this->laborOffset+$i*10]/518400));
+			
+			$laborPoints += $eq[1]*$productInfo[48+$i]*$skillMultiplier;
 		}
+		fclose($laborEqFile);
 		
 		// Save the new result
+		$newRate = intval($laborPoints/$totalLaborWeight); // override
+		$this->save('currentRate', $newRate);
 	}
 }
 
