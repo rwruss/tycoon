@@ -7,6 +7,11 @@ $objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'r+b');
 $nameFile = fopen('../scenarios/'.$scenario.'/objNames.dat', 'w');
 $laborNameFile = fopen('../scenarios/'.$scenario.'/laborNames.dat', 'w');
 $laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w');
+$laborEqFile = fopen('../scenarios/'.$scenario.'/laborEq.dat', 'w');
+
+fseek($laborEqFile, 1000*1000*4-4);
+fwrite($laborEqFile, pack('i', 0));
+fclose($laborEqFile);
 
 // Load labor descriptions
 $laborFile = fopen('../scenarios/'.$scenario.'/laborDesc.csv', 'rb');
