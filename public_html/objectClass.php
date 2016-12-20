@@ -356,13 +356,15 @@ class factory extends object {
 	}
 	
 	function updateProductionRate() {
+		global $gameID;
+		$scnNum = $_SESSION['game_'.$gameID]['scenario']
 		// Load product currently being produced
 		fseek($this->linkFile, $this->get('currentProd')*1000);
 		$productInfo = unpack('i*', fread($this->linkFile, 200));
 		$baseRate = $productInfo[11];
 		
 		// Adjust for labor experience and equivalencies
-		$laborEqFile = fopen('../scenarios/1/laborEq.dat', 'rb');
+		$laborEqFile = fopen('../scenarios/'.$scnNum.'/laborEq.dat', 'rb');
 		$totalLaborWeight = 0;
 		$laborPoints = 0;
 		for ($i=0; $i<10; $i++) {
