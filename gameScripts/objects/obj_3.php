@@ -48,6 +48,7 @@ for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
 }
 echo ']);
+textBlob("", thisDiv, "Rate: '.$thisObj->get('currentRate').'");
 optionBox1 = prodList.SLsingleButton(thisDiv'.$currentProduction.');
 
 sendButton = newButton(thisDiv, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(optionBox1))});

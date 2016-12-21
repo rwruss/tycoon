@@ -354,15 +354,15 @@ class factory extends object {
 		echo 'Write data:';
 		print_r($laborDat);
 	}
-	
+
 	function updateProductionRate() {
 		global $gameID;
-		$scnNum = $_SESSION['game_'.$gameID]['scenario']
+		$scnNum = $_SESSION['game_'.$gameID]['scenario'];
 		// Load product currently being produced
 		fseek($this->linkFile, $this->get('currentProd')*1000);
-		$productInfo = unpack('i*', fread($this->linkFile, 200));
+		$productInfo = unpack('i*', fread($this->linkFile, 1000));
 		$baseRate = $productInfo[11];
-		
+
 		// Adjust for labor experience and equivalencies
 		$laborEqFile = fopen('../scenarios/'.$scnNum.'/laborEq.dat', 'rb');
 		$totalLaborWeight = 0;
@@ -371,15 +371,16 @@ class factory extends object {
 			$totalLaborWeight += $productInfo[48+$i];
 			fseek($laborEqFile, $productInfo[38+$i]*4000+$this->objDat[$this->laborOffset+$i*10]*4);
 			$eq = unpack('i', fread($laborEqFile, 4));
-			
+
 			$skillMultiplier = pow(1.1, intval($this->objDat[$this->laborOffset+$i*10]/518400));
-			
+
 			$laborPoints += $eq[1]*$productInfo[48+$i]*$skillMultiplier;
 		}
 		fclose($laborEqFile);
-		
+
 		// Save the new result
-		$newRate = intval($laborPoints/$totalLaborWeight); // override
+		$newRate = intval($laborPoints/max($totalLaborWeight, 1.0)); // override
+		echo 'Save new rate of '.$newRate;
 		$this->save('currentRate', $newRate);
 	}
 }
