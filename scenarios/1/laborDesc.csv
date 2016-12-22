@@ -1,14 +1,14 @@
-None,Promotion 1,Promotion 2,Promotion 3,Promotion 4,Promotion 5,Promotion 6,Promotion 7,Promotion 8,Promotion 9,Promotion 10
-Unskilled Labor,None,None,None,None,None,None,None,None,None,None
-Farmer,None,None,None,None,None,None,None,None,None,None
-Rancher,None,None,None,None,None,None,None,None,None,None
-Meat Processor,None,None,None,None,None,None,None,None,None,None
-Miner,None,None,None,None,None,None,None,None,None,None
-Millworker,None,None,None,None,None,None,None,None,None,None
-Brewer,None,None,None,None,None,None,None,None,None,None
-Electrical Engineer,None,None,None,None,None,None,None,None,None,None
-Petroleum Engineer,None,None,None,None,None,None,None,None,None,None
-Chemist,None,None,None,None,None,None,None,None,None,None
-Oil Hand,None,None,None,None,None,None,None,None,None,None
-Computer Tech,None,None,None,None,None,None,None,None,None,None
-Factory Worker,None,None,None,None,None,None,None,None,None,None
+None,Promotion 1,Promotion 2,Promotion 3,Promotion 4,Promotion 5,Promotion 6,Promotion 7,Promotion 8,Promotion 9,Promotion 10,,
+Unskilled Labor,None,None,None,None,None,None,None,None,None,None,,
+Farmer,None,None,None,None,None,None,None,None,None,None,Unskilled Labor,50
+Rancher,None,None,None,None,None,None,None,None,None,None,Unskilled Labor,50
+Meat Processor,None,None,None,None,None,None,None,None,None,None,,
+Miner,None,None,None,None,None,None,None,None,None,None,,
+Millworker,None,None,None,None,None,None,None,None,None,None,,
+Brewer,None,None,None,None,None,None,None,None,None,None,,
+Electrical Engineer,None,None,None,None,None,None,None,None,None,None,,
+Petroleum Engineer,None,None,None,None,None,None,None,None,None,None,,
+Chemist,None,None,None,None,None,None,None,None,None,None,,
+Oil Hand,None,None,None,None,None,None,None,None,None,None,,
+Computer Tech,None,None,None,None,None,None,None,None,None,None,,
+Factory Worker,None,None,None,None,None,None,None,None,None,None,,

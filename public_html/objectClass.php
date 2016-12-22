@@ -367,14 +367,19 @@ class factory extends object {
 		$laborEqFile = fopen('../scenarios/'.$scnNum.'/laborEq.dat', 'rb');
 		$totalLaborWeight = 0;
 		$laborPoints = 0;
+		echo 'Current labor:<p>';
+		print_r($this->objDat);
 		for ($i=0; $i<10; $i++) {
+
 			$totalLaborWeight += $productInfo[48+$i];
-			fseek($laborEqFile, $productInfo[38+$i]*4000+$this->objDat[$this->laborOffset+$i*10]*4);
-			$eq = unpack('i', fread($laborEqFile, 4));
+			//fseek($laborEqFile, $productInfo[38+$i]*4000+$this->objDat[$this->laborOffset+$i*10]*4);
+			fseek($laborEqFile, $productInfo[38+$i]*4000);
+			$eq = unpack('i*', fread($laborEqFile, 400));
+			echo 'Check labor item '.$productInfo[38+$i].' at ('.($productInfo[38+$i]*4000).') for '.$this->objDat[$this->laborOffset+$i*10].' which has a value of '.$eq[1+$this->objDat[$this->laborOffset+$i*10]];
 
 			$skillMultiplier = pow(1.1, intval($this->objDat[$this->laborOffset+$i*10]/518400));
 
-			$laborPoints += $eq[1]*$productInfo[48+$i]*$skillMultiplier;
+			$laborPoints += $eq[1+$this->objDat[$this->laborOffset+$i*10]]*$productInfo[48+$i]*$skillMultiplier;
 		}
 		fclose($laborEqFile);
 

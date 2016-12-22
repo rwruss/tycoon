@@ -9,11 +9,11 @@ $laborNameFile = fopen('../scenarios/'.$scenario.'/laborNames.dat', 'w');
 $laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w');
 $laborEqFile = fopen('../scenarios/'.$scenario.'/laborEq.dat', 'w');
 
-fseek($laborEqFile, 1000*1000*4-4);
+fseek($laborEqFile, 1000*8000*4-4);
 fwrite($laborEqFile, pack('i', 0));
-fclose($laborEqFile);
 
-// Load labor descriptions
+
+// Load labor descriptions and equivalancies
 $laborFile = fopen('../scenarios/'.$scenario.'/laborDesc.csv', 'rb');
 $count = 0;
 while (($line = fgets($laborFile)) !== false) {
@@ -25,13 +25,14 @@ foreach ($laborItems as $key => $value) {
   echo 'Key '.$key.' has a length of '.strlen($key).' and a value of '.$value.'<br>';
 }
 print_R($laborItems);
+echo '<p>';
 
-// Record first line separately as it has no prereqs
+// Record first line separately as it has no prereqs or eqs
 fseek($laborFile, 0);
 $line = fgets($laborFile);
 $lineItems = explode(',', $line);
 fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
-$laborCount = 0;
+$laborCount = 1;
 while (($line = fgets($laborFile)) !== false) {
 	$lineItems = explode(',', $line);
 	fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
@@ -43,6 +44,24 @@ while (($line = fgets($laborFile)) !== false) {
 	}
 	fseek($laborDetailFile, $laborCount*1000+4);
 	fwrite($laborDetailFile, $promotionDat);
+
+	if ($lineItems[11] == '') {
+		fseek($laborEqFile, $laborCount*4000+$laborCount*4);
+		fwrite($laborEqFile, 1000);
+	} else {
+		$eqArray = array_fill(0, 1000, 0);
+		for ($j=11; $j<sizeof($lineItems); $j+=2) {
+			//print_r($lineItems);
+
+			if (trim($lineItems[$j]) == 'Unskilled labor') echo 'WE HAVE A MATCH';
+			else echo 'eq for '.trim($lineItems[$j]).' is ('.$laborItems[trim($lineItems[$j])].')->> '.trim($lineItems[$j]).'/Unskilled Labor, ('.strlen(trim($lineItems[$j])).'/'.strlen('Unskilled Labor').')';
+			$laborItemNum = $laborItems[trim($lineItems[$j])];
+			$eqArray[$laborItemNum] = intval($lineItems[$j+1]*100);
+
+		}
+		fseek($laborEqFile, $laborCount*4000);
+		fwrite($laborEqFile, packArray($eqArray));
+	}
 	$laborCount++;
 }
 
@@ -184,6 +203,7 @@ fclose($objFile);
 fclose($nameFile);
 fclose($laborNameFile);
 fclose($laborDetailFile);
+fclose($laborEqFile);
 
 // create sales file
 $salesFile = fopen('../scenarios/'.$scenario.'/saleOffers.slt', 'wb');
@@ -193,9 +213,9 @@ fclose($salesFile);
 
 
 function packArray($data) {
-  $str = '';
+  $str = pack('i', current($data));
   for ($i=1; $i<=sizeof($data); $i++) {
-    $str = $str.pack('i', $data[$i]);
+    $str = $str.pack('i', next($data));
   }
   return $str;
 }
