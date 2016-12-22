@@ -102,12 +102,13 @@ while (($line = fgets($productFile)) !== false) {
   $productArray = array_fill(1, 250, 0);
   $productArray[4] = 4;
   $productArray[9] = $count;
-  $productArray[11] = $lineItems[32];
+  $productArray[11] = $lineItems[42];
   for ($i=0; $i<10; $i++) {
 
     $productArray[18+$i] = $productList[$lineItems[1+$i]];
     $productArray[28+$i] = $lineItems[11+$i];
     $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
+	$productArray[48+$i] = $lineItems[32+$i]
   }
 
   fseek($objFile, $count*$dataBlockSize);
