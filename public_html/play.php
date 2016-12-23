@@ -20,7 +20,7 @@ $playerList = unpack("i*", file_get_contents("../games/".$_GET["gameID"]."/playe
 $playerListLoc = array_search($_SESSION["playerId"], $playerList);
 $pGameID = $playerList[$playerListLoc+1]*-1;
 $_SESSION["instance"] = $_GET["gameID"];
-//echo "PLAYER GAME ID IS ".$pGameID;
+echo "PLAYER GAME ID IS ".$pGameID;
 
 if ($pGameID == FALSE) {
 	echo "<p><p><p><p>Not alrady in game(".$_SESSION["playerId"].")";
@@ -48,7 +48,7 @@ $_SESSION['game_'.$gameID]['scenario'] = 1;
 $_SESSION['game_'.$gameID]['culture'] = 1; // Set and record player culture
 fclose($paramFile);
 
-//echo 'You are player '.$pGameID;
+echo 'You are player '.$pGameID;
 $gamePath = "../games/".$gameID;
 $scnPath = "../scenarios/".$_SESSION['game_'.$gameID]['scenario'];
 // Read player info
@@ -56,6 +56,7 @@ $defaultBlockSize = 100;
 $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 //$playerDat = file_get_contents($gamePath."/unitDat.dat", NULL, NULL, $pGameID*400, 400);
+echo 'Load player object:';
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
 
 // Load player factories
@@ -153,11 +154,7 @@ echo '
 	var gridUniforms = [];
 	var gridUnitLists = [];
 	var riverLength = 0;
-	var indexBuffer;
-	var unitIndexBuffer;
-	var simpleBox;
-	var treeBuffer;
-	var treeOffsets;
+
 	var baseTile = new Array(Math.round(baseMap[0]/(120*zoomLvl)), Math.round(baseMap[1]/(120*zoomLvl)));
 	var locTr = new Array(0, 0, 1, 1, 1);
 	var baseOffset = new Array((baseMap[0]-baseTile[0]*120*zoomLvl)/(12*zoomLvl), (baseTile[1]*120*zoomLvl-baseMap[1])/(12*zoomLvl), 1, 1, 1);
@@ -186,21 +183,21 @@ echo '
 					20, 20, 20, 20, 20, 20];
 	var drawOrder = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
 	var zoomRot = [0, 3, 2, 0, 1, 0, 0, 0, 0];
-	
+
 	var lastTime = 0;
 	var wY = 0;
 	var xSpeed = 0;
 	var zSpeed = 0;
 	var viewAngle;
 	var currentlyPressedKeys = {};
-	
+
 	var rttFramebuffer;
 	var rttTexture;
 	var terFramebuffer;
 	var terTexture;
 	var oceanFrameBuffer;
 	var oceanTexture;
-	
+
 	var tileCanvas;
 	var ctx;
 
@@ -211,7 +208,7 @@ echo '
 
 	var loaded = 0;
 	var loadTarg = 0;
-	
+
 	var drawList = [];
 	drawList[0] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
 	drawList[1] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
@@ -224,7 +221,7 @@ echo '
 	drawList[8] = drawList[0];
 	var clickParams = [];
 	var clickTarg = "";
-	
+
 	var genCharList = [];
 	var thisPlayer;
 	var numProducts = '.$numProducts.';
@@ -247,7 +244,7 @@ echo '
                  }
          }
 
-	
+
 	function groupSelect(selNum) {
 		dupe = false;
 		for (i=0; i<groupList.length; i++) {
@@ -302,7 +299,7 @@ echo '
 		xmlhttp.send(params);
 		}
 
-	
+
 	function makeBox(bName, val, h, w, x, y) {
 		console.log(arguments);
 		e = window.event || arguments[0];
@@ -408,7 +405,7 @@ echo '
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(newForrest), gl.STATIC_DRAW);
 		forrestSizes[tileNum] = newForrest.length/3;
 		}
-		
+
     function mapTextures(i, x, y) {
         tileTextures[i] = gl.createTexture();
 		handleMapTextures(tileTextures[i], x, y, i);
@@ -423,7 +420,7 @@ echo '
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.bindTexture(gl.TEXTURE_2D, null);
 		}
-		
+
 	function loadTexture(textureNumber, src) {
 		requiredImages++;
 		textureList[textureNumber].image = new Image();
@@ -538,7 +535,7 @@ echo '
         gl.uniformMatrix4fv(areaProgram.mvMatrixUniform, false, mvMatrix);
 		}
 	//alert(mvMatrix[0] + mvMatrix[1] + mvMatrix[2] + mvMatrix[3] + mvMatrix[4] + mvMatrix[5] + mvMatrix[6] + mvMatrix[7] + mvMatrix[8] + mvMatrix[9] + mvMatrix[10] + mvMatrix[11] + mvMatrix[12] + mvMatrix[13] + mvMatrix[14] + mvMatrix[15]);
-	
+
 
 	baseOffset[0] = (baseMap[0]-baseTile[0]*120*zoomLvl)/(12*zoomLvl)
 	baseOffset[1] = -(baseTile[1]*120*zoomLvl-baseMap[1])/(12*zoomLvl);
@@ -676,7 +673,7 @@ echo '
 			}
 		else if (switchOption == 6) loadTiles();
 		}
-	
+
     function animate() {
         var timeNow = new Date().getTime();
         if (lastTime != 0) {
@@ -973,7 +970,7 @@ echo '
 
 		return texture;
 		}
-		
+
 	function webGLStart() {
 		document.getElementById("readMsg").addEventListener("click", function(event) {console.log(event);makeBox(\'inBox\', 1099, 500, 500, 200, 50)});
 
@@ -1016,7 +1013,7 @@ echo '
 		laborNames = ['.$laborNameList.']
 		console.log(objNames);
 		console.log(factoryNames);
-		
+
 		playerFactories = new Array(';
 		if (sizeof($factoryList) > 0) echo 'new factory({subType:'.($factoryList[0]-$numProducts).', prod:'.$factoryList[1].', rate:'.$factoryList[2].', objID:'.$factoryList[3].'})';
 		for ($i=4; $i<sizeof($factoryList); $i+=4) {

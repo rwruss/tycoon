@@ -102,17 +102,20 @@ while (($line = fgets($productFile)) !== false) {
   $productArray = array_fill(1, 250, 0);
   $productArray[4] = 4;
   $productArray[9] = $count;
-  $productArray[11] = $lineItems[42];
+  $productArray[11] = $lineItems[41];
+
   for ($i=0; $i<10; $i++) {
 
     $productArray[18+$i] = $productList[$lineItems[1+$i]];
     $productArray[28+$i] = $lineItems[11+$i];
     $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
-	$productArray[48+$i] = $lineItems[32+$i]
+		$productArray[48+$i] = $lineItems[31+$i];
+		echo 'EQ #'.$i.':'.$lineItems[31+$i].'<p>';
   }
-
+	print_r($productArray);
   fseek($objFile, $count*$dataBlockSize);
   fwrite($objFile, packArray($productArray));
+	echo 'Write at '.($count*$dataBlockSize).'<p>';
   $count++;
 }
 
@@ -190,9 +193,10 @@ while (($line = fgets($factoryFile)) !== false) {
     $factoryObj[16+$i] = $factoryInventories[$lineItems[0]][0+$i];
   }
 
-
+	$writeArray = packArray($factoryObj);
+	echo 'Seek to '.($count*$dataBlockSize).' and write '.(strlen($writeArray)).'<br>';
   fseek($objFile, $count*$dataBlockSize);
-  fwrite($objFile, packArray($factoryObj));
+  fwrite($objFile, $writeArray);
 
   $count++;
 }
@@ -215,7 +219,7 @@ fclose($salesFile);
 
 function packArray($data) {
   $str = pack('i', current($data));
-  for ($i=1; $i<=sizeof($data); $i++) {
+  for ($i=1; $i<sizeof($data); $i++) {
     $str = $str.pack('i', next($data));
   }
   return $str;
