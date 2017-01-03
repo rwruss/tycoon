@@ -32,6 +32,7 @@ if ($postVals[5] == 0) {
       $thisObj->set('orderQty'.$i, 100);
       $thisObj->saveAll($objFile);
       print_r($thisObj->objDat);
+
       break;
     }
   }
@@ -81,6 +82,14 @@ if ($postVals[5] == 0) {
     flock($offerFile, LOCK_UN);
   }
 }
+
+echo '<script>
+materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
+console.log(materialOrder);
+console.log('.$postVals[1].');
+console.log(orderItems);
+showOrders(materialOrder, '.$postVals[1].');
+</script>';
 
 fclose($offerFile);
 fclose($objFile);

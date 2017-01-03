@@ -30,6 +30,13 @@ payBox = function (trg, maxPoints) {
 	return thisBox;
 }
 
+qtyBox = function (trg, maxPoints) {
+	let thisBox = addDiv("", "selectContain", trg);
+	thisBox.slider = slideValBar(thisBox, "", 0, maxPoints);
+
+	return thisBox;
+}
+
 setSlideQty = function(trg, max) {
 	console.log(trg.slider);
 	trg.slider.slide.max = max;
@@ -677,7 +684,7 @@ class unitList {
 class pane {
 	constructor (desc, desktop) {
 		//console.log("Make a pane " + this);
-		this.element = paneBox(desc, 0, 500, 500, 250, 250);
+		this.element = paneBox(desc, 0, 1000, 600, 250, 250);
 		//console.log(this.element.childNodes);
 		this.desc = desc;
 		this.deskHolder = desktop;
@@ -785,7 +792,6 @@ class deskTop {
 	}
 
 	paneToTop(thisPane) {
-		//console.log("to top");
 		delete this.paneList[thisPane.desc];
 		this.paneList[thisPane.desc] = thisPane;
 		this.arrangePanes();
@@ -994,13 +1000,18 @@ runClock = function (endTime, target) {
 	//console.log(target);
 	var date = new Date();
 	var remaining = (endTime - Math.floor(date.getTime()/1000));
-	//console.log(endTime + " - " + Math.floor(date.getTime()/1000) + " = " + (remaining) );
+	if (remaining > 0) {
+		//console.log(endTime + " - " + Math.floor(date.getTime()/1000) + " = " + (remaining) );
 
-	var hrs = Math.floor(remaining/3600);
-	var mins = Math.floor((remaining - hrs*3600)/60);
-	var secs = remaining%60;
+		var hrs = Math.floor(remaining/3600);
+		var mins = Math.floor((remaining - hrs*3600)/60);
+		var secs = remaining%60;
 
-	target.innerHTML = ("0" + hrs).slice(-2) + " : " + ("0" + mins).slice(-2) + " : " + ("0" + secs).slice(-2);
+		target.innerHTML = ("0" + hrs).slice(-2) + " : " + ("0" + mins).slice(-2) + " : " + ("0" + secs).slice(-2);
+	} else {
+		target.innerHTML = "";
+		clearInterval(target.clockObj);
+	}
 	//if (!target.runClock) clearInterval(target.clockObj);
 }
 
@@ -1044,5 +1055,32 @@ function switchGroups(item, group1, group2, emptyItem, group1Limit) {
 			}
 		}
 		if (numNodes  < group1Limit)	group1.appendChild(item);
+	}
+}
+
+function showOrders(materialOrder, factory) {
+	orderItems.innerHTML = "";
+	for (var i=0; i<materialOrder.length; i+=3) {
+		let thisBox = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], orderItems);
+		if (materialOrder[i] == 0) thisBox.addEventListener("click", function () {
+			useDeskTop.newPane("xyzPane");
+			orderPane = useDeskTop.getPane("xyzPane");
+			event.stopPropagation();
+			textBlob("", orderPane, "Select which item you want to order");
+			invList.reset();
+			orderBox1 = invList.SLsingleButton(orderPane);
+			orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + factory + ", "+ SLreadSelection(orderBox1))});
+			orderSelectButton.innerHTML = "Find Offers";
+			offerContainer = addDiv("", "stdContain", orderPane);
+			});
+	}
+}
+
+function showInventory(inventory) {
+	console.log("Shw inv");
+	reqBox.stores.innerHTML = "";
+	textBlob("", reqBox.stores, "Current resource stores:");
+	for (var i=0; i<inventory.length; i+=2) {
+		materialBox(inventory[i], inventory[i+1], reqBox.stores);
 	}
 }

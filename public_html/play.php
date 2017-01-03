@@ -121,7 +121,7 @@ echo '
 	var loadedImages = 0;
 	var requiredImages = 0;
 	var shaderProgram;
-    var bufferProgram;
+  var bufferProgram;
 	var riverProgram;
 	var colorProgram;
 	var unitProgram;
@@ -129,8 +129,8 @@ echo '
 	var areaProgram;
 	var oceanTexProgram;
 	var mvMatrix = mat4.create();
-    var bbMatrix = mat4.create();
-    var pMatrix = mat4.create();
+  var bbMatrix = mat4.create();
+  var pMatrix = mat4.create();
 	var tileBuffers;
 	var texCoordBuffer;
 	var drawPoints = 0;
@@ -208,6 +208,10 @@ echo '
 
 	var loaded = 0;
 	var loadTarg = 0;
+
+	//* Div vars	*//
+	var orderItems;
+	var reqBox;
 
 	var drawList = [];
 	drawList[0] = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35];
@@ -1072,6 +1076,7 @@ window.addEventListener("load", webGLStart);
 		ID: '.$pGameID.'<br>
 		<a href="javascript:void(0);" onclick="scrMod(1004)">Financial</a>
 		<a href="javascript:void(0);" onclick="scrMod(1002)">Busineses</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1026)">Markets</a><br>
 		<a href="./index.php" style="position:absolute; bottom:0">Back to Main</a>
 	</div>
 	<div id="infoBar" style="position:absolute; top:640; left:110; height:50; width:1200; border:1px solid #000000">infoBar</div>
@@ -1080,7 +1085,7 @@ window.addEventListener("load", webGLStart);
 		<a href="javascript:void(0);" id="readMsg">Read Messages</a>
 	</div>
 	<div id="gmPnl" style="position:absolute; top:40; left:110; height:650; width:1200; border:1px solid #000000; overflow:hidden">
-		<canvas style="position:absolute" id="lesson03-canvas" style="border: none; " width=1200 height=700></canvas>
+		<canvas style="position:absolute" id="lesson03-canvas" style="border: none;"></canvas>
 	</div>
 	<div id="topBar" style="position:absolute; top:15; left:110; height:25; width:1200; border:1px solid #000000; overflow:hidden">
 		<div id="cashBox" style="position:absolute; top:0; left:0; height:25; border:1px solid #000000; padding-right:5; overflow:hidden"></div>

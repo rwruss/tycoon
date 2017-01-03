@@ -33,9 +33,27 @@ fclose($offerFile);
 fclose($cityFile);
 
 echo 'textBlob("", productArea, "city information and options");
-cityDeals = new saleList(cityProducts);
+cityDeals = new uList(cityProducts);
 cityOffers = cityDeals.SLsingleButton(productArea);
-cityOButton = newButton(productArea, function () {scrMod("1017,'.$postVals[1].',"+ SLreadSelection(cityBox1) + "," + SLreadSelection(cityOffers))})
+cityOButton = newButton(productArea, function () {
+  qtyArea = addDiv("", "stdFloatDiv", thisDiv);
+  qtyArea.innerHTML = "";
+  textBlob("", qtyArea, "How many");
+
+  var selectedProd = SLreadSelection(cityOffers).split(",");
+
+  var qtyAvailable = 0;
+  console.log(productStores);
+  for (i=0; i<5; i++) {
+    if (productStores[i] == selectedProd[1]) {
+      qtyAvailable = productStores[i+5];
+    }
+  }
+  qtySel = qtyBox(qtyArea, qtyAvailable);
+  //setSlideVal(qtySel, 0);
+  sellButton = newButton(qtyArea, function() {scrMod("1017,'.$postVals[1].'," +  SLreadSelection(cityOffers) + "," + qtySel.slider.slide.value)});
+  sellButton.innerHTML = "SELL";
+})
 cityOButton.innerHTML = "Select this item";
 </script>';
 

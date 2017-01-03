@@ -18,10 +18,10 @@ $cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 $optionCheck = false;
 $optionList = $thisFactory->productionOptions();
-echo 'look for '.$postVals[5].' in <br>';
+echo 'look for '.$postVals[3].' in <br>';
 print_r($optionList);
 for ($i=0; $i<5; $i++) {
-	if ($postVals[5] == $optionList[$i]) {
+	if ($postVals[3] == $optionList[$i]) {
 		$optionCheck = true;
 		$prodNumber = $i;
 		break;
@@ -31,14 +31,14 @@ for ($i=0; $i<5; $i++) {
 // Verify the qunatity sold by the factory
 $qtyCheck = true;
 if ($optionCheck) {
-  if ($thisFactory->get('prodInv'.($prodNumber+1)) >= $postVals[6]) {
-    echo 'Qantity ok ('.$thisFactory->get('prodInv'.($i+1)).' vs '.$postVals[6].')';
+  if ($thisFactory->get('prodInv'.($prodNumber+1)) >= $postVals[4]) {
+    echo 'Qantity ok ('.$thisFactory->get('prodInv'.($i+1)).' vs '.$postVals[4].')';
     $qtyCheck = false;
   }
 } else exit('Not a valid item');
 
 
-if ($qtyCheck) exit ('note enough of this');
+if ($qtyCheck) exit ('note enough of this ('.$thisFactory->get('prodInv'.($prodNumber+1)).' < '.$postVals[4].')');
 // Load the city information
 $thisCity = loadCity($postVals[2], $cityFile, 4000);
 
@@ -52,15 +52,15 @@ $baseDemand = $thisCity->get('population')*$thisCity->demandRate($i);
 $startDemand = min($elapsed*$thisCity->demandRate($i)/3600+$thisCity->demandLevel($i), 2.0*$baseDemand);
 echo 'Start Demand:('.$now.' - '.$thisCity->get('lastUpdate').') * '.$thisCity->demandRate($i).' / 3600 + ' .$thisCity->demandLevel($i);
 */
-echo 'Base demand: '.$thisCity->baseDemand($postVals[5]);
+echo 'Base demand: '.$thisCity->baseDemand($postVals[3]);
 $basePrice = 100;
-$baseDemand = $thisCity->baseDemand($postVals[5]);
-$startDemand = $thisCity->currentDemand($postVals[5], $now);
-$endDemand = max(intval($startDemand - $postVals[6]),0);
+$baseDemand = $thisCity->baseDemand($postVals[3]);
+$startDemand = $thisCity->currentDemand($postVals[3], $now);
+$endDemand = max(intval($startDemand - $postVals[4]),0);
 
 $startPrice = intval(min($startDemand/$baseDemand, 2.0)*$basePrice);
 $endPrice = intval(min($endDemand/$baseDemand, 2.0)*$basePrice);
-$profit = (($startPrice+$endPrice)/2)*$postVals[6];
+$profit = (($startPrice+$endPrice)/2)*$postVals[4];
 
 echo 'Start/end city demand:'.$startDemand.' / '.$endDemand.'<br>
 Start/End price '.$startPrice.' / '.$endPrice.' FInal average price: '.(($startPrice+$endPrice)/2).' for a profit of '.$profit;
@@ -76,7 +76,7 @@ $thisPlayer->save('money', $thisPlayer->get('money') + $profit);
 echo 'final money: '.$thisPlayer->get('money');
 
 // remove qunatity from factory
-$thisFactory->save('prodInv'.($prodNumber+1), $thisFactory->get('prodInv'.($prodNumber+1)) - $postVals[6]);
+$thisFactory->save('prodInv'.($prodNumber+1), $thisFactory->get('prodInv'.($prodNumber+1)) - $postVals[4]);
 
 echo 'final qty: '.$thisFactory->get('prodInv'.($prodNumber+1)).'
 <script>

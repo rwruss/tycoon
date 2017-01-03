@@ -5,6 +5,8 @@ if ($thisObj->get('currentProd') > 0) {
 	$currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 } else $currentProduction = '';
 
+$currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
+
 if ($thisObj->get('currentProd') == 0) {
 	//$thisObj->save('currentProd', 1);
 	//$thisObj->set('currentProd', 1);
@@ -35,27 +37,32 @@ for ($i=0; $i<10; $i++) {
 echo '];
 
 inventoryItems = [];
+console.log(materialInv);
 for (i=0; i<materialInv.length; i+=2) {
 	inventoryItems.push(new product({objID:materialInv[i]}));
+	console.log("Add to inv: " + materialInv[i]);
 }
 invList = new uList(inventoryItems);
 
 var someProduct = new product({objID:999});
-console.log(someProduct);
-prodList = new uList([new product({objID:'.$thisObj->getTemp('prod1').'})';
+prodList = new uList([new product({objID:0}), new product({objID:'.$thisObj->getTemp('prod1').'})';
 
 for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
 }
 echo ']);
-textBlob("", thisDiv, "Rate: '.$thisObj->get('currentRate').'");
-optionBox1 = prodList.SLsingleButton(thisDiv'.$currentProduction.');
+var headSection = addDiv("", "stdFloatDiv", thisDiv);
+textBlob("", headSection, "Rate: '.$thisObj->get('currentRate').'");
 
-sendButton = newButton(thisDiv, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(optionBox1))});
+sendButton = newButton(headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(optionBox1))});
 sendButton.innerHTML = "Set production";
+optionBox1 = prodList.SLsingleButton(thisDiv'.$currentProduction.');
 
 var productInvSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", productInvSection, "Output Inventory");
+
+saleButton = newButton(productInvSection, function () {scrMod("1013,'.$postVals[1].'")});
+saleButton.innerHTML = "Sell Products";
 for (var i=0; i<5; i++) {
 	if (productStores[i]>0) {
 		productArray[productStores[i]].renderQty(productInvSection, productStores[i+5]);
@@ -63,57 +70,41 @@ for (var i=0; i<5; i++) {
 }
 
 var laborSection = addDiv("", "stdFloatDiv", thisDiv);
-textBlob("", laborSection, "Labor Pool - show available labor");
+laborSection.aassigned = addDiv("", "stdFloatDiv", laborSection);
+textBlob("", laborSection.aassigned, "Labor Pool - show available labor");
 for (var i=1; i<factoryLabor.length; i++) {
 
-	let laborItem = factoryLabor[i].renderSummary(laborSection);
-	//let laborItem = laborBox(factoryLabor[i], laborSection);
+	let laborItem = factoryLabor[i].renderSummary(laborSection.aassigned);
+	//let laborItem = laborBox(factoryLabor[i], laborSection.aassigned);
 	let itemNum = i;
-	console.log("item " + itemNum);
 	laborItem.addEventListener("click", function () {scrMod("1023,'.$postVals[1].',"+itemNum)});
 }
-laborButton = newButton(laborSection, function () {scrMod("1018,'.$postVals[1].'")});
+laborButton = newButton(laborSection.aassigned, function () {scrMod("1018,'.$postVals[1].'")});
 laborButton.innerHTML = "Adjust Labor";
 
-var reqBox = addDiv("", "stdFloatDiv", thisDiv);
+reqBox = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", reqBox, "Per unit of production, this requires:");
 reqBox.materials = addDiv("", "stdFloatDiv", reqBox);
-
 for (var i=0; i<productMaterial.length; i+=2) {
 	materialBox(productMaterial[i], productMaterial[i+1], reqBox.materials);
 }
-reqBox.labor = addDiv("", "stdFloatDiv", reqBox);
+laborSection.required = addDiv("", "stdFloatDiv", laborSection);
 for (var i=0; i<productLabor.length; i++) {
-	laborBox(productLabor[i], reqBox.labor);
+	laborBox(productLabor[i], laborSection.required);
 }
 
-var storesSection = addDiv("", "stdContainer", thisDiv);
-textBlob("", storesSection, "Current resource stores:");
-for (var i=0; i<materialInv.length; i+=2) {
-	materialBox(materialInv[i], materialInv[i+1], storesSection);
-}
+reqBox.stores = addDiv("", "stdContainer", thisDiv);
+showInventory(materialInv);
+
 
 if (invList.parentList.length > 0) {
 	var orderSection = addDiv("", "stdContainer", thisDiv);
 	var orderHead = addDiv("", "stdContain", orderSection);
-	var orderItems = addDiv("", "stdContain", orderSection);
+	orderItems = addDiv("", "stdContain", orderSection);
 	textBlob("", orderHead, "Current orders");
-	for (var i=0; i<materialOrder.length; i+=3) {
-		let thisBox = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], orderItems);
-		if (materialOrder[i] == 0) thisBox.addEventListener("click", function () {
-			useDeskTop.newPane("orderPane");
-			orderPane = useDeskTop.getPane("orderPane");
-			console.log(invList);
-			textBlob("", orderPane, "Select which item you want to order");
-			orderBox1 = invList.SLsingleButton(orderPane);
-			orderSelectButton = newButton(orderPane, function () {scrMod("1009,'.$postVals[1].',"+ SLreadSelection(orderBox1))});
-			orderSelectButton.innerHTML = "Find Offers";
-			offerContainer = addDiv("", "stdContain", orderPane);
-			});
-	}
+	showOrders(materialOrder, '.$postVals[1].', orderItems);
+
 }
-saleButton = newButton(thisDiv, function () {scrMod("1013,'.$postVals[1].'")});
-saleButton.innerHTML = "Sell Products";
 
 </script>';
 

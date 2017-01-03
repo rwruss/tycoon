@@ -23,6 +23,7 @@
 1023 - Labor Item detail
 1024 - PROCESS: Save adjusted pay rate for a worker
 1025 - PROCESS: Save adjust job title for a worker
+1026 - List of cities/markets
 
 
 TO DO:

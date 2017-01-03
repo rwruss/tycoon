@@ -229,15 +229,15 @@ class factory extends object {
 		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
 			$rscSpots[$this->resourceStores[$i]] = $i;
 		}
-		echo 'Resources spots<br>';
-		print_r($rscSpots);
+		//echo 'Resources spots<br>';
+		//print_r($rscSpots);
 		$referenceList=[];
 		for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
 			if ($productInfo[$i+18] > 0) {
-				echo 'Look for resource '.$productInfo[$i+18];
+				//echo 'Look for resource '.$productInfo[$i+18];
 				for ($j=0; $j<sizeof($this->resourceStores); $j+=2) {  // j is the index of the storage location at the factory
 					if ($this->resourceStores[$j] == $productInfo[$i+18]) {
-						echo 'Resources spot '.$j.' (type '.$this->resourceStores[$j].') which has a stock of '.$this->resourceStores[$j+1].' has a usage rate of '.$productInfo[$i+28].'<br>';
+						//echo 'Resources spot '.$j.' (type '.$this->resourceStores[$j].') which has a stock of '.$this->resourceStores[$j+1].' has a usage rate of '.$productInfo[$i+28].'<br>';
 						$referenceList[$j] = $productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
 						break;
 					}
@@ -251,7 +251,7 @@ class factory extends object {
 		$deleteOrder = [];
 		$events = [$this->get('lastUpdate'), 0, 0, $now, 0, 0];
 		for ($i=0; $i<10; $i++) {
-			echo 'Check '.$this->objDat[56+$i*3].'<br>';
+			//echo 'Check '.$this->objDat[56+$i*3].'<br>';
 			// if event has occured, load it then delete it
 			if ($this->objDat[56+$i*3] <= $now) {
 				array_push($events, $this->objDat[56+$i*3], $this->objDat[57+$i*3], $this->objDat[58+$i*3]);
@@ -271,7 +271,7 @@ class factory extends object {
 		$totalProduction = 0;
 
 		$productionRate = $this->get('currentRate')/100;
-		$productionRate = 1;  // Rate override
+		//$productionRate = 1;  // Rate override
 		for ($i=1; $i<sizeof($eventOrder); $i++) {
 			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
 			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].') = '.$elapsed.' + '.$this->get('remainderTime').'<br>';
@@ -280,7 +280,7 @@ class factory extends object {
 			$checkQty = [];
 
 			// Get max amount produced in time and save remainder time
-			$checkQty[] = ($elapsed+$this->get('remainderTime'))/$productionRate;
+			$checkQty[] = ($elapsed+$this->get('remainderTime'))/(60*$productionRate);
 			$this->set('remainderTime', ($elapsed+$this->get('remainderTime'))%$productionRate);
 
 			// Get max amount produced by each input
@@ -289,8 +289,8 @@ class factory extends object {
 			}
 
 			$produced = min($checkQty);
-			echo 'Produce '.$produced.' items';
-			print_r($checkQty);
+			echo 'Produce '.$produced.' items. Min:('.$elapsed.' + '.$this->get('remainderTime').')/'.$productionRate.' * 60)';
+			//print_r($checkQty);
 			for ($j=0; $j<sizeof($referenceList); $j++) {
 				echo $this->resourceStores[$j*2+1].' - '.$produced*$referenceList[$j].'<Br>';
 				$this->resourceStores[$j*2+1] -= $produced*$referenceList[$j];
@@ -300,7 +300,7 @@ class factory extends object {
 			if ($events[$eventOrder[$i]*3+1] > 0) {
 				$this->resourceStores[$rscSpots[$events[$eventOrder[$i]*3+1]]*2+1] += $events[$eventOrder[$i]*3+2];
 				echo 'adjusted stores:';
-				print_r($this->resourceStores);
+				//print_r($this->resourceStores);
 			}
 			$totalProduction += $produced;
 		}
@@ -376,18 +376,19 @@ class factory extends object {
 			//fseek($laborEqFile, $productInfo[38+$i]*4000+$this->objDat[$this->laborOffset+$i*10]*4);
 			fseek($laborEqFile, $productInfo[38+$i]*4000);
 			$eq = unpack('i*', fread($laborEqFile, 400));
+			print_r($eq);
 			//echo 'Item '.$productInfo[38+$i].' at ('.($productInfo[38+$i]*4000).') for '.$this->objDat[$this->laborOffset+$i*10].' which has a value of '.$eq[1+$this->objDat[$this->laborOffset+$i*10]];
 
-
-			$skillMultiplier = pow(1.1, intval($this->objDat[$this->laborOffset+$i*10]/518400));
-			echo 'Points = '.$eq[1+$this->objDat[$this->laborOffset+$i*10]].' * '.$productInfo[48+$i].' * '.$skillMultiplier.'<p>';
-			$laborPoints += $eq[1+$this->objDat[$this->laborOffset+$i*10]]*$productInfo[48+$i]*$skillMultiplier;
+			$checkType = $this->objDat[$this->laborOffset+$i*10+1];
+			$skillMultiplier = pow(1.1, intval($this->objDat[$this->laborOffset+$i*10+8]/518400));
+			echo 'Points for type ('.$checkType.') = '.$eq[1+$checkType].' * '.$productInfo[48+$i].' * '.$skillMultiplier.'<p>';
+			$laborPoints += $eq[1+$checkType]*$productInfo[48+$i]*$skillMultiplier;
 		}
 		fclose($laborEqFile);
 
 		// Save the new result
 		$newRate = intval($laborPoints/max($totalLaborWeight, 1.0)); // override
-		echo 'Save new rate of '.$newRate;
+		echo 'Save new rate of '.$newRate.' ('.$laborPoints.'/'.$totalLaborWeight.')';
 		$this->save('currentRate', $newRate);
 	}
 }
@@ -454,6 +455,7 @@ class city extends object {
 	}
 
 	function updateLabor($now, $schoolList, $baseRates, $slotFile) {
+
 		echo 'Number of schools: '.sizeof($schoolList->slotData);
 		print_r($schoolList->slotData);
 		$schoolTypes = array_fill(0, 100, 0);
@@ -461,30 +463,64 @@ class city extends object {
 			echo 'Add school type '.$schoolList->slotData[$i];
 			$schoolTypes[$schoolList->slotData[$i]]++;
 		}
-		//echo 'School types:';
-		//print_r($schoolTypes);
+
 		$addList = [];
 		for ($i=1; $i<sizeof($schoolTypes); $i++) {
 			if ($schoolTypes[$i] > 0) {
 				$thisSchool = new School($i);
 
 				$newTime = $now - $this->get('baseTime');
-				$pvsTime = $this->get('laborUpdateTime') - $this->get('baseTime');
-				echo 'NEwtime:'.$newTime.' - PvsTime '.$pvsTime;
 
-				foreach($thisSchool->schoolRates as $laborType => $trainRate) {
-					$addAmt = $schoolTypes[$i]*(intval($newTime/$trainRate) - intval($pvsTime/$trainRate));
-					$addList[$laborType] = $addAmt+1;
-					echo 'Schools train '.$addAmt.' of type '.$laborType.' with a rate of '.$trainRate;
+				$elapsed = time() - $this->get('laborUpdateTime');
+
+				if ($elapsed > 14400) {
+					// reset all labor
+					for ($i=0; $i<1000; $i++) {
+						$this->objDat[$this->laborStoreOffset+$i] = 0;
+					}
+
+					$this->set('laborUpdateTime', $now);
+					foreach($thisSchool->schoolRates as $laborType => $trainRate) {
+						$addAmt = min(10, $trainRate);
+						$addList[$laborType] = $addAmt;
+						echo 'Schools train '.$addAmt.' of type '.$laborType.' with a rate of '.$trainRate;
+					}
 				}
 			}
 		}
-		/*
-		if ($this->get('laborSlot') == 0) {
-			echo 'Make a new slot';
-			$this->save('laborSlot', newSlot($slotFile));
+
+
+		$laborCount = 0;
+		foreach ($addList as $laborID => $addAmount) {
+			echo 'Add '.$addAmount.' of labor type '.$laborID;
+			for ($n=0; $n<$addAmount; $n++) {
+				$pay = intval($baseRates[$laborID]*$this->get('affluence')*rand(90,110)/(10000));
+				echo 'Pay:'.$pay.' ('.$baseRates[$laborID].' * '.$this->get('affluence').')';
+
+				//$dat = pack('i*', 1, $laborID, 0, 0, 0, $pay, $now, 0, 0, 0);  , , ,  ,  , ,  ,
+				//$dat = pack('i*', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);  // education level, type, ability, start time, home region, expected pay, last update time, target upgrade
+				if ($laborCount > 1000) {
+					echo 'no more space ';
+					break 2;
+				} else {
+					$laborCount++;
+					$offset = $this->laborStoreOffset+$laborCount*10+1;
+					echo 'Add to loc '.$laborCount;
+					$this->objDat[$offset] = 1; // education level
+					$this->objDat[$offset+1] = $laborID; // type
+					$this->objDat[$offset+2] = 0; // open spot
+					$this->objDat[$offset+3] = $now; // start/creation time
+					$this->objDat[$offset+4] = 0; // job start time
+					$this->objDat[$offset+5] = $pay; // pay
+					$this->objDat[$offset+6] = $now; // last update time
+					$this->objDat[$offset+7] = 0; // home
+					$this->objDat[$offset+8] = 0; // ability
+					$this->objDat[$offset+9] = 0; // target upgrade
+				}
+			}
 		}
-		*/
+
+/*
 		$emptySpots = [];
 		for ($i=0; $i<100; $i++) {
 			if ($this->objDat[$this->laborStoreOffset+$i*10+1] == 0) $emptySpots[] = $i;
@@ -494,38 +530,13 @@ class city extends object {
 		}
 		echo 'Add list:';
 		print_r($addList);
-		foreach ($addList as $laborID => $addAmount) {
-			echo 'Add '.$addAmount.' of labor type '.$laborID;
-			for ($n=0; $n<$addAmount; $n++) {
-				$pay = intval($baseRates[$laborID]*$this->get('affluence')*rand(90,110)/(10000));
-				echo 'Pay:'.$pay.' ('.$baseRates[$laborID].' * '.$this->get('affluence').')';
-				$loc = array_shift($emptySpots);
-				//$dat = pack('i*', 1, $laborID, 0, 0, 0, $pay, $now, 0, 0, 0);  , , ,  ,  , ,  ,
-				//$dat = pack('i*', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);  // education level, type, ability, start time, home region, expected pay, last update time, target upgrade
-				if (is_null($loc)) {
-					echo 'no more space ';
-					break 2;
-				} else {
-					$offset = $this->laborStoreOffset+$loc*10+1;
-					echo 'Add to loc '.$loc;
-					$this->objDat[$offset] = 1; // education level
-					$this->objDat[$offset+1] = $laborID; // type
-					$this->objDat[$offset+2] = 0; // ability
-					$this->objDat[$offset+3] = 0; // start
-					$this->objDat[$offset+4] = 0; // time
-					$this->objDat[$offset+5] = $pay; // expected pay
-					$this->objDat[$offset+6] = $now; // region last update time
-					$this->objDat[$offset+7] = 0; // home
-					$this->objDat[$offset+8] = 0; // ability
-					$this->objDat[$offset+9] = 0; // target upgrade
-				}
-			}
-		}
 
+*/
 	// Record updated time
 	//print_r($this->objDat);
-	$this->set('laborUpdateTime', $now);
+
 	$this->saveAll($this->linkFile);
+
 	}
 
 	function changeLaborItem($spotNumber, $attrArray){
@@ -604,7 +615,7 @@ class school {
 	function __construct($schoolType) {
 		switch($schoolType) {
 			case 1:
-				$this->schoolRates = array_fill(1, 4, 3600);
+				$this->schoolRates = array_fill(1, 4, 5);
 			break;
 		}
 	}

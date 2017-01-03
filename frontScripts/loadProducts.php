@@ -3,7 +3,7 @@
 $dataBlockSize = 1000;
 
 $scenario = 1;
-$objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'r+b');
+$objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'w');
 $nameFile = fopen('../scenarios/'.$scenario.'/objNames.dat', 'w');
 $laborNameFile = fopen('../scenarios/'.$scenario.'/laborNames.dat', 'w');
 $laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w');
@@ -45,11 +45,12 @@ while (($line = fgets($laborFile)) !== false) {
 	fseek($laborDetailFile, $laborCount*1000+4);
 	fwrite($laborDetailFile, $promotionDat);
 
-	if ($lineItems[11] == '') {
-		fseek($laborEqFile, $laborCount*4000+$laborCount*4);
-		fwrite($laborEqFile, 1000);
-	} else {
+
+		echo '<p>EQS for item #'.$laborCount;
 		$eqArray = array_fill(0, 1000, 0);
+		$laborItemNum = $laborItems[trim($lineItems[0])];
+		$eqArray[$laborItemNum] = 10000;
+		if ($lineItems[11] != '') {
 		for ($j=11; $j<sizeof($lineItems); $j+=2) {
 			//print_r($lineItems);
 
@@ -59,6 +60,7 @@ while (($line = fgets($laborFile)) !== false) {
 			$eqArray[$laborItemNum] = intval($lineItems[$j+1]*100);
 
 		}
+		print_R($eqArray);
 		fseek($laborEqFile, $laborCount*4000);
 		fwrite($laborEqFile, packArray($eqArray));
 	}
@@ -105,7 +107,6 @@ while (($line = fgets($productFile)) !== false) {
   $productArray[11] = $lineItems[41];
 
   for ($i=0; $i<10; $i++) {
-
     $productArray[18+$i] = $productList[$lineItems[1+$i]];
     $productArray[28+$i] = $lineItems[11+$i];
     $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
@@ -113,9 +114,10 @@ while (($line = fgets($productFile)) !== false) {
 		echo 'EQ #'.$i.':'.$lineItems[31+$i].'<p>';
   }
 	print_r($productArray);
+	$packedProducts = packArray($productArray);
   fseek($objFile, $count*$dataBlockSize);
-  fwrite($objFile, packArray($productArray));
-	echo 'Write at '.($count*$dataBlockSize).'<p>';
+  fwrite($objFile, $packedProducts);
+	echo 'Write '.(strlen($packedProducts)).' bytes at '.($count*$dataBlockSize).'<p>';
   $count++;
 }
 
@@ -194,10 +196,11 @@ while (($line = fgets($factoryFile)) !== false) {
   }
 
 	$writeArray = packArray($factoryObj);
-	echo 'Seek to '.($count*$dataBlockSize).' and write '.(strlen($writeArray)).'<br>';
+
   fseek($objFile, $count*$dataBlockSize);
   fwrite($objFile, $writeArray);
 
+	echo 'Seek to '.($count*$dataBlockSize).' and write '.(strlen($writeArray)).', FInal pos: '.(ftell($objFile)).'<br>';
   $count++;
 }
 

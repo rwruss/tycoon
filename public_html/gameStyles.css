@@ -627,10 +627,10 @@
 }
 
 .regPane {
-	height:500;
-	width:500;
-	top:250;
-	left:250;
+	height:650;
+	width:1200;
+	top:40;
+	left:110;
 	position:absolute;
 	border:1px Solid #000000;
 	background: #B0B0B0;

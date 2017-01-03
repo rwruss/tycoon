@@ -120,7 +120,7 @@ for($i=0; $i<10; $i++) {
 		if (is_null($loc)) $loc = 0;
 
 		$laborCheck = unpack('i*', $laborDat);
-		print_R($laborCheck);
+		//print_R($laborCheck);
 
 		$businessLabor->addItem($slotFile, $laborDat, $loc);
 	}

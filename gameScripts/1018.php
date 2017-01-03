@@ -16,8 +16,10 @@ $thisFactory = loadObject($postVals[1], $objFile, 1000);
 echo 'Labor in slot '.$thisBusiness->get('laborSlot');
 $laborSlot = new itemSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
 print_r($laborSlot->slotData);
+/*
 echo 'factory object';
 print_r($thisFactory->objDat);
+*/
 echo '<script>
 
 companyLabor = [';
@@ -25,14 +27,14 @@ companyLabor = [';
 $startSpot = 1;
 for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
 	if ($laborSlot->slotData[$i] > 0) {
-		echo 'new laborItem({objID:'.($i+10).', pay:'.$laborSlot->slotData[$i+5].', ability:'.$laborSlot->slotData[$i+8].', laborType:'.$laborSlot->slotData[$i].'})';
+		echo 'new laborItem({objID:'.($i+10).', pay:'.$laborSlot->slotData[$i+5].', ability:'.$laborSlot->slotData[$i+8].', laborType:'.$laborSlot->slotData[$i+1].'})';
 		$startSpot = $i+10;
 		break;
 	}
 }
 for ($i=$startSpot; $i<sizeof($laborSlot->slotData); $i+=10) {
 	if ($laborSlot->slotData[$i] > 0) {
-		echo ', new laborItem({objID:'.($i+10).', pay:'.$laborSlot->slotData[$i+5].', ability:'.$laborSlot->slotData[$i+8].', laborType:'.$laborSlot->slotData[$i].'})';
+		echo ', new laborItem({objID:'.($i+10).', pay:'.$laborSlot->slotData[$i+5].', ability:'.$laborSlot->slotData[$i+8].', laborType:'.$laborSlot->slotData[$i+1].'})';
 	}
 }
 

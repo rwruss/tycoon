@@ -108,7 +108,7 @@ class offer {
 	}
 
 	renderSummary(target) {
-		//console.log(this);
+		console.log(this);
 		var thisDiv = addDiv(null, 'udHolder', target);
 		console.log("render product " + this.productID);
 		console.log(productArray[this.productID])
@@ -130,7 +130,6 @@ class product {
 		this.objID = details.objID,
 		this.objName = details.objName,
 		this.qty = details.qty || 0;
-		//console.log('create product ' + this.objID);
 	}
 
 	renderSummary(target) {

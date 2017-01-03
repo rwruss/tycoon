@@ -184,83 +184,10 @@ class objectList {
 	}
 }
 
-
-class saleList extends objectList {
-	constructor(parentList, opts) {
-		super();
-		this.listItems = Object.keys(parentList);
-		this.prefix = 1;
-		this.slideDefault = false;
-		//console.log(opts);
-		if (typeof opts !== "undefined") {
-			//console.log("run opts");
-			//if (opts.items.length > 0) this.listItems = opts.items;
-			this.listItems = opts.items || this.listItems;
-			this.prefix = opts.prefix || 1;
-			this.slideDefault = opts.max || false;
-		}
-		this.parentList = parentList;
-
-		//console.log(this);
-	}
-
-	getValue(trg) {
-		return this.prefix + "," + trg.selectedValue+","+trg.showBox.slider.slide.value;
-	}
-
-	existingValue(target, opts) {
-		console.log("set exsit ofr rsc")
-		this.showSelected(opts.setVal, target);
-		setSlideQty(target.showBox, opts.setQty);
-		target.showBox.slider.slide.value = opts.setQty;
-		console.log(target.showBox);
-	}
-
-	showItem(id, trg) {
-		let objBox = addDiv("", "rscContain", trg);
-		let objContent = addDiv("", "rscImg", objBox);
-		let newImg = addImg(id, "rscImg", objContent);
-		objBox.style.background = "white";
-		objContent.innerHTML = id.objID;
-		newImg.src = "./rscImages/"+id+".png";
-		newImg.alt = id;
-
-		return objBox;
-	}
-
-	showSelected(id, trg) {
-		SlclearTarget(trg);
-		trg.selectedValue = this.parentList[id].objID;
-		trg.showBox = slideBox(trg,0);
-		//trg.showBox.unitSpace.innerHTML = id;
-		console.log(this.parentList[id]);
-		this.parentList[id].renderSummary(trg.showBox.unitSpace);
-		if (this.slideDefault) setSlideQty(trg.showBox, this.slideDefault);
-		else setSlideQty(trg.showBox, this.parentList[id].qty);
-		trg.listItem = this;
-	}
-
-	typeIcon(trg) {
-		let objBox = addDiv("", "rscContain", trg);
-		objBox.innerHTML = "resources";
-
-		return objBox;
-	}
-
-	selectItem (trg) {
-		trg.className = "rscContainSelected";
-	}
-
-	unselectItem(trg) {
-		trg.className = "rscContain";
-	}
-
-}
-
 class uList extends objectList {
 	constructor(parentList, opts) {
 		super();
-		console.log(opts);
+		console.log(parentList);
 		this.listItems = Object.keys(parentList);
 		this.selectedItems = Array(this.listItems.length).fill(0);
 		//this.selectedItems.fill(0, 0, 10);
@@ -278,6 +205,10 @@ class uList extends objectList {
 		this.startItems = this.listItems;
 		this.parentList = parentList;
 
+	}
+
+	reset() {
+		this.selectedItems = Array(this.listItems.length).fill(0);
 	}
 
 	existingValue(target, opts) {
@@ -328,6 +259,79 @@ class uList extends objectList {
 
 		return objBox;
 	}
+}
+
+class saleList extends uList {
+	constructor(parentList, opts) {
+		super(parentList, opts);
+		/*
+		this.listItems = Object.keys(parentList);
+		this.prefix = 1;
+		this.slideDefault = false;
+		//console.log(opts);
+		if (typeof opts !== "undefined") {
+			//console.log("run opts");
+			//if (opts.items.length > 0) this.listItems = opts.items;
+			this.listItems = opts.items || this.listItems;
+			this.prefix = opts.prefix || 1;
+			this.slideDefault = opts.max || false;
+		}
+		this.parentList = parentList;
+
+		//console.log(this);*/
+	}
+	/*
+	getValue(trg) {
+		return this.prefix + "," + trg.selectedValue+","+trg.showBox.slider.slide.value;
+	}
+
+	existingValue(target, opts) {
+		console.log("set exsit ofr rsc")
+		this.showSelected(opts.setVal, target);
+		setSlideQty(target.showBox, opts.setQty);
+		target.showBox.slider.slide.value = opts.setQty;
+		console.log(target.showBox);
+	}
+
+	showItem(id, trg) {
+		let objBox = addDiv("", "rscContain", trg);
+		let objContent = addDiv("", "rscImg", objBox);
+		let newImg = addImg(id, "rscImg", objContent);
+		objBox.style.background = "white";
+		objContent.innerHTML = id.objID;
+		newImg.src = "./rscImages/"+id+".png";
+		newImg.alt = id;
+
+		return objBox;
+	}
+
+	showSelected(id, trg) {
+		SlclearTarget(trg);
+		trg.selectedValue = this.parentList[id].objID;
+		trg.showBox = slideBox(trg,0);
+		//trg.showBox.unitSpace.innerHTML = id;
+		console.log(this.parentList[id]);
+		this.parentList[id].renderSummary(trg.showBox.unitSpace);
+		if (this.slideDefault) setSlideQty(trg.showBox, this.slideDefault);
+		else setSlideQty(trg.showBox, this.parentList[id].qty);
+		trg.listItem = this;
+	}
+
+	typeIcon(trg) {
+		let objBox = addDiv("", "rscContain", trg);
+		objBox.innerHTML = "resources";
+
+		return objBox;
+	}
+
+	selectItem (trg) {
+		trg.className = "rscContainSelected";
+	}
+
+	unselectItem(trg) {
+		trg.className = "rscContain";
+	}
+*/
 }
 
 class multiList extends objectList {

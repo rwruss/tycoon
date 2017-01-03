@@ -63,7 +63,7 @@ if ($laborSpotCheck >= 0) {
 }
 
 // Delete the reference to the labor in the city labor inventory
-$emptyDat = pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 if (flock($cityFile, LOCK_EX)) {
 	$thisCity->changeLaborItem($postVals[4], [0,0,0,0,0,0,0,0,0,0]);
 
