@@ -58,6 +58,18 @@ sendButton = newButton(headSection, function () {scrMod("1005,'.$postVals[1].',"
 sendButton.innerHTML = "Set production";
 optionBox1 = prodList.SLsingleButton(thisDiv'.$currentProduction.');
 
+startButton1 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',1"))});
+startButton1.innerHTML = "Set production - 1 hour";
+
+startButton2 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',2"))});
+startButton2.innerHTML = "Set production - 2 hour";
+
+startButton3 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',3"))});
+startButton3.innerHTML = "Set production - 4 hour";
+
+startButton4 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',4"))});
+startButton4.innerHTML = "Set production - 8 hour";
+
 var productInvSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", productInvSection, "Output Inventory");
 

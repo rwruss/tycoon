@@ -96,6 +96,10 @@ class factory extends object {
 		parent::__construct($id, $dat, $file);
 
 		$this->attrList['remainderTime'] = 14;
+		$this->attrList['prodLength'] = 15;
+		$this->attrList['prodStart'] = 16;
+		$this->attrList['prodQty'] = 17;
+		
 		$this->attrList['currentProd'] = 19; // which inventory item is being produced - NOT the product ID
 		$this->attrList['currentRate'] = 20;
 		$this->attrList['labor1'] = 21;

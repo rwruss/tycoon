@@ -24,6 +24,8 @@
 1024 - PROCESS: Save adjusted pay rate for a worker
 1025 - PROCESS: Save adjust job title for a worker
 1026 - List of cities/markets
+1027 - PROCESS: Show City Details
+1028 - PROCESS: Start work on products at a factory
 
 
 TO DO:
@@ -35,7 +37,10 @@ DONE - Assigning labor to production tasks at factory
 http://playdosgamesonline.com/capitalism.html
 
 
-Swing:
+Get a job
+http://loudprogrammer.net/interview-with-rob-percival-how-to-land-your-first-junior-developer-job/?utm_source=quora&utm_medium=answer#.WG7ISvkrKUk
+
+Baby Swing:
 https://www.youtube.com/watch?v=4i-TcJVnsFA
 https://www.youtube.com/watch?v=MGDR5OfqOtU
 http://www.jameco.com/z/RF-500TB-18280-R-Nichibo-Taiwan-3-Volt-Dc-Motor-2104-Rpm-1-3-Volt-Range_2158442.html?CID=GOOG&gclid=CJrzz7yc9M8CFQuLaQodhpUKhg
