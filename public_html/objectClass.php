@@ -2,8 +2,8 @@
 
 $templateBlockSize = 1000;
 class object {
-	protected $linkFile, $unitBin, $id, $attrList, $itemBlockSize;
-	public $objDat;
+	protected $unitBin, $id, $attrList, $itemBlockSize;
+	public $objDat, $linkFile;
 	function __construct($id, $dat, $file) {
 		$this->linkFile = $file;
 
@@ -99,7 +99,7 @@ class factory extends object {
 		$this->attrList['prodLength'] = 15;
 		$this->attrList['prodStart'] = 16;
 		$this->attrList['prodQty'] = 17;
-		
+
 		$this->attrList['currentProd'] = 19; // which inventory item is being produced - NOT the product ID
 		$this->attrList['currentRate'] = 20;
 		$this->attrList['labor1'] = 21;
@@ -207,6 +207,14 @@ class factory extends object {
 
 	}
 
+	function resourceInv() {
+		$tmp = [];
+		for ($i=0; $i<20; $i++) {
+			if ($this->templateDat[16+$i] > 0) array_push($tmp, $this->templateDat[16+$i], $this->objDat[31+$i]);
+		}
+		return $tmp;
+	}
+
 	function productionOptions() {
 		return ([$this->tempList['prod1'], $this->tempList['prod2'], $this->tempList['prod3'], $this->tempList['prod4'], $this->tempList['prod5']]);
 	}
@@ -220,6 +228,7 @@ class factory extends object {
 	}
 
 	function updateStocks() {
+		/*
 		if ($this->get('currentProd') == 0) return;
 
 		// load production requirements
@@ -332,6 +341,63 @@ class factory extends object {
 		// Save updated information
 		$this->set('lastUpdate', $now);
 		$this->saveAll($this->linkFile);
+		*/
+		// Sort material requirements into the storage index for the factory
+		$now = time();
+		$rscSpots = [];
+		$saveFactory = false;
+		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
+			$rscSpots[$this->resourceStores[$i]] = $i;
+		}
+
+		//order info : time, resource type #, qty
+		for ($i=0; $i<10; $i++) {
+			if ($this->objDat[56+$i*3] <= $now && $this->objDat[56+$i*3] != 0) {
+				/*
+				array_push($events, $this->objDat[56+$i*3], $this->objDat[57+$i*3], $this->objDat[58+$i*3]);
+				$this->objDat[56+$i*3] = 0;
+				$this->objDat[57+$i*3] = 0;
+				$this->objDat[58+$i*3] = 0;*/
+
+				// Add material from arrived order
+					//$this->resourceStores[$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
+					echo 'adjusted stores: Item: '.$this->objDat[56+$i*3+1].' (Spot '.$rscSpots[$this->objDat[56+$i*3+1]].') + '.$this->objDat[56+$i*3+2].'<>';
+					//echo 'New qty at 31 + '.$rscSpots[$this->objDat[56+$i*3+1]].':'.$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]];
+					$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
+					$this->objDat[56+$i*3] = 0;
+					$this->objDat[57+$i*3] = 0;
+					$this->objDat[58+$i*3] = 0;
+
+					$this->productStores[0] = $this->objDat[51];
+					$this->productStores[1] = $this->objDat[52];
+					$this->productStores[2] = $this->objDat[53];
+					$this->productStores[3] = $this->objDat[54];
+					$this->productStores[4] = $this->objDat[55];
+
+					//$saveFactory = true;
+
+			} else echo $this->objDat[56+$i*3].' > '.$now.'<br>';
+		}
+
+		// Update production
+		if ($this->get('prodStart') + $this->get('prodLength') <= $now && $this->get('prodStart') > 0) {
+			echo 'Update completed production';
+			//Find product index
+			for ($i=0; $i<5; $i++){
+				if ($this->templateDat[11+$i] == $this->get('currentProd')) {
+					$productIndex = $i;
+					break;
+				}
+			}
+			$this->objDat[51+$productIndex] += $this->get('prodQty');
+
+			$this->set('prodStart', 0);
+			$saveFactory = true;
+		} else {
+			echo $this->get('prodStart').' + '.$this->get('prodLength').' > '.$now;
+		}
+
+		if ($saveFactory) $this->saveAll($this->linkFile);
 	}
 
 	function materialOrders() {

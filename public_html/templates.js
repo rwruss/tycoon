@@ -39,8 +39,8 @@ qtyBox = function (trg, maxPoints) {
 
 setSlideQty = function(trg, max) {
 	console.log(trg.slider);
-	trg.slider.slide.max = max;
-	trg.slider.maxVal.innerHTML = max;
+	trg.slide.max = max;
+	trg.maxVal.innerHTML = max;
 }
 
 setSlideVal = function (trg, val) {
@@ -182,7 +182,7 @@ msgBox = function (trg, prm, opt) {
 	} else {
 		subBox.value = "";
 	}
-
+	/*
 	box = document.createElement("textArea");
 	box.style.width="100%";
 	box.addEventListener("keydown", function (event) {event.stopPropagation()});
@@ -190,7 +190,7 @@ msgBox = function (trg, prm, opt) {
 	box.addEventListener("mouseup", function (event) {console.log(event); this.parentNode.parentNode.setAttribute("draggable", true); });
 	box.addEventListener("mouseout", function (event) {console.log(event); this.parentNode.parentNode.setAttribute("draggable", true); });
 	trg.appendChild(box);
-
+	*/
 	sendButton = addDiv("", "", trg);
 	sendButton.innerHTML = "send message";
 	sendButton.addEventListener("click", function () {
@@ -545,28 +545,14 @@ materialBox = function (id, qty, target) {
 	thisRsc.qtyDiv = addDiv("asdf", "productQty", thisRsc);
 
 	thisRsc.qtyDiv.innerHTML = qty;
-	return thisRsc;/*
-	var thisDiv = addDiv(null, 'udHolder', target);
-	thisDiv.setAttribute("data-unitid", this.unitID);
-
-	thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-	thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
-
-	thisDiv.actDiv = addDiv("asdf", "sumAct", thisDiv);
-	thisDiv.actDiv.setAttribute("data-boxName", "apBar");
-	thisDiv.actDiv.setAttribute("data-boxunitid", this.unitID);
-
-	thisDiv.expDiv = addDiv("asdf", "sumStr", thisDiv);
-	thisDiv.expDiv.setAttribute("data-boxName", "strBar");
-	thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
-
-	thisDiv.nameDiv.innerHTML = qty + " of " +objNames[id];*/
+	return thisRsc;
 
 }
 
 bPos = [0,0];
 paneBox = function(bName, val, h, w, x, y) {
 	var newDiv = document.createElement('div');
+	/*
 	newDiv.draggable = "true";
 
 	newDiv.addEventListener("drag", function (event) {
@@ -582,7 +568,7 @@ paneBox = function(bName, val, h, w, x, y) {
 		this.style.left = bPos[0] - bPos[2] + event.clientX;
 		this.style.top = bPos[1] - bPos[3] + event.clientY;
 	});
-
+	*/
 	var killBut = document.createElement('div');
 	killBut.className = "paneCloseButton";
 	killBut.innerHTML = 'X';
@@ -979,8 +965,9 @@ updateFactory = function (object) {
 	}
 }
 
-countDownClock = function (endTime, target) {
-	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj)}, 1000);
+countDownClock = function (endTime, target, callback = function () {console.log("default functin")}) {
+	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj, callback)}, 1000);
+
 	checkNode = target.parentNode;
 	while (checkNode) {
 		if (checkNode.destructFunctions) {
@@ -996,8 +983,8 @@ countDownClock = function (endTime, target) {
 	//target.addEventListener("DOMNodeRemoved", function () {console.log("remove");clearInterval(target.clockObj);}, false);
 }
 
-runClock = function (endTime, target) {
-	//console.log(target);
+runClock = function (endTime, target, object, callback) {
+
 	var date = new Date();
 	var remaining = (endTime - Math.floor(date.getTime()/1000));
 	if (remaining > 0) {
@@ -1011,6 +998,8 @@ runClock = function (endTime, target) {
 	} else {
 		target.innerHTML = "";
 		clearInterval(target.clockObj);
+		console.log("test callbuck");
+		callback();
 	}
 	//if (!target.runClock) clearInterval(target.clockObj);
 }
@@ -1076,11 +1065,19 @@ function showOrders(materialOrder, factory) {
 	}
 }
 
-function showInventory(inventory) {
+function showInventory(factory, inventory) {
 	console.log("Shw inv");
-	reqBox.stores.innerHTML = "";
-	textBlob("", reqBox.stores, "Current resource stores:");
-	for (var i=0; i<inventory.length; i+=2) {
-		materialBox(inventory[i], inventory[i+1], reqBox.stores);
+	if (factory == selectedFactory) {
+		reqBox.stores.innerHTML = "";
+		textBlob("", reqBox.stores, "Current resource stores:");
+		for (var i=0; i<inventory.length; i+=2) {
+			materialBox(inventory[i], inventory[i+1], reqBox.stores);
+		}
+	}
+}
+
+function updateMaterialInv(factory, materialInv) {
+	if (factory == selectedFactory) {
+		showInventory(factory, materialInv);
 	}
 }

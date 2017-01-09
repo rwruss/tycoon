@@ -19,13 +19,26 @@ prodList = new saleList([new product({objID:'.$thisObj->getTemp('prod1').', qty:
 for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).', qty:'.$thisObj->get('prodInv'.$i).'})';
 }
-echo '])
+echo ']);
 var lotSection = addDiv("", "standardContain", thisDiv);
 textBlob("", lotSection, "Sell on Market");
-saleBox1 = prodList.SLsingleButton(lotSection);
-salePrice = priceBox(lotSection,0.00);
+saleBox1 = prodList.SLsingleButton(lotSection, {setVal:'.$thisObj->getTemp('prod1').', selectFunction: function() {
+	let result = SLreadSelection(saleBox1).split(",") ;
+	let inventory = 0;
+	for (var z=0; z<5; z++) {
+		if (productStores[z] == result[1]) {
+			inventory = productStores[z+5];
+		}
+	}
+	console.log(result[1] + " has " + inventory);
+	setSlideQty(saleQty, inventory);
 
-sendButton = newButton(lotSection, function () {scrMod("1014,'.$postVals[1].',"+ SLreadSelection(saleBox1) + "," + salePrice.value)});
+}});
+saleQty = slideValBar(lotSection, "", 0, productStores[5]);
+
+salePrice = priceBox(lotSection,0.01);
+
+sendButton = newButton(lotSection, function () {scrMod("1014,'.$postVals[1].',"+ SLreadSelection(saleBox1) + "," + saleQty.slide.value + "," + salePrice.value)});
 sendButton.innerHTML = "Create Offer";
 
 var citySales = addDiv("", "standardContain", thisDiv);

@@ -25,7 +25,7 @@ class objectList {
 
 	SLsingleButton(target, opts) {
 		//console.log(this.selectedItems);
-		var selectButton = addDiv("b1", "button", target);
+		var selectButton = addDiv("b1", "listButton", target);
 		selectButton.innerHTML = "button";
 		let item = this;
 		selectButton.listItem = this;
@@ -36,27 +36,37 @@ class objectList {
 		var renderFunction = function(x, y) {
 				return item.showItem(x, y);
 			}
+
+		// Set default selectButton
+		var selectFunction = function() {};
 		// Apply options
 		if (typeof opts !== "undefined") {
 			console.log(opts);
 			if (opts.setVal !== "undefined") {
+				console.log("show a default value");
 				this.existingValue(selectButton, opts);
 			}
 			if (opts.renderFunction) {
+				console.log("load a different function");
 				renderFunction = opts.renderFunction;
+			} else {
+			}
+			if (opts.selectFunction) {
+				console.log("set select function");
+				selectFunction = opts.selectFunction;
 			} else {
 			}
 		}
 
 		selectButton.addEventListener("click", function () {
-			item.SLsingleSelect(selectButton, renderFunction)
+			item.SLsingleSelect(selectButton, renderFunction, selectFunction)
 			});
 		return selectButton;
 
 
 	}
 
-	SLsingleSelect(target, renderFunction) {
+	SLsingleSelect(target, renderFunction, selectFunction) {
 		//console.log("SLSELECT: " + target.innerHTML + " function is " + renderFunction)
 		var showContain;
 		if (document.getElementById("selectMenu")) showContain = document.getElementById("selectMenu");
@@ -77,7 +87,7 @@ class objectList {
 			var testVal = this.sortOptions[i];
 			sortButton.addEventListener("click", function () {
 				SLsortBy(sortTarget, testVal);
-				sortTarget.SLshowList(target, showContain.content, renderFunction);
+				sortTarget.SLshowList(target, showContain.content, renderFunction, selectFunction);
 			});
 		}
 
@@ -117,7 +127,7 @@ class objectList {
 					console.log("fitlered list " + filterTarget.listItems);
 					console.log(filterTarget);
 
-					filterTarget.SLshowList(target, showContain.content, renderFunction);
+					filterTarget.SLshowList(target, showContain.content, renderFunction, selectFunction);
 				}
 			});
 		}
@@ -130,10 +140,10 @@ class objectList {
 
 		//console.log("pass this function");
 		//console.log(renderFunction);
-		this.SLshowList(target, showContain.content, renderFunction);
+		this.SLshowList(target, showContain.content, renderFunction, selectFunction);
 	}
 
-	SLshowList(target, selectContainer, renderFunction) {
+	SLshowList(target, selectContainer, renderFunction, selectFunction) {
 		selectContainer.innerHTML = "";
 		for (var i=0; i<this.listItems.length; i++) {
 			if (this.parentList[this.listItems[i]] instanceof objectList) {
@@ -167,6 +177,7 @@ class objectList {
 					//this.owner.showSelected(object.objID, target);
 					console.log(this.owner.selectedItems);
 					renderFunction(object.owner.parentList[object.objID], target);
+					selectFunction();
 					});
 				} else console.log("case 33");
 			}
@@ -212,11 +223,11 @@ class uList extends objectList {
 	}
 
 	existingValue(target, opts) {
-		//console.log("ulist existing to " + opts.setVal);
-
+		console.log("ulist existing to " + opts.setVal);
+		console.log(this.parentList);
 		for (var i=0; i<this.parentList.length; i++) {
 			if (this.parentList[i].objID == opts.setVal) {
-				//console.log(opts.setVal + " found at " + i);
+				console.log(opts.setVal + " found at " + i);
 					this.selectedItems[i] = 1;
 					this.showSelected(i, target);
 

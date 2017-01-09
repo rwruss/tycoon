@@ -9,8 +9,9 @@ $thisPlayer = loadObject($pGameID, $objFile, 400);
 fclose($objFile);
 
 echo '<script>
-useDeskTop.newPane("military");
-thisDiv = useDeskTop.getPane("military");
+useDeskTop.newPane("businessDetail");
+thisDiv = useDeskTop.getPane("businessDetail");
+thisDiv.innerHTML = "";
 textBlob("", thisDiv, "Company information - total funds: '.($thisPlayer->get('money')/100).'");';
 
 ?>

@@ -3,12 +3,13 @@
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$offerFile = fopen($gamePath.'/saleOffers.slt', 'rb');
 
 $thisObj = loadObject($postVals[1], $objFile, 400);
 
 // Process a sale offer for a factory
+echo 'Factory: '.$postVals[1].' -> Sell '.$postVals[4].' of product '.$postVals[3].' at a unit price of '.$postVals[5];
 
 // Remove the qunatity of items from the factory inventory
 /// Locate product inventory numer in factory

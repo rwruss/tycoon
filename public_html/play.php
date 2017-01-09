@@ -162,6 +162,8 @@ echo '
 	var areaBuffer;
 	var areaCenters;
 	var areaColors;
+	var prodContain;
+	var selectedFactory;
 
 	var unitBox;
 	var rY = 0.0;
@@ -1038,6 +1040,7 @@ echo '
 		}
 
 		factoryArray = new Array();
+		//factoryArray.push(new factory({objType:factory, objID:0, objName:"None"}));
 		for (var i=0; i<numFactories; i++) {
 			console.log("make factory " + objNames[numProducts+i]);
 			factoryArray.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i), items:[1,2,3,4,5], prices:[6, 7, 8, 9, 10]}));

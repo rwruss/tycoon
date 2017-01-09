@@ -104,7 +104,7 @@ class offer {
 		this.quality = details[4];
 		this.pollution = details[5];
 		this.rights = details[6];
-		this.productID = details[7]
+		this.productID = details[0]
 	}
 
 	renderSummary(target) {

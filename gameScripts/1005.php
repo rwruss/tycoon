@@ -29,8 +29,10 @@ if ($optionCheck) {
 	// Read product Data
 	fseek($objFile, $postVals[3]*1000);
 	$productInfo = unpack('i*', fread($objFile, 200));
+	//print_r($productInfo);
 
 	// Set new item production
+	echo 'Set production of item '.$postVals[3].' to '.$productInfo[11];
 	$thisObj->save('currentProd', $postVals[3]);
 	$thisObj->save('currentRate', $productInfo[11]);
 } else {
