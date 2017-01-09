@@ -41,6 +41,18 @@ if ($optionCheck) {
 if ($qtyCheck) exit ('note enough of this ('.$thisFactory->get('prodInv'.($prodNumber+1)).' < '.$postVals[4].')');
 // Load the city information
 $thisCity = loadCity($postVals[2], $cityFile, 4000);
+$cityRegion = loadRegion($thisCity->get('parentRegion'));
+
+// Add sales to factory tax base for it's own region
+$factoryTax = 0;
+$thisFactory->adjVal('totalSales', $factoryTax);
+$thisFactory->adjVal('periodSales', $factoryTax);
+
+if ($thisFactory->get('region1') != $thisCity->get('parentRegion')) {
+	// apply tarrif on sold goods
+	$tarrifAmount = 0;
+	$cityRegion->adjVal('money', $tarrifAmount);
+}
 
 // Update city demand
 

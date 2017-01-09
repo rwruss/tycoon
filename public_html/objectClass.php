@@ -43,6 +43,13 @@ class object {
 			$this->objDat[$this->attrList[$desc]] = $val;
 		}
 	}
+	
+	function adjVal($desc, $incr) {
+		if (array_key_exists($desc, $this->attrList)) {
+			//echo 'Found '.$desc.' use spot '.$this->attrList[$desc].'.  Type: '.gettype ($this->objDat);
+			$this->objDat[$this->attrList[$desc]] += $val;
+		}
+	}
 
 	function save($desc, $val) {
 		if (array_key_exists($desc, $this->attrList)) {
@@ -95,6 +102,10 @@ class factory extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
+		$this->attrList['region'] = 11;
+		$this->attrList['totalSales'] = 12;
+		$this->attrList['periodSales'] = 13;
+		
 		$this->attrList['remainderTime'] = 14;
 		$this->attrList['prodLength'] = 15;
 		$this->attrList['prodStart'] = 16;
@@ -483,6 +494,7 @@ class city extends object {
 		$this->attrList['laborUpdateTime'] = 16;
 		$this->attrList['schoolSlot'] = 17;
 		$this->attrList['laborSlot'] = 18;
+		$this->attrList['parentRegion'] = 19;
 	}
 
 	function demandRate($productID) {
@@ -688,6 +700,17 @@ class school {
 				$this->schoolRates = array_fill(1, 4, 5);
 			break;
 		}
+	}
+}
+
+class region extends object {
+	function __construct($id, $dat, $file) {
+		parent::__construct($id, $dat, $file);
+		
+	$this->attrList['money'] = 10;
+	$this->attrList['internalTax'] = 11;
+	$this->attrList['externalTax'] = 12;
+	$this->attrList['tarrif'] = 13;
 	}
 }
 
