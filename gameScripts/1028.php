@@ -6,6 +6,11 @@ $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 // Load target factory
 $thisObj = loadObject($postVals[1], $objFile, 400);
+$thisObj->updateStocks();
+
+print_r($thisObj->objDat);
+print_r($thisObj->resourceInv());
+print_r($thisObj->resourceStores);
 
 // Confrim that player can give this order
 if ($thisObj->get('owner') != $pGameID) {

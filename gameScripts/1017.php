@@ -41,18 +41,9 @@ if ($optionCheck) {
 if ($qtyCheck) exit ('note enough of this ('.$thisFactory->get('prodInv'.($prodNumber+1)).' < '.$postVals[4].')');
 // Load the city information
 $thisCity = loadCity($postVals[2], $cityFile, 4000);
-$cityRegion = loadRegion($thisCity->get('parentRegion'));
+$cityRegion = loadRegion($thisCity->get('parentRegion'), $cityFile);
 
-// Add sales to factory tax base for it's own region
-$factoryTax = 0;
-$thisFactory->adjVal('totalSales', $factoryTax);
-$thisFactory->adjVal('periodSales', $factoryTax);
 
-if ($thisFactory->get('region1') != $thisCity->get('parentRegion')) {
-	// apply tarrif on sold goods
-	$tarrifAmount = 0;
-	$cityRegion->adjVal('money', $tarrifAmount);
-}
 
 // Update city demand
 
@@ -74,6 +65,17 @@ $startPrice = intval(min($startDemand/$baseDemand, 2.0)*$basePrice);
 $endPrice = intval(min($endDemand/$baseDemand, 2.0)*$basePrice);
 $profit = (($startPrice+$endPrice)/2)*$postVals[4];
 
+// Add sales to factory tax base for it's own region
+$factoryTax = 0;
+$thisFactory->adjVal('totalSales', $profit);
+$thisFactory->adjVal('periodSales', $profit);
+
+if ($thisFactory->get('region1') != $thisCity->get('parentRegion')) {
+	// apply tarrif on sold goods
+	$tarrifAmount = 0;
+	//$cityRegion->adjVal('money', $tarrifAmount);
+}
+
 echo 'Start/end city demand:'.$startDemand.' / '.$endDemand.'<br>
 Start/End price '.$startPrice.' / '.$endPrice.' FInal average price: '.(($startPrice+$endPrice)/2).' for a profit of '.$profit;
 
@@ -88,7 +90,8 @@ $thisPlayer->save('money', $thisPlayer->get('money') + $profit);
 echo 'final money: '.$thisPlayer->get('money');
 
 // remove qunatity from factory
-$thisFactory->save('prodInv'.($prodNumber+1), $thisFactory->get('prodInv'.($prodNumber+1)) - $postVals[4]);
+$thisFactory->adjVal('prodInv'.($prodNumber+1), -$postVals[4]);
+$thisFactory->saveAll($objFile);
 
 echo 'final qty: '.$thisFactory->get('prodInv'.($prodNumber+1)).'
 <script>

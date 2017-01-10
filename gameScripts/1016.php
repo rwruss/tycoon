@@ -23,7 +23,7 @@ for ($i=1; $i<$numProducts; $i++) {
   $actualDemand = min($thisCity->currentDemand($i, $now), 2.0*$baseDemand);
   //echo 'Actual Demand: '.$actualDemand;
   $itemPrice = intval(min($actualDemand/$baseDemand, 2.0)*$price);
-  echo 'cityProducts.push(new offer(['.$i.', 1000, '.$itemPrice.', '.$postVals[2].']));';
+  echo 'cityProducts.push(new offer(['.$i.', 100, '.$itemPrice.', '.$postVals[2].']));';
 }
 
 // Output what the city will buy and at what price

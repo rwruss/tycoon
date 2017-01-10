@@ -43,11 +43,11 @@ class object {
 			$this->objDat[$this->attrList[$desc]] = $val;
 		}
 	}
-	
+
 	function adjVal($desc, $incr) {
 		if (array_key_exists($desc, $this->attrList)) {
 			//echo 'Found '.$desc.' use spot '.$this->attrList[$desc].'.  Type: '.gettype ($this->objDat);
-			$this->objDat[$this->attrList[$desc]] += $val;
+			$this->objDat[$this->attrList[$desc]] += $incr;
 		}
 	}
 
@@ -105,7 +105,7 @@ class factory extends object {
 		$this->attrList['region'] = 11;
 		$this->attrList['totalSales'] = 12;
 		$this->attrList['periodSales'] = 13;
-		
+
 		$this->attrList['remainderTime'] = 14;
 		$this->attrList['prodLength'] = 15;
 		$this->attrList['prodStart'] = 16;
@@ -205,11 +205,13 @@ class factory extends object {
 		$this->tempList['prod4'] = $this->templateDat[14];
 		$this->tempList['prod5'] = $this->templateDat[15];
 
+		$this->resourceStores = $this->resourceInv();
+		/*
 		$this->resourceStores = [];
 		for ($i=0; $i<20; $i++) {
 			if ($this->templateDat[16+$i] > 0) array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
 		}
-
+		*/
 		$this->productStores[] = $this->objDat[51];
 		$this->productStores[] = $this->objDat[52];
 		$this->productStores[] = $this->objDat[53];
@@ -706,7 +708,7 @@ class school {
 class region extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 	$this->attrList['money'] = 10;
 	$this->attrList['internalTax'] = 11;
 	$this->attrList['externalTax'] = 12;
@@ -727,6 +729,13 @@ function loadCity($id, $file) {
 	$dat = unpack('i*', fread($file, 105000));
 
 	return new city($id, $dat, $file);
+}
+
+function loadRegion($id, $file) {
+	fseek($file, $id*105000);
+	$dat = unpack('i*', fread($file, 105000));
+
+	return new region($id, $dat, $file);
 }
 
 function loadObject($id, $file, $size) {

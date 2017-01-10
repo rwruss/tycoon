@@ -13,7 +13,7 @@ if ($thisObj->get('currentProd') == 0) {
 }
 //echo 'Load object '.$thisObj->get('currentProd');
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
-
+print_r($thisObj->objDat);
 echo '<script>
 selectedFactory = '.$postVals[1].';
 thisDiv.innerHTML = "";
@@ -54,7 +54,7 @@ for ($i=2; $i<6; $i++) {
 }
 echo ']);
 var headSection = addDiv("", "stdFloatDiv", thisDiv);
-textBlob("", headSection, "Rate: '.($thisObj->get('currentRate')/100).'");
+textBlob("", headSection, "Rate: '.($thisObj->get('currentRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
 sendButton = newButton(headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(optionBox1))});
 sendButton.innerHTML = "Set production";
