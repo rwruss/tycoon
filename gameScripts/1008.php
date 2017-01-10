@@ -6,6 +6,14 @@ require_once('./objectClass.php');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
+// Verify that the player has enough money to build this factory
+$thisBusiness = loadObject($pGameID, $objFile, 400);
+if ($factoryCost > $thisBusiness->get('money')) {
+	echo 'You do not have enough money to build this type of factory.  You need '.($factoryCost - $thisBusiness->get('money')).' to start construction.';
+	exit();
+}
+
+
 // Create a new factory object
 if (flock($objFile, LOCK_EX)) {
 	// get new ID

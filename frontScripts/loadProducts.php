@@ -144,7 +144,7 @@ $factoryFile = fopen('../scenarios/'.$scenario.'/factoryDesc.csv', 'rb');
 // $count = 1; Factories need to be added to the count total since they need unique IDs from the products
 echo '<p>';
 $factoryInventories = [];
-
+fgets($factoryFile);
 while (($line = fgets($factoryFile)) !== false) {
 
   $lineItems = explode(',', $line);
@@ -156,6 +156,7 @@ while (($line = fgets($factoryFile)) !== false) {
   $factoryObj = array_fill(1, 250, 0);
   // set object type and subtype
   $factoryObj[4] = 7;
+  $factoryObj[8] = $lineItems[6];
   $factoryObj[9] = $count;
 
   for ($i=1; $i<5; $i++) {
