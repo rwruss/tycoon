@@ -13,6 +13,9 @@ if ($factoryCost > $thisBusiness->get('money')) {
 	exit();
 }
 
+// Deduct the cost of the factory
+$thisBusiness->save('money', $thisBusiness->get('money')-$factoryCost);
+
 
 // Create a new factory object
 if (flock($objFile, LOCK_EX)) {
@@ -63,5 +66,9 @@ if (flock($objFile, LOCK_EX)) {
 
 fclose($objFile);
 fclose($slotFile);
+
+echo '<script>
+thisPlayer.money = '.$thisPlayer->get('money').'
+</script>';
 
 ?>
