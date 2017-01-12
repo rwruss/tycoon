@@ -89,6 +89,7 @@ console.log(materialOrder);
 console.log('.$postVals[1].');
 console.log(orderItems);
 showOrders(materialOrder, '.$postVals[1].');
+thisDiv = useDeskTop.getPane("businessObjects");
 </script>';
 
 fclose($offerFile);

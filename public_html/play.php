@@ -1080,6 +1080,7 @@ window.addEventListener("load", webGLStart);
 		<a href="javascript:void(0);" onclick="scrMod(1004)">Financial</a>
 		<a href="javascript:void(0);" onclick="scrMod(1002)">Busineses</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1026)">Markets</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(2001)" style="position:absolute; bottom:20">Gimme Coin</a><br>
 		<a href="./index.php" style="position:absolute; bottom:0">Back to Main</a>
 	</div>
 	<div id="infoBar" style="position:absolute; top:640; left:110; height:50; width:1200; border:1px solid #000000">infoBar</div>

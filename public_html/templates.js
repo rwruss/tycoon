@@ -771,6 +771,7 @@ class deskTop {
 	getPane(desc) {
 		if (this.paneList[desc]) {
 			//console.log("dound " + desc);
+			this.paneToTop(this.paneList[desc]);
 			return this.paneList[desc].element.childNodes[1];
 		} else {
 			//console.log(desc + " does not ex");

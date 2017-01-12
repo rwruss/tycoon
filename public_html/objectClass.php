@@ -387,7 +387,7 @@ class factory extends object {
 					$this->productStores[3] = $this->objDat[54];
 					$this->productStores[4] = $this->objDat[55];
 
-					//$saveFactory = true;
+					$saveFactory = true;
 
 			} else echo $this->objDat[56+$i*3].' > '.$now.'<br>';
 		}

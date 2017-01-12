@@ -6,16 +6,20 @@ require_once('./objectClass.php');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
+// Load template data
+fseek($objFile, $postVals[2]*$templateBlockSize);
+$templateDat = unpack('i*', fread($objFile, $templateBlockSize));
+
 // Verify that the player has enough money to build this factory
+$factoryCost = $templateDat[8];
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 if ($factoryCost > $thisBusiness->get('money')) {
-	echo 'You do not have enough money to build this type of factory.  You need '.($factoryCost - $thisBusiness->get('money')).' to start construction.';
+	echo 'You do not have enough money to build this type of factory.  You need '.$factoryCost.' - '.$thisBusiness->get('money').' = '.($factoryCost - $thisBusiness->get('money')).' to start construction.';
 	exit();
 }
 
 // Deduct the cost of the factory
 $thisBusiness->save('money', $thisBusiness->get('money')-$factoryCost);
-
 
 // Create a new factory object
 if (flock($objFile, LOCK_EX)) {
@@ -42,7 +46,6 @@ if (flock($objFile, LOCK_EX)) {
 	print_r($testDat);
 
 	// Add unit to player's list of objects
-  $thisBusiness = loadObject($pGameID, $objFile, 400);
   if ($thisBusiness->get('ownedObjects') == 0) {
     $thisBusiness->save('ownedObjects', newSlot($slotFile));
   }
@@ -68,7 +71,7 @@ fclose($objFile);
 fclose($slotFile);
 
 echo '<script>
-thisPlayer.money = '.$thisPlayer->get('money').'
+thisPlayer.money = '.$thisBusiness->get('money').'
 </script>';
 
 ?>
