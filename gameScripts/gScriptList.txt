@@ -26,11 +26,14 @@
 1026 - List of cities/markets
 1027 - PROCESS: Show City Details
 1028 - PROCESS: Start work on products at a factory
+1029 - MENU: Construction Speed Up at Factory
+1030 - PROCESS: Construction Speed Up at Factory
 
 
 TO DO:
 Labor experience and leveling up - Daily processing of an update
 Adjust production rates based on labor - Do this in the labor and production change scripts
+Professional Services/Construction, Engineering, Markinting, etc
 
 DONE - Assigning labor to production tasks at factory
 

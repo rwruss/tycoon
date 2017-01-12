@@ -102,6 +102,10 @@ class factory extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
+		$this->attrList['factoryLevel'] = 1;
+		$this->attrList['factoryStatus'] = 2;
+		$this->attrList['constructCompleteTime'] = 3;
+		$this->attrList['upgradeInProgress'] = 8;
 		$this->attrList['region'] = 11;
 		$this->attrList['totalSales'] = 12;
 		$this->attrList['periodSales'] = 13;
@@ -111,7 +115,7 @@ class factory extends object {
 		$this->attrList['prodStart'] = 16;
 		$this->attrList['prodQty'] = 17;
 
-		$this->attrList['currentProd'] = 19; // which inventory item is being produced - NOT the product ID
+		$this->attrList['currentProd'] = 19; // Product ID that is currently being produced
 		$this->attrList['currentRate'] = 20;
 		$this->attrList['labor1'] = 21;
 		$this->attrList['labor2'] = 22;
@@ -355,10 +359,21 @@ class factory extends object {
 		$this->set('lastUpdate', $now);
 		$this->saveAll($this->linkFile);
 		*/
-		// Sort material requirements into the storage index for the factory
 		$now = time();
-		$rscSpots = [];
 		$saveFactory = false;
+		
+		// Update facility construction or upgrades as needed
+		$constructDelta = $this->get('constructCompleteTime') - $now;
+		if ($constructDelta <= 0 && $this->get('upgradeInProgress') > 0) {
+			$this->set('factoryLevel', $this->get('upgradeInProgress'));
+			$this->set('upgradeInProgress', 0);
+			$saveFactory = true;
+		}
+		
+		// Sort material requirements into the storage index for the factory
+		
+		$rscSpots = [];
+		
 		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
 			$rscSpots[$this->resourceStores[$i]] = $i;
 		}
@@ -366,11 +381,6 @@ class factory extends object {
 		//order info : time, resource type #, qty
 		for ($i=0; $i<10; $i++) {
 			if ($this->objDat[56+$i*3] <= $now && $this->objDat[56+$i*3] != 0) {
-				/*
-				array_push($events, $this->objDat[56+$i*3], $this->objDat[57+$i*3], $this->objDat[58+$i*3]);
-				$this->objDat[56+$i*3] = 0;
-				$this->objDat[57+$i*3] = 0;
-				$this->objDat[58+$i*3] = 0;*/
 
 				// Add material from arrived order
 					//$this->resourceStores[$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
@@ -394,7 +404,9 @@ class factory extends object {
 
 		// Update production
 		if ($this->get('prodStart') + $this->get('prodLength') <= $now && $this->get('prodStart') > 0) {
+			// Production is complete
 			echo 'Update completed production';
+			
 			//Find product index
 			for ($i=0; $i<5; $i++){
 				if ($this->templateDat[11+$i] == $this->get('currentProd')) {
@@ -405,6 +417,12 @@ class factory extends object {
 			$this->objDat[51+$productIndex] += $this->get('prodQty');
 
 			$this->set('prodStart', 0);
+			
+			// Update labor experience
+			for ($i=0; $i<10; $i++) {
+				$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
+			}
+			
 			$saveFactory = true;
 		} else {
 			echo $this->get('prodStart').' + '.$this->get('prodLength').' > '.$now;

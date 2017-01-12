@@ -20,8 +20,7 @@ console.log(playerFactories);
 for (let i=0; i<playerFactories.length; i++) {
 	let thisSummary = playerFactories[i].renderSummary(listSection);
 	let thisFactory = playerFactories[i];
-	thisSummary.addEventListener("click", function () {scrMod("1003,"+thisFactory.objID);
-		console.log(thisFactory)})
+	thisSummary.addEventListener("click", function () {scrMod("1003,"+thisFactory.objID);})
 }
 
 optionBox1 = defaultBuildings.SLsingleButton(headSection, {setVal:33});

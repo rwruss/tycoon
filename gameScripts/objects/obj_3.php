@@ -1,5 +1,19 @@
 <?php
 
+$now = time();
+$constructDelta = $thisObj->get('constructCompleteTime') - $now;
+if ($thisObj->get('factoryLevel') == 0) {
+	// Check if construction of the factory is complete
+	if ($constructDelta > 0) {
+		echo 'This facility is still being built.  Would you like to speed it up?';
+		exit();
+	}
+}
+
+if ($constructDelta > 0) {
+	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;'
+}
+
 $thisObj->updateStocks();
 if ($thisObj->get('currentProd') > 0) {
 	$currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
@@ -16,7 +30,29 @@ $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
 print_r($thisObj->objDat);
 echo '<script>
 selectedFactory = '.$postVals[1].';
-thisDiv.innerHTML = "";
+thisDiv.innerHTML = "";';
+
+if ($constructDelta > 0) {
+	echo 'var updateArea = addDiv("", "stdFloatDiv", thisDiv);';
+		
+	if ($thisObj->get('factoryLevel') == 0) {
+		echo 'textBlob("", updateArea, "Building factory");
+		var buildTimeBox = addDiv("", "orderTime", prodContain);
+		buildTimeBox.runClock = true;
+		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
+		speedUpButton = newButton(productInvSection, function () {scrMod("1029,1,'.$postVals[1].'")});
+		speedUpButton.innerHTML = "Speed Up Construction"';
+	} else {
+		echo 'textBlob("", updateArea, "Upgrading factory to level '.$thisObj->get('upgradeInProgress').'");
+		var buildTimeBox = addDiv("", "orderTime", prodContain);
+		buildTimeBox.runClock = true;
+		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
+		speedUpButton = newButton(productInvSection, function () {scrMod("1029,1,'.$postVals[1].'")});
+		speedUpButton.innerHTML = "Speed Up Construction"';
+	}
+}
+
+echo '
 productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).']
 productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
 productLabor = ['.implode(',', $productInfo->reqLabor).'];
