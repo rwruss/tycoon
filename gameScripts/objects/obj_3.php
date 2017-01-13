@@ -5,13 +5,23 @@ $constructDelta = $thisObj->get('constructCompleteTime') - $now;
 if ($thisObj->get('factoryLevel') == 0) {
 	// Check if construction of the factory is complete
 	if ($constructDelta > 0) {
-		echo 'This facility is still being built.  Would you like to speed it up?';
+		echo '<script>
+		selectedFactory = '.$postVals[1].';
+		thisDiv.innerHTML = "";
+		textBlob("", thisDiv, "This facility is still being built.  Would you like to speed it up?;");
+		var buildTimeBox = addDiv("", "orderTime", thisDiv);
+		buildTimeBox.runClock = true;
+		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
+		speedUpButton = newButton(thisDiv, function () {scrMod("1029,1,'.$postVals[1].'")});
+		speedUpButton.innerHTML = "Speed Up Construction";
+		console.log("done");
+		</script>';
 		exit();
 	}
 }
 
 if ($constructDelta > 0) {
-	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;'
+	//echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
 }
 
 $thisObj->updateStocks();
@@ -27,28 +37,30 @@ if ($thisObj->get('currentProd') == 0) {
 }
 //echo 'Load object '.$thisObj->get('currentProd');
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
-print_r($thisObj->objDat);
+//print_r($thisObj->objDat);
 echo '<script>
 selectedFactory = '.$postVals[1].';
 thisDiv.innerHTML = "";';
 
 if ($constructDelta > 0) {
 	echo 'var updateArea = addDiv("", "stdFloatDiv", thisDiv);';
-		
+
 	if ($thisObj->get('factoryLevel') == 0) {
 		echo 'textBlob("", updateArea, "Building factory");
-		var buildTimeBox = addDiv("", "orderTime", prodContain);
+		var buildTimeBox = addDiv("", "orderTime", updateArea);
 		buildTimeBox.runClock = true;
 		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
-		speedUpButton = newButton(productInvSection, function () {scrMod("1029,1,'.$postVals[1].'")});
+		speedUpButton = newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'")});
 		speedUpButton.innerHTML = "Speed Up Construction"';
 	} else {
 		echo 'textBlob("", updateArea, "Upgrading factory to level '.$thisObj->get('upgradeInProgress').'");
-		var buildTimeBox = addDiv("", "orderTime", prodContain);
+		var buildTimeBox = addDiv("", "orderTime", updateArea);
 		buildTimeBox.runClock = true;
 		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
-		speedUpButton = newButton(productInvSection, function () {scrMod("1029,1,'.$postVals[1].'")});
-		speedUpButton.innerHTML = "Speed Up Construction"';
+		speedUpButton = newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'");event.stopPropagation();});
+		speedUpButton.innerHTML = "Speed Up Construction";
+		buildTimeBox.style.position.top = 0;
+		buildTimeBox.style.position.right = 0;';
 	}
 }
 
@@ -109,6 +121,9 @@ startButton4.innerHTML = "Work for - 8 hour";
 
 prodContain = addDiv("", "orderContain", headSection);
 optionBox1 = prodList.SLsingleButton(prodContain'.$currentProduction.');
+
+upgradeButton = newButton(headSection, function () {scrMod("1031,'.$postVals[1].'")});
+upgradeButton.innerHTML = "Upgrade Factory";
 ';
 if ($thisObj->get('prodStart') > 0) {
 	echo '

@@ -742,6 +742,7 @@ class deskTop {
 	newPane (desc, type) {
 		//console.log("start list " + Object.keys(this.paneList))
 		if (this.paneList[desc]) {
+
 			//console.log("already made: " + this.constructor.name + " -> " + Object.keys(this.paneList));
 		} else {
 
@@ -756,7 +757,7 @@ class deskTop {
 			}
 			//console.log("created " + desc);
 		}
-
+		this.paneToTop(this.paneList[desc]);
 	}
 
 	arrangePanes() {
@@ -779,6 +780,7 @@ class deskTop {
 	}
 
 	paneToTop(thisPane) {
+		console.log("move " + thisPane.desc + " to the top");
 		delete this.paneList[thisPane.desc];
 		this.paneList[thisPane.desc] = thisPane;
 		this.arrangePanes();

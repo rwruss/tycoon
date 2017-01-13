@@ -361,7 +361,7 @@ class factory extends object {
 		*/
 		$now = time();
 		$saveFactory = false;
-		
+
 		// Update facility construction or upgrades as needed
 		$constructDelta = $this->get('constructCompleteTime') - $now;
 		if ($constructDelta <= 0 && $this->get('upgradeInProgress') > 0) {
@@ -371,9 +371,9 @@ class factory extends object {
 		}
 		
 		// Sort material requirements into the storage index for the factory
-		
+
 		$rscSpots = [];
-		
+
 		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
 			$rscSpots[$this->resourceStores[$i]] = $i;
 		}
@@ -384,7 +384,7 @@ class factory extends object {
 
 				// Add material from arrived order
 					//$this->resourceStores[$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
-					echo 'adjusted stores: Item: '.$this->objDat[56+$i*3+1].' (Spot '.$rscSpots[$this->objDat[56+$i*3+1]].') + '.$this->objDat[56+$i*3+2].'<>';
+					//echo 'adjusted stores: Item: '.$this->objDat[56+$i*3+1].' (Spot '.$rscSpots[$this->objDat[56+$i*3+1]].') + '.$this->objDat[56+$i*3+2].'<>';
 					//echo 'New qty at 31 + '.$rscSpots[$this->objDat[56+$i*3+1]].':'.$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]];
 					$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
 					$this->objDat[56+$i*3] = 0;
@@ -399,14 +399,16 @@ class factory extends object {
 
 					$saveFactory = true;
 
-			} else echo $this->objDat[56+$i*3].' > '.$now.'<br>';
+			} else {
+				//echo $this->objDat[56+$i*3].' > '.$now.'<br>';
+			}
 		}
 
 		// Update production
 		if ($this->get('prodStart') + $this->get('prodLength') <= $now && $this->get('prodStart') > 0) {
 			// Production is complete
-			echo 'Update completed production';
-			
+			//echo 'Update completed production';
+
 			//Find product index
 			for ($i=0; $i<5; $i++){
 				if ($this->templateDat[11+$i] == $this->get('currentProd')) {
@@ -417,15 +419,15 @@ class factory extends object {
 			$this->objDat[51+$productIndex] += $this->get('prodQty');
 
 			$this->set('prodStart', 0);
-			
+
 			// Update labor experience
 			for ($i=0; $i<10; $i++) {
 				$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
 			}
-			
+
 			$saveFactory = true;
 		} else {
-			echo $this->get('prodStart').' + '.$this->get('prodLength').' > '.$now;
+			//echo $this->get('prodStart').' + '.$this->get('prodLength').' > '.$now;
 		}
 
 		if ($saveFactory) $this->saveAll($this->linkFile);

@@ -1,27 +1,24 @@
 <?php
 
-require_once('./objectClass.php');
-
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-
-// Load inventory of production boosts for this player
-
-// Load factory Data
-$thisFactory = loadObject($postVals[2], $objFile, 1000);
-
 echo '<script>
+console.log("boostmenu")
 useDeskTop.newPane("boostMenu");
 boostDiv = useDeskTop.getPane("boostMenu");
+boostDiv.innerHTML = "";
+//useDeskTop.paneToTop(boostDiv);
 
-boostButton1 = newButton(productInvSection, function () {scrMod("1030,1,'.$postVals[1].',1");thisDiv = useDeskTop.getPane("businessObjects");});
-boostButton1.innerHTML = "Boost 1";
+boostButton1 = newButton(boostDiv, function () {scrMod("1030,1,'.$postVals[2].',1");thisDiv = useDeskTop.getPane("businessObjects");thisDiv = useDeskTop.getPane("businessObjects");event.stopPropagation();});
+boostButton1.innerHTML = "1 minute";
 
-boostButton2 = newButton(productInvSection, function () {scrMod("1030,1,'.$postVals[1].',2");thisDiv = useDeskTop.getPane("businessObjects");});
-boostButton2.innerHTML = "Boost 2";
+boostButton2 = newButton(boostDiv, function () {scrMod("1030,1,'.$postVals[2].',2");thisDiv = useDeskTop.getPane("businessObjects");thisDiv = useDeskTop.getPane("businessObjects");event.stopPropagation();});
+boostButton2.innerHTML = "10 minutes";
 
-boostButton3 = newButton(productInvSection, function () {scrMod("1030,1,'.$postVals[1].',3");thisDiv = useDeskTop.getPane("businessObjects");});
-boostButton3.innerHTML = "Boost 3";
-thisDiv = useDeskTop.getPane("businessObjects");';
+boostButton3 = newButton(boostDiv, function () {scrMod("1030,1,'.$postVals[2].',3");thisDiv = useDeskTop.getPane("businessObjects");thisDiv = useDeskTop.getPane("businessObjects");event.stopPropagation();});
+boostButton3.innerHTML = "30 minutes";
 
-fclose($objFile);
+boostButton3 = newButton(boostDiv, function () {scrMod("1030,1,'.$postVals[2].',4");thisDiv = useDeskTop.getPane("businessObjects");thisDiv = useDeskTop.getPane("businessObjects");event.stopPropagation();});
+boostButton3.innerHTML = "1 hour";
+
+</script>';
+
 ?>

@@ -28,6 +28,7 @@
 1028 - PROCESS: Start work on products at a factory
 1029 - MENU: Construction Speed Up at Factory
 1030 - PROCESS: Construction Speed Up at Factory
+1031 - PROCESS: Start upgrade at factory
 
 
 TO DO:

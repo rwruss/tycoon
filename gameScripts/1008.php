@@ -35,9 +35,14 @@ if (flock($objFile, LOCK_EX)) {
   $newObj = new factory($newID, $newObjDat, $objFile);
 
 	// Set default parameters for this factory
+	$now = time();
+	$newObj->set('factoryLevel', 0);
+	$newObj->set('factoryStatus', 0);
+	$newObj->set('constructCompleteTime', $now+600);
+	$newObj->set('upgradeInProgress', 1);
 	$newObj->set('oType', 3);
 	$newObj->set('owner', $pGameID);
-	$newObj->set('lastUpdate', time());
+	$newObj->set('lastUpdate', $now);
 	$newObj->set('subType', $postVals[2]);
 	$newObj->saveAll($objFile);
 
