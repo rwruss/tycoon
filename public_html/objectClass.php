@@ -93,6 +93,17 @@ class business extends object {
 		$this->attrList['ownedObjects'] = 11;
 		$this->attrList['money'] = 14;
 		$this->attrList['laborSlot'] = 15;
+		
+		$this->attrList['boost1'] = 20;
+		$this->attrList['boost2'] = 21;
+		$this->attrList['boost3'] = 22;
+		$this->attrList['boost4'] = 23;
+		$this->attrList['boost5'] = 24;
+		$this->attrList['boost6'] = 25;
+		$this->attrList['boost7'] = 26;
+		$this->attrList['boost8'] = 27;
+		$this->attrList['boost9'] = 28;
+		$this->attrList['boost10'] = 29;
 	}
 }
 

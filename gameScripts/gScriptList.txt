@@ -29,6 +29,9 @@
 1029 - MENU: Construction Speed Up at Factory
 1030 - PROCESS: Construction Speed Up at Factory
 1031 - PROCESS: Start upgrade at factory
+1032 - MENU: Game Store :) Real money for gold
+1033 - MENU: Gold Store
+1034 - PROCESS: Purchase items in the gold store
 
 
 TO DO:

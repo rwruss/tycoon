@@ -969,7 +969,8 @@ updateFactory = function (object) {
 }
 
 countDownClock = function (endTime, target, callback = function () {console.log("default functin")}) {
-	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj, callback)}, 1000);
+	target.clockObj.boost = 0;
+	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj, callback, target.clockObj.boost)}, 1000);
 
 	checkNode = target.parentNode;
 	while (checkNode) {
@@ -986,10 +987,14 @@ countDownClock = function (endTime, target, callback = function () {console.log(
 	//target.addEventListener("DOMNodeRemoved", function () {console.log("remove");clearInterval(target.clockObj);}, false);
 }
 
-runClock = function (endTime, target, object, callback) {
+clockBoost(target, amount) {
+	target.clockObj.boost += amount;
+}
+
+runClock = function (endTime, target, object, callback, boost) {
 
 	var date = new Date();
-	var remaining = (endTime - Math.floor(date.getTime()/1000));
+	var remaining = (endTime - boost - Math.floor(date.getTime()/1000));
 	if (remaining > 0) {
 		//console.log(endTime + " - " + Math.floor(date.getTime()/1000) + " = " + (remaining) );
 
