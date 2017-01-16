@@ -715,11 +715,11 @@ class pane {
 	}
 }
 
-class hPane extends pane {
+class menu extends pane {
 	constructor(desc, desktop) {
 		super(desc, desktop);
-		//console.log("set hPane style for " + this.element);
-		this.element.className = "hPane";
+		//console.log("set menu style for " + this.element);
+		this.element.className = "menu";
 	}
 }
 
@@ -739,15 +739,15 @@ class deskTop {
 		this.id = "a desktop";
 	}
 
-	newPane (desc, type) {
+	newPane (desc, type="") {
 		//console.log("start list " + Object.keys(this.paneList))
 		if (this.paneList[desc]) {
 
 			//console.log("already made: " + this.constructor.name + " -> " + Object.keys(this.paneList));
 		} else {
 
-			if (type == "hPane") {
-				var mkPane = new hPane(desc, this);
+			if (type == "menu") {
+				var mkPane = new menu(desc, this);
 				this.paneList[desc] = mkPane;
 				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			} else {
@@ -971,6 +971,8 @@ updateFactory = function (object) {
 countDownClock = function (endTime, target, callback = function () {console.log("default functin")}) {
 	target.boost = 0;
 	target.timeBox = addDiv("", "timeFloat", target);
+	target.boostBox = addDIv("", "buildSpeedUp", target);
+	target.boostBox = "S";
 	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj, callback, target.boost)}, 1000);
 
 	checkNode = target.parentNode;
@@ -1089,4 +1091,10 @@ function updateMaterialInv(factory, materialInv) {
 	if (factory == selectedFactory) {
 		showInventory(factory, materialInv);
 	}
+}
+
+function updateBoostTarget(boostTarget, displayTarget) {
+	var clone = boostTarget.cloneNode(true);
+	clone.boostBox.remove;
+	displayTarget.appendChild(clone);	
 }
