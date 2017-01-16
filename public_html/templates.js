@@ -969,8 +969,9 @@ updateFactory = function (object) {
 }
 
 countDownClock = function (endTime, target, callback = function () {console.log("default functin")}) {
-	target.clockObj.boost = 0;
-	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj, callback, target.clockObj.boost)}, 1000);
+	target.boost = 0;
+	target.timeBox = addDiv("", "timeFloat", target);
+	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj, callback, target.boost)}, 1000);
 
 	checkNode = target.parentNode;
 	while (checkNode) {
@@ -987,12 +988,12 @@ countDownClock = function (endTime, target, callback = function () {console.log(
 	//target.addEventListener("DOMNodeRemoved", function () {console.log("remove");clearInterval(target.clockObj);}, false);
 }
 
-clockBoost(target, amount) {
-	target.clockObj.boost += amount;
+clockBoost = function (target, amount) {
+	target.boost += amount;
 }
 
 runClock = function (endTime, target, object, callback, boost) {
-
+	console.log("boost " + boost);
 	var date = new Date();
 	var remaining = (endTime - boost - Math.floor(date.getTime()/1000));
 	if (remaining > 0) {
@@ -1002,7 +1003,7 @@ runClock = function (endTime, target, object, callback, boost) {
 		var mins = Math.floor((remaining - hrs*3600)/60);
 		var secs = remaining%60;
 
-		target.innerHTML = ("0" + hrs).slice(-2) + " : " + ("0" + mins).slice(-2) + " : " + ("0" + secs).slice(-2);
+		target.timeBox.innerHTML = ("0" + hrs).slice(-2) + " : " + ("0" + mins).slice(-2) + " : " + ("0" + secs).slice(-2);
 	} else {
 		target.innerHTML = "";
 		clearInterval(target.clockObj);

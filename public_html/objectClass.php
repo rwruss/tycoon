@@ -32,7 +32,7 @@ class object {
 		if (array_key_exists($desc, $this->attrList)) {
 			return $this->objDat[$this->attrList[$desc]];
 		} else {
-			echo 'Not found in type '.$this->objDat[4].' ('.$desc.')';
+			echo 'DESC: "'.$desc.'" Not found in type '.$this->objDat[4].' ('.$desc.')';
 			return false;
 		}
 	}
@@ -93,7 +93,7 @@ class business extends object {
 		$this->attrList['ownedObjects'] = 11;
 		$this->attrList['money'] = 14;
 		$this->attrList['laborSlot'] = 15;
-		
+
 		$this->attrList['boost1'] = 20;
 		$this->attrList['boost2'] = 21;
 		$this->attrList['boost3'] = 22;
@@ -380,7 +380,7 @@ class factory extends object {
 			$this->set('upgradeInProgress', 0);
 			$saveFactory = true;
 		}
-		
+
 		// Sort material requirements into the storage index for the factory
 
 		$rscSpots = [];

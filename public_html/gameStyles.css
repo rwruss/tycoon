@@ -519,3 +519,17 @@
 	top:100;
 	height:25;
 }
+
+.timeFloat {
+	position:relative;
+	float:left;
+	height:25;
+	display:inline-block;
+}
+
+.buildSpeedUp {
+	position:relative;
+	float:left;
+	height:25;
+	width:25;
+}

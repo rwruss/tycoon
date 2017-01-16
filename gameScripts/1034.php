@@ -19,7 +19,9 @@ if ($playerGold < $itemCost) {
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 
 // Add the objects to the player profile
-$thisBusiness->save('boost'+$postVals[1], $thisFactory->get('boost'+$postVals[1])+1);
+$desc = 'boost'.$postVals[1];
+$thisBusiness->save($desc, $thisBusiness->get($desc)+1);
+echo 'You now have '.$thisBusiness->get($desc);
 
 fclose($objFile);
 

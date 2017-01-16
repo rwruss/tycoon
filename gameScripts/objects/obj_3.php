@@ -47,20 +47,22 @@ if ($constructDelta > 0) {
 
 	if ($thisObj->get('factoryLevel') == 0) {
 		echo 'textBlob("", updateArea, "Building factory");
-		var buildTimeBox = addDiv("", "orderTime", updateArea);
+		buildTimeBox = addDiv("", "timeFloat", updateArea);
 		buildTimeBox.runClock = true;
 		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
-		speedUpButton = newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'")});
-		speedUpButton.innerHTML = "Speed Up Construction"';
+		speedUpButton = addDiv("", "buildSpeedUp", buildTimeBox)
+		//newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'")});
+		speedUpButton.innerHTML = "S";
+		speedUpButton.addEventListener("click", function () {scrMod("1029,1,'.$postVals[1].'")});';
 	} else {
 		echo 'textBlob("", updateArea, "Upgrading factory to level '.$thisObj->get('upgradeInProgress').'");
-		var buildTimeBox = addDiv("", "orderTime", updateArea);
+		buildTimeBox = addDiv("", "timeFloat", updateArea);
 		buildTimeBox.runClock = true;
 		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
-		speedUpButton = newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'");event.stopPropagation();});
-		speedUpButton.innerHTML = "Speed Up Construction";
-		buildTimeBox.style.position.top = 0;
-		buildTimeBox.style.position.right = 0;';
+		speedUpButton = addDiv("", "buildSpeedUp", buildTimeBox)
+		//newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'")});
+		speedUpButton.innerHTML = "S";
+		speedUpButton.addEventListener("click", function () {scrMod("1029,1,'.$postVals[1].'")});';
 	}
 }
 
