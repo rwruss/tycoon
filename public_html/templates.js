@@ -526,13 +526,13 @@ laborBox = function (id, target) {
 }
 
 orderBox = function (time, rscID, qty, target) {
-
 	var thisOrder = addDiv("", "orderContain", target);
 	materialBox(rscID, qty, thisOrder);
-	var timeBox = addDiv("", "orderTime", thisOrder);
+	thisOrder.clock = addDiv("", "orderTime", thisOrder);
 	if (time > 0) {
-		timeBox.runClock = true;
-		countDownClock(time, timeBox);
+		//timeBox.runClock = true;
+		countDownClock(time, thisOrder.clock);
+		thisOrder.clock.boostBox.addEventListener("click", function () {console.log("Speed up options for a material order")});';
 		//thisOrder.innerHTML = rscID + " - " + time + "-" + qty;
 	}
 
@@ -1058,11 +1058,11 @@ function switchGroups(item, group1, group2, emptyItem, group1Limit) {
 	}
 }
 
-function showOrders(materialOrder, factory) {
-	orderItems.innerHTML = "";
+function showOrders(materialOrder, factory, target) {
+	target.innerHTML = "";
 	for (var i=0; i<materialOrder.length; i+=3) {
-		let thisBox = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], orderItems);
-		if (materialOrder[i] == 0) thisBox.addEventListener("click", function () {
+		factoryOrders[i] = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], target);
+		if (materialOrder[i] == 0) factoryOrders[i].addEventListener("click", function () {
 			useDeskTop.newPane("xyzPane");
 			orderPane = useDeskTop.getPane("xyzPane");
 			event.stopPropagation();
@@ -1095,6 +1095,7 @@ function updateMaterialInv(factory, materialInv) {
 
 function updateBoostTarget(boostTarget, displayTarget) {
 	var clone = boostTarget.cloneNode(true);
-	clone.boostBox.remove;
+	clone.clock.boostBox.remove();
 	displayTarget.appendChild(clone);	
+	return clone;
 }

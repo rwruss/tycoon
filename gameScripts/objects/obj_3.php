@@ -47,22 +47,24 @@ if ($constructDelta > 0) {
 
 	if ($thisObj->get('factoryLevel') == 0) {
 		echo 'textBlob("", updateArea, "Building factory");
-		buildTimeBox = addDiv("", "timeFloat", updateArea);
+		factoryUpgrageBox = addDiv("", "", updateArea);
+		factoryUpgrageBox.clock = addDiv("", "timeFloat", updateArea);
 		//buildTimeBox.runClock = true;
-		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
+		countDownClock('.($thisObj->get('constructCompleteTime')).', factoryUpgrageBox.clock, function () {console.log("finish factory construction")});
 		//speedUpButton = addDiv("", "buildSpeedUp", buildTimeBox)
 		//newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'")});
 		//speedUpButton.innerHTML = "S";
-		buildTimeBox.boostBox.addEventListener("click", function () {scrMod("1029,1,'.$postVals[1].'")});';
+		factoryUpgrageBox.clock.boostBox.addEventListener("click", function () {scrMod("1029,1,'.$postVals[1].'")});';
 	} else {
-		echo 'textBlob("", updateArea, "Upgrading factory to level '.$thisObj->get('upgradeInProgress').'");
-		buildTimeBox = addDiv("", "timeFloat", updateArea);
+		echo 'textBlob("", updateArea, "Building factory");
+		factoryUpgrageBox = addDiv("", "", updateArea);
+		factoryUpgrageBox.clock = addDiv("", "timeFloat", updateArea);
 		//buildTimeBox.runClock = true;
-		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
+		countDownClock('.($thisObj->get('constructCompleteTime')).', factoryUpgrageBox.clock, function () {console.log("finish factory construction")});
 		//speedUpButton = addDiv("", "buildSpeedUp", buildTimeBox)
 		//newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'")});
 		//speedUpButton.innerHTML = "S";
-		buildTimeBox.boostBox.addEventListener("click", function () {scrMod("1029,1,'.$postVals[1].'")});';
+		factoryUpgrageBox.clock.boostBox.addEventListener("click", function () {scrMod("1029,1,'.$postVals[1].'")});';
 	}
 }
 
@@ -106,7 +108,7 @@ echo ']);
 var headSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", headSection, "Rate: '.($thisObj->get('currentRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
-sendButton = newButton(headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(optionBox1))});
+sendButton = newButton(headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(factoryProductionBox))});
 sendButton.innerHTML = "Set production";
 
 startButton1 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',1")});
@@ -122,19 +124,19 @@ startButton4 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].'
 startButton4.innerHTML = "Work for - 8 hour";
 
 prodContain = addDiv("", "orderContain", headSection);
-optionBox1 = prodList.SLsingleButton(prodContain'.$currentProduction.');
+factoryProductionBox = prodList.SLsingleButton(prodContain'.$currentProduction.');
 
 upgradeButton = newButton(headSection, function () {scrMod("1031,'.$postVals[1].'")});
 upgradeButton.innerHTML = "Upgrade Factory";
 ';
 if ($thisObj->get('prodStart') > 0) {
 	echo '
-		optionBox1.qtyDiv = addDiv("asdf", "productQty", optionBox1);
-		optionBox1.qtyDiv.innerHTML = '.$thisObj->get('prodQty').';
+		factoryProductionBox.qtyDiv = addDiv("asdf", "productQty", factoryProductionBox);
+		factoryProductionBox.qtyDiv.innerHTML = '.$thisObj->get('prodQty').';
 
-		var timeBox = addDiv("", "orderTime", prodContain);
-		timeBox.runClock = true;
-		countDownClock('.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', timeBox, function () {console.log("update factory")});';
+		factoryProductionBox.clock = addDiv("", "orderTime", prodContain);
+		countDownClock('.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', factoryProductionBox.clock, function () {console.log("update factory")});
+		factoryProductionBox.clock.boostBox.addEventListener("click", function () {console.log("product Production")})';
 }
 echo '
 var productInvSection = addDiv("", "stdFloatDiv", thisDiv);
