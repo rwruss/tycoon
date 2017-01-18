@@ -525,6 +525,7 @@ laborBox = function (id, target) {
 	//thisLabor.innerHTML = id;
 }
 
+/*
 orderBox = function (time, rscID, qty, target) {
 	var thisOrder = addDiv("", "orderContain", target);
 	materialBox(rscID, qty, thisOrder);
@@ -538,7 +539,7 @@ orderBox = function (time, rscID, qty, target) {
 
 	return thisOrder;
 }
-
+*/
 materialBox = function (id, qty, target) {
 	let thisRsc = productArray[id].renderSummary(target);
 
@@ -968,6 +969,13 @@ updateFactory = function (object) {
 	}
 }
 
+objectClock = function (object, dst, callback = function () {console.log("default functin")}) {
+	//dst.timeBox = addDiv("", "timeFloat", dst);
+	//target.boostBox = addDiv("", "buildSpeedUp", dst);
+	//dst.boostBox.innerHTML = "S";
+	dst.clockObj = setInterval(function () {runClock(object.endTime, dst.timeBox, dst.clockObj, callback, object.boost)}, 1000)
+}
+
 countDownClock = function (endTime, target, callback = function () {console.log("default functin")}) {
 	target.boost = 0;
 	target.timeBox = addDiv("", "timeFloat", target);
@@ -1060,6 +1068,7 @@ function switchGroups(item, group1, group2, emptyItem, group1Limit) {
 }
 
 function showOrders(materialOrder, factory, target) {
+	/*
 	target.innerHTML = "";
 	for (var i=0; i<materialOrder.length; i+=3) {
 		factoryOrders[i] = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], target);
@@ -1074,7 +1083,7 @@ function showOrders(materialOrder, factory, target) {
 			orderSelectButton.innerHTML = "Find Offers";
 			offerContainer = addDiv("", "stdContain", orderPane);
 			});
-	}
+	}*/
 }
 
 function showInventory(factory, inventory) {

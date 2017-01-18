@@ -17,7 +17,7 @@ echo $thisFactory->get('constructCompleteTime').' - '.$boostDurations[$postVals[
 if ($thisFactory->get('constructCompleteTime') > $now) {
   $thisFactory->save('constructCompleteTime', $thisFactory->get('constructCompleteTime')-$boostDurations[$postVals[3]]);
   echo '<script>
-  clockBoost(buildTimeBox, '.$boostDurations[$postVals[3]].');
+  thisUpgrade.boostClock('.$boostDurations[$postVals[3]].');
   </script>';
 } else {
   echo 'There is nothing to boost here. End:'.$thisFactory->get('constructCompleteTime').', now:'.$now;

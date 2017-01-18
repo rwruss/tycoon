@@ -12,16 +12,16 @@ var boostListHolder = addDiv("", "stdFloatDiv", boostDiv);
 boostTarget = updateBoostTarget(prodContain, boostTargetHolder);
 
 
-boostButton1 = newButton(boostListHolder, function () {scrMod("1036,'.$postVals[2].',0"); boostTarget = updateBoostTarget(prodContain, boostTargetHolder);});
+boostButton1 = newButton(boostListHolder, function () {scrMod("1037,'.$postVals[2].',0");});
 boostButton1.innerHTML = "1 minute";
 
-boostButton2 = newButton(boostListHolder, function () {scrMod("1036,'.$postVals[2].',1"); boostTarget = updateBoostTarget(prodContain, boostTargetHolder);});
+boostButton2 = newButton(boostListHolder, function () {scrMod("1037,'.$postVals[2].',1");});
 boostButton2.innerHTML = "10 minutes";
 
-boostButton3 = newButton(boostListHolder, function () {scrMod("10306,'.$postVals[2].',2"); boostTarget = updateBoostTarget(prodContain, boostTargetHolder);});
+boostButton3 = newButton(boostListHolder, function () {scrMod("1037,'.$postVals[2].',2");});
 boostButton3.innerHTML = "30 minutes";
 
-boostButton3 = newButton(boostListHolder, function () {scrMod("1036,'.$postVals[2].',3"); boostTarget = updateBoostTarget(prodContain, boostTargetHolder);});
+boostButton3 = newButton(boostListHolder, function () {scrMod("1037,'.$postVals[2].',3");});
 boostButton3.innerHTML = "1 hour";
 
 </script>';

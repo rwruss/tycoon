@@ -34,6 +34,8 @@
 1034 - PROCESS: Purchase items in the gold store
 1035 - MENU: Production Speed Up at Factory
 1036 - MENU: Material Order Speed Up at Factory
+1037 - PROCESS: Production Speed Up at Factory (from 1035)
+1038 - PROCESS: Material Order Speed Up at Factory (from 1036)
 
 
 TO DO:

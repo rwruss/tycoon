@@ -31,13 +31,10 @@ if ($thisObj->get('currentProd') > 0) {
 
 $currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 
-if ($thisObj->get('currentProd') == 0) {
-	//$thisObj->save('currentProd', 1);
-	//$thisObj->set('currentProd', 1);
-}
+
 //echo 'Load object '.$thisObj->get('currentProd');
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
-//print_r($thisObj->objDat);
+
 echo '<script>
 selectedFactory = '.$postVals[1].';
 thisDiv.innerHTML = "";';
@@ -62,7 +59,13 @@ productLabor = ['.implode(',', $productInfo->reqLabor).'];
 materialInv = ['.implode(',', $thisObj->resourceInv()).'];
 materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
 inProduction = ['.$thisObj->get('prodLength').', '.$thisObj->get('prodStart').', '.$thisObj->get('prodQty').'];
-factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0})';
+factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0});
+
+factoryOrders = new Array();
+for (var i=0; i<materialOrder.length; i+=3) {
+	factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
+}
+';
 $startVals = [];
 for ($i=0; $i<10; $i++) {
 	if ($thisObj->objDat[$thisObj->laborOffset + $i*10] == 0) {
@@ -111,11 +114,14 @@ startButton4 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].'
 startButton4.innerHTML = "Work for - 8 hour";
 
 prodContain = addDiv("", "orderContain", headSection);
-factoryProductionBox = prodList.SLsingleButton(prodContain'.$currentProduction.');
+fProduction = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100);
+fProductionBox = fProduction.render(prodContain);
+factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
 
 upgradeButton = newButton(headSection, function () {scrMod("1031,'.$postVals[1].'")});
 upgradeButton.innerHTML = "Upgrade Factory";
 ';
+/*
 if ($thisObj->get('prodStart') > 0) {
 	echo '
 		factoryProductionBox.qtyDiv = addDiv("asdf", "productQty", factoryProductionBox);
@@ -125,6 +131,7 @@ if ($thisObj->get('prodStart') > 0) {
 		countDownClock('.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', factoryProductionBox.clock, function () {console.log("update factory")});
 		factoryProductionBox.clock.boostBox.addEventListener("click", function () {console.log("product Production")})';
 }
+*/
 echo '
 var productInvSection = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", productInvSection, "Output Inventory");
