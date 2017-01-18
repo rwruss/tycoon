@@ -532,7 +532,7 @@ orderBox = function (time, rscID, qty, target) {
 	if (time > 0) {
 		//timeBox.runClock = true;
 		countDownClock(time, thisOrder.clock);
-		thisOrder.clock.boostBox.addEventListener("click", function () {console.log("Speed up options for a material order")});';
+		thisOrder.clock.boostBox.addEventListener("click", function () {console.log("Speed up options for a material order")});
 		//thisOrder.innerHTML = rscID + " - " + time + "-" + qty;
 	}
 
@@ -971,8 +971,9 @@ updateFactory = function (object) {
 countDownClock = function (endTime, target, callback = function () {console.log("default functin")}) {
 	target.boost = 0;
 	target.timeBox = addDiv("", "timeFloat", target);
-	target.boostBox = addDIv("", "buildSpeedUp", target);
-	target.boostBox = "S";
+	target.boostBox = addDiv("", "buildSpeedUp", target);
+	target.boostBox.innerHTML = "S";
+	target.endTime = endTime;
 	target.clockObj = setInterval(function () {runClock(endTime, target, target.clockObj, callback, target.boost)}, 1000);
 
 	checkNode = target.parentNode;
@@ -1094,8 +1095,11 @@ function updateMaterialInv(factory, materialInv) {
 }
 
 function updateBoostTarget(boostTarget, displayTarget) {
-	var clone = boostTarget.cloneNode(true);
-	clone.clock.boostBox.remove();
-	displayTarget.appendChild(clone);	
+	let clone = boostTarget.cloneNode(true);
+	clone.clock = boostTarget.clock;
+	console.log(boostTarget.clock.innerHTML);
+	//countDownClock(boostTarget.clock.endTime, clone.clock);
+	//clone.clock.boostBox.remove();
+	displayTarget.appendChild(clone);
 	return clone;
 }

@@ -2,14 +2,14 @@
 
 echo '<script>
 console.log("boostmenu")
-useDeskTop.newPane("boostMenu", "menu");
+useDeskTop.newPane("boostMenu");
 boostDiv = useDeskTop.getPane("boostMenu");
 boostDiv.innerHTML = "";
 //useDeskTop.paneToTop(boostDiv);
 
 var boostTargetHolder = addDiv("", "stdFloatDiv", boostDiv);
 var boostListHolder = addDiv("", "stdFloatDiv", boostDiv);
-boostTarget = updateBoostTarget(factoryUpgrageBox, boostTargetHolder);
+thisUpgrade.render(boostTargetHolder);
 
 
 boostButton1 = newButton(boostListHolder, function () {scrMod("1030,1,'.$postVals[2].',0"); boostTarget = updateBoostTarget(factoryUpgrageBox, boostTargetHolder);});

@@ -46,25 +46,12 @@ if ($constructDelta > 0) {
 	echo 'var updateArea = addDiv("", "stdFloatDiv", thisDiv);';
 
 	if ($thisObj->get('factoryLevel') == 0) {
-		echo 'textBlob("", updateArea, "Building factory");
-		factoryUpgrageBox = addDiv("", "", updateArea);
-		factoryUpgrageBox.clock = addDiv("", "timeFloat", updateArea);
-		//buildTimeBox.runClock = true;
-		countDownClock('.($thisObj->get('constructCompleteTime')).', factoryUpgrageBox.clock, function () {console.log("finish factory construction")});
-		//speedUpButton = addDiv("", "buildSpeedUp", buildTimeBox)
-		//newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'")});
-		//speedUpButton.innerHTML = "S";
-		factoryUpgrageBox.clock.boostBox.addEventListener("click", function () {scrMod("1029,1,'.$postVals[1].'")});';
+		// this is new construction
+		echo '';
 	} else {
-		echo 'textBlob("", updateArea, "Building factory");
-		factoryUpgrageBox = addDiv("", "", updateArea);
-		factoryUpgrageBox.clock = addDiv("", "timeFloat", updateArea);
-		//buildTimeBox.runClock = true;
-		countDownClock('.($thisObj->get('constructCompleteTime')).', factoryUpgrageBox.clock, function () {console.log("finish factory construction")});
-		//speedUpButton = addDiv("", "buildSpeedUp", buildTimeBox)
-		//newButton(updateArea, function () {scrMod("1029,1,'.$postVals[1].'")});
-		//speedUpButton.innerHTML = "S";
-		factoryUpgrageBox.clock.boostBox.addEventListener("click", function () {scrMod("1029,1,'.$postVals[1].'")});';
+		// this is an upgrade
+		echo 'thisUpgrade = new factoryUpgrade('.$postVals[1].', '.($thisObj->get('constructCompleteTime')).');
+		thisUpgrade.render(updateArea)';
 	}
 }
 

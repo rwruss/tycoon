@@ -232,3 +232,24 @@ class gamePlayer {
 		document.getElementById("cashBox").innerHTML = "$" + (this.cash/100).toFixed(2);
 	}
 }
+
+class factoryUpgrade {
+	constructor(id, endTime) {
+		this.factoryID = id;
+		this.endTime = endTime;
+		console.log("Set ID to " + this.factoryID);
+	}
+
+	boostClock(deltaT) {
+		this.clock.boost += deltaT;
+	}
+
+	render(target) {
+		this.containerBox = addDiv("", "", target);
+		this.containerBox.innerHTML = "upgrading somethin";
+		this.clock = addDiv("", "timeFloat", this.containerBox);
+		countDownClock(this.endTime, this.clock);
+		let useID = this.factoryID;
+		this.clock.boostBox.addEventListener("click", function () {scrMod("1029,1,"+useID)});
+	}
+}

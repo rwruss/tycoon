@@ -167,6 +167,7 @@ echo '
 	var buildTimeBox;
 	var boostTarget;
 	var factoryProductionBox;
+	var factoryUpgradeBox;
 	var factoryOrders = new Array();
 
 	var unitBox;
@@ -236,7 +237,7 @@ echo '
 	var thisPlayer;
 	var numProducts = '.$numProducts.';
 	var numFactories = '.$numFactories.';
-	
+
 
 	function ncode_div(el_id) {
 				if (typeof(el_id) == "string") trg = document.getElementById(el_id);

@@ -15,9 +15,11 @@ $thisObj = loadObject($postVals[1], $objFile, 400);
 // confirm that the selected item is a valid item for this factory
 $optionCheck = false;
 //$productID = $thisObj->templateDat[16 + $postVals[2]];
-$productID = $postVals[2];
+$productID = $postVals[3];
 for ($i=0; $i<20; $i++) {
+		echo $thisObj->templateDat[16+$i].' vs '.$productID.'<br>';
 	if ($thisObj->templateDat[16+$i] == $productID) {
+
 		$optionCheck = true;
 		break;
 	}
