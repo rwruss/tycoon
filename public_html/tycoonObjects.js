@@ -249,20 +249,20 @@ class factoryUpgrade {
 		var containerBox = addDiv("", "", target);
 		containerBox.innerHTML = "upgrading somethin";
 		containerBox.clock = addDiv("", "timeFloat", containerBox);
-		
+
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
 			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, dst.clockObj, function () {console.log("factory upgrade completion")}, this.boost)}, 1000)
-			
+
 			if (boost) {
 				container.boostBox = addDiv("", "buildSpeedUp", containerBox);
 				container.boostBox.innerHTML = "S";
-			
+
 				let useID = this.factoryID;
 				container.boostBox.addEventListener("click", function () {scrMod("1029,1,"+useID)});
 			}
 		}
-	
+
 		return this.containerBox
 	}
 }
@@ -285,7 +285,7 @@ class factoryOrder {
 		var containerBox = addDiv("", "orderContain", target);
 		materialBox(rscID, qty, containerBox);
 		containerBox.clock = addDiv("", "timeFloat", containerBox);
-		
+
 		if (this.material == 0) containerBox.addEventListener("click", function () {
 			useDeskTop.newPane("xyzPane");
 			orderPane = useDeskTop.getPane("xyzPane");
@@ -297,20 +297,20 @@ class factoryOrder {
 			orderSelectButton.innerHTML = "Find Offers";
 			offerContainer = addDiv("", "stdContain", orderPane);
 			});
-		
+
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
 			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, dst.clockObj, function () {console.log("material order completion")}, this.boost)}, 1000)
-			
+
 			if (boost) {
 				container.boostBox = addDiv("", "buildSpeedUp", containerBox);
 				container.boostBox.innerHTML = "S";
-			
+
 				let useID = this.factoryID;
 				container.boostBox.addEventListener("click", function () {scrMod("1036,"+this.factoryID + "," + this.orderNum)});
 			}
 		}
-		
+
 		return this.containerBox
 	}
 }
@@ -330,9 +330,9 @@ class factoryProduction {
 
 	render(target, boost=true) {
 		var containerBox = addDiv("", "orderContain", target);
-		materialBox(rscID, qty, containerBox);
+		//materialBox(rscID, qty, containerBox);
 		containerBox.clock = addDiv("", "timeFloat", containerBox);
-		
+
 		if (this.material == 0) containerBox.addEventListener("click", function () {
 			useDeskTop.newPane("xyzPane");
 			orderPane = useDeskTop.getPane("xyzPane");
@@ -344,20 +344,20 @@ class factoryProduction {
 			orderSelectButton.innerHTML = "Find Offers";
 			offerContainer = addDiv("", "stdContain", orderPane);
 			});
-		
+
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
 			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, dst.clockObj, function () {console.log("material order completion")}, this.boost)}, 1000)
-			
+
 			if (boost) {
 				container.boostBox = addDiv("", "buildSpeedUp", containerBox);
 				container.boostBox.innerHTML = "S";
-			
+
 				let useID = this.factoryID;
 				container.boostBox.addEventListener("click", function () {scrMod("1035,"+this.factoryID)});
 			}
 		}
-		
-		return this.containerBox
+		console.log("complete product reender");
+		return containerBox
 	}
 }
