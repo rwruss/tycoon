@@ -169,7 +169,7 @@ echo '
 	var factoryProductionBox;
 	var factoryUpgradeBox;
 	var factoryOrders = new Array();
-	var fProduction;
+	var fProductionBox;
 
 	var unitBox;
 	var rY = 0.0;

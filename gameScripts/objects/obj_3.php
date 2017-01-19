@@ -59,13 +59,12 @@ productLabor = ['.implode(',', $productInfo->reqLabor).'];
 materialInv = ['.implode(',', $thisObj->resourceInv()).'];
 materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
 inProduction = ['.$thisObj->get('prodLength').', '.$thisObj->get('prodStart').', '.$thisObj->get('prodQty').'];
-factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0});
 
 factoryOrders = new Array();
 for (var i=0; i<materialOrder.length; i+=3) {
 	factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 }
-';
+factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0})';
 $startVals = [];
 for ($i=0; $i<10; $i++) {
 	if ($thisObj->objDat[$thisObj->laborOffset + $i*10] == 0) {
@@ -116,6 +115,7 @@ startButton4.innerHTML = "Work for - 8 hour";
 prodContain = addDiv("", "orderContain", headSection);
 fProduction = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100);
 fProductionBox = fProduction.render(prodContain);
+console.log(fProductionBox);
 factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
 
 upgradeButton = newButton(headSection, function () {scrMod("1031,'.$postVals[1].'")});
