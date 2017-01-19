@@ -4,12 +4,12 @@ $playerFile = fopen("../users/userDat.dat", "r+b");
 
 if (flock($playerFile, LOCK_EX)) {  // acquire an exclusive lock
 	$newID = max(1,filesize("../users/userDat.dat")/500);
-	
+	/*
 	fseek($nameFile, 100+$numNames*40);
 	fwrite($nameFile, $testName);
 	fseek($nameFile, 100+$numNames*40+36);
 	fwrite($nameFile, pack("N", $newID));
-	
+	*/
 	fseek($playerFile, $newID*500+499);
 	fwrite($playerFile, pack("C", 0));
 	
@@ -30,6 +30,7 @@ if (flock($playerFile, LOCK_EX)) {  // acquire an exclusive lock
 	session_start();
 	$_SESSION['playerId'] = $newID;
 	$_SESSION['pHandle'] = substr($postVals[1], 0, 30);
+	$_SESSION['boosts'] = array_fill(0, 20, 10);
 	
 	echo "conPane<script>
 		document.getElementById('plrPane').innerHTML = '".substr($postVals[1], 0, 30)." - ".$newID."';

@@ -82,10 +82,17 @@ if ($match) {
 	$checkVal = trim(fread($checkFile, 255));
 	fclose($checkFile);
 	if (md5($postVals[2]) == $checkVal) {
+		// Load player data
+		$playerFile = fopen("../users/userDat.dat", "r+b");
+		$playerDat = unpack('i*', fread($playerFile, 500));
+		fclose($playerFile);
 		
+		// Set session variables
 		session_start();
 		$_SESSION['playerId'] = $matchVal[1];
 		$_SESSION['pHandle'] = $testName;
+		$_SESSION['boosts'] = array_slice($playerDat, 50, 20);
+		$_SESSION['gold'] = $playerDat[2];
 		echo "<Script>document.getElementById('plrPane').innerHTML = '".$testName."  - ".$_SESSION['playerId']."';
 			passClick(1004);
 		</script>";

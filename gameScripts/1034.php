@@ -1,28 +1,40 @@
 <?php
 
 require_once('./objectClass.php');
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 // Load the itemcost for this item
 
 // Open the player object
+$playerFile = fopen("../users/userDat.dat", "r+b");
+fseek($playerFile, $pGameId*500);
+$playerDat = unpack('i*', fread($playerFile, 500));
+$thisUser = new user($pGameID, $playerDat, $playerFile);
 
 // Verify they have enough gold for this transaction
-$playerGold = 1000;
+$playerGold = $thisUser->get('gold');
+$playerGold = 1000; // Override
 $itemCost = $postVals[1];
 if ($playerGold < $itemCost) {
 	echo 'You do not have enough gold to make this purchase';
 	exit();
 }
 
-// Open the player business for this game
-$thisBusiness = loadObject($pGameID, $objFile, 400);
+// Calculate used gold and record new boost quantities
+$goldCost = 0;
+session_start();
+for ($i=0; $i<20; $i++) {
+	$thisUser->set('boost'.$i, $thisUser->get('boost'.$i)+$postVals[1+$i]);
+	$_SESSION['boosts'][$i] = $thisUser->get('boost'.$i);
+	$goldCost += $i*$postVals[1+$i];
+}
 
-// Add the objects to the player profile
-$desc = 'boost'.$postVals[1];
-$thisBusiness->save($desc, $thisBusiness->get($desc)+1);
-echo 'You now have '.$thisBusiness->get($desc);
+$thisUser->set($thisUser->get('gold'), $thisUser->get('gold') - $goldCost);
+$_SESSION['gold'] = $thisUser->get('gold');
 
-fclose($objFile);
+$thisUser->saveAll($playerFile);
+
+echo '<script>thisPlayer.gold = '.$thisUser->get('gold').'</script>';
+
+fclose($playerFile);
 
 ?>

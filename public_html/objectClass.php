@@ -86,6 +86,38 @@ class object {
 	}
 }
 
+class user extends object {
+	function __construct($id, $dat, $file) {
+		parent::__construct($id, $dat, $file);
+		
+		$this->attrList['lastLogin'] = 1;
+		$this->attrList['gold'] = 2;
+		
+		$this->attrList['boost0'] = 51;
+		$this->attrList['boost1'] = 52;
+		$this->attrList['boost2'] = 53;
+		$this->attrList['boost3'] = 54;
+		$this->attrList['boost4'] = 55;
+		$this->attrList['boost5'] = 56;
+		$this->attrList['boost6'] = 57;
+		$this->attrList['boost7'] = 58;
+		$this->attrList['boost8'] = 59;
+		$this->attrList['boost9'] = 60;
+		$this->attrList['boost10'] = 61;
+		$this->attrList['boost11'] = 62;
+		$this->attrList['boost12'] = 63;
+		$this->attrList['boost13'] = 64;
+		$this->attrList['boost14'] = 65;
+		$this->attrList['boost15'] = 66;
+		$this->attrList['boost16'] = 67;
+		$this->attrList['boost17'] = 68;
+		$this->attrList['boost18'] = 69;
+		$this->attrList['boost19'] = 70;
+		
+		$this->itemBlockSize = 500;
+	}
+}
+
 class business extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);

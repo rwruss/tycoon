@@ -7,6 +7,10 @@ require_once('./objectClass.php');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 // Load inventory of production boosts for this player
+if ($_SESSION['boosts'][$postVals[3]] < 1) {
+	echo 'You don\'t have enough of this boost';
+	exit();
+}
 
 // Load factory Data
 $thisFactory = loadObject($postVals[2], $objFile, 1000);

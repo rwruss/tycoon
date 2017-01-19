@@ -1102,6 +1102,7 @@ window.addEventListener("load", webGLStart);
 	</div>
 	<div id="topBar" style="position:absolute; top:15; left:110; height:25; width:1200; border:1px solid #000000; overflow:hidden">
 		<div id="cashBox" style="position:absolute; top:0; left:0; height:25; border:1px solid #000000; padding-right:5; overflow:hidden"></div>
+		<div id="goldBox" style="position:absolute; top:0; left:100; height:25; border:1px solid #000000; padding-right:5; overflow:hidden"></div>
 	</div>
 
 	<div id="scrBox" style="width:0; height:0; overflow:hidden;">

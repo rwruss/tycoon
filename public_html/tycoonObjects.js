@@ -222,14 +222,22 @@ class laborItem extends labor {
 
 class gamePlayer {
 	constructor(data) {
-		this.cash = data[0] || 0;
-		this.money = this.cash;
+		this.moneyCash = data[0] || 0;
+		this.moneyGold = data[1] || 0;
+		this.money = this.moneyCash;
+		this.gold = this.moneyGold;
 	}
 
 	set money (x) {
 		console.log("setting player money to " + x);
-		this.cash = x;
-		document.getElementById("cashBox").innerHTML = "$" + (this.cash/100).toFixed(2);
+		this.moneyCash = x;
+		document.getElementById("cashBox").innerHTML = "$" + (this.moneyCash/100).toFixed(2);
+	}
+	
+	set gold (x) {
+		console.log("setting playergold to  " + x);
+		this.moneyGold = x;
+		documen.getElemenyById("goldBox").innerHTML = "G " + this.moneyGold;
 	}
 }
 

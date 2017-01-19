@@ -4,8 +4,8 @@
 1004 - Player Games
 1005 - Logout
 1006 - Process Signup
-1007 - Create a new player
-1008 - Verify login
+1007 - PROCESS: Create a new player
+1008 - PROCESS: Verify login
 1009 - Show open games
 1010 - Create new game Menu
 1011 - Process create game

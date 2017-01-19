@@ -1112,3 +1112,31 @@ function updateBoostTarget(boostTarget, displayTarget) {
 	displayTarget.appendChild(clone);
 	return clone;
 }
+
+function incrBox(target) {
+	let container = addDiv("", "", target);
+	container.setValue = 0;
+	container.display = addDiv("", "", target);
+	container.lgStepDn = addDiv("", "", target);
+	container.smStepDn = addDiv("", "", target);
+	container.lgStepUp = addDiv("", "", target);
+	container.smStepUp = addDiv("", "", target);
+	
+	container.display.innerHTML = "0";
+	container.lgStepDn.innerHTML = "<<";
+	container.smStepDn.innerHTML = "<";
+	container.lgStepUp.innerHTML = ">>";
+	container.smStepUp.innerHTML = ">";
+	
+	container.lgStepDn.addEventListener("click", function () {incrStep(this, -10);});
+	container.smStepDn.addEventListener("click", function () {incrStep(this, -1);});
+	container.lgStepUp.addEventListener("click", function () {incrStep(this, 1);});
+	container.smStepUp.addEventListener("click", function () {incrStep(this, 10);});
+	
+	return container;
+}
+
+function incrStep(trg, incr) {
+	trg.parentNode.setValue = Math.max(0, trg.parentNode.setValue+incr);
+	trg.display.innerHTML = trg.parentNode.setValue;
+}
