@@ -233,11 +233,11 @@ class gamePlayer {
 		this.moneyCash = x;
 		document.getElementById("cashBox").innerHTML = "$" + (this.moneyCash/100).toFixed(2);
 	}
-	
+
 	set gold (x) {
 		console.log("setting playergold to  " + x);
 		this.moneyGold = x;
-		documen.getElemenyById("goldBox").innerHTML = "G " + this.moneyGold;
+		document.getElementById("goldBox").innerHTML = "G " + this.moneyGold;
 	}
 }
 
@@ -250,24 +250,26 @@ class factoryUpgrade {
 	}
 
 	boostClock(deltaT) {
-		this.boost += deltaT;
+		this.timeBoost += deltaT;
 	}
 
 	render(target, boost=true) {
 		var containerBox = addDiv("", "", target);
 		containerBox.innerHTML = "upgrading somethin";
-		containerBox.clock = addDiv("", "timeFloat", containerBox);
+		containerBox.timeBox = addDiv("", "timeFloat", containerBox);
 
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
-			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, dst.clockObj, function () {console.log("factory upgrade completion")}, this.boost)}, 1000)
+
+			var objectPointer = this;
+			containerBox.clockObj = setInterval(function () {runClock(objectPointer.endTime, containerBox, "", function () {console.log("factory upgrade completion")}, objectPointer.timeBoost)}, 1000)
 
 			if (boost) {
-				container.boostBox = addDiv("", "buildSpeedUp", containerBox);
-				container.boostBox.innerHTML = "S";
+				containerBox.boostBox = addDiv("", "buildSpeedUp", containerBox);
+				containerBox.boostBox.innerHTML = "S";
 
 				let useID = this.factoryID;
-				container.boostBox.addEventListener("click", function () {scrMod("1029,1,"+useID)});
+				containerBox.boostBox.addEventListener("click", function () {scrMod("1029,1,"+useID)});
 			}
 		}
 
@@ -277,45 +279,51 @@ class factoryUpgrade {
 
 class factoryOrder {
 	constructor(id, endTime, productID, qty, spotNum) {
-		this.factoryID = id;
+		this.factoryID = id || 0;
 		this.endTime = endTime;
 		this.timeBoost = 0;
 		this.material = productID;
 		this.qty = qty;
 		this.orderNum = spotNum;
+		console.log("created order at factory " + this.factoryID);
 	}
 
 	boostClock(deltaT) {
-		this.boost += deltaT;
+		this.timeBoost += deltaT;
 	}
 
 	render(target, boost=true) {
 		var containerBox = addDiv("", "orderContain", target);
-		materialBox(rscID, qty, containerBox);
+		materialBox(this.material, this.qty, containerBox);
 		containerBox.clock = addDiv("", "timeFloat", containerBox);
-
+		var thisObject = this;
 		if (this.material == 0) containerBox.addEventListener("click", function () {
+
 			useDeskTop.newPane("xyzPane");
-			orderPane = useDeskTop.getPane("xyzPane");
+			var orderPane = useDeskTop.getPane("xyzPane");
+			orderPane.innerHTML = "";
+
 			event.stopPropagation();
+
 			textBlob("", orderPane, "Select which item you want to order");
 			invList.reset();
-			orderBox1 = invList.SLsingleButton(orderPane);
-			orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + factory + ", "+ SLreadSelection(orderBox1))});
+			var orderBox1 = invList.SLsingleButton(orderPane);
+			var orderSelectButton = newButton(orderPane, function () {console.log(thisObject);scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(orderBox1))});
 			orderSelectButton.innerHTML = "Find Offers";
-			offerContainer = addDiv("", "stdContain", orderPane);
+			var offerContainer = addDiv("", "stdContain", orderPane);
 			});
 
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
-			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, dst.clockObj, function () {console.log("material order completion")}, this.boost)}, 1000)
+			var objectPointer = this;
+			containerBox.clockObj = setInterval(function () {runClock(objectPointer.endTime, dst.clock, dst.clockObj, function () {console.log("material order completion")}, objectPointer.timeBoost)}, 1000)
 
 			if (boost) {
-				container.boostBox = addDiv("", "buildSpeedUp", containerBox);
-				container.boostBox.innerHTML = "S";
+				containerBox.boostBox = addDiv("", "buildSpeedUp", containerBox);
+				containerBox.boostBox.innerHTML = "S";
 
 				let useID = this.factoryID;
-				container.boostBox.addEventListener("click", function () {scrMod("1036,"+this.factoryID + "," + this.orderNum)});
+				containerBox.boostBox.addEventListener("click", function () {scrMod("1036,"+this.factoryID + "," + this.orderNum)});
 			}
 		}
 
@@ -355,7 +363,7 @@ class factoryProduction {
 
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
-			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, dst.clockObj, function () {console.log("material order completion")}, this.boost)}, 1000)
+			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, "", function () {console.log("material order completion")}, this.boost)}, 1000)
 
 			if (boost) {
 				container.boostBox = addDiv("", "buildSpeedUp", containerBox);

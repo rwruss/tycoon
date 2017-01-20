@@ -781,7 +781,7 @@ class deskTop {
 	}
 
 	paneToTop(thisPane) {
-		console.log("move " + thisPane.desc + " to the top");
+		//console.log("move " + thisPane.desc + " to the top");
 		delete this.paneList[thisPane.desc];
 		this.paneList[thisPane.desc] = thisPane;
 		this.arrangePanes();
@@ -1004,9 +1004,11 @@ clockBoost = function (target, amount) {
 }
 
 runClock = function (endTime, target, object, callback, boost) {
-	console.log("boost " + boost);
+	//console.log("boost " + boost);
 	var date = new Date();
 	var remaining = (endTime - boost - Math.floor(date.getTime()/1000));
+	//console.log(target);
+	//console.log("boost:" + boost + ", " + endTime + " - " + Math.floor(date.getTime()/1000) + " = " + remaining);
 	if (remaining > 0) {
 		//console.log(endTime + " - " + Math.floor(date.getTime()/1000) + " = " + (remaining) );
 
@@ -1087,7 +1089,7 @@ function showOrders(materialOrder, factory, target) {
 }
 
 function showInventory(factory, inventory) {
-	console.log("Shw inv");
+	//console.log("Shw inv");
 	if (factory == selectedFactory) {
 		reqBox.stores.innerHTML = "";
 		textBlob("", reqBox.stores, "Current resource stores:");
@@ -1116,27 +1118,27 @@ function updateBoostTarget(boostTarget, displayTarget) {
 function incrBox(target) {
 	let container = addDiv("", "", target);
 	container.setValue = 0;
-	container.display = addDiv("", "", target);
-	container.lgStepDn = addDiv("", "", target);
-	container.smStepDn = addDiv("", "", target);
-	container.lgStepUp = addDiv("", "", target);
-	container.smStepUp = addDiv("", "", target);
-	
+	container.display = addDiv("container", "slideContain", container);
+	container.lgStepDn = addDiv("", "slideMin", container);
+	container.smStepDn = addDiv("", "slideMin", container);
+	container.lgStepUp = addDiv("", "slideMin", container);
+	container.smStepUp = addDiv("", "slideMin", container);
+
 	container.display.innerHTML = "0";
 	container.lgStepDn.innerHTML = "<<";
 	container.smStepDn.innerHTML = "<";
 	container.lgStepUp.innerHTML = ">>";
 	container.smStepUp.innerHTML = ">";
-	
+
 	container.lgStepDn.addEventListener("click", function () {incrStep(this, -10);});
 	container.smStepDn.addEventListener("click", function () {incrStep(this, -1);});
-	container.lgStepUp.addEventListener("click", function () {incrStep(this, 1);});
-	container.smStepUp.addEventListener("click", function () {incrStep(this, 10);});
-	
+	container.lgStepUp.addEventListener("click", function () {incrStep(this, 10);});
+	container.smStepUp.addEventListener("click", function () {incrStep(this, 1);});
+
 	return container;
 }
 
 function incrStep(trg, incr) {
 	trg.parentNode.setValue = Math.max(0, trg.parentNode.setValue+incr);
-	trg.display.innerHTML = trg.parentNode.setValue;
+	trg.parentNode.display.innerHTML = trg.parentNode.setValue;
 }

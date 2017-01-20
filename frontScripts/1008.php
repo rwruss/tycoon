@@ -47,10 +47,10 @@ while (1< 2) {
 		break;
 		}
 	$checkPoint = min($numNames, max(0,$checkPoint + $interval*$mult));
-	
+
 	}
 // Iterate through last 10 candidates for matches
-//echo "FINAL - CheckPoint: ".$checkPoint.", Interval: ".$interval.", Mult: ".$mult."<br>";	
+//echo "FINAL - CheckPoint: ".$checkPoint.", Interval: ".$interval.", Mult: ".$mult."<br>";
 fseek($nameFile, 100+$checkPoint*40);
 $finalRead = fread($nameFile, min(400, ($numNames-$checkPoint)*40));
 for ($i=0; $i<min(10, $numNames-$checkPoint); $i++) {
@@ -84,9 +84,10 @@ if ($match) {
 	if (md5($postVals[2]) == $checkVal) {
 		// Load player data
 		$playerFile = fopen("../users/userDat.dat", "r+b");
+		fseek($playerFile, $matchVal[1]*500);
 		$playerDat = unpack('i*', fread($playerFile, 500));
 		fclose($playerFile);
-		
+
 		// Set session variables
 		session_start();
 		$_SESSION['playerId'] = $matchVal[1];

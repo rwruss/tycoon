@@ -175,10 +175,15 @@ showInventory('.$postVals[1].', materialInv);
 if (invList.parentList.length > 0) {
 	var orderSection = addDiv("", "stdFloatDiv", thisDiv);
 	var orderHead = addDiv("", "stdContain", orderSection);
-	orderItems = addDiv("", "stdContain", orderSection);
-	textBlob("", orderHead, "Current orders");
+
 	showOrders(materialOrder, '.$postVals[1].', orderItems);
 
+}
+orderItems = addDiv("", "stdContain", orderSection);
+textBlob("", orderHead, "Current orders");
+console.log(factoryOrders.length);
+for (i=0; i<factoryOrders.length; i++) {
+	factoryOrders[i].render(orderItems);
 }
 
 </script>';

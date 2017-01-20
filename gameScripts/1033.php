@@ -11,16 +11,15 @@ for (var i=0; i<optionList.length; i++) {
 	saleButtons[i] = incrBox(thisItem);
 }
 
-submitButton = newButton(boostDiv, function () {scrMod("1034,"+thisItemNum)});
+submitButton = newButton(boostDiv);
 submitButton.innerHTML = "Purchase Items";
 submitButton.addEventListener("click", function () {
 	let retStr = "";
 	for (var i=0; i<saleButtons.length; i++) {
 		retStr += ","+saleButtons[i].setValue;
 	}
-	scrMod("1039"+retStr);
+	scrMod("1034"+retStr);
 });
 </script>';
 
 ?>
-

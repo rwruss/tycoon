@@ -987,7 +987,7 @@ echo '
 	function webGLStart() {
 		document.getElementById("readMsg").addEventListener("click", function(event) {console.log(event);makeBox(\'inBox\', 1099, 500, 500, 200, 50)});
 
-		thisPlayer = new gamePlayer(['.$thisPlayer->get('money').']);
+		thisPlayer = new gamePlayer(['.$thisPlayer->get('money').', '.$_SESSION['gold'].']);
 		useDeskTop = new deskTop;
 		setClick([0], "auto")
 		var canvas = document.getElementById("lesson03-canvas");

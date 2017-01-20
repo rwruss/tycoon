@@ -5,7 +5,7 @@ require_once('./objectClass.php');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 // Load target factory
-$thisFactory = loadObject($postVals[1], $objFile, 400);
+$thisFactory = loadObject($postVals[1], $objFile, 1000);
 $thisFactory->updateStocks();
 
 print_r($thisFactory->objDat);
@@ -24,8 +24,8 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 }
 
 // Verify that the correct labor is assigned to start this task
-fseek($this->linkFile, $this->get('currentProd')*1000);
-$productInfo = unpack('i*', fread($this->linkFile, 200));
+fseek($thisFactory->linkFile, $thisFactory->get('currentProd')*1000);
+$productInfo = unpack('i*', fread($thisFactory->linkFile, 200));
 
 $laborFail = false;
 $neededLabor = [];
@@ -39,7 +39,7 @@ for ($i=0; $i<7; $i++) {
 	}
 	if ($productInfo[38+$i] > 0) {
 		$workTime = max(1,$thisFactory->objDat[$thisFactory->laborOffset+10*$i+1]);
-		$laborLevel = log($workTime], 2.0)+1;
+		$laborLevel = log($workTime, 2.0)+1;
 		$productionRate += 0.5+$laborLevel;
 		$productionItems++;
 	}

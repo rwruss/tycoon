@@ -41,6 +41,7 @@ class object {
 		if (array_key_exists($desc, $this->attrList)) {
 			//echo 'Found '.$desc.' use spot '.$this->attrList[$desc].'.  Type: '.gettype ($this->objDat);
 			$this->objDat[$this->attrList[$desc]] = $val;
+			echo 'Set '.$desc.' ('.$this->attrList[$desc].') to '.$val;
 		}
 	}
 
@@ -89,10 +90,10 @@ class object {
 class user extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->attrList['lastLogin'] = 1;
 		$this->attrList['gold'] = 2;
-		
+
 		$this->attrList['boost0'] = 51;
 		$this->attrList['boost1'] = 52;
 		$this->attrList['boost2'] = 53;
@@ -113,7 +114,7 @@ class user extends object {
 		$this->attrList['boost17'] = 68;
 		$this->attrList['boost18'] = 69;
 		$this->attrList['boost19'] = 70;
-		
+
 		$this->itemBlockSize = 500;
 	}
 }
