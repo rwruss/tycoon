@@ -28,7 +28,7 @@
 1028 - PROCESS: Start work on products at a factory
 1029 - MENU: Construction Speed Up at Factory
 1030 - PROCESS: Construction Speed Up at Factory
-1031 - PROCESS: Start upgrade at factory
+1031 - PROCESS: Start upgrade at factory (from 1039)
 1032 - MENU: Game Store :) Real money for gold
 1033 - MENU: Gold Store
 1034 - PROCESS: Purchase items from the gold store (from 1033)
@@ -36,6 +36,8 @@
 1036 - MENU: Material Order Speed Up at Factory
 1037 - PROCESS: Production Speed Up at Factory (from 1035)
 1038 - PROCESS: Material Order Speed Up at Factory (from 1036)
+1039 - PROCESS: save an order from the gold store (REAL MONEY!)
+1040 - empty/available
 
 
 TO DO:

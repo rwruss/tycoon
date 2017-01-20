@@ -682,6 +682,7 @@ class pane {
 		this.nodeType = "pane";
 
 		this.element.addEventListener("click", function(event) {this.parentObj.toTop()});
+		
 		this.element.childNodes[0].addEventListener("click", function (event) {
 			//console.log("destroying " + this.parentNode.parentObj.nodeType + "  via " + this);
 			for (var i=0; i<this.parentNode.destructFunctions.length; i++) {
@@ -691,24 +692,22 @@ class pane {
 			this.parentNode.parentObj.destroyWindow();
 			event.stopPropagation();
 			});
+		/*
 		this.element.addEventListener("dragstart", function (event) {
 			this.parentObj.toTop();
 			event.dataTransfer.setData('application/node type', this);
 			bPos = [parseInt(this.offsetLeft), parseInt(this.offsetTop), event.clientX, event.clientY];
 
 			console.log(bPos);
-		});
+		});*/
 		this.toTop();
 	}
 
 	destroyWindow() {
-		//console.log("remove " + this.desc)
 		this.element.remove();
-		//var tmp = this.element.parentNode.removeChild(this.element);
-		//console.log(tmp);
+
 		this.deskHolder.removePane(this);
 		delete this;
-		//console.log("final " + Object.keys(this.deskHolder.paneList));
 	}
 
 	toTop() {
@@ -1141,4 +1140,38 @@ function incrBox(target) {
 function incrStep(trg, incr) {
 	trg.parentNode.setValue = Math.max(0, trg.parentNode.setValue+incr);
 	trg.parentNode.display.innerHTML = trg.parentNode.setValue;
+}
+
+function resourceQuery(msg, products, services, nextFunction) {
+	var targetPane = useDeskTop.getPane("dialogPane");
+	textBlob("", targetPane, msg);
+	
+	var productArea = addDiv("", "stdFloatDiv", targetPane);
+	var serviceArea = addDiv("", "stdFloatDiv", targetPane);
+	var productCheck = true;
+	var serviceCheck = true;
+	
+	for (var i=0; i<products.length; i+=2) {
+		let thisProduct = productArray(productArea, products[i]).renderQty(products[i+1]);
+		if (playerProducts[i] < products[i+1]) {
+			thisProduct.style.border = "red";
+			productCheck = false;
+		}
+	}
+	
+	for (var i=0; i<services.length; i+=2) {
+		let thisService = productArray(serviceArea, services[i]).renderQty(services[i+1]);
+		if (playerServices[i] < services[i+1]) {
+			thisService.style.border = "red";
+			serviceCheck = false;
+		}
+	}
+
+	if (productCheck && serviceCheck) {
+		sendButton = newButton(headSection, nextFunction);
+		sendButton.innerHTML = "Proceed";
+	} else {
+		sendButton = newButton(headSection, function () {targetPane.parentObj.destroyWindow();});
+		sendButton.innerHTML = "Go back";
+	}
 }

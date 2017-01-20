@@ -36,6 +36,8 @@ $currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
 
 echo '<script>
+factoryUpgradeProducts = [];
+factoryUpgradeServices = [];
 selectedFactory = '.$postVals[1].';
 thisDiv.innerHTML = "";';
 
@@ -118,7 +120,7 @@ fProductionBox = fProduction.render(prodContain);
 console.log(fProductionBox);
 factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
 
-upgradeButton = newButton(headSection, function () {scrMod("1031,'.$postVals[1].'")});
+upgradeButton = newButton(headSection, function () {resourceQuery(factoryUpgradeProducts, factoryUpgradeServices, function () {scrMod("1031,'.$postVals[1].'")}}));
 upgradeButton.innerHTML = "Upgrade Factory";
 ';
 /*

@@ -159,6 +159,41 @@ class product {
 	}
 }
 
+class service {
+	constructor(details) {
+
+		this.objID = details.objID,
+		this.objName = details.objName,
+		this.qty = details.qty || 0;
+	}
+
+	renderSummary(target) {
+		//console.log('draw ' + this.type)
+		var thisDiv = addDiv(null, 'productHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
+		return thisDiv;
+	}
+
+	renderQty(target, qty) {
+		var thisDiv = addDiv(null, 'productHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
+		thisDiv.qtyDiv.innerHTML = qty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+
+		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
+		return thisDiv;
+	}
+}
+
 class labor {
 	constructor(details) {
 
@@ -308,7 +343,7 @@ class factoryOrder {
 			textBlob("", orderPane, "Select which item you want to order");
 			invList.reset();
 			var orderBox1 = invList.SLsingleButton(orderPane);
-			var orderSelectButton = newButton(orderPane, function () {console.log(thisObject);scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(orderBox1))});
+			var orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(orderBox1))});
 			orderSelectButton.innerHTML = "Find Offers";
 			var offerContainer = addDiv("", "stdContain", orderPane);
 			});

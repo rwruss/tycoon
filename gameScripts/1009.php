@@ -59,7 +59,9 @@ if ($optionCheck && $spotCheck !== false) {
 		}
 	}
 
-	echo '<script>offerList = [];
+	echo '<script>
+	var orderPane = useDeskTop.getPane("xyzPane");
+	offerList = [];
 	offerList.push(new offer([0, 100, 299, 0, 50, 50, 50, '.$productID.', 8, 9, 10]));';
 
 

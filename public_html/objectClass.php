@@ -137,6 +137,10 @@ class business extends object {
 		$this->attrList['boost8'] = 27;
 		$this->attrList['boost9'] = 28;
 		$this->attrList['boost10'] = 29;
+		
+		for ($i=0; $i<20; $i++) {
+			$this->attrList['service'.$i] = 100+$i;
+		}
 	}
 }
 
@@ -800,6 +804,13 @@ function loadRegion($id, $file) {
 	$dat = unpack('i*', fread($file, 105000));
 
 	return new region($id, $dat, $file);
+}
+
+function loadUser($id, $file) {
+	fseek($file, $id*500);
+	$dat = unpack('i*', fread($file, 500));
+
+	return new user($id, $dat, $file);
 }
 
 function loadObject($id, $file, $size) {
