@@ -66,11 +66,13 @@ setBar = function (id, desc, pct) {
 }
 
 class city {
-	constructor(details) {
+	constructor(objDat) {
 
-		this.objID = details.objID,
-		this.objName = details.objName,
-		this.qty = details.qty || 0;
+		this.objID = objDat[0];
+		this.objName = objDat[1];
+		this.details = objDat;
+		this.demandRates = "";
+		this.demandLevels = "";
 		//console.log('create product ' + this.objID);
 	}
 
@@ -93,6 +95,49 @@ class city {
 		thisDiv.nameDiv.innerHTML = this.objName + " - " + this.objID;
 		return thisDiv;
 	}
+
+	renderDetail(target) {
+		var containerDiv = addDiv(null, 'udHolder', target);
+		//containerDiv.innerHTML = this.objName;
+
+		containerDiv.population = addDiv(null, "", containerDiv);
+		containerDiv.education = addDiv(null, "", containerDiv);
+		containerDiv.affluence = addDiv(null, "", containerDiv);
+		containerDiv.region = addDiv(null, "", containerDiv);
+
+		containerDiv.population.innerHTML = "Pop: " + this.details[11];
+		containerDiv.education.innerHTML = "Education: " + this.details[12];
+		containerDiv.affluence.innerHTML = "Pop: " + this.details[13];
+		containerDiv.region.innerHTML = "Region: " + this.details[18];
+
+		return containerDiv;
+	}
+
+	demandMenu(target, demandRates, demandLevels) {
+		this.demandRates = demandRates;
+		this.demandLevels = demandLevels;
+
+		var sortDiv = addDiv(null, 'stdFloatDiv', target);
+		sortDiv.innerHTML = "Sort Bar";
+
+		var showDiv = addDiv(null, 'stdFloatDiv', target);
+		return showDiv;
+	}
+
+	renderDemands(target, list) {
+		for (var i=0; i<list.length; i++)	{
+			let showRate = this.demandLevels[list[i]]/this.details[11]*this.demandRates[list[i]];
+			let ratePct = showRate
+
+			let containDiv = addDiv("", "demandContain", target);
+			containDiv.product = addDiv("", "demandIcon", containDiv);
+			containDiv.bar = addDiv("", "demandBar", containDiv);
+			containDiv.rate = addDiv("", "demandRate", containDiv);
+			containDiv.current = addDiv("", "demandCurrent", containDiv);
+			console.log(this.demandLevels[list[i]] + " / " + this.details[11] + " * " +this.demandRates[list[i]]);
+			containDiv.bar.innerHTML = showRate;
+		}
+	}
 }
 
 class offer {
@@ -108,10 +153,7 @@ class offer {
 	}
 
 	renderSummary(target) {
-		console.log(this);
 		var thisDiv = addDiv(null, 'udHolder', target);
-		console.log("render product " + this.productID);
-		console.log(productArray[this.productID])
 		productArray[this.productID].renderSummary(thisDiv);
 
 		thisDiv.setAttribute("data-unitid", this.unitID);
@@ -206,8 +248,6 @@ class labor {
 	}
 
 	renderSummary(target) {
-		console.log("rendum");
-		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'productHolder', target);
 
 		thisDiv.ownerObject = this.objID;
@@ -261,6 +301,7 @@ class gamePlayer {
 		this.moneyGold = data[1] || 0;
 		this.money = this.moneyCash;
 		this.gold = this.moneyGold;
+		this.boosts = new Array();
 	}
 
 	set money (x) {
@@ -273,6 +314,10 @@ class gamePlayer {
 		console.log("setting playergold to  " + x);
 		this.moneyGold = x;
 		document.getElementById("goldBox").innerHTML = "G " + this.moneyGold;
+	}
+
+	setBoosts(boosts) {
+		this.boosts = boosts;
 	}
 }
 
@@ -320,7 +365,6 @@ class factoryOrder {
 		this.material = productID;
 		this.qty = qty;
 		this.orderNum = spotNum;
-		console.log("created order at factory " + this.factoryID);
 	}
 
 	boostClock(deltaT) {
@@ -330,28 +374,37 @@ class factoryOrder {
 	render(target, boost=true) {
 		var containerBox = addDiv("", "orderContain", target);
 		materialBox(this.material, this.qty, containerBox);
-		containerBox.clock = addDiv("", "timeFloat", containerBox);
+		containerBox.timeBox = addDiv("", "timeFloat", containerBox);
 		var thisObject = this;
 		if (this.material == 0) containerBox.addEventListener("click", function () {
 
 			useDeskTop.newPane("xyzPane");
-			var orderPane = useDeskTop.getPane("xyzPane");
+			orderPane = useDeskTop.getPane("xyzPane");
 			orderPane.innerHTML = "";
 
 			event.stopPropagation();
 
 			textBlob("", orderPane, "Select which item you want to order");
 			invList.reset();
-			var orderBox1 = invList.SLsingleButton(orderPane);
-			var orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(orderBox1))});
+			orderPane.orderBox1 = invList.SLsingleButton(orderPane);
+			orderPane.offerContainer = addDiv("", "stdContain", orderPane);
+			var orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(orderPane.orderBox1))});
 			orderSelectButton.innerHTML = "Find Offers";
-			var offerContainer = addDiv("", "stdContain", orderPane);
+
 			});
 
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
 			var objectPointer = this;
-			containerBox.clockObj = setInterval(function () {runClock(objectPointer.endTime, dst.clock, dst.clockObj, function () {console.log("material order completion")}, objectPointer.timeBoost)}, 1000)
+			containerBox.clockObj = setInterval(function () {runClock(objectPointer.endTime, containerBox, objectPointer, function (trgObject) {
+				console.log(objectPointer);
+				businessDiv.orderItems.innerHTML = "";
+				trgObject.material = 0;
+				trgObject.qty = 0;
+				for (var i=0; i<factoryOrders.length; i++) {
+					factoryOrders[i].render(businessDiv.orderItems);
+				}
+			}, objectPointer.timeBoost)}, 1000)
 
 			if (boost) {
 				containerBox.boostBox = addDiv("", "buildSpeedUp", containerBox);
@@ -408,7 +461,6 @@ class factoryProduction {
 				container.boostBox.addEventListener("click", function () {scrMod("1035,"+this.factoryID)});
 			}
 		}
-		console.log("complete product reender");
 		return containerBox
 	}
 }

@@ -31,7 +31,7 @@ if ($postVals[5] == 0) {
       $thisObj->set('orderItem'.$i, $postVals[3]);
       $thisObj->set('orderQty'.$i, 100);
       $thisObj->saveAll($objFile);
-      print_r($thisObj->objDat);
+      //print_r($thisObj->objDat);
 
       break;
     }
@@ -85,10 +85,15 @@ if ($postVals[5] == 0) {
 
 echo '<script>
 materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
-console.log(materialOrder);
-console.log('.$postVals[1].');
-console.log(orderItems);
-showOrders(materialOrder, '.$postVals[1].');
+businessDiv.orderItems.innerHTML = "";
+factoryOrders = new Array();
+for (var i=0; i<materialOrder.length; i+=3) {
+	factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
+}
+for (i=0; i<factoryOrders.length; i++) {
+	factoryOrders[i].render(businessDiv.orderItems);
+}
+
 thisDiv = useDeskTop.getPane("businessObjects");
 </script>';
 

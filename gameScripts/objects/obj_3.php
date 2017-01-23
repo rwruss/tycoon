@@ -7,12 +7,12 @@ if ($thisObj->get('factoryLevel') == 0) {
 	if ($constructDelta > 0) {
 		echo '<script>
 		selectedFactory = '.$postVals[1].';
-		thisDiv.innerHTML = "";
-		textBlob("", thisDiv, "This facility is still being built.  Would you like to speed it up?;");
-		var buildTimeBox = addDiv("", "orderTime", thisDiv);
+		businessDiv.innerHTML = "";
+		textBlob("", businessDiv, "This facility is still being built.  Would you like to speed it up?;");
+		var buildTimeBox = addDiv("", "orderTime", businessDiv);
 		buildTimeBox.runClock = true;
 		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
-		speedUpButton = newButton(thisDiv, function () {scrMod("1029,1,'.$postVals[1].'")});
+		speedUpButton = newButton(businessDiv, function () {scrMod("1029,1,'.$postVals[1].'")});
 		speedUpButton.innerHTML = "Speed Up Construction";
 		console.log("done");
 		</script>';
@@ -39,10 +39,10 @@ echo '<script>
 factoryUpgradeProducts = [];
 factoryUpgradeServices = [];
 selectedFactory = '.$postVals[1].';
-thisDiv.innerHTML = "";';
+businessDiv.innerHTML = "";';
 
 if ($constructDelta > 0) {
-	echo 'var updateArea = addDiv("", "stdFloatDiv", thisDiv);';
+	echo 'var updateArea = addDiv("", "stdFloatDiv", businessDiv);';
 
 	if ($thisObj->get('factoryLevel') == 0) {
 		// this is new construction
@@ -82,7 +82,7 @@ for ($i=0; $i<10; $i++) {
 echo '];
 
 inventoryItems = [];
-console.log(materialInv);
+//console.log(materialInv);
 for (i=0; i<materialInv.length; i+=2) {
 	inventoryItems.push(new product({objID:materialInv[i]}));
 	//console.log("Add to inv: " + materialInv[i]);
@@ -96,7 +96,7 @@ for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
 }
 echo ']);
-var headSection = addDiv("", "stdFloatDiv", thisDiv);
+var headSection = addDiv("", "stdFloatDiv", businessDiv);
 textBlob("", headSection, "Rate: '.($thisObj->get('currentRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
 sendButton = newButton(headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(factoryProductionBox))});
@@ -117,10 +117,13 @@ startButton4.innerHTML = "Work for - 8 hour";
 prodContain = addDiv("", "orderContain", headSection);
 fProduction = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100);
 fProductionBox = fProduction.render(prodContain);
-console.log(fProductionBox);
+//console.log(fProductionBox);
 factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
 
-upgradeButton = newButton(headSection, function () {resourceQuery(factoryUpgradeProducts, factoryUpgradeServices, function () {scrMod("1031,'.$postVals[1].'")}}));
+upgradeButton = newButton(headSection, function () {
+	resourceQuery(factoryUpgradeProducts, factoryUpgradeServices, function () {
+		scrMod("1031,'.$postVals[1].'");})
+	});
 upgradeButton.innerHTML = "Upgrade Factory";
 ';
 /*
@@ -135,7 +138,7 @@ if ($thisObj->get('prodStart') > 0) {
 }
 */
 echo '
-var productInvSection = addDiv("", "stdFloatDiv", thisDiv);
+var productInvSection = addDiv("", "stdFloatDiv", businessDiv);
 textBlob("", productInvSection, "Output Inventory");
 
 saleButton = newButton(productInvSection, function () {scrMod("1013,'.$postVals[1].'")});
@@ -146,7 +149,7 @@ for (var i=0; i<5; i++) {
 	}
 }
 
-var laborSection = addDiv("", "stdFloatDiv", thisDiv);
+var laborSection = addDiv("", "stdFloatDiv", businessDiv);
 laborSection.aassigned = addDiv("", "stdFloatDiv", laborSection);
 textBlob("", laborSection.aassigned, "Labor Pool - show available labor");
 for (var i=1; i<factoryLabor.length; i++) {
@@ -154,12 +157,13 @@ for (var i=1; i<factoryLabor.length; i++) {
 	let laborItem = factoryLabor[i].renderSummary(laborSection.aassigned);
 	//let laborItem = laborBox(factoryLabor[i], laborSection.aassigned);
 	let itemNum = i;
+	if factoryLabor[i]
 	laborItem.addEventListener("click", function () {scrMod("1023,'.$postVals[1].',"+itemNum)});
 }
 laborButton = newButton(laborSection.aassigned, function () {scrMod("1018,'.$postVals[1].'")});
 laborButton.innerHTML = "Adjust Labor";
 
-reqBox = addDiv("", "stdFloatDiv", thisDiv);
+reqBox = addDiv("", "stdFloatDiv", businessDiv);
 textBlob("", reqBox, "Per unit of production, this requires:");
 reqBox.materials = addDiv("", "stdFloatDiv", reqBox);
 for (var i=0; i<productMaterial.length; i+=2) {
@@ -170,22 +174,18 @@ for (var i=0; i<productLabor.length; i++) {
 	laborBox(productLabor[i], laborSection.required);
 }
 
-reqBox.stores = addDiv("", "stdFloatDiv", thisDiv);
+reqBox.stores = addDiv("", "stdFloatDiv", businessDiv);
 showInventory('.$postVals[1].', materialInv);
 
+var orderSection = addDiv("", "stdFloatDiv", businessDiv);
+var orderHead = addDiv("", "stdFloatDiv", orderSection);
 
-if (invList.parentList.length > 0) {
-	var orderSection = addDiv("", "stdFloatDiv", thisDiv);
-	var orderHead = addDiv("", "stdContain", orderSection);
 
-	showOrders(materialOrder, '.$postVals[1].', orderItems);
-
-}
-orderItems = addDiv("", "stdContain", orderSection);
+businessDiv.orderItems = addDiv("", "stdFloatDiv", orderSection);
 textBlob("", orderHead, "Current orders");
 console.log(factoryOrders.length);
 for (i=0; i<factoryOrders.length; i++) {
-	factoryOrders[i].render(orderItems);
+	factoryOrders[i].render(businessDiv.orderItems);
 }
 
 </script>';

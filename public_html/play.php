@@ -20,7 +20,6 @@ $playerList = unpack("i*", file_get_contents("../games/".$_GET["gameID"]."/playe
 $playerListLoc = array_search($_SESSION["playerId"], $playerList);
 $pGameID = $playerList[$playerListLoc+1]*-1;
 $_SESSION["instance"] = $_GET["gameID"];
-echo "PLAYER GAME ID IS ".$pGameID;
 
 if ($pGameID == FALSE) {
 	echo "<p><p><p><p>Not alrady in game(".$_SESSION["playerId"].")";
@@ -48,15 +47,13 @@ $_SESSION['game_'.$gameID]['scenario'] = 1;
 $_SESSION['game_'.$gameID]['culture'] = 1; // Set and record player culture
 fclose($paramFile);
 
-echo 'You are player '.$pGameID;
 $gamePath = "../games/".$gameID;
 $scnPath = "../scenarios/".$_SESSION['game_'.$gameID]['scenario'];
 // Read player info
 $defaultBlockSize = 100;
 $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-//$playerDat = file_get_contents($gamePath."/unitDat.dat", NULL, NULL, $pGameID*400, 400);
-echo 'Load player object:';
+
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
 
 // Load player factories
@@ -170,6 +167,8 @@ echo '
 	var factoryUpgradeBox;
 	var factoryOrders = new Array();
 	var fProductionBox;
+	var orderPane;
+	var businessDiv;
 
 	var unitBox;
 	var rY = 0.0;
@@ -988,6 +987,7 @@ echo '
 		document.getElementById("readMsg").addEventListener("click", function(event) {console.log(event);makeBox(\'inBox\', 1099, 500, 500, 200, 50)});
 
 		thisPlayer = new gamePlayer(['.$thisPlayer->get('money').', '.$_SESSION['gold'].']);
+		thisPlayer.setBoosts('.implode(',', $_SESSION['boosts']).');
 		useDeskTop = new deskTop;
 		setClick([0], "auto")
 		var canvas = document.getElementById("lesson03-canvas");
@@ -1034,13 +1034,18 @@ echo '
 		}
 		echo ');
 		console.log(playerFactories);
-		
+
 		serviceArray = new Array();
-		
+
 
 		productArray = new Array();
 		for (var i=0; i<numProducts; i++) {
 			productArray.push(new product({objType:product, objID:(i), objName:objNames[i]}));
+		}
+
+		serviceArray = new Array();
+		for (var i=0; i<20; i++) {
+			serviceArray.push(new product({objType:service, objID:(i), objName:"Service"+i}));
 		}
 
 		laborArray = new Array();
@@ -1093,6 +1098,7 @@ window.addEventListener("load", webGLStart);
 		<a href="javascript:void(0);" onclick="scrMod(1002)">Busineses</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1026)">Markets</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1040)">Services</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1041)">Conglomerate</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1033)" style="position:absolute; bottom:60">Boost Store</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1032)" style="position:absolute; bottom:40">Buy Gold</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(2001)" style="position:absolute; bottom:20">Gimme Coin</a><br>

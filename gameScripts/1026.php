@@ -14,17 +14,7 @@ thisDiv = useDeskTop.getPane("hireLabor");
 useDeskTop.paneToTop(thisDiv.parentNode.parentObj);
 console.log(thisDiv.parentNode.parentObj);
 thisDiv.innerHTML = "";
-cityList = [new city({objID:1, objName:"Round Rock"})];
-
-/*
-var citySelect = new uList(cityList);
-cityBox1 = citySelect.SLsingleButton(thisDiv);
-cityButton = newButton(thisDiv, function () {scrMod("1020,'.$postVals[1].',"+ SLreadSelection(cityBox1))})
-cityButton.innerHTML = "select this city";
-
-var showLaborArea = addDiv("showLaborArea", "standardContain", thisDiv);
-textBlob("", showLaborArea, "Options in this city");
-*/
+cityList = [new city([1, "Round Rock"])];
 
 console.log(cityList);
 for (var i=0; i<cityList.length; i++) {

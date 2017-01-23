@@ -533,3 +533,47 @@
 	height:25;
 	width:25;
 }
+
+.demandContain {
+	position:relative;
+	float:left;
+	height:50;
+	width:250;
+	border: 1px solid blue;
+}
+
+.demandIcon {
+	position:absolute;
+	height:25;
+	width:25;
+	left:0;
+	top:0;
+	border: 1px solid black;
+}
+
+.demandBar {
+	position:absolute;
+	height:25;
+	width:200;
+	left:50;
+	top:0;
+	border: 1px solid black;
+}
+
+.demandRate {
+	position:absolute;
+	height:25;
+	width:125;
+	left:0;
+	top:25;
+	border: 1px solid black;
+}
+
+.demandCurrent{
+	position:absolute;
+	height:25;
+	width:125;
+	left:125;
+	top:25;
+	border: 1px solid black;
+}

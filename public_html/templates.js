@@ -682,7 +682,7 @@ class pane {
 		this.nodeType = "pane";
 
 		this.element.addEventListener("click", function(event) {this.parentObj.toTop()});
-		
+
 		this.element.childNodes[0].addEventListener("click", function (event) {
 			//console.log("destroying " + this.parentNode.parentObj.nodeType + "  via " + this);
 			for (var i=0; i<this.parentNode.destructFunctions.length; i++) {
@@ -1006,8 +1006,7 @@ runClock = function (endTime, target, object, callback, boost) {
 	//console.log("boost " + boost);
 	var date = new Date();
 	var remaining = (endTime - boost - Math.floor(date.getTime()/1000));
-	//console.log(target);
-	//console.log("boost:" + boost + ", " + endTime + " - " + Math.floor(date.getTime()/1000) + " = " + remaining);
+
 	if (remaining > 0) {
 		//console.log(endTime + " - " + Math.floor(date.getTime()/1000) + " = " + (remaining) );
 
@@ -1017,10 +1016,10 @@ runClock = function (endTime, target, object, callback, boost) {
 
 		target.timeBox.innerHTML = ("0" + hrs).slice(-2) + " : " + ("0" + mins).slice(-2) + " : " + ("0" + secs).slice(-2);
 	} else {
-		target.innerHTML = "";
+		target.timeBox.innerHTML = "";
 		clearInterval(target.clockObj);
 		console.log("test callbuck");
-		callback();
+		callback(object);
 	}
 	//if (!target.runClock) clearInterval(target.clockObj);
 }
@@ -1145,12 +1144,12 @@ function incrStep(trg, incr) {
 function resourceQuery(msg, products, services, nextFunction) {
 	var targetPane = useDeskTop.getPane("dialogPane");
 	textBlob("", targetPane, msg);
-	
+
 	var productArea = addDiv("", "stdFloatDiv", targetPane);
 	var serviceArea = addDiv("", "stdFloatDiv", targetPane);
 	var productCheck = true;
 	var serviceCheck = true;
-	
+
 	for (var i=0; i<products.length; i+=2) {
 		let thisProduct = productArray(productArea, products[i]).renderQty(products[i+1]);
 		if (playerProducts[i] < products[i+1]) {
@@ -1158,7 +1157,7 @@ function resourceQuery(msg, products, services, nextFunction) {
 			productCheck = false;
 		}
 	}
-	
+
 	for (var i=0; i<services.length; i+=2) {
 		let thisService = productArray(serviceArea, services[i]).renderQty(services[i+1]);
 		if (playerServices[i] < services[i+1]) {

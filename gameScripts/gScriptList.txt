@@ -37,13 +37,16 @@
 1037 - PROCESS: Production Speed Up at Factory (from 1035)
 1038 - PROCESS: Material Order Speed Up at Factory (from 1036)
 1039 - PROCESS: save an order from the gold store (REAL MONEY!)
-1040 - empty/available
+1040 - MENU: Show services held by player/company
+1041 - MENU: Congolmerate overview
 
 
 TO DO:
 Labor experience and leveling up - Daily processing of an update
 Adjust production rates based on labor - Do this in the labor and production change scripts
 Professional Services/Construction, Engineering, Markinting, etc
+Adjust player object for "C" type dat
+Demand rate bars in cities
 
 DONE - Assigning labor to production tasks at factory
 
@@ -69,3 +72,8 @@ https://www.quora.com/Whats-the-coolest-thing-you-can-get-a-computer-to-do-in-10
 
 cities
 https://en.wikipedia.org/wiki/List_of_urban_areas_by_population
+
+Game List:
+Kingdom Come: Deliverance
+Dual Universe
+Sea of Thieves

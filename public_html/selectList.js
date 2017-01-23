@@ -41,9 +41,9 @@ class objectList {
 		var selectFunction = function() {};
 		// Apply options
 		if (typeof opts !== "undefined") {
-			console.log(opts);
+			//console.log(opts);
 			if (opts.setVal !== "undefined") {
-				console.log("show a default value");
+				//console.log("show a default value");
 				this.existingValue(selectButton, opts);
 			}
 			if (opts.renderFunction) {
@@ -164,18 +164,18 @@ class objectList {
 				object.objID = this.listItems[i];
 				object.addEventListener("click", function () {
 
-					console.log("set slected to " + object.objID + " which equals " + this.owner);
+					//console.log("set slected to " + object.objID + " which equals " + this.owner);
 					object.parentNode.parentNode.remove();
 					SlclearTarget(target);
 
 					target.selectedValue = this.owner.parentList[object.objID].objID;
 
 					this.owner.selectedItems[target.selectedIndex] = 0;
-					console.log("unselect item " + target.selectedIndex);
+					//console.log("unselect item " + target.selectedIndex);
 					this.owner.selectedItems[object.objID] = 1;
 					target.selectedIndex = object.objID;
 					//this.owner.showSelected(object.objID, target);
-					console.log(this.owner.selectedItems);
+					//console.log(this.owner.selectedItems);
 					renderFunction(object.owner.parentList[object.objID], target);
 					selectFunction();
 					});
@@ -223,11 +223,11 @@ class uList extends objectList {
 	}
 
 	existingValue(target, opts) {
-		console.log("ulist existing to " + opts.setVal);
-		console.log(this.parentList);
+		//console.log("ulist existing to " + opts.setVal);
+		//console.log(this.parentList);
 		for (var i=0; i<this.parentList.length; i++) {
 			if (this.parentList[i].objID == opts.setVal) {
-				console.log(opts.setVal + " found at " + i);
+				//console.log(opts.setVal + " found at " + i);
 					this.selectedItems[i] = 1;
 					this.showSelected(i, target);
 
@@ -248,7 +248,7 @@ class uList extends objectList {
 	}
 
 	showItem(id, trg) {
-		console.log(id);
+		//console.log(id);
 		var objBox = id.renderSummary(trg);
 		//console.log("Show the default uList item " + objBox)
 		return objBox;

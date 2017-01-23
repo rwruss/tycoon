@@ -81,11 +81,11 @@ if ($optionCheck && $spotCheck !== false) {
 		showOffers.addSort("rights", "Rights");
 		showOffers.addSort("pollution", "Pollution");
 
-		orderBox2 = showOffers.SLsingleButton(offerContainer);
+		orderBox2 = showOffers.SLsingleButton(orderPane.offerContainer);
 		orderBox2.click();
 
-		//orderButton = newButton(offerContainer, function () {console.log(SLreadSelection(orderBox1))});
-		orderButton = newButton(offerContainer, function () {scrMod("1010,'.$postVals[1].'," + SLreadSelection(orderBox1) + "," +  SLreadSelection(orderBox2))});
+		//orderButton = newButton(orderPane.offerContainer, function () {console.log(SLreadSelection(orderBox1))});
+		orderButton = newButton(orderPane.offerContainer, function () {scrMod("1010,'.$postVals[1].'," + SLreadSelection(orderPane.orderBox1) + "," +  SLreadSelection(orderBox2))});
 		orderButton.innerHTML = "Place Order";
 		</script>';
 }

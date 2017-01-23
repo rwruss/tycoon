@@ -126,6 +126,7 @@ class business extends object {
 		$this->attrList['ownedObjects'] = 11;
 		$this->attrList['money'] = 14;
 		$this->attrList['laborSlot'] = 15;
+		$this->attrList['teamID'] = 17;
 
 		$this->attrList['boost1'] = 20;
 		$this->attrList['boost2'] = 21;
@@ -137,7 +138,7 @@ class business extends object {
 		$this->attrList['boost8'] = 27;
 		$this->attrList['boost9'] = 28;
 		$this->attrList['boost10'] = 29;
-		
+
 		for ($i=0; $i<20; $i++) {
 			$this->attrList['service'.$i] = 100+$i;
 		}
@@ -545,8 +546,8 @@ class factory extends object {
 }
 
 class city extends object {
-	private $dRateOffset, $dLevelOffset, $laborDemandOffset;
-	public $laborStoreOffset;
+	private $dRateOffset, $dLevelOffset;
+	public $laborStoreOffset, $laborDemandOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);

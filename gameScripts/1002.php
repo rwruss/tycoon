@@ -10,11 +10,11 @@ $thisBusiness = loadObject($pGameID, $objFile, 400);
 
 echo '<script>
 useDeskTop.newPane("businessObjects");
-thisDiv = useDeskTop.getPane("businessObjects");
-thisDiv.innerHTML = "";
+businessDiv = useDeskTop.getPane("businessObjects");
+businessDiv.innerHTML = "";
 
-var headSection = addDiv("", "stdFloatDiv", thisDiv);
-var listSection = addDiv("", "stdFloatDiv", thisDiv);
+var headSection = addDiv("", "stdFloatDiv", businessDiv);
+var listSection = addDiv("", "stdFloatDiv", businessDiv);
 
 console.log(playerFactories);
 for (let i=0; i<playerFactories.length; i++) {
