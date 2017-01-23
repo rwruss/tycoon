@@ -553,10 +553,9 @@
 
 .demandBar {
 	position:absolute;
-	height:25;
-	width:200;
+	height:15;
 	left:50;
-	top:0;
+	top:5;
 	border: 1px solid black;
 }
 

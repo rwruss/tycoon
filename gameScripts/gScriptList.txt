@@ -48,6 +48,9 @@ Professional Services/Construction, Engineering, Markinting, etc
 Adjust player object for "C" type dat
 Demand rate bars in cities
 
+IDEAS:
+Politics/mayors for cities - set polices and influence city and population demands
+
 DONE - Assigning labor to production tasks at factory
 
 http://playdosgamesonline.com/capitalism.html

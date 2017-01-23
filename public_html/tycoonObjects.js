@@ -127,7 +127,7 @@ class city {
 	renderDemands(target, list) {
 		for (var i=0; i<list.length; i++)	{
 			let showRate = this.demandLevels[list[i]]/this.details[11]*this.demandRates[list[i]];
-			let ratePct = showRate
+			let ratePct = this.demandLevels[list[i]]/2.0*this.demandRates[list[i]]*this.details[11];
 
 			let containDiv = addDiv("", "demandContain", target);
 			containDiv.product = addDiv("", "demandIcon", containDiv);
@@ -136,6 +136,12 @@ class city {
 			containDiv.current = addDiv("", "demandCurrent", containDiv);
 			console.log(this.demandLevels[list[i]] + " / " + this.details[11] + " * " +this.demandRates[list[i]]);
 			containDiv.bar.innerHTML = showRate;
+			
+			let r = Math.floor(255 - 255*ratePct);
+			let g = Math.floor(255*ratePct);
+			
+			containDiv.bar.style.width = 20 + 180*ratePct;
+			contain.bar.style.backgroundColor = "rgb(" + r + ", " + g + ", "0")";
 		}
 	}
 }
