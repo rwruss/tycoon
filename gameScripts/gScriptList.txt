@@ -47,7 +47,6 @@ Labor experience and leveling up - Daily processing of an update
 Adjust production rates based on labor - Do this in the labor and production change scripts
 Professional Services/Construction, Engineering, Markinting, etc
 Adjust player object for "C" type dat
-Demand rate bars in cities
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
