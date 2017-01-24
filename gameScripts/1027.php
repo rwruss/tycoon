@@ -17,6 +17,12 @@ textBlob("", cityPane, "City information");
 var showCity = new city(['.$postVals[1].', "some citgy", '.implode(',', array_slice($thisCity->objDat, 0, 25)).']);
 showCity.renderDetail(cityPane);
 
+let optionButton1 = newButton(cityPane);
+optionButton1.innerHTML = "Labor at City";
+
+let optionButton2 = newButton(cityPane);
+optionButton2.innerHTML = "Run for Mayor";
+
 var demandPane = addDiv("", "stdFloatDiv", cityPane);
 demandPane.showDiv = showCity.demandMenu(demandPane, ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborDemandOffset-1, 10000)).'], ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborStoreOffset-1, 10000)).']);
 showCity.renderDemands(demandPane.showDiv, [1, 2, 3, 4, 5,6]);

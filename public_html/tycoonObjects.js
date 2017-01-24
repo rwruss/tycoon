@@ -105,10 +105,10 @@ class city {
 		containerDiv.affluence = addDiv(null, "", containerDiv);
 		containerDiv.region = addDiv(null, "", containerDiv);
 
-		containerDiv.population.innerHTML = "Pop: " + this.details[11];
-		containerDiv.education.innerHTML = "Education: " + this.details[12];
-		containerDiv.affluence.innerHTML = "Pop: " + this.details[13];
-		containerDiv.region.innerHTML = "Region: " + this.details[18];
+		containerDiv.population.innerHTML = "Pop: " + this.details[13];
+		containerDiv.education.innerHTML = "Education: " + this.details[14];
+		containerDiv.affluence.innerHTML = "Aff: " + this.details[15];
+		containerDiv.region.innerHTML = "Region: " + this.details[20];
 
 		return containerDiv;
 	}
@@ -126,22 +126,25 @@ class city {
 
 	renderDemands(target, list) {
 		for (var i=0; i<list.length; i++)	{
-			let showRate = this.demandLevels[list[i]]/this.details[11]*this.demandRates[list[i]];
-			let ratePct = this.demandLevels[list[i]]/2.0*this.demandRates[list[i]]*this.details[11];
+			let showRate = this.demandLevels[list[i]]/this.details[13]*this.demandRates[list[i]];
+			let ratePct = Math.min(100, this.demandLevels[list[i]]/(2.0*this.demandRates[list[i]]*this.details[13]));
+
+			console.log(this.demandLevels[list[i]] + " / 2.0 * " +this.demandRates[list[i]] + " * " + this.details[13]);
 
 			let containDiv = addDiv("", "demandContain", target);
 			containDiv.product = addDiv("", "demandIcon", containDiv);
 			containDiv.bar = addDiv("", "demandBar", containDiv);
 			containDiv.rate = addDiv("", "demandRate", containDiv);
 			containDiv.current = addDiv("", "demandCurrent", containDiv);
-			console.log(this.demandLevels[list[i]] + " / " + this.details[11] + " * " +this.demandRates[list[i]]);
+			console.log(this.demandLevels[list[i]] + " / " + this.details[13] + " * " +this.demandRates[list[i]]);
 			containDiv.bar.innerHTML = showRate;
-			
+
 			let r = Math.floor(255 - 255*ratePct);
 			let g = Math.floor(255*ratePct);
-			
-			containDiv.bar.style.width = 20 + 180*ratePct;
-			contain.bar.style.backgroundColor = "rgb(" + r + ", " + g + ", "0")";
+			let barSize = 20 + 180*ratePct/100;
+
+			containDiv.bar.style.width = barSize;
+			containDiv.bar.style.backgroundColor = "rgb(" + r + ", " + g + ",0)";
 		}
 	}
 }

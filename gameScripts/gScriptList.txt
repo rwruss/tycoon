@@ -39,6 +39,7 @@
 1039 - PROCESS: save an order from the gold store (REAL MONEY!)
 1040 - MENU: Show services held by player/company
 1041 - MENU: Congolmerate overview
+1042 - MENU: Political menu
 
 
 TO DO:
