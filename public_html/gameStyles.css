@@ -22,111 +22,10 @@
 	border-radius:10;
 }
 
-.bldgImg {
-	position:absolute;
-	left:0;
-	top:0;
-	width:75;
-	height:75;
-}
-
-.bldgLvl {
-	position:absolute;
-	left:125;
-	top:0;
-	width:25;
-	height:25;
-}
-
-.msgSum_1 {
-	font-weight: bold;
-}
-
-.optionHolder {
-	position:absolute;
-	left:500;
-	top:250;
-	width:100%;
-	height:100%;
-}
-
-.optionPrompt {
-	position:absolute;
-	top:0;
-	left:0;
-}
-
-.optionAccept {
-	position:absolulte;
-	background:#FF00FF;
-	bottom:0;
-	left:0;
-}
-
-.optionDecline {
-	position:absolulte;
-	background:#FF0000;
-	bottom:0;
-	right:0;
-}
-
-.reqBox1 {
-	display:inline-block;
-	//float:left;
-	background:#00F000;
-	margin:5;
-}
-
-.reqBox2 {
-	display:inline-block;
-	//float:left;
-	background:#F00000;
-	margin: 5;
-}
-
-.reqHolder {
-	margin:auto;
-	float:left;
-	width:100%;
-	display:block;
-	text-align: center;
-}
-
-.reqImg {
-	display:inline;
-	float:left;
-	width:25;
-	height:25;
-}
-
-.reqText {
-	display:inline;
-	height:25;
-}
-
 .stdFloatDiv {
 	width:100%;
 	position:relative;
 	float:left;
-}
-
-.tabBox {
-	position:absolute;
-	top:0;
-	left:0;
-	width:100%;
-	height:100%;
-	background:#FFFFFF;
-	opacity:1;
-	overflow:auto;
-	visibility:hidden;
-}
-
-.taskHeader {
-	position:absolute;
-	top:0;
-	width:100%;
-	height:150;
 }
 
 .textBlob {
@@ -182,43 +81,6 @@
    font-weight:bold;
 }
 
-.plotDesc {
-	position:relative;
-	float:left;
-	width:99%;
-	border: 1px solid black;
-}
-
-.plotPoints {
-	position: absolute;
-	height:20;
-	left:20;
-	top:20;
-}
-
-.plotSummary {
-	position:relative;
-	float:left;
-	width:99%;
-	border: 1px solid black;
-}
-
-.plotTarget {
-	position:relative;
-	float:left;
-	height:150;
-	width:150;
-	border: 1px solid black;
-}
-
-.plotDtl {
-	position:relative;
-	float:left;
-	height: 150;
-	width: calc (100% - 150px);
-	border: 1px solid black;
-}
-
 .stdContainer {
 	position:relative;
 	float:left;
@@ -233,110 +95,12 @@
 	width:50%;
 }
 
-
-
-.taskTabHolder {
-	display:inline;
-	position:absolute;
-	top:150;
-	width:100%;
-	height:20;
-}
-
-.taskOptions {
-	position:absolute;
-	top:170;
-	width:100%;
-	height:300;
-	overflow:hidden;
-}
-
-.tdHolder {
-	position:relative;
-	float:left;
-	width:99%;
-	height:150;
-	border: 1px solid black;
-}
-
-.tdImg {
-	position:absolute;
-	left:10;
-	top:0;
-	width:75;
-	height:75;
-}
-
 .charHolder{
 	position:relative;
 	float:left;
 	width:150;
 	height:150;
 	border: 1px solid black;
-}
-
-.udHolder {
-	position:relative;
-	float:left;
-	width:150;
-	height:150;
-	border: 1px solid black;
-	background-color:white;
-}
-
-.udAvatar {
-	position:absolute;
-	left:0;
-	top:0;
-	width:75;
-	height:75;
-}
-
-.udExp {
-	position:absolute;
-	left:0;
-	top:115;
-	height:8;
-}
-
-.udAct {
-	position:absolute;
-	left:0;
-	top:105;
-	height:8;
-}
-
-
-.udName {
-	position:absolute;
-	left:0;
-	top:130;
-	width:150;
-	height:25;
-}
-
-.udType {
-	position:absolute;
-	left:125;
-	top:0;
-	width:25;
-	height:25;
-}
-
-.udLvl {
-	position:absolute;
-	left:125;
-	top:25;
-	width:25;
-	height:25;
-}
-
-.udGoto {
-	position:absolute;
-	left:125;
-	top:75;
-	width:25;
-	height:25;
 }
 
 .menuPane {
