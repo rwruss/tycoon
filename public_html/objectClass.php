@@ -607,8 +607,13 @@ class city extends object {
 		return(min($elapsed*$this->demandRate($productNumber)/(3600*1000000)+$this->demandLevel($productNumber), 2.0*$this->baseDemand($productNumber)));
 	}
 
-	function updateLabor($now, $schoolList, $baseRates, $slotFile) {
+	function updateLabor($now, $schoolList, $baseRates) {
 
+		if ($now - $this->get('laborUpdateTime') < 60) {
+			echo "no uptade";
+			return;
+		}
+		/*
 		echo 'Number of schools: '.sizeof($schoolList->slotData);
 		print_r($schoolList->slotData);
 		$schoolTypes = array_fill(0, 100, 0);
@@ -621,10 +626,7 @@ class city extends object {
 		for ($i=1; $i<sizeof($schoolTypes); $i++) {
 			if ($schoolTypes[$i] > 0) {
 				$thisSchool = new School($i);
-
-				$newTime = $now - $this->get('baseTime');
-
-				$elapsed = time() - $this->get('laborUpdateTime');
+				$elapsed = $now - $this->get('laborUpdateTime');
 
 				if ($elapsed > 14400) {
 					// reset all labor
@@ -641,7 +643,21 @@ class city extends object {
 				}
 			}
 		}
-
+		*/
+		// overwrite for different types
+		$addList[1] = 3;
+		$addList[2] = 3;
+		$addList[3] = 3;
+		$addList[4] = 3;
+		$addList[5] = 3;
+		$addList[6] = 3;
+		$addList[7] = 3;
+		$addList[8] = 3;
+		$addList[9] = 3;
+		$addList[10] = 3;
+		$addList[11] = 3;
+		$addList[12] = 3;
+		$addList[13] = 3;
 
 		$laborCount = 0;
 		foreach ($addList as $laborID => $addAmount) {
@@ -673,26 +689,11 @@ class city extends object {
 			}
 		}
 
-/*
-		$emptySpots = [];
-		for ($i=0; $i<100; $i++) {
-			if ($this->objDat[$this->laborStoreOffset+$i*10+1] == 0) $emptySpots[] = $i;
-			else {
-				echo 'End at '.$i.'/('.($this->laborStoreOffset+$i*10+1).') ->> '.$this->objDat[$this->laborStoreOffset+$i*10+1];
-			}
-		}
-		echo 'Add list:';
-		print_r($addList);
-
-*/
-	// Record updated time
-	//print_r($this->objDat);
-
+	$this->set('laborUpdateTime', $now);
 	$this->saveAll($this->linkFile);
-
 	}
 
-	function changeLaborItem($spotNumber, $attrArray){
+	function changeLaborItem($spotNumber, $attrArray) {
 		$datStr = pack('i*', $attrArray[0], $attrArray[1], $attrArray[2], $attrArray[3], $attrArray[4], $attrArray[5], $attrArray[6], $attrArray[7], $attrArray[8], $attrArray[9]);
 		$fileOffset = $this->laborStoreOffset+$spotNumber*10;
 		$this->saveBlock($fileOffset, $datStr);

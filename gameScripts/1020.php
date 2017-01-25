@@ -7,6 +7,7 @@ $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 
+echo 'Load city '.$postVals[3];
 $thisCity = loadCity($postVals[3], $cityFile);
 
 // Update city labor to show latest items
@@ -20,7 +21,7 @@ $citySchools->slotData[1] = 1;
 print_r($citySchools->slotData);
 
 
-$thisCity->updateLabor($now, $citySchools, $laborRates, $slotFile);
+$thisCity->updateLabor($now, $citySchools, $laborRates);
 //print_r($thisCity->objDat);
 echo '<script>
 

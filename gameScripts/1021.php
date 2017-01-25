@@ -7,10 +7,12 @@ $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 
+
 $thisCity = loadCity($postVals[2], $cityFile);
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
 echo 'Hire labor list item '.$postVals[4].' from city '.$postVals[2].' for factory '.$postVals[1];
+
 $laborDat = array_slice($thisCity->objDat, $thisCity->laborStoreOffset+$postVals[4]*10, 10);
 echo 'Labor Dat:';
 print_R($laborDat);
@@ -73,6 +75,11 @@ if (flock($cityFile, LOCK_EX)) {
 print_r($thisFactory->objDat);
 echo 'Final factory labor:';
 print_R(array_slice($thisFactory->objDat, $thisFactory->laborOffset-1, 100));
+
+echo '<script>
+factoryLabor['.$postVals[4].'] = new laborItem({objID:'.$postVals[4].', pay:'.$laborDat[5].', ability:'.$laborDat[8].', laborType:'.$laborDat[1].'});
+showFactoryLabor(businessDiv.laborSection.aassigned, factoryLabor);
+</script>';
 
 fclose($objFile);
 fclose($slotFile);

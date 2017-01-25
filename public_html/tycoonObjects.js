@@ -113,15 +113,18 @@ class city {
 		return containerDiv;
 	}
 
-	demandMenu(target, demandRates, demandLevels) {
+	loadDemands(demandRates, demandLevels) {
 		this.demandRates = demandRates;
 		this.demandLevels = demandLevels;
+	}
 
-		var sortDiv = addDiv(null, 'stdFloatDiv', target);
-		sortDiv.innerHTML = "Sort Bar";
+	demandMenu(target) {
+		target.innerHTML = "";
+		target.sortDiv = addDiv(null, 'stdFloatDiv', target);
+		target.sortDiv.innerHTML = "Sort Bar";
 
-		var showDiv = addDiv(null, 'stdFloatDiv', target);
-		return showDiv;
+		target.showDiv = addDiv(null, 'stdFloatDiv', target);
+		//return showDiv;
 	}
 
 	renderDemands(target, list) {
@@ -131,7 +134,7 @@ class city {
 
 			console.log(this.demandLevels[list[i]] + " / 2.0 * " +this.demandRates[list[i]] + " * " + this.details[13]);
 
-			let containDiv = addDiv("", "demandContain", target);
+			let containDiv = addDiv("", "demandContain", target.showDiv);
 			containDiv.product = addDiv("", "demandIcon", containDiv);
 			containDiv.bar = addDiv("", "demandBar", containDiv);
 			containDiv.rate = addDiv("", "demandRate", containDiv);

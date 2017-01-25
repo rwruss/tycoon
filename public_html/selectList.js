@@ -179,7 +179,10 @@ class objectList {
 					renderFunction(object.owner.parentList[object.objID], target);
 					selectFunction();
 					});
-				} else console.log("case 33");
+				} else {
+					console.log("error case 33 " + this.selectedItems[i] + " == 0; " + this.parentList[this.listItems[i]].objID + " != " + this.emptyItem);
+					console.log(this.parentList);
+				}
 			}
 		}
 	}
