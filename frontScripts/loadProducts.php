@@ -100,6 +100,11 @@ while (($line = fgets($productFile)) !== false) {
   $productReqs[trim($lineItems[0])][8] = $productList[$lineItems[9]];
   $productReqs[trim($lineItems[0])][9] = $productList[$lineItems[10]];
 
+	echo trim($lineItems[0]).' Requires:<br>';
+	for ($i=0; $i<10; $i++) {
+		echo $productReqs[trim($lineItems[0])][$i].'<br>';
+	}
+
   // read ingredients into array
   $productArray = array_fill(1, 250, 0);
   $productArray[4] = 4;
@@ -111,9 +116,9 @@ while (($line = fgets($productFile)) !== false) {
     $productArray[28+$i] = $lineItems[11+$i];
     $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
 		$productArray[48+$i] = $lineItems[31+$i];
-		echo 'EQ #'.$i.':'.$lineItems[31+$i].'<p>';
+		//echo 'EQ #'.$i.':'.$lineItems[31+$i].'<p>';
   }
-	print_r($productArray);
+	//print_r($productArray);
 	$packedProducts = packArray($productArray);
   fseek($objFile, $count*$dataBlockSize);
   fwrite($objFile, $packedProducts);
@@ -151,7 +156,7 @@ while (($line = fgets($factoryFile)) !== false) {
   fwrite($nameFile, '"'.$lineItems[0].'",');
 
 
-  $prodReq = array_fill(0, 10, 0);
+  //$prodReq = array_fill(0, 10, 0);
   $factoryInventories[$lineItems[0]] = array_fill(0,20,0);
   $factoryObj = array_fill(1, 250, 0);
   // set object type and subtype
@@ -159,26 +164,32 @@ while (($line = fgets($factoryFile)) !== false) {
   $factoryObj[8] = $lineItems[6];
   $factoryObj[9] = $count;
 
-  for ($i=1; $i<5; $i++) {
+  for ($i=1; $i<=5; $i++) {
     $requiredProduct = trim($lineItems[$i]);
     $factoryObj[10+$i] = $productList[$requiredProduct];
     echo '#'.$count.' - '.$lineItems[0].' produces '.$lineItems[$i].' which requires '.$productReqs[$requiredProduct][0].'<br>';
-    for ($prodReq = 0; $prodReq<20; $prodReq++) {
-      $inventoryCheck = true;
-      echo 'Check '.$factoryInventories[$lineItems[0]][$prodReq].' vs '.$productReqs[$requiredProduct][0].'<br>';
-      if (intval($factoryInventories[$lineItems[0]][$prodReq]) == intval($productReqs[$requiredProduct][0])) {
-        // already in inventory
-        echo '&nbsp&nbsp&nbsp&nbspAlready there<br>';
-        $inventoryCheck = false;
-        break;
-      }
-      elseif ($factoryInventories[$lineItems[0]][$prodReq] == 0) {
-        $factoryInventories[$lineItems[0]][$prodReq] = $productReqs[$requiredProduct][0];
-        $inventoryCheck = false;
-        echo '&nbsp&nbsp&nbsp&nbspAdded to spot<br>';
-        break;
-      }
-    }
+		for ($reqNum=0; $reqNum<10; $reqNum++) {
+			if ($productReqs[$requiredProduct][$reqNum] > 0) {
+
+		    for ($invSpot = 0; $invSpot<20; $invSpot++) {
+		      $inventoryCheck = true;
+		      echo 'Check '.$factoryInventories[$lineItems[0]][$invSpot].' vs '.$productReqs[$requiredProduct][$reqNum].'<br>';
+		      if (intval($factoryInventories[$lineItems[0]][$invSpot]) == intval($productReqs[$requiredProduct][$reqNum])) {
+		        // already in inventory
+		        echo '&nbsp&nbsp&nbsp&nbspAlready there<br>';
+		        $inventoryCheck = false;
+		        break;
+		      }
+		      elseif ($factoryInventories[$lineItems[0]][$invSpot] == 0) {
+		        $factoryInventories[$lineItems[0]][$invSpot] = $productReqs[$requiredProduct][$reqNum];
+		        $inventoryCheck = false;
+		        echo '&nbsp&nbsp&nbsp&nbspAdded to spot<br>';
+		        break;
+		      }
+		    }
+			}
+		}
+
   if ($inventoryCheck) echo 'CANT SETUP FACTORY TYPE '.$lineItems[0].' - TOO MUCH INVENTORY<Br>';
   }
   echo '<p>';

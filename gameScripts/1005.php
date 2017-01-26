@@ -29,12 +29,21 @@ if ($optionCheck) {
 	// Read product Data
 	fseek($objFile, $postVals[3]*1000);
 	$productInfo = unpack('i*', fread($objFile, 200));
+	$newProduct = loadProduct($postVals[3], $objFile, 400);
 	//print_r($productInfo);
 
 	// Set new item production
 	echo 'Set production of item '.$postVals[3].' to '.$productInfo[11];
 	$thisObj->save('currentProd', $postVals[3]);
-	$thisObj->save('currentRate', $productInfo[11]);
+	$thisObj->save('currentRate', $newProduct->get('numMaterial'));
+
+	echo '<script>
+	productMaterial = ['.implode(',', $newProduct->reqMaterials).'];
+	showProdRequirements(reqBox.materials, productMaterial);
+
+	productLabor = ['.implode(',', $newProduct->reqLabor).'];
+	showRequiredLabor(businessDiv.laborSection.required, productLabor);
+	</script>';
 } else {
 	echo 'Not able to set';
 }

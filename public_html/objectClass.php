@@ -259,21 +259,16 @@ class factory extends object {
 		$this->tempList['prod5'] = $this->templateDat[15];
 
 		$this->resourceStores = $this->resourceInv();
-		/*
-		$this->resourceStores = [];
-		for ($i=0; $i<20; $i++) {
-			if ($this->templateDat[16+$i] > 0) array_push($this->resourceStores, $this->templateDat[16+$i], $this->objDat[31+$i]);
-		}
-		*/
+
 		$this->productStores[] = $this->objDat[51];
 		$this->productStores[] = $this->objDat[52];
 		$this->productStores[] = $this->objDat[53];
 		$this->productStores[] = $this->objDat[54];
 		$this->productStores[] = $this->objDat[55];
-
 	}
 
 	function resourceInv() {
+		//print_r(array_slice($this->templateDat, 15, 20));
 		$tmp = [];
 		for ($i=0; $i<20; $i++) {
 			if ($this->templateDat[16+$i] > 0) array_push($tmp, $this->templateDat[16+$i], $this->objDat[31+$i]);
@@ -294,120 +289,6 @@ class factory extends object {
 	}
 
 	function updateStocks() {
-		/*
-		if ($this->get('currentProd') == 0) return;
-
-		// load production requirements
-		fseek($this->linkFile, $this->get('currentProd')*1000);
-		$productInfo = unpack('i*', fread($this->linkFile, 200));
-
-		// NEED TO DETERMINE PRODUCT INDEX
-
-		// Sort material requirements into the storage index for the factory
-		$rscSpots = [];
-		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
-			$rscSpots[$this->resourceStores[$i]] = $i;
-		}
-		//echo 'Resources spots<br>';
-		//print_r($rscSpots);
-		$referenceList=[];
-		for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
-			if ($productInfo[$i+18] > 0) {
-				//echo 'Look for resource '.$productInfo[$i+18];
-				for ($j=0; $j<sizeof($this->resourceStores); $j+=2) {  // j is the index of the storage location at the factory
-					if ($this->resourceStores[$j] == $productInfo[$i+18]) {
-						//echo 'Resources spot '.$j.' (type '.$this->resourceStores[$j].') which has a stock of '.$this->resourceStores[$j+1].' has a usage rate of '.$productInfo[$i+28].'<br>';
-						$referenceList[$j] = $productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
-						break;
-					}
-				}
-			}
-		}
-
-		// Load pending deliveries
-		$now = time();
-		$elapsed = $now - $this->get('lastUpdate');
-		$deleteOrder = [];
-		$events = [$this->get('lastUpdate'), 0, 0, $now, 0, 0];
-		for ($i=0; $i<10; $i++) {
-			//echo 'Check '.$this->objDat[56+$i*3].'<br>';
-			// if event has occured, load it then delete it
-			if ($this->objDat[56+$i*3] <= $now) {
-				array_push($events, $this->objDat[56+$i*3], $this->objDat[57+$i*3], $this->objDat[58+$i*3]);
-				$this->objDat[56+$i*3] = 0;
-				$this->objDat[57+$i*3] = 0;
-				$this->objDat[58+$i*3] = 0;
-			} else echo $this->objDat[56+$i*3].' > '.$now.'<br>';
-		}
-
-		for ($i=0; $i<sizeof($events)/3; $i++) {
-			$timeList[$i] = $events[$i*3];
-		}
-		array_push($events, $now, 0, 0);
-
-		asort($timeList);
-		$eventOrder = array_keys($timeList);
-		$totalProduction = 0;
-
-		$productionRate = $this->get('currentRate')/100;
-		//$productionRate = 1;  // Rate override
-		for ($i=1; $i<sizeof($eventOrder); $i++) {
-			$elapsed = $events[$eventOrder[$i]*3] - $events[$eventOrder[$i-1]*3];
-			echo 'Elapsed: ('. $events[$eventOrder[$i]*3].' - '.$events[$eventOrder[$i-1]*3].') = '.$elapsed.' + '.$this->get('remainderTime').'<br>';
-
-			// Check for limiting resource or time
-			$checkQty = [];
-
-			// Get max amount produced in time and save remainder time
-			$checkQty[] = ($elapsed+$this->get('remainderTime'))/(60*$productionRate);
-			$this->set('remainderTime', ($elapsed+$this->get('remainderTime'))%$productionRate);
-
-			// Get max amount produced by each input
-			for ($j=0; $j<sizeof($referenceList); $j++) {
-				$checkQty[] = $this->resourceStores[$j*2+1]/$referenceList[$j];
-			}
-
-			$produced = min($checkQty);
-			echo 'Produce '.$produced.' items. Min:('.$elapsed.' + '.$this->get('remainderTime').')/'.$productionRate.' * 60)';
-			//print_r($checkQty);
-			for ($j=0; $j<sizeof($referenceList); $j++) {
-				echo $this->resourceStores[$j*2+1].' - '.$produced*$referenceList[$j].'<Br>';
-				$this->resourceStores[$j*2+1] -= $produced*$referenceList[$j];
-			}
-
-			// Add material from arrived order
-			if ($events[$eventOrder[$i]*3+1] > 0) {
-				$this->resourceStores[$rscSpots[$events[$eventOrder[$i]*3+1]]*2+1] += $events[$eventOrder[$i]*3+2];
-				echo 'adjusted stores:';
-				//print_r($this->resourceStores);
-			}
-			$totalProduction += $produced;
-		}
-
-		//Find product index
-		for ($i=0; $i<5; $i++){
-			if ($this->templateDat[11+$i] == $this->get('currentProd')) {
-				$productIndex = $i;
-				break;
-			}
-		}
-
-		// Record updated product stocks
-		echo 'Add a total of '.$totalProduction.' at index '.$productIndex;
-		$this->objDat[51+$productIndex] += $totalProduction;
-
-		// Record updated input stocks
-		for ($i=0; $i<sizeof($referenceList); $i++) {
-			echo 'set store spot '.$i.' to a value of '.$this->resourceStores[$i*2+1];
-			$this->objDat[31+$i] = $this->resourceStores[$i*2+1];
-		}
-
-		// Delete orders that have arrived - done above
-
-		// Save updated information
-		$this->set('lastUpdate', $now);
-		$this->saveAll($this->linkFile);
-		*/
 		$now = time();
 		$saveFactory = false;
 
@@ -423,8 +304,9 @@ class factory extends object {
 
 		$rscSpots = [];
 
-		for ($i=0; $i<sizeof($this->resourceStores); $i+=2) {
-			$rscSpots[$this->resourceStores[$i]] = $i;
+		for ($i=0; $i<sizeof($this->resourceStores)/2; $i++) {
+			$rscSpots[$this->resourceStores[$i*2]] = $i;
+			//print_r($rscSpots);
 		}
 
 		//order info : time, resource type #, qty
@@ -433,7 +315,7 @@ class factory extends object {
 
 				// Add material from arrived order
 					//$this->resourceStores[$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
-					//echo 'adjusted stores: Item: '.$this->objDat[56+$i*3+1].' (Spot '.$rscSpots[$this->objDat[56+$i*3+1]].') + '.$this->objDat[56+$i*3+2].'<>';
+					echo 'adjusted stores: Item: '.$this->objDat[56+$i*3+1].' (Spot '.$rscSpots[$this->objDat[56+$i*3+1]].') + '.$this->objDat[56+$i*3+2].'<>';
 					//echo 'New qty at 31 + '.$rscSpots[$this->objDat[56+$i*3+1]].':'.$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]];
 					$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
 					$this->objDat[56+$i*3] = 0;

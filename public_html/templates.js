@@ -749,11 +749,11 @@ class deskTop {
 			if (type == "menu") {
 				var mkPane = new menu(desc, this);
 				this.paneList[desc] = mkPane;
-				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
+				console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			} else {
 				var mkPane = new regPane(desc, this);
 				this.paneList[desc] = mkPane;
-				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
+				console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			}
 			//console.log("created " + desc);
 		}
@@ -1172,5 +1172,19 @@ function resourceQuery(msg, products, services, nextFunction) {
 	} else {
 		sendButton = newButton(headSection, function () {targetPane.parentObj.destroyWindow();});
 		sendButton.innerHTML = "Go back";
+	}
+}
+
+showProdRequirements = function(trg, productMaterial) {
+	trg.innerHTML = "";
+	for (var i=0; i<productMaterial.length; i+=2) {
+		materialBox(productMaterial[i], productMaterial[i+1], trg);
+	}
+}
+
+showRequiredLabor = function(trg, reqdLabor) {
+	trg.innerHTML = "";
+	for (var i=0; i<reqdLabor.length; i++) {
+		laborBox(reqdLabor[i], trg);
 	}
 }

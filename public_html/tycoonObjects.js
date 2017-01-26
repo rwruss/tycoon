@@ -448,7 +448,7 @@ class factoryProduction {
 		var containerBox = addDiv("", "orderContain", target);
 		//materialBox(rscID, qty, containerBox);
 		containerBox.clock = addDiv("", "timeFloat", containerBox);
-
+		/*
 		if (this.material == 0) containerBox.addEventListener("click", function () {
 			useDeskTop.newPane("xyzPane");
 			orderPane = useDeskTop.getPane("xyzPane");
@@ -460,7 +460,7 @@ class factoryProduction {
 			orderSelectButton.innerHTML = "Find Offers";
 			offerContainer = addDiv("", "stdContain", orderPane);
 			});
-
+			*/
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
 			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, "", function () {console.log("material order completion")}, this.boost)}, 1000)
