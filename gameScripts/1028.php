@@ -58,8 +58,7 @@ $totalRate = $productionRate/$productionItems;
 
 // Calculate the amount of product to be produced
 $durations = [0, 3600, 7200, 14400, 28800];
-$production = $thisFactory->get('currentRate')*$durations[$postVals[2]]/360000; // 3600 seconds x 100 for decimal factor in production rate
-//echo 'Production = '.$thisFactory->get('currentRate').' * '.$durations[$postVals[2]].'/36000';
+$production = $thisFactory->get('prodRate')*$durations[$postVals[2]]/360000; // 3600 seconds x 100 for decimal factor in production rate
 
 // <-- Verify that there are enough required resources
 // load production requirements
@@ -109,6 +108,7 @@ $overRideDurs = [0, 30, 60, 90, 120];
 $thisFactory->set('prodLength', $overRideDurs[$postVals[2]]);
 $thisFactory->set('prodStart', $now);
 $thisFactory->set('prodQty', $production);
+$thisFactory->set('initProdDuration', $overRideDurs[$postVals[2]]);
 
 $thisFactory->saveAll($thisFactory->linkFile);
 

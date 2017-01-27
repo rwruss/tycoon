@@ -165,17 +165,9 @@ class factory extends object {
 		$this->attrList['prodQty'] = 17;
 
 		$this->attrList['currentProd'] = 19; // Product ID that is currently being produced
-		$this->attrList['currentRate'] = 20;
-		$this->attrList['labor1'] = 21;
-		$this->attrList['labor2'] = 22;
-		$this->attrList['labor3'] = 23;
-		$this->attrList['labor4'] = 24;
-		$this->attrList['labor5'] = 25;
-		$this->attrList['labor6'] = 26;
-		$this->attrList['labor7'] = 27;
-		$this->attrList['labor8'] = 28;
-		$this->attrList['labor9'] = 29;
-		$this->attrList['labor10'] = 30;
+		$this->attrList['initProdDuration'] = 20;
+		$this->attrList['prodRate'] = 21;
+
 		$this->attrList['inputInv1'] = 31;
 		$this->attrList['inputInv2'] = 32;
 		$this->attrList['inputInv3'] = 33;
@@ -388,7 +380,7 @@ class factory extends object {
 		echo 'Write data:';
 		print_r($laborDat);
 	}
-
+	/*
 	function updateProductionRate() {
 		global $gameID;
 		$scnNum = $_SESSION['game_'.$gameID]['scenario'];
@@ -424,7 +416,7 @@ class factory extends object {
 		$newRate = intval($laborPoints/max($totalLaborWeight, 1.0)); // override
 		echo 'Save new rate of '.$newRate.' ('.$laborPoints.'/'.$totalLaborWeight.')';
 		$this->save('currentRate', $newRate);
-	}
+	}*/
 }
 
 class city extends object {
