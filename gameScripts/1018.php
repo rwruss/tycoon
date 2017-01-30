@@ -12,14 +12,11 @@ $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
 
 
-// Load labor stdFloatDiv
+// Load labor
 echo 'Labor in slot '.$thisBusiness->get('laborSlot');
 $laborSlot = new itemSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
 print_r($laborSlot->slotData);
-/*
-echo 'factory object';
-print_r($thisFactory->objDat);
-*/
+
 echo '<script>
 
 companyLabor = [';

@@ -1100,6 +1100,7 @@ window.addEventListener("load", webGLStart);
 		<a href="javascript:void(0);" onclick="scrMod(1040)">Services</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1041)">Conglomerate</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1042)">Politics</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1044)">Messages</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1033)" style="position:absolute; bottom:60">Boost Store</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(1032)" style="position:absolute; bottom:40">Buy Gold</a><br>
 		<a href="javascript:void(0);" onclick="scrMod(2001)" style="position:absolute; bottom:20">Gimme Coin</a><br>

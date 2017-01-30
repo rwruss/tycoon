@@ -41,6 +41,7 @@
 1041 - MENU: Congolmerate overview
 1042 - MENU: Political menu
 1043 - MENU: Put factory up for sale
+1044 - MENU: Messages Menu
 
 
 TO DO:
@@ -49,7 +50,8 @@ Adjust production rates based on labor - Do this in the labor and production cha
 Professional Services/Construction, Engineering, Markinting, etc
 Adjust player object for "C" type dat
 Fix labor type sales at cities (based on schools available)
-DIFFERENT TYPES OF PACKING FOR OBJECT TYPES
+Compay storylines
+DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

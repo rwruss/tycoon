@@ -24,9 +24,13 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 }
 
 // Verify that the correct labor is assigned to start this task
-fseek($thisFactory->linkFile, $thisFactory->get('currentProd')*1000);
-$productInfo = unpack('i*', fread($thisFactory->linkFile, 200));
+//fseek($thisFactory->linkFile, $thisFactory->get('currentProd')*1000);
+//$productInfo = unpack('i*', fread($thisFactory->linkFile, 200));
 
+$thisProduct = loadProduct($postVals[3], $objFile, 400);
+//$productionRate = $thisFactory->get('prodRate');
+//$productionRate = $thisFactory->setProdRate($postVals[3], $thisProduct, $laborEqFile);
+/*
 $laborFail = false;
 $neededLabor = [];
 $productionRate = 0;
@@ -55,7 +59,7 @@ if ($laborFail) {
 
 // Caluclate the production rate
 $totalRate = $productionRate/$productionItems;
-
+*/
 // Calculate the amount of product to be produced
 $durations = [0, 3600, 7200, 14400, 28800];
 $production = intval($thisFactory->get('prodRate')*$durations[$postVals[2]]/360000); // 3600 seconds x 100 for decimal factor in production rate

@@ -8,35 +8,14 @@ require_once('./objectClass.php');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $cityFile = fopen($gamePath.'/cities.dat', 'r+b');
+$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb');
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
-// Determine add and remove lists
-/*
-$addList = [];
-$keepList = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-for ($i=2; $i<12; $i++) {
-  if ($postVals[$i] > 10) {
-    $addList[] = $postVals[$i]-10;
-  } else $keepList[$postVals[$i]] = 1;
-
-}
-
-//print_r($thisFactory->objDat);
-
-echo 'Add to factory:';
-print_R($addList);
-
-echo 'Keep List';
-print_R($keepList);
-*/
 $lOff = $thisFactory->laborOffset;
 $startFactoryLabor = array_slice($thisFactory->objDat, $lOff-1, 100);
-
-//echo 'Start factory labor:';
-//print_r($startFactoryLabor);
 
 // Load the business labor slot to get the relevant items
 $openSlotSpots = [];
@@ -120,15 +99,20 @@ for($i=0; $i<10; $i++) {
 		if (is_null($loc)) $loc = 0;
 
 		$laborCheck = unpack('i*', $laborDat);
-		//print_R($laborCheck);
 
 		$businessLabor->addItem($slotFile, $laborDat, $loc);
 	}
 }
 
+$thisProduct = loadProduct($thisFactory->get('currentProd'), $objFile, 400);
+$productionRate = $thisFactory->setProdRate($postVals[3], $thisProduct, $laborEqFile);
+$thisFactory->set('prodRate', $productionRate);
 $thisFactory->saveAll($objFile);
-$thisFactory->updateProductionRate();
 
+echo '<script>factoryRate(headSection.rate, '.($productionRate/100).');
+	</script>';
+
+fclose($laborEqfile);
 fclose($objFile);
 fclose($slotFile);
 fclose($cityFile);

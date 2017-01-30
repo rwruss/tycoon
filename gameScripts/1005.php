@@ -1,6 +1,5 @@
 <?php
 
-require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');

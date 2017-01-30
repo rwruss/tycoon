@@ -127,6 +127,11 @@ class business extends object {
 		$this->attrList['money'] = 14;
 		$this->attrList['laborSlot'] = 15;
 		$this->attrList['teamID'] = 17;
+		
+		$this->attrList['msgStartSpot'] = 40;
+		$this->attrList['msgStartSize'] = 41;
+		$this->attrList['msgEndSpot'] = 42;
+		$this->attrList['msgEndSize'] = 43;		
 
 		$this->attrList['boost1'] = 20;
 		$this->attrList['boost2'] = 21;
