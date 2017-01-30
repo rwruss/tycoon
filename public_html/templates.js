@@ -1067,25 +1067,6 @@ function switchGroups(item, group1, group2, emptyItem, group1Limit) {
 	}
 }
 
-function showOrders(materialOrder, factory, target) {
-	/*
-	target.innerHTML = "";
-	for (var i=0; i<materialOrder.length; i+=3) {
-		factoryOrders[i] = orderBox(materialOrder[i], materialOrder[i+1], materialOrder[i+2], target);
-		if (materialOrder[i] == 0) factoryOrders[i].addEventListener("click", function () {
-			useDeskTop.newPane("xyzPane");
-			orderPane = useDeskTop.getPane("xyzPane");
-			event.stopPropagation();
-			textBlob("", orderPane, "Select which item you want to order");
-			invList.reset();
-			orderBox1 = invList.SLsingleButton(orderPane);
-			orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + factory + ", "+ SLreadSelection(orderBox1))});
-			orderSelectButton.innerHTML = "Find Offers";
-			offerContainer = addDiv("", "stdContain", orderPane);
-			});
-	}*/
-}
-
 function showInventory(factory, inventory) {
 	//console.log("Shw inv");
 	if (factory == selectedFactory) {
@@ -1186,5 +1167,25 @@ showRequiredLabor = function(trg, reqdLabor) {
 	trg.innerHTML = "";
 	for (var i=0; i<reqdLabor.length; i++) {
 		laborBox(reqdLabor[i], trg);
+	}
+}
+
+showOrders = function (trg, factoryOrders) {
+	console.log(factoryOrders.length);
+	for (i=0; i<factoryOrders.length; i++) {
+		factoryOrders[i].render(trg);
+	}
+}
+
+factoryRate = function (trg, rate) {
+	trg.innerHTML = "Rate: " + rate;
+}
+
+showOutputs = function (trg, productStores) {
+	trg.innerHTML = "";
+	for (var i=0; i<5; i++) {
+		if (productStores[i]>0) {
+			productArray[productStores[i]].renderQty(trg, productStores[i+5]);
+		}
 	}
 }

@@ -96,8 +96,8 @@ for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
 }
 echo ']);
-var headSection = addDiv("", "stdFloatDiv", businessDiv);
-textBlob("", headSection, "Rate: '.($thisObj->get('currentRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
+headSection = addDiv("", "stdFloatDiv", businessDiv);
+headSection.rate = textBlob("", headSection, "Rate: '.($thisObj->get('prodRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
 sellButton = newButton(headSection, function () {scrMod("1043,'.$postVals[1].'")});
 sellButton.innerHTML = "Sell Factory";
@@ -129,16 +129,12 @@ upgradeButton = newButton(headSection, function () {
 	});
 upgradeButton.innerHTML = "Upgrade Factory";
 
-var productInvSection = addDiv("", "stdFloatDiv", businessDiv);
+productInvSection = addDiv("", "stdFloatDiv", businessDiv);
 textBlob("", productInvSection, "Output Inventory");
 
 saleButton = newButton(productInvSection, function () {scrMod("1013,'.$postVals[1].'")});
 saleButton.innerHTML = "Sell Products";
-for (var i=0; i<5; i++) {
-	if (productStores[i]>0) {
-		productArray[productStores[i]].renderQty(productInvSection, productStores[i+5]);
-	}
-}
+showOutputs(productInvSection, productStores);
 
 businessDiv.laborSection = addDiv("", "stdFloatDiv", businessDiv);
 businessDiv.laborPool = addDiv("", "stdFloatDiv", businessDiv);
@@ -170,14 +166,12 @@ showInventory('.$postVals[1].', materialInv);
 var orderSection = addDiv("", "stdFloatDiv", businessDiv);
 var orderHead = addDiv("", "stdFloatDiv", orderSection);
 
-
 businessDiv.orderItems = addDiv("", "stdFloatDiv", orderSection);
 textBlob("", orderHead, "Current orders");
-console.log(factoryOrders.length);
-for (i=0; i<factoryOrders.length; i++) {
-	factoryOrders[i].render(businessDiv.orderItems);
-}
+showOrders(businessDiv.orderItems, factoryOrders);
+/*
 
+*/
 </script>';
 
 ?>

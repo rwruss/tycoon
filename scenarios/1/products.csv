@@ -13,7 +13,7 @@ Coal,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner
 Iron,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,100,0,0,0,0,0,0,0,0,0,100,Item,x
 Copper,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,100,0,0,0,0,0,0,0,0,0,100,Item,x
 Aluminum,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,100,0,0,0,0,0,0,0,0,0,100,Item,x
-Steel,Iron,Coal,None,None,None,None,None,None,None,None,1,1,0,0,0,0,0,0,0,0,Millworker,Millworker,None,None,None,None,None,None,None,None,100,0,0,0,0,0,0,0,0,0,100,Item,x
+Steel,Iron,Coal,None,None,None,None,None,None,None,None,1,1,0,0,0,0,0,0,0,0,Millworker,Millworker,None,None,None,None,None,None,None,None,80,0,0,0,0,0,0,0,0,0,100,Item,x
 Rare Elements,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Miner,None,None,None,None,None,None,None,None,None,100,0,0,0,0,0,0,0,0,0,100,Item,x
 Grapes,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,100,0,0,0,0,0,0,0,0,0,100,Item,x
 Berries,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,Farmer,None,None,None,None,None,None,None,None,None,100,0,0,0,0,0,0,0,0,0,100,Item,x

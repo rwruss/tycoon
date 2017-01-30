@@ -67,7 +67,7 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 			//echo 'Object '.$ownedObjects->slotData[$i].'<br>';
 			$thisObject = loadObject($ownedObjects->slotData[$i], $unitFile, 400);
 			if ($thisObject->get('oType') == 3) {
-				array_push($factoryList, $thisObject->get('subType'), $thisObject->get('currentProd'), $thisObject->get('currentRate'), $ownedObjects->slotData[$i]);
+				array_push($factoryList, $thisObject->get('subType'), $thisObject->get('currentProd'), $thisObject->get('prodRate'), $ownedObjects->slotData[$i]);
 			}
 			else echo 'Cull object type '.$thisObject->get('oType');
 		}

@@ -385,6 +385,25 @@ class factoryOrder {
 
 	render(target, boost=true) {
 		var containerBox = addDiv("", "orderContain", target);
+
+		this.displayBox = containerBox;
+		this.showItem(this.displayBox, boost);
+		return containerBox;
+	}
+
+	updateOrder (id, endTime, productID, qty) {
+		console.log("update order to " + this.displayBox);
+		this.factoryID = id || 0;
+		this.endTime = endTime;
+		this.timeBoost = 0;
+		this.material = productID;
+		this.qty = qty;
+		//this.displayBox.innerHTML = "";
+		this.showItem(this.displayBox, true);
+		//this.displayBox.innerHTML = "";
+	}
+
+	showItem (containerBox, boost=true) {
 		materialBox(this.material, this.qty, containerBox);
 		containerBox.timeBox = addDiv("", "timeFloat", containerBox);
 		var thisObject = this;
@@ -408,15 +427,26 @@ class factoryOrder {
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
 			var objectPointer = this;
+			console.log("start a clock for object " + this.orderNum);
 			containerBox.clockObj = setInterval(function () {runClock(objectPointer.endTime, containerBox, objectPointer, function (trgObject) {
 				console.log(objectPointer);
-				businessDiv.orderItems.innerHTML = "";
+
+				//businessDiv.orderItems.innerHTML = "";
+
+
+				for (var i=0; i<materialInv.length; i+=2) {
+					if (materialInv[i] == trgObject.material) {
+						materialInv[i+1] += trgObject.qty;
+						console.log("add " + trgObject.qty);
+						showInventory(trgObject.factoryID, materialInv);
+						break;
+					}
+				}
 				trgObject.material = 0;
 				trgObject.qty = 0;
-				for (var i=0; i<factoryOrders.length; i++) {
-					factoryOrders[i].render(businessDiv.orderItems);
-				}
-			}, objectPointer.timeBoost)}, 1000)
+				//factoryOrders[trgObject.orderNum] = new factoryOrder(0, 0, 0, 0, 0);
+				factoryOrders[trgObject.orderNum].updateOrder(trgObject.factoryID, 0, 0, 0);
+			}, objectPointer.timeBoost)}, 1000);
 
 			if (boost) {
 				containerBox.boostBox = addDiv("", "buildSpeedUp", containerBox);
@@ -426,8 +456,7 @@ class factoryOrder {
 				containerBox.boostBox.addEventListener("click", function () {scrMod("1036,"+this.factoryID + "," + this.orderNum)});
 			}
 		}
-
-		return this.containerBox
+		//this.displayBox = containerBox;
 	}
 }
 
@@ -447,30 +476,26 @@ class factoryProduction {
 	render(target, boost=true) {
 		var containerBox = addDiv("", "orderContain", target);
 		//materialBox(rscID, qty, containerBox);
-		containerBox.clock = addDiv("", "timeFloat", containerBox);
-		/*
-		if (this.material == 0) containerBox.addEventListener("click", function () {
-			useDeskTop.newPane("xyzPane");
-			orderPane = useDeskTop.getPane("xyzPane");
-			event.stopPropagation();
-			textBlob("", orderPane, "Select which item you want to order");
-			invList.reset();
-			orderBox1 = invList.SLsingleButton(orderPane);
-			orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + factory + ", "+ SLreadSelection(orderBox1))});
-			orderSelectButton.innerHTML = "Find Offers";
-			offerContainer = addDiv("", "stdContain", orderPane);
-			});
-			*/
+		containerBox.timeBox = addDiv("", "timeFloat", containerBox);
+
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {
-			containBox.clockObj = setInterval(function () {runClock(this.endTime, dst.clock, "", function () {console.log("material order completion")}, this.boost)}, 1000)
+			var objectPointer = this;
+			containerBox.clockObj = setInterval(function () {runClock(objectPointer.endTime, containerBox, objectPointer, function (trgObject) {
+				console.log("prod complete " + trgObject.qty);
+				for (var i=0; i<5; i++) {
+					if (productStores[i] == trgObject.material) productStores[i+5] += trgObject.qty;
+				}
+				showOutputs(productInvSection, productStores);
+			}, objectPointer.timeBoost)}, 1000);
+
 
 			if (boost) {
-				container.boostBox = addDiv("", "buildSpeedUp", containerBox);
-				container.boostBox.innerHTML = "S";
+				containerBox.boostBox = addDiv("", "buildSpeedUp", containerBox);
+				containerBox.boostBox.innerHTML = "S";
 
 				let useID = this.factoryID;
-				container.boostBox.addEventListener("click", function () {scrMod("1035,"+this.factoryID)});
+				containerBox.boostBox.addEventListener("click", function () {scrMod("1035,"+this.factoryID)});
 			}
 		}
 		return containerBox

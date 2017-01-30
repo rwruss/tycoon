@@ -45,25 +45,22 @@ while (($line = fgets($laborFile)) !== false) {
 	fseek($laborDetailFile, $laborCount*1000+4);
 	fwrite($laborDetailFile, $promotionDat);
 
+	$eqArray = array_fill(1, 1000, 0);
+	$laborItemNum = $laborItems[trim($lineItems[0])];
+	$eqArray[$laborItemNum] = 10000;
 
-		echo '<p>EQS for item #'.$laborCount;
-		$eqArray = array_fill(0, 1000, 0);
-		$laborItemNum = $laborItems[trim($lineItems[0])];
-		$eqArray[$laborItemNum] = 10000;
+	echo '<p>EQS for item #'.$laborCount.' - item #'.$laborItemNum.'<br>';
 		if ($lineItems[11] != '') {
-		for ($j=11; $j<sizeof($lineItems); $j+=2) {
-			//print_r($lineItems);
+			for ($j=11; $j<sizeof($lineItems); $j+=2) {
+				$eqItemNum = $laborItems[trim($lineItems[$j])];
+ 				echo 'eq for '.trim($lineItems[$j]).' (item #'.$laborItemNum.') is ('.$laborItems[trim($lineItems[$j])].')->> '.trim($lineItems[$j]).'<br>';
 
-			if (trim($lineItems[$j]) == 'Unskilled labor') echo 'WE HAVE A MATCH';
-			else echo 'eq for '.trim($lineItems[$j]).' is ('.$laborItems[trim($lineItems[$j])].')->> '.trim($lineItems[$j]).'/Unskilled Labor, ('.strlen(trim($lineItems[$j])).'/'.strlen('Unskilled Labor').')';
-			$laborItemNum = $laborItems[trim($lineItems[$j])];
-			$eqArray[$laborItemNum] = intval($lineItems[$j+1]*100);
-
+				$eqArray[$eqItemNum] = intval($lineItems[$j+1]*100);
 		}
-		print_R($eqArray);
-		fseek($laborEqFile, $laborCount*4000);
-		fwrite($laborEqFile, packArray($eqArray));
 	}
+	echo 'EQ Array Sum:'.array_sum($eqArray);
+	fseek($laborEqFile, $laborCount*4000);
+	fwrite($laborEqFile, packArray($eqArray));
 	$laborCount++;
 }
 

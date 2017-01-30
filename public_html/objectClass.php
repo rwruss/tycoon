@@ -259,6 +259,55 @@ class factory extends object {
 		$this->productStores[] = $this->objDat[55];
 	}
 
+	function setProdRate($prodID, $thisProduct, $laborEqFile) {
+		// Review labor affects
+		$productionRate = 0;
+		$productionItems = 0;
+
+		// Check first 7 labor types at the factory
+		for ($i=0; $i<7; $i++) {
+			if ($thisProduct->objDat[38+$i] > 0) {
+				fseek($laborEqFile, $this->objDat[$this->laborOffset+10*$i+1]*4000);
+				$eqDat = unpack('i*', fread($laborEqFile, 80));
+				print_r($eqDat);
+
+				$eqArray = array_fill(0, 1000, 0);
+				$eqArray[1] = $eqDat[1];
+				$eqArray[2] = $eqDat[2];
+				$eqArray[3] = $eqDat[3];
+				$eqArray[4] = $eqDat[4];
+				$eqArray[5] = $eqDat[5];
+				$eqArray[6] = $eqDat[6];
+				$eqArray[7] = $eqDat[7];
+				$eqArray[8] = $eqDat[8];
+				$eqArray[9] = $eqDat[19];
+				$eqArray[10] = $eqDat[1];
+				$eqArray[11] = $eqDat[1];
+				$eqArray[12] = $eqDat[1];
+				$eqArray[13] = $eqDat[1];
+				$eqArray[14] = $eqDat[1];
+				$eqArray[15] = $eqDat[1];
+				$eqArray[16] = $eqDat[1];
+				$eqArray[17] = $eqDat[1];
+				$eqArray[18] = $eqDat[1];
+				$eqArray[19] = $eqDat[1];
+				$eqArray[20] = $eqDat[1];
+
+
+				$effectiveRate = $eqArray[$this->objDat[$this->laborOffset+10*$i+1]]/10000;
+				$workTime = max(1,$this->objDat[$this->laborOffset+10*$i+1]);
+				//$laborLevel = log($workTime, 2.0)+1;
+				$laborLevel = $workTime/36000;
+				$productionRate += (0.5+$laborLevel)*$effectiveRate;
+				echo 'Labor item '.($this->objDat[$this->laborOffset+10*$i+1]*4000).' rate is '.((0.5+$laborLevel)*$effectiveRate).' ->> (0.5 + '.$laborLevel.') * '.$effectiveRate;
+				$productionItems++;
+			}
+		}
+
+		$totalRate = intval($thisProduct->get('baseRate')*$productionRate/$productionItems*100);
+		return $totalRate;
+	}
+
 	function resourceInv() {
 		//print_r(array_slice($this->templateDat, 15, 20));
 		$tmp = [];
@@ -380,43 +429,6 @@ class factory extends object {
 		echo 'Write data:';
 		print_r($laborDat);
 	}
-	/*
-	function updateProductionRate() {
-		global $gameID;
-		$scnNum = $_SESSION['game_'.$gameID]['scenario'];
-		// Load product currently being produced
-		echo 'Read from '.($this->get('currentProd')*1000);
-		fseek($this->linkFile, $this->get('currentProd')*1000);
-		$productInfo = unpack('i*', fread($this->linkFile, 1000));
-		$baseRate = $productInfo[11];
-
-		// Adjust for labor experience and equivalencies
-		$laborEqFile = fopen('../scenarios/'.$scnNum.'/laborEq.dat', 'rb');
-		$totalLaborWeight = 0;
-		$laborPoints = 0;
-		echo 'Current labor:<p>';
-		print_r($productInfo);
-		for ($i=0; $i<10; $i++) {
-
-			$totalLaborWeight += $productInfo[48+$i];
-			//fseek($laborEqFile, $productInfo[38+$i]*4000+$this->objDat[$this->laborOffset+$i*10]*4);
-			fseek($laborEqFile, $productInfo[38+$i]*4000);
-			$eq = unpack('i*', fread($laborEqFile, 400));
-			print_r($eq);
-			//echo 'Item '.$productInfo[38+$i].' at ('.($productInfo[38+$i]*4000).') for '.$this->objDat[$this->laborOffset+$i*10].' which has a value of '.$eq[1+$this->objDat[$this->laborOffset+$i*10]];
-
-			$checkType = $this->objDat[$this->laborOffset+$i*10+1];
-			$skillMultiplier = pow(1.1, intval($this->objDat[$this->laborOffset+$i*10+8]/518400));
-			echo 'Points for type ('.$checkType.') = '.$eq[1+$checkType].' * '.$productInfo[48+$i].' * '.$skillMultiplier.'<p>';
-			$laborPoints += $eq[1+$checkType]*$productInfo[48+$i]*$skillMultiplier;
-		}
-		fclose($laborEqFile);
-
-		// Save the new result
-		$newRate = intval($laborPoints/max($totalLaborWeight, 1.0)); // override
-		echo 'Save new rate of '.$newRate.' ('.$laborPoints.'/'.$totalLaborWeight.')';
-		$this->save('currentRate', $newRate);
-	}*/
 }
 
 class city extends object {
@@ -487,38 +499,7 @@ class city extends object {
 			echo "no uptade";
 			return;
 		}
-		/*
-		echo 'Number of schools: '.sizeof($schoolList->slotData);
-		print_r($schoolList->slotData);
-		$schoolTypes = array_fill(0, 100, 0);
-		for ($i=1; $i<=sizeof($schoolList->slotData); $i++) {
-			echo 'Add school type '.$schoolList->slotData[$i];
-			$schoolTypes[$schoolList->slotData[$i]]++;
-		}
 
-		$addList = [];
-		for ($i=1; $i<sizeof($schoolTypes); $i++) {
-			if ($schoolTypes[$i] > 0) {
-				$thisSchool = new School($i);
-				$elapsed = $now - $this->get('laborUpdateTime');
-
-				if ($elapsed > 14400) {
-					// reset all labor
-					for ($i=0; $i<1000; $i++) {
-						$this->objDat[$this->laborStoreOffset+$i] = 0;
-					}
-
-					$this->set('laborUpdateTime', $now);
-					foreach($thisSchool->schoolRates as $laborType => $trainRate) {
-						$addAmt = min(10, $trainRate);
-						$addList[$laborType] = $addAmt;
-						echo 'Schools train '.$addAmt.' of type '.$laborType.' with a rate of '.$trainRate;
-					}
-				}
-			}
-		}
-		*/
-		// overwrite for different types
 		$addList[1] = 3;
 		$addList[2] = 3;
 		$addList[3] = 3;
@@ -582,7 +563,6 @@ class city extends object {
 		$newVal = $this->objDat[$loc] + $delta;
 		$this->saveItem($loc, $newVal);
 	}
-
 }
 
 class product extends object {
@@ -591,6 +571,7 @@ class product extends object {
 		parent::__construct($id, $dat, $file);
 
 		$this->attrList['numMaterial'] = 11;
+		$this->attrList['baseRate'] = 11;
 		$this->attrList['numLabor'] = 12;
 		$this->attrList['matReq1'] = 18;
 		$this->attrList['matReq2'] = 19;

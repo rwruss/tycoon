@@ -27,6 +27,7 @@ if ($postVals[5] == 0) {
   // record in this players pending order slot
   for ($i=1; $i<=10; $i++) {
     if ($thisObj->get('orderItem'.$i) == 0) {
+      $orderNumber = $i-1;
       $thisObj->set('orderTime'.$i, time()+60);
       $thisObj->set('orderItem'.$i, $postVals[3]);
       $thisObj->set('orderQty'.$i, 100);
@@ -85,7 +86,9 @@ if ($postVals[5] == 0) {
 
 echo '<script>
 materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
-businessDiv.orderItems.innerHTML = "";
+//businessDiv.orderItems.innerHTML = "";
+
+/*
 factoryOrders = new Array();
 for (var i=0; i<materialOrder.length; i+=3) {
 	factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
@@ -93,7 +96,8 @@ for (var i=0; i<materialOrder.length; i+=3) {
 for (i=0; i<factoryOrders.length; i++) {
 	factoryOrders[i].render(businessDiv.orderItems);
 }
-
+*/
+factoryOrders['.$orderNumber.'].updateOrder('.$postVals[1].', materialOrder['.($orderNumber*3).'], materialOrder['.($orderNumber*3+1).'], materialOrder['.($orderNumber*3+2).'], '.$orderNumber.');
 thisDiv = useDeskTop.getPane("businessObjects");
 </script>';
 

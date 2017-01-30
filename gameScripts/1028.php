@@ -8,9 +8,9 @@ $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 $thisFactory->updateStocks();
 
-print_r($thisFactory->objDat);
-print_r($thisFactory->resourceInv());
-print_r($thisFactory->resourceStores);
+//print_r($thisFactory->objDat);
+//print_r($thisFactory->resourceInv());
+//print_r($thisFactory->resourceStores);
 
 // Confrim that player can give this order
 if ($thisFactory->get('owner') != $pGameID) {
@@ -58,7 +58,7 @@ $totalRate = $productionRate/$productionItems;
 
 // Calculate the amount of product to be produced
 $durations = [0, 3600, 7200, 14400, 28800];
-$production = $thisFactory->get('prodRate')*$durations[$postVals[2]]/360000; // 3600 seconds x 100 for decimal factor in production rate
+$production = intval($thisFactory->get('prodRate')*$durations[$postVals[2]]/360000); // 3600 seconds x 100 for decimal factor in production rate
 
 // <-- Verify that there are enough required resources
 // load production requirements
@@ -91,8 +91,9 @@ for ($i=0; $i<10; $i++) { // i is the index of the resource required by the prod
 }
 
 if (sizeof($rscFail) > 0) {
-	for ($i=0; $i<sizeof($rscFail); $i++) {
-		echo 'Need '.$rscFail[$i].' of resource type '.$productInfo[$i+18];
+	foreach ($rscFail as $rscID=>$rscQty) {
+		print_R($rscFail);
+		echo 'Need '.$rscQty.' of resource type '.$thisFactory->resourceStores[$rscID];
 		}
 	exit();
 }
@@ -104,7 +105,7 @@ foreach ($usageList as $spot => $qty) {
 }
 
 // Start the work
-$overRideDurs = [0, 30, 60, 90, 120];
+$overRideDurs = [0, 10, 10, 10, 10];
 $thisFactory->set('prodLength', $overRideDurs[$postVals[2]]);
 $thisFactory->set('prodStart', $now);
 $thisFactory->set('prodQty', $production);
@@ -112,11 +113,23 @@ $thisFactory->set('initProdDuration', $overRideDurs[$postVals[2]]);
 
 $thisFactory->saveAll($thisFactory->linkFile);
 
+if ($thisFactory->get('currentProd') > 0) {
+	$currentProduction = ', {setVal:'.$thisFactory->get('currentProd').'}';
+} else $currentProduction = '';
+
+$currentProduction = ', {setVal:'.$thisFactory->get('currentProd').'}';
+
 echo 'Make '.$production.' in '.$durations[$postVals[2]].' ('.$overRideDurs[$postVals[2]].') Seconds.
 <script>
+/*
 var timeBox = addDiv("", "orderTime", prodContain);
 timeBox.runClock = true;
 countDownClock('.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).', timeBox, function () {console.log("update factory")});
+*/
+prodContain.innerHTML = "";
+fProduction = new factoryProduction('.$postVals[1].', '.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).', '.$thisFactory->get('currentProd').', 100);
+fProductionBox = fProduction.render(prodContain);
+factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
 updateMaterialInv('.$postVals[1].', ['.implode(',', $thisFactory->resourceInv()).']);
 </script>';
 
