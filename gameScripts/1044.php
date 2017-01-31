@@ -1,7 +1,6 @@
 <?php
 
 require_once('./objectClass.php');
-require_once('./slotFunctions.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $messageFile = fopen($gamePath.'/messages.dat', 'rb');
@@ -16,12 +15,17 @@ for ($i=0; $i<20; $i++) {
 	fseek($messageFile, $msgStart);
 	$msgDat = fread($messageFile, 80);
 	$msgHead = unpack('i*', substr($msgDat, 0, 40));
+	$msgSubj = trim($msgDat, 11, 20);
+	$msgFromName = trim($msgDat, 20);
 }
 
 
 echo '<script>
 useDeskTop.newPane("msgPane");
-thisDiv = useDeskTop.getPane("msgPane");
+msgDiv = useDeskTop.getPane("msgPane");
+
+msgDiv.msgItems = addDiv("", "", msgDiv);
+msgSummary(msgDiv.msgItems, "Name", '.$msgHead[3].', '..', '..', '.$msgHead[1].');
 </script>';
 
 fclose($objFile);

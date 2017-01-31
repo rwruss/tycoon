@@ -42,6 +42,8 @@
 1042 - MENU: Political menu
 1043 - MENU: Put factory up for sale
 1044 - MENU: Messages Menu
+1045 - PROCESS: Show info on a player
+1046 - PROCESS: Show message content
 
 
 TO DO:
@@ -53,6 +55,7 @@ Fix labor type sales at cities (based on schools available)
 Company storylines
 Fix & expand Sale options/market (1013)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
+http://www.linuxhowtos.org/C_C++/socket.htm
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
