@@ -132,9 +132,9 @@ upgradeButton.innerHTML = "Upgrade Factory";
 productInvSection = addDiv("", "stdFloatDiv", businessDiv);
 textBlob("", productInvSection, "Output Inventory");
 
+showOutputs(productInvSection, productStores);
 saleButton = newButton(productInvSection, function () {scrMod("1013,'.$postVals[1].'")});
 saleButton.innerHTML = "Sell Products";
-showOutputs(productInvSection, productStores);
 
 businessDiv.laborSection = addDiv("", "stdFloatDiv", businessDiv);
 businessDiv.laborPool = addDiv("", "stdFloatDiv", businessDiv);

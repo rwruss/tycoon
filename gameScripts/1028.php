@@ -125,13 +125,9 @@ $currentProduction = ', {setVal:'.$thisFactory->get('currentProd').'}';
 
 echo 'Make '.$production.' in '.$durations[$postVals[2]].' ('.$overRideDurs[$postVals[2]].') Seconds.
 <script>
-/*
-var timeBox = addDiv("", "orderTime", prodContain);
-timeBox.runClock = true;
-countDownClock('.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).', timeBox, function () {console.log("update factory")});
-*/
+
 prodContain.innerHTML = "";
-fProduction = new factoryProduction('.$postVals[1].', '.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).', '.$thisFactory->get('currentProd').', 100);
+fProduction = new factoryProduction('.$postVals[1].', '.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).', '.$thisFactory->get('currentProd').', '.$production.');
 fProductionBox = fProduction.render(prodContain);
 factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
 updateMaterialInv('.$postVals[1].', ['.implode(',', $thisFactory->resourceInv()).']);

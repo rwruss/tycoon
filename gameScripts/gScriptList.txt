@@ -38,7 +38,7 @@
 1038 - PROCESS: Material Order Speed Up at Factory (from 1036)
 1039 - PROCESS: save an order from the gold store (REAL MONEY!)
 1040 - MENU: Show services held by player/company
-1041 - MENU: Congolmerate overview
+1041 - MENU: Conglomerate overview
 1042 - MENU: Political menu
 1043 - MENU: Put factory up for sale
 1044 - MENU: Messages Menu
@@ -50,7 +50,8 @@ Adjust production rates based on labor - Do this in the labor and production cha
 Professional Services/Construction, Engineering, Markinting, etc
 Adjust player object for "C" type dat
 Fix labor type sales at cities (based on schools available)
-Compay storylines
+Company storylines
+Fix & expand Sale options/market (1013)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
 
 IDEAS:
