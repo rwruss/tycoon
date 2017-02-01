@@ -27,12 +27,12 @@ class objectList {
 		//console.log(this.selectedItems);
 		var selectButton = addDiv("b1", "listButton", target);
 		selectButton.innerHTML = "button";
-		let item = this;
+		
 		selectButton.listItem = this;
-		//selectButton.addEventListener("click", function () {item.SLsingleSelect(selectButton)});
 		selectButton.selectedValue = false;
 
 		// Set default render
+		let item = this;
 		var renderFunction = function(x, y) {
 				return item.showItem(x, y);
 			}
@@ -141,6 +141,12 @@ class objectList {
 		//console.log("pass this function");
 		//console.log(renderFunction);
 		this.SLshowList(target, showContain.content, renderFunction, selectFunction);
+	}
+	
+	SLShowAll(target, renderFunction) {
+		for (var i=0; i<this.listObj.length; i++) {
+			let object = renderFunction(this.parentList[this.listItems[i]], target, i);
+		}
 	}
 
 	SLshowList(target, selectContainer, renderFunction, selectFunction) {

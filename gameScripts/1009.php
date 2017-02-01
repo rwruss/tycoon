@@ -70,6 +70,7 @@ if ($optionCheck && $spotCheck !== false) {
 	}	*/
 	echo '<script>
 	var orderPane = useDeskTop.getPane("xyzPane");
+	offerArea = addDiv("", "", orderPane);
 	offerList = [];
 	offerList.push(new offer([0, 100, 299, 0, 50, 50, 50, '.$productID.', 8, 9, 10]));';
 
@@ -79,11 +80,20 @@ if ($optionCheck && $spotCheck !== false) {
 		$placeNum = $offerList->slotList[floor($slotItem/1000)]*4004+$slotItem%1000;
 		if ($offerList->slotData[$slotItem] > 0) echo 'offerList.push(new offer(['.$placeNum.', '.$offerList->slotData[$slotItem].', '.$offerList->slotData[$slotItem+1].', 3, 4, 5, 6, '.$productID.', 8, 9, 10]));';
 	}
-
+	
+echo 'showOffers = new uList(offerList);
+	showOffers.showAll(offerArea, function(x, y) {
+		let offerItem = x;
+		let item = x.renderSummary(y);
+		item.buyBox.addEventListener("click", scrMod("1010,'.$postVals[1].',"+offerItem.objID));
+		});
+	</script>';
+/*
 	echo 'console.log(offerList);
 		showOffers = new uList(offerList);
 		console.log("parentList");
 		console.log(showOffers.parentList);
+		showOffers.addSory("distance", "Distance");
 		showOffers.addSort("price", "Price");
 		showOffers.addSort("quantity", "Amount");
 		showOffers.addSort("quality", "Quality");
@@ -96,7 +106,7 @@ if ($optionCheck && $spotCheck !== false) {
 		//orderButton = newButton(orderPane.offerContainer, function () {console.log(SLreadSelection(orderBox1))});
 		orderButton = newButton(orderPane.offerContainer, function () {scrMod("1010,'.$postVals[1].'," + SLreadSelection(orderPane.orderBox1) + "," +  SLreadSelection(orderBox2))});
 		orderButton.innerHTML = "Place Order";
-		</script>';
+		</script>';*/
 }
 
 fclose($offerFile);

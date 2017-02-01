@@ -169,6 +169,9 @@ class offer {
 		productArray[this.productID].renderSummary(thisDiv);
 
 		thisDiv.setAttribute("data-unitid", this.unitID);
+		
+		thisDiv.buyBox = addDiv("", "", thisDiv);
+		thisDiv.buyBox.innerHTML = "buy";
 
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");

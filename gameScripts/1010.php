@@ -1,13 +1,19 @@
 <?php
 
+/*
+PostVals
+1 = factory ID
+2 = Order ID
+*/
+
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$offerFile = fopen($gamePath.'/saleOffers.slt', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
-$thisObj = loadObject($postVals[1], $objFile, 400);
+$thisFactory = loadObject($postVals[1], $objFile, 400);
 
 if ($postVals[5] == 0) {
   // this is the default offer;
@@ -26,13 +32,13 @@ if ($postVals[5] == 0) {
 
   // record in this players pending order slot
   for ($i=1; $i<=10; $i++) {
-    if ($thisObj->get('orderItem'.$i) == 0) {
+    if ($thisFactory->get('orderItem'.$i) == 0) {
       $orderNumber = $i-1;
-      $thisObj->set('orderTime'.$i, time()+60);
-      $thisObj->set('orderItem'.$i, $postVals[3]);
-      $thisObj->set('orderQty'.$i, 100);
-      $thisObj->saveAll($objFile);
-      //print_r($thisObj->objDat);
+      $thisFactory->set('orderTime'.$i, time()+60);
+      $thisFactory->set('orderItem'.$i, $postVals[3]);
+      $thisFactory->set('orderQty'.$i, 100);
+      $thisFactory->saveAll($objFile);
+      //print_r($thisFactory->objDat);
 
       break;
     }
@@ -68,11 +74,11 @@ if ($postVals[5] == 0) {
 
     // record in this players pending order slot
     for ($i=1; $i<=10; $i++) {
-      if ($thisObj->get('orderItem'.$i) == 0) {
-        $thisObj->set('orderTime'.$i, time()+3600);
-        $thisObj->set('orderItem'.$i, $postVals[3]);
-        $thisObj->set('orderQty'.$i, 100);
-        $thisObj->saveAll($objFile);
+      if ($thisFactory->get('orderItem'.$i) == 0) {
+        $thisFactory->set('orderTime'.$i, time()+3600);
+        $thisFactory->set('orderItem'.$i, $postVals[3]);
+        $thisFactory->set('orderQty'.$i, 100);
+        $thisFactory->saveAll($objFile);
         break;
       }
     }
@@ -85,7 +91,7 @@ if ($postVals[5] == 0) {
 }
 
 echo '<script>
-materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
+materialOrder = ['.implode(',', $thisFactory->materialOrders()).'];
 //businessDiv.orderItems.innerHTML = "";
 
 /*
