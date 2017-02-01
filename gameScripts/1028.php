@@ -27,7 +27,7 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 //fseek($thisFactory->linkFile, $thisFactory->get('currentProd')*1000);
 //$productInfo = unpack('i*', fread($thisFactory->linkFile, 200));
 
-$thisProduct = loadProduct($postVals[3], $objFile, 400);
+$thisProduct = loadProduct($postVals[2], $objFile, 400);
 //$productionRate = $thisFactory->get('prodRate');
 //$productionRate = $thisFactory->setProdRate($postVals[3], $thisProduct, $laborEqFile);
 /*

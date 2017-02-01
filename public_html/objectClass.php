@@ -127,11 +127,11 @@ class business extends object {
 		$this->attrList['money'] = 14;
 		$this->attrList['laborSlot'] = 15;
 		$this->attrList['teamID'] = 17;
-		
+
 		$this->attrList['msgStartSpot'] = 40;
 		$this->attrList['msgStartSize'] = 41;
 		$this->attrList['msgEndSpot'] = 42;
-		$this->attrList['msgEndSize'] = 43;		
+		$this->attrList['msgEndSize'] = 43;
 
 		$this->attrList['boost1'] = 20;
 		$this->attrList['boost2'] = 21;
@@ -384,7 +384,7 @@ class factory extends object {
 		// Update production
 		if ($this->get('prodStart') + $this->get('prodLength') <= $now && $this->get('prodStart') > 0) {
 			// Production is complete
-			//echo 'Update completed production';
+			echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
 
 			//Find product index
 			for ($i=0; $i<5; $i++){

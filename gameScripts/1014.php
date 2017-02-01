@@ -4,7 +4,7 @@ require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'rb');
+$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 
 $thisObj = loadObject($postVals[1], $objFile, 400);
 
@@ -41,7 +41,7 @@ if ($invCheck) {
 	exit();
 }
 
-$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $pGameID, 100, 100, 100, time(), 0, 0, 0);
+$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), 0, 0, 0);
 if (flock($offerFile, LOCK_EX)) {
 	$saleSlot = new blockSlot($postVals[3], $offerFile, 4004);
 	$location = sizeof($saleSlot->slotData);

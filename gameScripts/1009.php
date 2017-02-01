@@ -58,7 +58,16 @@ if ($optionCheck && $spotCheck !== false) {
 			$priceList[$i] = $offerList->slotData[$i+1];
 		}
 	}
+	/* {
+	0 - object ID & product ID
+	1 - quantity
+	2 - price
+	3 - seller ID
+	4 - quality
+	5 - pollution
+	6 - rights
 
+	}	*/
 	echo '<script>
 	var orderPane = useDeskTop.getPane("xyzPane");
 	offerList = [];
