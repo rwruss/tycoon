@@ -68,11 +68,12 @@ if ($postVals[2] == 0) {
     if ($moneyCheck) exit('not enough money for this deal.  Have'.$thisPlayer->get('money').' -> Need '.$totalCost);
 
     // deduct the money from this player
-    $targetPlayer = loadObject($offerDat[3], $objFile, 400);
     $thisPlayer->set('money', $thisPlayer->get('money')-$totalCost);
 
     // add the money to the selling player
-    $targetPlayer->set('money', $targetPlayer->get('money')+$totalCost);
+	$targetFactory = loadObject($offerDat[3], $objFile, 400);
+	$targetPlayer = loadObject($targetFactory->get('owner'), $objFile, 400);
+	$targetPlayer->set('money', $targetPlayer->get('money')+$totalCost);
 
     // record in this players pending order slot
     for ($i=1; $i<=10; $i++) {
