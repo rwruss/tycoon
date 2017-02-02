@@ -166,10 +166,11 @@ class offer {
 
 	renderSummary(target) {
 		var thisDiv = addDiv(null, 'udHolder', target);
+		console.log("render product "+ this.productID);
 		productArray[this.productID].renderSummary(thisDiv);
 
 		thisDiv.setAttribute("data-unitid", this.unitID);
-		
+
 		thisDiv.buyBox = addDiv("", "", thisDiv);
 		thisDiv.buyBox.innerHTML = "buy";
 

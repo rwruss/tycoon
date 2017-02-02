@@ -541,6 +541,7 @@ orderBox = function (time, rscID, qty, target) {
 }
 */
 materialBox = function (id, qty, target) {
+	console.log("show material box for produ " + id);
 	let thisRsc = productArray[id].renderSummary(target);
 
 	thisRsc.qtyDiv = addDiv("asdf", "productQty", thisRsc);
@@ -1192,16 +1193,16 @@ showOutputs = function (trg, productStores) {
 
 msgSummary = function (trg, fromName, fromID, time, subject, msgStatus, s, e) {
 	msgContain = addDiv("", "", trg);
-	
+
 	let msgTime = addDiv("", "", msgContain);
 	msgTime.innerHTML = time;
-	
+
 	let msgFrom = addDiv("", "", msgContain);
 	//msgFrom.innerHTML = fromName;
 	//msgFrom.addEventListener("click", scrMod("1045,"+fromID));
-	
+
 	let msgSubject = addDiv("", "", msgContain);
 	msgSubject.innerHTML = subject;
-	
+
 	msgContain.addEventListener("click", scrMod("1046,"+s+","+e));
 }

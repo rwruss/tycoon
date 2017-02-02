@@ -55,6 +55,7 @@ Fix labor type sales at cities (based on schools available)
 Company storylines
 Fix & expand Sale options/market - sorting and filtering (1013)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
+Fix money transfer to selling factory/player in 1010
 http://www.linuxhowtos.org/C_C++/socket.htm
 
 IDEAS:

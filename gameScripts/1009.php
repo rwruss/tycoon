@@ -77,15 +77,15 @@ if ($optionCheck && $spotCheck !== false) {
 
 	$numItems = sizeof($offerList->slotData);
 	for ($slotItem=1; $slotItem<$numItems; $slotItem+=10) {
-		$placeNum = $offerList->slotList[floor($slotItem/1000)]*4004+$slotItem%1000;
+		$placeNum = $offerList->slotList[floor($slotItem/1000)]*4004+($slotItem%1000)*4;
 		if ($offerList->slotData[$slotItem] > 0) echo 'offerList.push(new offer(['.$placeNum.', '.$offerList->slotData[$slotItem].', '.$offerList->slotData[$slotItem+1].', 3, 4, 5, 6, '.$productID.', 8, 9, 10]));';
 	}
-	
+
 echo 'showOffers = new uList(offerList);
-	showOffers.showAll(offerArea, function(x, y) {
+	showOffers.SLShowAll(offerArea, function(x, y) {
 		let offerItem = x;
 		let item = x.renderSummary(y);
-		item.buyBox.addEventListener("click", scrMod("1010,'.$postVals[1].',"+offerItem.objID));
+		item.buyBox.addEventListener("click", function () {scrMod("1010,'.$postVals[1].',"+offerItem.objID + "," +  SLreadSelection(orderPane.orderBox1))});
 		});
 	</script>';
 /*

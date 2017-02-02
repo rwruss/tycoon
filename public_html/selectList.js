@@ -27,7 +27,7 @@ class objectList {
 		//console.log(this.selectedItems);
 		var selectButton = addDiv("b1", "listButton", target);
 		selectButton.innerHTML = "button";
-		
+
 		selectButton.listItem = this;
 		selectButton.selectedValue = false;
 
@@ -142,9 +142,9 @@ class objectList {
 		//console.log(renderFunction);
 		this.SLshowList(target, showContain.content, renderFunction, selectFunction);
 	}
-	
+
 	SLShowAll(target, renderFunction) {
-		for (var i=0; i<this.listObj.length; i++) {
+		for (var i=0; i<this.listItems.length; i++) {
 			let object = renderFunction(this.parentList[this.listItems[i]], target, i);
 		}
 	}
