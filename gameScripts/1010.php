@@ -72,9 +72,16 @@ if ($postVals[2] == 0) {
 
     // add the money to the selling player
 	$targetFactory = loadObject($offerDat[3], $objFile, 400);
-	$targetPlayer = loadObject($targetFactory->get('owner'), $objFile, 400);
-  echo 'Target money: '.$targetPlayer->get('money').' + '.$totalCost;
-	$targetPlayer->set('money', $targetPlayer->get('money')+$totalCost);
+	$targetFactory->set('totalSales', $targetFactory->get('totalSales')+$totalCost);
+	$targetFactory->set('periodSales', $targetFactory->get('periodSales')+$totalCost);
+	if ($targetFactory->get('owner') == $pGameID) {
+		$thisPlayer->set('money', $thisPlayer->get('money')+$totalCost);
+	} else {
+		$targetPlayer = loadObject($targetFactory->get('owner'), $objFile, 400);
+		echo 'Target money: '.$targetPlayer->get('money').' + '.$totalCost;
+		$targetPlayer->save('money', $targetPlayer->get('money')+$totalCost);
+	}
+	
 
     // record in this players pending order slot
     for ($i=1; $i<=10; $i++) {

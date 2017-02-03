@@ -151,7 +151,7 @@ class business extends object {
 }
 
 class factory extends object {
-	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores;
+	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -242,6 +242,7 @@ class factory extends object {
 		$inputInventoryIndex = 61;
 
 		$this->laborOffset = 131;
+		$this->eqRateOffset = 24;
 
 		// Load template information
 		global $templateBlockSize;
@@ -298,15 +299,19 @@ class factory extends object {
 				$eqArray[19] = $eqDat[1];
 				$eqArray[20] = $eqDat[1];
 
-
 				$effectiveRate = $eqArray[$this->objDat[$this->laborOffset+10*$i+1]]/10000;
+				
 				$workTime = max(1,$this->objDat[$this->laborOffset+10*$i+1]);
 				//$laborLevel = log($workTime, 2.0)+1;
 				$laborLevel = $workTime/36000;
 				$productionRate += (0.5+$laborLevel)*$effectiveRate;
 				echo 'Labor item '.($this->objDat[$this->laborOffset+10*$i+1]*4000).' rate is '.((0.5+$laborLevel)*$effectiveRate).' ->> (0.5 + '.$laborLevel.') * '.$effectiveRate;
+				
+				// Record labor eq rates
+				$this->objDat[$this->eqRateOffset+$i] = $effectiveRate*10000;
 				$productionItems++;
 			}
+			$this->saveAll();
 		}
 
 		$totalRate = intval($thisProduct->get('baseRate')*$productionRate/$productionItems*100);
@@ -352,30 +357,25 @@ class factory extends object {
 
 		for ($i=0; $i<sizeof($this->resourceStores)/2; $i++) {
 			$rscSpots[$this->resourceStores[$i*2]] = $i;
-			//print_r($rscSpots);
 		}
 
 		//order info : time, resource type #, qty
 		for ($i=0; $i<10; $i++) {
 			if ($this->objDat[56+$i*3] <= $now && $this->objDat[56+$i*3] != 0) {
-
 				// Add material from arrived order
-					//$this->resourceStores[$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
-					echo 'adjusted stores: Item: '.$this->objDat[56+$i*3+1].' (Spot '.$rscSpots[$this->objDat[56+$i*3+1]].') + '.$this->objDat[56+$i*3+2].'<>';
-					//echo 'New qty at 31 + '.$rscSpots[$this->objDat[56+$i*3+1]].':'.$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]];
-					$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
-					$this->objDat[56+$i*3] = 0;
-					$this->objDat[57+$i*3] = 0;
-					$this->objDat[58+$i*3] = 0;
+				echo 'adjusted stores: Item: '.$this->objDat[56+$i*3+1].' (Spot '.$rscSpots[$this->objDat[56+$i*3+1]].') + '.$this->objDat[56+$i*3+2].'<>';
+				$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
+				$this->objDat[56+$i*3] = 0;
+				$this->objDat[57+$i*3] = 0;
+				$this->objDat[58+$i*3] = 0;
 
-					$this->productStores[0] = $this->objDat[51];
-					$this->productStores[1] = $this->objDat[52];
-					$this->productStores[2] = $this->objDat[53];
-					$this->productStores[3] = $this->objDat[54];
-					$this->productStores[4] = $this->objDat[55];
+				$this->productStores[0] = $this->objDat[51];
+				$this->productStores[1] = $this->objDat[52];
+				$this->productStores[2] = $this->objDat[53];
+				$this->productStores[3] = $this->objDat[54];
+				$this->productStores[4] = $this->objDat[55];
 
-					$saveFactory = true;
-
+				$saveFactory = true;
 			} else {
 				//echo $this->objDat[56+$i*3].' > '.$now.'<br>';
 			}
@@ -398,8 +398,9 @@ class factory extends object {
 			$this->set('prodStart', 0);
 
 			// Update labor experience
-			for ($i=0; $i<10; $i++) {
-				$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
+			for ($i=0; $i<7; $i++) {
+				//$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
+				$this->objDat[$this->laborOffset+$i*10+7] += intval($this->get('initProdDuration')*$this->objDat[$this->$eqRateOffset+$i]/10000);
 			}
 
 			$saveFactory = true;
