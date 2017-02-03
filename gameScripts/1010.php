@@ -73,6 +73,7 @@ if ($postVals[2] == 0) {
     // add the money to the selling player
 	$targetFactory = loadObject($offerDat[3], $objFile, 400);
 	$targetPlayer = loadObject($targetFactory->get('owner'), $objFile, 400);
+  echo 'Target money: '.$targetPlayer->get('money').' + '.$totalCost;
 	$targetPlayer->set('money', $targetPlayer->get('money')+$totalCost);
 
     // record in this players pending order slot
