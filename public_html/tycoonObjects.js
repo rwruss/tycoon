@@ -211,9 +211,10 @@ class product {
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);
+		
+		addImg("asdf", "productImg", thisDiv); // labor image
 
-		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 
 		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
 		return thisDiv;
@@ -223,8 +224,10 @@ class product {
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);
 
-		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+		
+		addImg("asdf", "productImg", thisDiv); // labor image
 
 		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
 		thisDiv.qtyDiv.innerHTML = qty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
@@ -276,7 +279,8 @@ class labor {
 		this.objName = details.objName,
 		this.qty = details.qty || 0;
 		this.edClass = details.edClass || "None",
-		this.laborType = details.laborType;
+		this.laborType = details.laborType,
+		this.quality = details.quality || 0;
 		//console.log('create product ' + this.objID);
 	}
 
@@ -285,10 +289,23 @@ class labor {
 
 		thisDiv.ownerObject = this.objID;
 
-		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+		
+		addImg("asdf", "laborImg", thisDiv); // labor image
+		
+		thisDiv.qualBar = addDiv("asdf", "laborQualBar", thisDiv); // labor quality bar;
+		let qualPct = (this.quality%3600)/3600;
+		thisDiv.qualBar.style.width = 10 + 65*qualPct; 
+		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
+		
+		thisDiv.qualNum = addDiv("asdf", "laborQualNum", thisDiv);
+		thisDiv.qualNum.innerHTML = parseInt(this.quality/3600);
+		
+		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
+		thisDiv.eduDiv.innerHTML = this.edClass;
 
-		thisDiv.nameDiv.innerHTML = "Labor - " + laborNames[this.laborType];
+		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
 	}
 
@@ -297,7 +314,7 @@ class labor {
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);
 
-		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
+		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
 		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);

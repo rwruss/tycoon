@@ -1,0 +1,35 @@
+<link rel="stylesheet" type="text/css" href="e:/websites/tycoon/public_html/gameStyles.css">
+<script src="e:/websites/tycoon/public_html/templates.js"></script>
+<script src="e:/websites/tycoon/public_html/selectList.js"></script>
+<script src="e:/websites/tycoon/public_html/tycoonObjects.js"></script>
+
+<html>
+
+<head>
+<script>
+
+laborNames = new Array();
+laborNames[0] = "None";
+laborNames[1] = "Labor Type 1";
+
+objNames = new Array();
+objNames[0] = "None";
+objNames[1] = "product";
+
+function init () {
+	console.log("load page");
+	
+	laborItem1 = new labor({objID:1, edClass:1, laborType:1, quality:250});
+	laborItem1.renderSummary("screen");
+	
+	product1 = new product({objID:1, objName:"something", qty:"123"});
+	product1.renderQty("screen", 123456789);
+}
+
+window.addEventListener("load", init);
+</script>
+</head>
+<body>
+<div id="screen" style="width:960; height:640; border:1px solid black"></div>
+</body>
+</html>
