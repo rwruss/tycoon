@@ -47,14 +47,17 @@
 
 
 TO DO:
-Labor experience and leveling up - Daily processing of an update - verify job completion leveling works
 Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
 Professional Services/Construction, Engineering, Markinting, etc
-
+Factory upgrades and boosts
+Politics
+Messages
 Fix labor type sales at cities (based on schools available) - verify this is done
 Company storylines
 Fix & expand Sale options/market - sorting and filtering (1013)
 
+
+TO DO ON HOLD
 Adjust player object for "C" type dat (Hold off on this for now)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
 http://www.linuxhowtos.org/C_C++/socket.htm

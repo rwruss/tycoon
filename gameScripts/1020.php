@@ -11,7 +11,7 @@ echo 'Load city '.$postVals[3];
 $thisCity = loadCity($postVals[3], $cityFile);
 
 // Update city labor to show latest items
-$laborRates = array_fill(0, 1000, 1000);
+$laborRates = array_fill(0, 1000, 999);
 $laborRates[1] = 3600;
 $now = time();
 $citySchools = new itemSlot($thisCity->get('schoolSlot'), $slotFile, 40);
@@ -29,7 +29,7 @@ laborList = [';
 $startSpot = 0;
 for ($i=0; $i<100; $i++) {
 	$offset = $thisCity->laborStoreOffset+$i*10+1;
-	if ($thisCity->objDat[$offset] > 0) {
+	if ($thisCity->objDat[$offset+1] > 0) {
 		echo 'new laborItem({objID:'.$i.', pay:'.$thisCity->objDat[$offset+5].', ability:'.$thisCity->objDat[$offset+8].', laborType:'.$thisCity->objDat[$offset+1].'})';
 		$startSpot = $i+1;
 		break;
@@ -38,11 +38,12 @@ for ($i=0; $i<100; $i++) {
 for ($i=$startSpot; $i<100; $i++) {
 	$offset = $thisCity->laborStoreOffset+$i*10+1;
 	if ($thisCity->objDat[$offset] > 0) {
-		echo ', new laborItem({objID:'.$i.', pay:'.$thisCity->objDat[$offset+5].', ability:'.$thisCity->objDat[$offset+8].', laborType:'.$thisCity->objDat[$offset+1].'})';
+		echo ', new laborItem({objID:'.$offset.', pay:'.$thisCity->objDat[$offset+5].', ability:'.$thisCity->objDat[$offset+8].', laborType:'.$thisCity->objDat[$offset+1].'})';
 	}
 }
-
 echo '];
+
+
 
 laborSelect = new uList(laborList);
 laborSelect.addFilter("edClass", "Education");

@@ -40,6 +40,7 @@ if (flock($objFile, LOCK_EX)) {
 	$newObj->set('factoryStatus', 0);
 	$newObj->set('constructCompleteTime', $now+600);
 	$newObj->set('upgradeInProgress', 1);
+	$newObj->set('currentProd', $templateDat[11]);
 	$newObj->set('oType', 3);
 	$newObj->set('owner', $pGameID);
 	$newObj->set('lastUpdate', $now);

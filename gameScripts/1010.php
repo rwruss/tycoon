@@ -11,8 +11,8 @@ PostVals
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 $thisFactory = loadObject($postVals[1], $objFile, 400);
@@ -74,6 +74,7 @@ if ($postVals[2] == 0) {
 	$targetFactory = loadObject($offerDat[3], $objFile, 400);
 	$targetFactory->set('totalSales', $targetFactory->get('totalSales')+$totalCost);
 	$targetFactory->set('periodSales', $targetFactory->get('periodSales')+$totalCost);
+  $targetFactory->saveAll($targetFactory->linkFile);
 	if ($targetFactory->get('owner') == $pGameID) {
 		$thisPlayer->set('money', $thisPlayer->get('money')+$totalCost);
 	} else {
@@ -81,14 +82,14 @@ if ($postVals[2] == 0) {
 		echo 'Target money: '.$targetPlayer->get('money').' + '.$totalCost;
 		$targetPlayer->save('money', $targetPlayer->get('money')+$totalCost);
 	}
-	
+
 
     // record in this players pending order slot
     for ($i=1; $i<=10; $i++) {
       if ($thisFactory->get('orderItem'.$i) == 0) {
-        $thisFactory->set('orderTime'.$i, time()+3600);
+        $thisFactory->set('orderTime'.$i, time()+60);
         $thisFactory->set('orderItem'.$i, $postVals[4]);
-        $thisFactory->set('orderQty'.$i, 100);
+        $thisFactory->set('orderQty'.$i, $offerDat[1]);
         $thisFactory->saveAll($objFile);
         $orderNumber = $i;
         break;
@@ -115,8 +116,9 @@ for (i=0; i<factoryOrders.length; i++) {
 	factoryOrders[i].render(businessDiv.orderItems);
 }
 */
-factoryOrders['.$orderNumber.'].updateOrder('.$postVals[1].', materialOrder['.($orderNumber*3).'], materialOrder['.($orderNumber*3+1).'], materialOrder['.($orderNumber*3+2).'], '.$orderNumber.');
+factoryOrders['.($orderNumber-1).'].updateOrder('.$postVals[1].', materialOrder['.(($orderNumber-1)*3).'], materialOrder['.(($orderNumber-1)*3+1).'], materialOrder['.(($orderNumber-1)*3+2).'], '.($orderNumber-1).');
 thisDiv = useDeskTop.getPane("businessObjects");
+thisPlayer.money = '.$thisPlayer->get('money').'
 </script>';
 
 fclose($offerFile);

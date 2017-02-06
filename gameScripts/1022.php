@@ -110,9 +110,24 @@ $thisFactory->set('prodRate', $productionRate);
 $thisFactory->saveAll($objFile);
 
 echo '<script>factoryRate(headSection.rate, '.($productionRate/100).');
+factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0})';
+$startVals = [];
+for ($i=0; $i<10; $i++) {
+	if ($thisFactory->objDat[$thisFactory->laborOffset + $i*10] == 0) {
+		$useID = 0;
+		$startVals[$i] = 0;
+	} else {
+		$startVals[$i] = $i+1;
+		$useID = $i+1;
+	}
+	echo ', new laborItem({objID:"'.$useID.'", pay:'.$thisFactory->objDat[$thisFactory->laborOffset+5 + $i*10].', ability:'.$thisFactory->objDat[$thisFactory->laborOffset+8 + $i*10].', laborType:'.$thisFactory->objDat[$thisFactory->laborOffset+1 + $i*10].'})';
+}
+
+echo '];
+showLabor('.$postVals[1].', factoryLabor);
 	</script>';
 
-fclose($laborEqfile);
+fclose($laborEqFile);
 fclose($objFile);
 fclose($slotFile);
 fclose($cityFile);

@@ -3,7 +3,7 @@
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 
 $thisObj = loadObject($postVals[1], $objFile, 400);
@@ -31,6 +31,7 @@ if ($productCheck) {
 $invCheck = true;
 if ($thisObj->get('prodInv'.$inventorySlot) >= $postVals[4]) {
 	$newQty = $thisObj->get('prodInv'.$inventorySlot) - $postVals[4];
+	echo 'Set new inventory to '.$newQty;
 	$thisObj->save('prodInv'.$inventorySlot, $newQty);
 	$invCheck = false;
 }
@@ -57,5 +58,10 @@ if (flock($offerFile, LOCK_EX)) {
 
 fclose($objFile);
 fclose($offerFile);
+
+echo '<script>
+productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).']
+showOutputs(productInvSection, productStores);
+</script>';
 
 ?>

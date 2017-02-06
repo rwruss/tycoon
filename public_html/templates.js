@@ -1079,6 +1079,20 @@ function showInventory(factory, inventory) {
 	}
 }
 
+function showLabor(factory, factoryLabor) {
+	businessDiv.laborSection.aassigned.innerHTML = "";
+	for (var i=1; i<factoryLabor.length; i++) {
+
+		let laborItem = factoryLabor[i].renderSummary(businessDiv.laborSection.aassigned);
+		let itemNum = i;
+		if (factoryLabor[i] > 0) 	{}
+		laborItem.addEventListener("click", function () {scrMod("1023,'.$postVals[1].',"+itemNum)});
+	}
+	let trgFactory = factory;
+	laborButton = newButton(businessDiv.laborSection.aassigned, function () {scrMod("1018,"+trgFactory)});
+	laborButton.innerHTML = "Adjust Labor";
+}
+
 function updateMaterialInv(factory, materialInv) {
 	if (factory == selectedFactory) {
 		showInventory(factory, materialInv);

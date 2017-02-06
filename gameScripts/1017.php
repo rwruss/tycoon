@@ -91,6 +91,8 @@ echo 'final money: '.$thisPlayer->get('money');
 
 // remove qunatity from factory
 $thisFactory->adjVal('prodInv'.($prodNumber+1), -$postVals[4]);
+$thisFactory->adjVal('totalSales', $profit);
+$thisFactory->adjVal('periodSales', $profit);
 $thisFactory->saveAll($objFile);
 
 echo 'final qty: '.$thisFactory->get('prodInv'.($prodNumber+1)).'

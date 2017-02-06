@@ -43,7 +43,7 @@ class objectList {
 		if (typeof opts !== "undefined") {
 			//console.log(opts);
 			if (opts.setVal !== "undefined") {
-				//console.log("show a default value");
+				console.log("show a default value");
 				this.existingValue(selectButton, opts);
 			}
 			if (opts.renderFunction) {
@@ -243,6 +243,8 @@ class uList extends objectList {
 					target.selectedValue = this.parentList[i].objID;
 					target.selectedIndex = i;
 					break;
+			} else {
+				//console.log(this.parentList[i].objID + " != " + opts.setVal);
 			}
 		}
 

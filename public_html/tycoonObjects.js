@@ -180,6 +180,23 @@ class offer {
 		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100;
 		return thisDiv;
 	}
+
+	renderSale(target) {
+		var thisDiv = addDiv(null, 'udHolder', target);
+		console.log("render product "+ this.productID);
+		productArray[this.productID].renderSummary(thisDiv);
+
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.buyBox = addDiv("", "", thisDiv);
+		thisDiv.buyBox.innerHTML = "sell";
+
+		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100;
+		return thisDiv;
+	}
 }
 
 class product {
@@ -306,7 +323,7 @@ class laborItem extends labor {
 		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
-		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "(" + this.laborType + ")" + "Pay: " + this.pay;
+		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "(" + this.laborType + ")" + "<br>Pay: " + this.pay;
 		return thisDiv;
 	}
 }
@@ -408,6 +425,7 @@ class factoryOrder {
 	}
 
 	showItem (containerBox, boost=true) {
+		containerBox.innerHTML = "";
 		materialBox(this.material, this.qty, containerBox);
 		containerBox.timeBox = addDiv("", "timeFloat", containerBox);
 		var thisObject = this;

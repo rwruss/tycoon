@@ -273,6 +273,7 @@ class factory extends object {
 		// Check first 7 labor types at the factory
 		for ($i=0; $i<7; $i++) {
 			if ($thisProduct->objDat[38+$i] > 0) {
+				echo 'Check labor type '.$this->objDat[$this->laborOffset+10*$i+1];
 				fseek($laborEqFile, $this->objDat[$this->laborOffset+10*$i+1]*4000);
 				$eqDat = unpack('i*', fread($laborEqFile, 80));
 				print_r($eqDat);
@@ -300,18 +301,18 @@ class factory extends object {
 				$eqArray[20] = $eqDat[1];
 
 				$effectiveRate = $eqArray[$this->objDat[$this->laborOffset+10*$i+1]]/10000;
-				
+
 				$workTime = max(1,$this->objDat[$this->laborOffset+10*$i+1]);
 				//$laborLevel = log($workTime, 2.0)+1;
 				$laborLevel = $workTime/36000;
 				$productionRate += (0.5+$laborLevel)*$effectiveRate;
 				echo 'Labor item '.($this->objDat[$this->laborOffset+10*$i+1]*4000).' rate is '.((0.5+$laborLevel)*$effectiveRate).' ->> (0.5 + '.$laborLevel.') * '.$effectiveRate;
-				
+
 				// Record labor eq rates
 				$this->objDat[$this->eqRateOffset+$i] = $effectiveRate*10000;
 				$productionItems++;
 			}
-			$this->saveAll();
+			$this->saveAll($this->linkFile);
 		}
 
 		$totalRate = intval($thisProduct->get('baseRate')*$productionRate/$productionItems*100);
@@ -400,7 +401,8 @@ class factory extends object {
 			// Update labor experience
 			for ($i=0; $i<7; $i++) {
 				//$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
-				$this->objDat[$this->laborOffset+$i*10+7] += intval($this->get('initProdDuration')*$this->objDat[$this->$eqRateOffset+$i]/10000);
+				$this->objDat[$this->laborOffset+$i*10+8] += intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000);
+				echo 'Add '.intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000).' to exp. ->> '.$this->get('initProdDuration').' * '.$this->objDat[$this->eqRateOffset+$i];
 			}
 
 			$saveFactory = true;
@@ -533,7 +535,7 @@ class city extends object {
 					echo 'no more space ';
 					break 2;
 				} else {
-					$laborCount++;
+
 					$offset = $this->laborStoreOffset+$laborCount*10+1;
 					echo 'Add to loc '.$laborCount;
 					$this->objDat[$offset] = 1; // education level
@@ -546,9 +548,24 @@ class city extends object {
 					$this->objDat[$offset+7] = 0; // home
 					$this->objDat[$offset+8] = 0; // ability
 					$this->objDat[$offset+9] = 0; // target upgrade
+					$laborCount++;
 				}
 			}
 		}
+echo 'Clear '.(1000-$laborCount).' spots';
+	for ($i=$laborCount; $i<1000; $i++) {
+		$offset = $this->laborStoreOffset+$i*10+1;
+		$this->objDat[$offset] = 0; // education level
+		$this->objDat[$offset+1] = 0; // type
+		$this->objDat[$offset+2] = 0; // open spot
+		$this->objDat[$offset+3] = 0; // start/creation time
+		$this->objDat[$offset+4] = 0; // job start time
+		$this->objDat[$offset+5] = 0; // pay
+		$this->objDat[$offset+6] = 0; // last update time
+		$this->objDat[$offset+7] = 0; // home
+		$this->objDat[$offset+8] = 0; // ability
+		$this->objDat[$offset+9] = 0; // target upgrade
+	}
 
 	$this->set('laborUpdateTime', $now);
 	$this->saveAll($this->linkFile);

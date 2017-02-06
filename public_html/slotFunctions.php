@@ -199,9 +199,9 @@ class blockSlot extends dataSlot {
 
 	function addItem($file, $data, $location) {
 		echo 'Slotlist:<br>';
-		print_r($this->slotList);
+		//print_r($this->slotList);
 		echo 'data block length '.strlen($data).'<br>';
-		print_R($this->slotData);
+		//print_R($this->slotData);
 		if (flock($file, LOCK_EX)) {  // acquire an exclusive lock
 			// Read the last item that was saved in this slot and version
 			fseek($file, $this->slotList[0]*$this->size+4);

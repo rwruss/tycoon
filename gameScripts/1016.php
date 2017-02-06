@@ -15,6 +15,11 @@ $now = time();
 $elapsed = $now-$thisCity->get('lastUpdate');
 $price = 100;
 $numProducts = 10;
+
+/*
+Need to adjust to show only products relevant to current factory.
+*/
+
 echo '<script>
 cityProducts = new Array();';
 for ($i=1; $i<$numProducts; $i++) {
@@ -23,7 +28,7 @@ for ($i=1; $i<$numProducts; $i++) {
   $actualDemand = min($thisCity->currentDemand($i, $now), 2.0*$baseDemand);
   //echo 'Actual Demand: '.$actualDemand;
   $itemPrice = intval(min($actualDemand/$baseDemand, 2.0)*$price);
-  echo 'cityProducts.push(new offer(['.$i.', 100, '.$itemPrice.', '.$postVals[2].']));';
+  echo 'cityProducts.push(new offer(['.$i.', 100, '.$itemPrice.', '.$postVals[2].', 0, 0, 0, '.$i.']));';
 }
 
 // Output what the city will buy and at what price
@@ -34,7 +39,9 @@ fclose($cityFile);
 
 echo 'textBlob("", productArea, "city information and options");
 cityDeals = new uList(cityProducts);
-cityOffers = cityDeals.SLsingleButton(productArea);
+cityOffers = cityDeals.SLsingleButton(productArea, {renderFunction: function(x,y) {console.log(x);
+  return x.renderSale(y);
+}});
 cityOButton = newButton(productArea, function () {
   qtyArea = addDiv("", "stdFloatDiv", thisDiv);
   qtyArea.innerHTML = "";

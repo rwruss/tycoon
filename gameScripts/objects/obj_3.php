@@ -35,7 +35,7 @@ if ($thisObj->get('currentProd') > 0) {
 $currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 
 
-//echo 'Load object '.$thisObj->get('currentProd');
+//echo 'Load production object '.$thisObj->get('currentProd');
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
 
 echo '<script>
@@ -133,23 +133,17 @@ productInvSection = addDiv("", "stdFloatDiv", businessDiv);
 textBlob("", productInvSection, "Output Inventory");
 
 showOutputs(productInvSection, productStores);
-saleButton = newButton(productInvSection, function () {scrMod("1013,'.$postVals[1].'")});
+
+salesSection = addDiv("", "stdFloatDiv", businessDiv);
+saleButton = newButton(salesSection, function () {scrMod("1013,'.$postVals[1].'")});
 saleButton.innerHTML = "Sell Products";
 
 businessDiv.laborSection = addDiv("", "stdFloatDiv", businessDiv);
 businessDiv.laborPool = addDiv("", "stdFloatDiv", businessDiv);
 textBlob("", businessDiv.laborPool, "Unassigned Labor");
 businessDiv.laborSection.aassigned = addDiv("", "stdFloatDiv", businessDiv.laborSection);
-textBlob("", businessDiv.laborSection.aassigned, "Labor Pool - show available labor");
-for (var i=1; i<factoryLabor.length; i++) {
-
-	let laborItem = factoryLabor[i].renderSummary(businessDiv.laborSection.aassigned);
-	let itemNum = i;
-	if (factoryLabor[i] > 0) 	{}
-	laborItem.addEventListener("click", function () {scrMod("1023,'.$postVals[1].',"+itemNum)});
-}
-laborButton = newButton(businessDiv.laborSection.aassigned, function () {scrMod("1018,'.$postVals[1].'")});
-laborButton.innerHTML = "Adjust Labor";
+textBlob("", businessDiv.laborSection.aassigned, "Labor working here");
+showLabor('.$postVals[1].', factoryLabor);
 
 reqBox = addDiv("", "stdFloatDiv", businessDiv);
 textBlob("", reqBox, "Per unit of production, this requires:");
