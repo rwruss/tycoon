@@ -15,17 +15,17 @@ for ($i=0; $i<20; $i++) {
 	fseek($messageFile, $msgStart);
 	$msgDat = fread($messageFile, 80);
 	$msgHead = unpack('i*', substr($msgDat, 0, 40));
-	$msgSubj = trim($msgDat, 11, 20);
-	$msgFromName = trim($msgDat, 20);
+	$msgSubj = trim(substr($msgDat, 11, 20));
+	$msgFromName = trim(substr($msgDat, 20));
 }
-
+print_r($msgHead);
 
 echo '<script>
 useDeskTop.newPane("msgPane");
 msgDiv = useDeskTop.getPane("msgPane");
 
 msgDiv.msgItems = addDiv("", "", msgDiv);
-msgSummary(msgDiv.msgItems, "Name", '.$msgHead[3].', '..', '..', '.$msgHead[1].');
+msgSummary(msgDiv.msgItems, "Name", '.$msgHead[3].', '.$msgHead[2].', "'.$msgSubj.'", '.$msgHead[1].');
 </script>';
 
 fclose($objFile);

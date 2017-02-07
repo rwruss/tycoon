@@ -521,25 +521,8 @@ setBarSize = function(id, pct, full) {
 
 laborBox = function (id, target) {
 	laborArray[id].renderSummary(target);
-	//var thisLabor = addDiv("", "", target);
-	//thisLabor.innerHTML = id;
 }
 
-/*
-orderBox = function (time, rscID, qty, target) {
-	var thisOrder = addDiv("", "orderContain", target);
-	materialBox(rscID, qty, thisOrder);
-	thisOrder.clock = addDiv("", "orderTime", thisOrder);
-	if (time > 0) {
-		//timeBox.runClock = true;
-		countDownClock(time, thisOrder.clock);
-		thisOrder.clock.boostBox.addEventListener("click", function () {console.log("Speed up options for a material order")});
-		//thisOrder.innerHTML = rscID + " - " + time + "-" + qty;
-	}
-
-	return thisOrder;
-}
-*/
 materialBox = function (id, qty, target) {
 	console.log("show material box for produ " + id);
 	let thisRsc = productArray[id].renderSummary(target);
@@ -554,23 +537,7 @@ materialBox = function (id, qty, target) {
 bPos = [0,0];
 paneBox = function(bName, val, h, w, x, y) {
 	var newDiv = document.createElement('div');
-	/*
-	newDiv.draggable = "true";
 
-	newDiv.addEventListener("drag", function (event) {
-		if (event.clientX > 0) {
-		//console.log("drag start");
-		this.style.left = bPos[0] - bPos[2] + event.clientX;
-		this.style.top = bPos[1] - bPos[3] + event.clientY;
-		}
-	});
-	newDiv.addEventListener("dragend", function (event) {
-		event = event || window.event;
-		//console.log(event + " = " + event.clientX + ", " + event.clientY);
-		this.style.left = bPos[0] - bPos[2] + event.clientX;
-		this.style.top = bPos[1] - bPos[3] + event.clientY;
-	});
-	*/
 	var killBut = document.createElement('div');
 	killBut.className = "paneCloseButton";
 	killBut.innerHTML = 'X';
@@ -1181,7 +1148,8 @@ showProdRequirements = function(trg, productMaterial) {
 showRequiredLabor = function(trg, reqdLabor) {
 	trg.innerHTML = "";
 	for (var i=0; i<reqdLabor.length; i++) {
-		laborBox(reqdLabor[i], trg);
+		if (reqdLabor[i]>0) laborArray[reqdLabor[i]].renderSimple(trg);
+		//laborBox(reqdLabor[i], trg);
 	}
 }
 

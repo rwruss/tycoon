@@ -211,12 +211,12 @@ class product {
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);
-		
+
 		addImg("asdf", "productImg", thisDiv); // labor image
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 
-		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
+		thisDiv.nameDiv.innerHTML = objNames[this.objID];
 		return thisDiv;
 	}
 
@@ -226,13 +226,13 @@ class product {
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
-		
+
 		addImg("asdf", "productImg", thisDiv); // labor image
 
 		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
 		thisDiv.qtyDiv.innerHTML = qty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 
-		thisDiv.nameDiv.innerHTML = objNames[this.objID] + " - " + this.objID;
+		thisDiv.nameDiv.innerHTML = objNames[this.objID];
 		return thisDiv;
 	}
 }
@@ -278,9 +278,9 @@ class labor {
 		this.objID = details.objID,
 		this.objName = details.objName,
 		this.qty = details.qty || 0;
-		this.edClass = details.edClass || "None",
+		this.edClass = details.edClass || "0",
 		this.laborType = details.laborType,
-		this.quality = details.quality || 0;
+		this.quality = details.ability || 0;
 		//console.log('create product ' + this.objID);
 	}
 
@@ -291,17 +291,18 @@ class labor {
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
-		
+
 		addImg("asdf", "laborImg", thisDiv); // labor image
-		
+
 		thisDiv.qualBar = addDiv("asdf", "laborQualBar", thisDiv); // labor quality bar;
 		let qualPct = (this.quality%3600)/3600;
-		thisDiv.qualBar.style.width = 10 + 65*qualPct; 
+		thisDiv.qualBar.style.width = 10 + 65*qualPct;
 		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
-		
+
 		thisDiv.qualNum = addDiv("asdf", "laborQualNum", thisDiv);
-		thisDiv.qualNum.innerHTML = parseInt(this.quality/3600);
-		
+		//thisDiv.qualNum.innerHTML = parseInt((3600-this.quality)/60);
+		thisDiv.qualNum.innerHTML = this.quality;
+
 		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
 		thisDiv.eduDiv.innerHTML = this.edClass;
 
@@ -323,6 +324,31 @@ class labor {
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
 	}
+
+	renderSimple(target) {
+		var thisDiv = addDiv(null, 'productHolder', target);
+
+		thisDiv.ownerObject = this.objID;
+
+		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
+		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		addImg("asdf", "laborImg", thisDiv); // labor image
+
+		//thisDiv.qualBar = addDiv("asdf", "laborQualBar", thisDiv); // labor quality bar;
+		//let qualPct = (this.quality%3600)/3600;
+		//thisDiv.qualBar.style.width = 10 + 65*qualPct;
+		//thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
+
+		//thisDiv.qualNum = addDiv("asdf", "laborQualNum", thisDiv);
+		//thisDiv.qualNum.innerHTML = parseInt(this.quality/3600);
+
+		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
+		thisDiv.eduDiv.innerHTML = this.edClass;
+
+		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
+		return thisDiv;
+	}
 }
 
 class laborItem extends labor {
@@ -332,6 +358,7 @@ class laborItem extends labor {
 	}
 
 	renderSummary(target) {
+		/*
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute('ownerObject', this.objID);
 		//thisDiv.ownerObject = this.objID;
@@ -341,6 +368,29 @@ class laborItem extends labor {
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "(" + this.laborType + ")" + "<br>Pay: " + this.pay;
+		return thisDiv;
+		*/
+		var thisDiv = addDiv(null, 'productHolder', target);
+
+		thisDiv.ownerObject = this.objID;
+
+		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		addImg("asdf", "laborImg", thisDiv); // labor image
+
+		thisDiv.qualBar = addDiv("asdf", "laborQualBar", thisDiv); // labor quality bar;
+		let qualPct = (this.quality%3600)/3600;
+		thisDiv.qualBar.style.width = 10 + 65*qualPct;
+		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
+
+		thisDiv.qualNum = addDiv("asdf", "laborQualNum", thisDiv);
+		thisDiv.qualNum.innerHTML = this.quality;
+
+		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
+		thisDiv.eduDiv.innerHTML = this.edClass;
+
+		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
 	}
 }
