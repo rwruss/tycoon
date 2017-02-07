@@ -44,10 +44,10 @@
 1044 - MENU: Messages Menu
 1045 - PROCESS: Show info on a player
 1046 - PROCESS: Show message content
+1047 - MENU: Write/send a new message
 
 
 TO DO:
-Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
 Professional Services/Construction, Engineering, Markinting, etc
 Factory upgrades and boosts
 Politics
@@ -55,7 +55,7 @@ Messages
 Fix labor type sales at cities (based on schools available) - verify this is done
 Company storylines
 Fix & expand Sale options/market - sorting and filtering (1013)
-
+Resolve comma splitting of input with messages
 
 TO DO ON HOLD
 Adjust player object for "C" type dat (Hold off on this for now)
@@ -65,7 +65,9 @@ http://www.linuxhowtos.org/C_C++/socket.htm
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
 
-DONE - Assigning labor to production tasks at factory
+DONE - 
+Assigning labor to production tasks at factory
+Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
 
 http://playdosgamesonline.com/capitalism.html
 

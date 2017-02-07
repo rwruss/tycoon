@@ -37,7 +37,7 @@ if ($inputValidate) {
 	print_r($postVals);
 	}
 }
-
+/*
 function read_slot($file, $slot_num, $slot_size)
 	{
 	$next_slot = $slot_num;
@@ -54,7 +54,7 @@ function read_slot($file, $slot_num, $slot_size)
 		//echo "Next Slot: ".$next_slot;
 		}
 	return $units_a;
-	}
+	}*/
 /*
 function sendMessage($mOpt, $content, $toList) {
 	include("../gameScripts/msg/messageSend.php");

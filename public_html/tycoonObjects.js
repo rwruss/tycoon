@@ -590,3 +590,39 @@ class factoryProduction {
 		return containerBox
 	}
 }
+
+class message {
+	constructor() {
+		this.loaded = false;
+		this.content = "";
+		this.subject = "";
+		this.clicked = 0;
+	}
+	
+	showContent() {
+		if (this.loaded) {
+			
+		} else {
+			
+		}
+		this.clicked = (this.clicked+1)%2;
+	}
+	
+	collapse() {
+		this.renderObject.summaryBar.className = "msgContentHide";
+	}
+	
+	renderSummary(trg) {
+		let summaryBar;
+		if (this.read) summaryBar = addDiv("", "msgSum", trg);
+		else summaryBar = addDiv("", "msgSumNew", trg);
+		
+		summaryBar.innerHTML = this.subject;
+		this.renderObject = summaryBar;
+	}
+	
+	renderContent() {
+		trg.contentBox.className = "msgContentShow";
+		trg.contentBox.innerHTML = this.content;
+	}
+}
