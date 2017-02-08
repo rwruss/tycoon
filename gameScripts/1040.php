@@ -6,9 +6,13 @@ useDeskTop.newPane("dialogPane");
 var targetPane = useDeskTop.getPane("dialogPane");
 targetPane.innerHTML = "";
 
+targetPane.options = addDiv("", "stdFloatDiv", targetPane);
+targetPane.results = addDiv("", "stdFloatDiv", targetPane);
+
 textBlob("", targetPane, "Output Inventory");
 for (var i=0; i<20; i++) {
-  serviceArray[i].renderSummary(targetPane);
+  let thisService = serviceArray[i].renderSummary(targetPane.options);
+  thisService.addEventListener("click", function () {scrMod("1048,"+i)});
 }
 </script>';
 

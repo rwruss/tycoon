@@ -597,6 +597,10 @@ class message {
 		this.content = "";
 		this.subject = dat.subject || "";
 		this.clicked = dat.read || 0;
+		this.id = dat.id;
+		this.fromID = dat.fromID;
+		this.fromName = dat.fromName;
+		this.sentTime = dat.time;
 	}
 
 	showContent(trg) {
@@ -606,9 +610,9 @@ class message {
 			this.renderObject.contentBox.className = "msgContentHide";
 		} else {
 			if (this.loaded) {
-				this.renderContent(trg);
+				this.renderContent(trg) ;
 			} else {
-				this.content = "test content";
+				this.content = returnInfo("1046,"+this.id);
 				this.renderContent(trg);
 			}
 		}
@@ -633,11 +637,15 @@ class message {
 		summaryBar.appendChild(summaryBar.subjSpan);
 
 		summaryBar.fromSpan = document.createElement("span");
-		summaryBar.fromSpan.innerHTML = "From";
+		summaryBar.fromSpan.innerHTML = "From: " + this.fromName;
+		let msgSender = this.fromID;
+		summaryBar.fromSpan.addEventListener("click", function () {
+			scrMod("1045,"+msgSender);
+		});
 		summaryBar.appendChild(summaryBar.fromSpan);
 
 		summaryBar.timeSpan = document.createElement("span");
-		summaryBar.timeSpan.innerHTML = "Time";
+		summaryBar.timeSpan.innerHTML = "Sent: " + this.sentTime;
 		summaryBar.timeSpan.className = "spanStyle";
 		summaryBar.appendChild(summaryBar.timeSpan);
 

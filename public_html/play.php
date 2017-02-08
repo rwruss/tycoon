@@ -282,18 +282,33 @@ echo '
 		xmlhttp.onreadystatechange = function() {
 			if (typeof(trg) == "string") target = document.getElementById(trg);
 			else target = trg;
-			//console.log("send to " + target);
+			
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				//console.log("sending...");
+				
 				target.innerHTML = xmlhttp.response;
-				//console.log("sent");
+				
 				ncode_div(target);
-				//console.log("ncoding");
+				
 				}
 			}
 
 		xmlhttp.send(params);
 		}
+		
+	function returnInfo(val) {
+		params = "val1="+val;
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {				
+				return xmlhttp.response;				
+				}
+			}
+
+		xmlhttp.send(params);
+	}
 
 	function scrMod(val) {
 		params = "val1="+val;

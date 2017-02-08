@@ -1,47 +1,55 @@
 <?php
 
+/*
+PV
+1 -> first message location
+*/
+
 require_once('./objectClass.php');
+require_once('./slotFunctions.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $messageFile = fopen($gamePath.'/messages.dat', 'rb');
+$slotFile = fopen($gamePath.'/', 'rb');
 
 // Read message list for player
 $thisBusiness = loadObject($pGameID, $objFile, 400);
+$msgSlot = new itemSlot($thisBusiness->get('msgSlot'), $slotFile, 40);
 
-
-$msgStart = $thisBusiness->get('msgStartSpot');
-$msgSize = $thisBusiness->get('msgStartSize');
-for ($i=0; $i<20; $i++) {
-	fseek($messageFile, $msgStart);
-	$msgDat = fread($messageFile, 80);
-	$msgHead = unpack('i*', substr($msgDat, 0, 40));
-	$msgSubj = trim(substr($msgDat, 11, 20));
-	$msgFromName = trim(substr($msgDat, 20));
+$numMsg = sizeof($msgSlot);
+$showQty = 20;
+if ($numMsg - $postVals[1] < 20) {
+	$showQty = $numMsg - $postVals[1];
 }
-print_r($msgHead);
-
-/*
-echo '<script>
-useDeskTop.newPane("msgPane");
-msgDiv = useDeskTop.getPane("msgPane");
-
-msgDiv.msgItems = addDiv("", "", msgDiv);
-msgSummary(msgDiv.msgItems, "Name", '.$msgHead[3].', '.$msgHead[2].', "'.$msgSubj.'", '.$msgHead[1].');
-</script>';
-*/
 
 echo '<script>
 useDeskTop.newPane("msgPane");
 msgDiv = useDeskTop.getPane("msgPane");
 msgDiv.innerHTML = "";
+messages = new Array();';
 
-testMsg = new message({subject:"Test message"});
-testMsg.renderSummary(msgDiv);
+$firstMsg = 2*$postVals[1];
+$showQty *= 2;
+// Message start, read
+for ($i=0; $i<$showQty; $i+=2) {
+	if ($msgSlot[$i] > 0) {
+		fseek($messageFile, $msgSlot[$i+$firstMsg]);
+		$msgDat = fread($messageFile, 100);
+		$msgHead = unpack('i*', substr($msgDat, 0, 40));
+		$msgSubj = trim(substr($msgDat, 11, 20));
+		$msgFromName = trim(substr($msgDat, 20));
+		
+		echo 'messages.push(new message[{subject:"'.$msgSubj.'", fromName:"'.$msgFromName.'", fromID:"'.$msgHead[3].'", read:"'.$msgSlot[$i+1].'", id:"'.$msgSlot[$i].'-'.$msgHead[8].'-'.($msgHead[7]-$pGameID).'", time:'.$msgHead[2].'}])';
+	}
+}
 
-testMsg2 = new message({subject:"Test message 2"});
-testMsg2.renderSummary(msgDiv);';
+echo 'for (var i=0; i<messages.length; i++) {
+	messages[i].renderSummary(msgDiv);
+}
+</script>';
 
 fclose($objFile);
 fclose($messageFile);
+fclose($slotFile);
 
 ?>
