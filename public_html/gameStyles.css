@@ -401,3 +401,37 @@
 	width:60;
 	height:60;
 }
+
+.msgSum {
+	position:relative;
+	float:left;
+	width:98%;
+	border: 1px solid black;
+}
+
+.msgSumNew {
+	position:relative;
+	float:left;
+	width:98%;
+	border: 3px solid red;
+}
+
+.msgContentShow {
+	position:relative;
+	top:0;
+	left:0;
+	width:100%;
+}
+
+.msgContentHide {
+	position:relative;
+	top:0;
+	left:0;
+	height:0;
+	overflow:hidden;
+}
+
+.spanStyle {
+	position:absolute;
+	right:0;
+}

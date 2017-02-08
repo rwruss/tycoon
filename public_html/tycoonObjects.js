@@ -592,37 +592,63 @@ class factoryProduction {
 }
 
 class message {
-	constructor() {
+	constructor(dat) {
 		this.loaded = false;
 		this.content = "";
-		this.subject = "";
-		this.clicked = 0;
+		this.subject = dat.subject || "";
+		this.clicked = dat.read || 0;
 	}
-	
-	showContent() {
-		if (this.loaded) {
-			
-		} else {
-			
-		}
+
+	showContent(trg) {
 		this.clicked = (this.clicked+1)%2;
+		this.renderObject.className = "msgSum";
+		if (!this.clicked) {
+			this.renderObject.contentBox.className = "msgContentHide";
+		} else {
+			if (this.loaded) {
+				this.renderContent(trg);
+			} else {
+				this.content = "test content";
+				this.renderContent(trg);
+			}
+		}
 	}
-	
+
 	collapse() {
-		this.renderObject.summaryBar.className = "msgContentHide";
+		this.renderObject.contentBox.className = "msgContentHide";
 	}
-	
+
 	renderSummary(trg) {
 		let summaryBar;
 		if (this.read) summaryBar = addDiv("", "msgSum", trg);
 		else summaryBar = addDiv("", "msgSumNew", trg);
-		
-		summaryBar.innerHTML = this.subject;
+
+		let msgItem = this;
+		summaryBar.addEventListener("click", function () {
+			msgItem.showContent(msgItem.renderObject.contentBox);
+		});
+
+		summaryBar.subjSpan = document.createElement("span");
+		summaryBar.subjSpan.innerHTML = this.subject;
+		summaryBar.appendChild(summaryBar.subjSpan);
+
+		summaryBar.fromSpan = document.createElement("span");
+		summaryBar.fromSpan.innerHTML = "From";
+		summaryBar.appendChild(summaryBar.fromSpan);
+
+		summaryBar.timeSpan = document.createElement("span");
+		summaryBar.timeSpan.innerHTML = "Time";
+		summaryBar.timeSpan.className = "spanStyle";
+		summaryBar.appendChild(summaryBar.timeSpan);
+
+		summaryBar.contentBox = addDiv("", "msgContentHide", summaryBar);
+
+
 		this.renderObject = summaryBar;
 	}
-	
+
 	renderContent() {
-		trg.contentBox.className = "msgContentShow";
-		trg.contentBox.innerHTML = this.content;
+		this.renderObject.contentBox.className = "msgContentShow";
+		this.renderObject.contentBox.innerHTML = this.content;
 	}
 }

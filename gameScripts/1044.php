@@ -20,6 +20,7 @@ for ($i=0; $i<20; $i++) {
 }
 print_r($msgHead);
 
+/*
 echo '<script>
 useDeskTop.newPane("msgPane");
 msgDiv = useDeskTop.getPane("msgPane");
@@ -27,6 +28,18 @@ msgDiv = useDeskTop.getPane("msgPane");
 msgDiv.msgItems = addDiv("", "", msgDiv);
 msgSummary(msgDiv.msgItems, "Name", '.$msgHead[3].', '.$msgHead[2].', "'.$msgSubj.'", '.$msgHead[1].');
 </script>';
+*/
+
+echo '<script>
+useDeskTop.newPane("msgPane");
+msgDiv = useDeskTop.getPane("msgPane");
+msgDiv.innerHTML = "";
+
+testMsg = new message({subject:"Test message"});
+testMsg.renderSummary(msgDiv);
+
+testMsg2 = new message({subject:"Test message 2"});
+testMsg2.renderSummary(msgDiv);';
 
 fclose($objFile);
 fclose($messageFile);
