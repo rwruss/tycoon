@@ -10,29 +10,28 @@ $_SESSION['gameId'] = $postVals[1];
 
 // record player as a user in this new game
 $playerFile = fopen("../games/".$postVals[1]."/objects.dat", "r+b");
+$gameOfferFile = fopen("../games/".$postVals[1]."/saleOffers.dat", "r+b");
 if (flock($playerFile, LOCK_EX)) {
   fseek($playerFile, 0, SEEK_END);
 
   $pGameID = max(1,ftell($playerFile)/100);
   echo 'Set player ID to '.$pGameID.'<br>';
+  
+  // Create a new offer slot for this player
+  $newSlot = newSlot($gameOfferFile, 1000);
 
   $playerDat = array_fill(1, 100, 0);
   $playerDat[4] = 1;
   $playerDat[14] = 10000;
+  $playerDat[41] = $newSlot;
   $playerDat[100] = -1;
 
   fseek($playerFile, $pGameID*100);
   fwrite($playerFile, packArray($playerDat));
-  //fwrite($playerFile, pack('i', 1));
-  //fseek($playerFile, $pGameID*100+399);
-  //fwrite($playerFile, pack("C", 99));
 
-  // Add this player to the file
-
-  //fseek($playerFile, $pGameID*100);
-  //fwrite($playerFile, pack('i*', 0, 0, 0, 1));
   flock($playerFile, LOCK_UN);
 }
+fclose($gameOfferFile);
 fclose($playerFile);
 
 // Add player to list of players in this game
@@ -46,24 +45,21 @@ fseek($uDatFile, $_SESSION['playerId']*500);
 $uDat = fread($uDatFile, 500);
 $gameSlot = unpack("N", substr($uDat, 8, 4));
 
+$uSlot = fopen("../users/userSlots.slt", "r+b");
 if ($gameSlot[1] == 0) {
 	echo "get new Slot";
-	$uSlot = fopen("../users/userSlots.slt", "r+b");
 	$newSlot = startASlot($uSlot, "../users/userSlots.slt");
 
 	fseek($uDatFile, $_SESSION['playerId']*500+8);
 	fwrite($uDatFile, pack("N", $newSlot));
 
 	addDataToSlot("../users/userSlots.slt", $newSlot, pack("N", $postVals[1]), $uSlot);
-	fclose($uSlot);
 	}
 else {
 	echo "Add game to slot";
-	$uSlot = fopen("../users/userSlots.slt", "r+b");
-
-	addDataToSlot("../users/userSlots.slt", $gameSlot[1], pack("N", $postVals[1]), $uSlot);
-	fclose($uSlot);
+	addDataToSlot("../users/userSlots.slt", $gameSlot[1], pack("N", $postVals[1]), $uSlot);	
 	}
+fclose($uSlot);
 
 echo "conPane - game ".$postVals[1]."
 

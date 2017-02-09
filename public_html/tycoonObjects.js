@@ -73,6 +73,8 @@ class city {
 		this.details = objDat;
 		this.demandRates = "";
 		this.demandLevels = "";
+		this.rTax = objDat[14];
+		this.nTax = objDat[15];
 		//console.log('create product ' + this.objID);
 	}
 
@@ -155,15 +157,18 @@ class city {
 class offer {
 	constructor(details) {
 		this.objID = details[0];
-		this.qty = details[1];
-		this.price = details[2];
-		this.sellingFactory = details[3];
-		this.quality = details[4];
-		this.pollution = details[5];
-		this.rights = details[6];
-		this.productID = details[7];
-		this.seller = details[8];
-		this.sellCong = details[9];
+		this.productID = details[1];
+		
+		this.qty = details[2]; //1
+		this.price = details[3]; //2
+		this.sellingFactory = details[4]; //3
+		this.quality = details[5]; //4
+		this.pollution = details[6]; //5
+		this.rights = details[7]; //6
+		this.time = details[8]; //7
+		this.saleLoc = details[9]; //8
+		this.sellerID = details[10]; //9
+		this.sellCongID = details[11]; //10
 	}
 
 	renderSummary(target) {

@@ -4,7 +4,7 @@ require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
 
 $thisObj = loadObject($postVals[1], $objFile, 400);
@@ -56,6 +56,15 @@ if (flock($offerDatFile, LOCK_EX)) {
 	$offerGroups = floor($offerSize/4000);
 
 	$offerLoc=0;
+	$emptyOffers = new itemSlot(0, $offerListFile, 1004);
+	for ($i=1; $i<sizeof($emptyOffers); $i++) {
+		if ($emptyOffers[$i] > 0) {
+			$offerLoc = $emptyOffers[$i];
+			$emptyOffers->deleteItem($i, $offerListFile);
+			break;
+		}
+	}
+	/*
 	for ($checkGroup=0; $checkGroup<$offerGroups; $checkGroup++) {
 		fseek($offerDatFile, $checkGroup*4000);
 		$chkDat = unpack('i*', fread($offerDatFile));
@@ -65,7 +74,7 @@ if (flock($offerDatFile, LOCK_EX)) {
 				break 2;
 			}
 		}
-	}
+	}*/
 	if ($offerLoc == 0) $offerLoc = ceil($offerSize/40)*40;
 
 	fseek($offerDatFile, $offerLoc);
@@ -73,50 +82,28 @@ if (flock($offerDatFile, LOCK_EX)) {
 	flock($offerDatFile, LOCK_UN);
 }
 
-if (flock($offerFile, LOCK_EX)) {
+if (flock($offerListFile, LOCK_EX)) {
 	// Record the sale in the list for the product
-	$saleKey = pack('i*', $offerLoc, $postVals[3]);
-	$prodSlot = new blockSlot($postVals[3], $offerFile, 1004);
-	$loc = 0;
-	for ($i=1; $i<sizeof($prodSlot->slotData); $i+=2) {
-		if ($prodSlot->slotData[$i] == 0) {
-			$loc = $i;
-			break;
-		}
-	}
-	$prodSlot->addItem($offerFile, $saleKey, $loc);
+	$saleKey = pack('i*', $offerLoc);
+	$prodSlot = new itemSlot($postVals[3], $offerListFile, 1004);
+	$prodSlot->addItem($offerListFile, $saleKey, $loc);
 
 	// Record the sale in the list for the player
-	$playerSlot = new blockSlot($thisBusiness->get('openOffers'), $offerFile, 1004);
-	$loc = 0;
-	for ($i=1; $i<sizeof($playerSlot->slotData); $i+=2) {
-		if ($playerSlot->slotData[$i] == 0) {
-			$loc = $i;
-			break;
-		}
-	}
-	$playerSlot->addItem($offerFile, $saleKey, $loc);
+	$playerSlot = new itemSlot($thisBusiness->get('openOffers'), $offerListFile, 1004);
+	$playerSlot->addItem($offerListFile, $saleKey, $loc);
 
 	// Record the sale in the list for the conglomerate
 	if ($thisBusiness->get('teamID') > 0) {
 		$thisCong = loadObject($thisBusiness->get('teamID'), $objFile, 1000);
-		$congSlot = new blockSlot($thisCong->get('openOffers'), $offerFile, 1004);
-
-		$loc = 0;
-		for ($i=1; $i<sizeof($congSlot->slotData); $i+=2) {
-			if ($congSlot->slotData[$i] == 0) {
-				$loc = $i;
-				break;
-			}
-		}
-		$congSlot->addItem($offerFile, $saleKey, $loc);
+		$congSlot = new itemSlot($thisCong->get('openOffers'), $offerListFile, 1004);
+		$congSlot->addItem($offerListFile, $saleKey, $loc);
 	}
 
-	flock($offerFile, LOCK_UN);
+	flock($offerListFile, LOCK_UN);
 }
 
 fclose($objFile);
-fclose($offerFile);
+fclose($offerListFile);
 fclose($offerDatFile);
 
 /*
@@ -124,7 +111,7 @@ require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 
 $thisObj = loadObject($postVals[1], $objFile, 400);
 
@@ -165,8 +152,8 @@ if ($invCheck) {
 $location = 0;
 $conglID = 0;
 $saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID);
-if (flock($offerFile, LOCK_EX)) {
-	$saleSlot = new blockSlot($postVals[3], $offerFile, 4004);
+if (flock($offerListFile, LOCK_EX)) {
+	$saleSlot = new blockSlot($postVals[3], $offerListFile, 4004);
 	$location = sizeof($saleSlot->slotData);
 	for ($i=1; $i<sizeof($saleSlot->slotData); $i+=10) {
 		if ($saleSlot->slotData[$i] == 0) {
@@ -174,8 +161,8 @@ if (flock($offerFile, LOCK_EX)) {
 			break;
 		}
 	}
-	$saleSlot->addItem($offerFile, $saleDat, $location);
-	flock($offerFile, LOCK_UN);
+	$saleSlot->addItem($offerListFile, $saleDat, $location);
+	flock($offerListFile, LOCK_UN);
 }
 
 // record offer in player's sales information
@@ -185,7 +172,7 @@ $businessSales = new blockSlot($thisBusiness->get('salesList'), $slotFile, 40);
 // record in conglomerate's sales information
 
 fclose($objFile);
-fclose($offerFile);
+fclose($offerListFile);
 
 echo '<script>
 productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).']

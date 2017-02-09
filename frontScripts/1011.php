@@ -46,21 +46,36 @@ if ($handle = opendir('../scenarios/'.$postVals[1]))
 	}
 // Add basic player info and unstarted status
 $playerFile = fopen("../games/".$newGameId."/objects.dat", "r+b");
+$gameOfferFile = fopen("../games/".newGameId."/saleOffers.dat", "r+b");
 fseek($playerFile, 0, SEEK_END);
 
 $pGameID = max(1,ftell($playerFile)/100);
 echo 'Set player ID to '.$pGameID.'<br>';
 
+// Create a new offer slot for this player
+$newSlot = newSlot($gameOfferFile, 1000);
+
+$playerDat = array_fill(1, 100, 0);
+$playerDat[4] = 1;
+$playerDat[14] = 10000;
+$playerDat[41] = $newSlot;
+$playerDat[100] = -1;
+
+fseek($playerFile, $pGameID*100);
+fwrite($playerFile, packArray($playerDat));
+
+/*
 fseek($playerFile, $pGameID*100+12);
 fwrite($playerFile, pack('i', 1));
 fseek($playerFile, $pGameID*100+399);
 fwrite($playerFile, pack("C", 99));
-
+*/
 // Add this player to the file
 
 //fseek($playerFile, $pGameID*100);
 //fwrite($playerFile, pack('i*', 0, 0, 0, 1));
 fclose($playerFile);
+fclose($gamerOfferFile);
 
 // Prep game slot file
 $gameSlotFile = fopen("../games/".$newGameId."/gameSlots.slt", "wb");
@@ -104,5 +119,13 @@ else {
 	}
 fclose($gameSlotFile);
 fclose($uDatFile);
+
+function packArray($data) {
+  $str = pack('i', current($data));
+  for ($i=1; $i<sizeof($data); $i++) {
+    $str = $str.pack('i', next($data));
+  }
+  return $str;
+}
 
 ?>

@@ -14,7 +14,7 @@ var cityPane = useDeskTop.getPane("cityInfo");
 cityPane.innerHTML = "";
 
 textBlob("", cityPane, "City information");
-var showCity = new city(['.$postVals[1].', "some citgy", '.implode(',', array_slice($thisCity->objDat, 0, 25)).']);
+var showCity = new city(['.$postVals[1].', "some citgy", '.implode(',', array_slice($thisCity->objDat, 11, 25)).']);
 showCity.loadDemands(['.implode(',', array_slice($thisCity->objDat, $thisCity->laborDemandOffset-1, 10000)).'], ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborStoreOffset-1, 10000)).']);
 showCity.renderDetail(cityPane);
 var detailSection = addDiv("", "stdFloatDiv", cityPane);

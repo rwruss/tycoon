@@ -224,7 +224,7 @@ fclose($laborEqFile);
 
 // create sales file
 $salesFile = fopen('../scenarios/'.$scenario.'/saleOffers.slt', 'wb');
-fseek($salesFile, sizeof($productReqs)*1001*4-4);
+fseek($salesFile, 10000*1001*4-4); // allow for 10k products
 fwrite($salesFile, pack('i', 0));
 fclose($salesFile);
 

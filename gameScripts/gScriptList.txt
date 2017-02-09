@@ -47,26 +47,30 @@
 1047 - MENU: Write/send a new message
 1048 - PROCESS: sending a message
 1049 - MENU: Show options for purchasing services
-
+1050 - MENU: Show Region Detail
 
 TO DO:
-CORRECT GAME JOIN/START SCRIPIT 1001
- - Create standard slots (offers) in slot files and record locations
+Detail regional effects
 Professional Services/Construction, Engineering, Marketing, etc
 Factory upgrades and boosts
 Politics
 Messages
 Company storylines
-Fix & expand Sale options/market - sorting and filtering (1013)
 Resolve comma splitting of input with messages
 Player information detail (1045)
 Business Deals/Agreements with other companies and conglomerates
+Protect empty order list writing in 1014
 
 VERIFY DONE
 Fix labor type sales at cities (based on schools available) - verify this is done
 TO DO ON HOLD
 Adjust player object for "C" type dat (Hold off on this for now)
+CORRECT GAME JOIN/START SCRIPIT 1001
+ - Create standard slots (offers) in slot files and record locations
+Fix & expand Sale options/market - sorting and filtering (1013)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
+
+
 http://www.linuxhowtos.org/C_C++/socket.htm
 
 IDEAS:

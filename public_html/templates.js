@@ -1188,3 +1188,24 @@ msgSummary = function (trg, fromName, fromID, time, subject, msgStatus, s, e) {
 
 	msgContain.addEventListener("click", scrMod("1046,"+s+","+e));
 }
+
+receiveOffers = function(offerDat) {
+	offerList = [];
+	for (var i=0; i<offerDat.length; i+=10) {
+		offerList.push(new offer([offerDat.slice(i, i+11)]));
+	}
+	
+	showOffers = new uList(offerList);
+	showOffers.addSort("Price", price);
+	showOffers.addSort("Qunatity", qty);
+	showOffers.addSort("Quality", quality);
+	showOffers.addSort("Pollution", pollution);
+	showOffers.addSort("Rights", rights);
+	showOffers.SLShowAll(offerArea, function(x, y) {
+		let offerItem = x;
+		let item = x.renderSummary(y);
+		item.buyBox.addEventListener("click", function () {scrMod("1010,'.$postVals[1].',"+offerItem.objID + "," +  SLreadSelection(orderPane.orderBox1))});
+		});
+		
+	
+}

@@ -460,6 +460,10 @@ class city extends object {
 		$this->attrList['schoolSlot'] = 17;
 		$this->attrList['laborSlot'] = 18;
 		$this->attrList['parentRegion'] = 19;
+		$this->attrList['leader'] = 20;
+		$this->attrList['nation'] = 21;
+		$this->attrList['rTax'] = 22;
+		$this->attrList['nTax'] = 23;
 	}
 
 	function demandRate($productID) {
@@ -627,6 +631,12 @@ class product extends object {
 			//if ($this->objDat[38+$i] > 0) $this->reqLabor[] = $this->objDat[38+$i];
 			$this->reqLabor[] = $this->objDat[38+$i];
 		}
+	}
+}
+
+class region extends object {
+	function __construct($id, $dat, $file) {
+		parent::__construct($id, $dat, $file);
 	}
 }
 
