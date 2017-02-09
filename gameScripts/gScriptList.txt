@@ -50,6 +50,8 @@
 
 
 TO DO:
+CORRECT GAME JOIN/START SCRIPIT 1001
+ - Create standard slots (offers) in slot files and record locations
 Professional Services/Construction, Engineering, Marketing, etc
 Factory upgrades and boosts
 Politics
@@ -70,7 +72,7 @@ http://www.linuxhowtos.org/C_C++/socket.htm
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
 
-DONE - 
+DONE -
 Assigning labor to production tasks at factory
 Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
 

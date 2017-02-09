@@ -14,24 +14,23 @@ if (!isset($_GET["gameID"])) echo "<script>window.location.replace(./index.php)<
 
 // Read game file to determine player number and status.
 //print_r($_SESSION);
-//echo 'Look for player '.$_SESSION["playerId"].'in game <p>';
+echo 'Look for player '.$_SESSION["playerId"].'in game <p>';
 $playerList = unpack("i*", file_get_contents("../games/".$_GET["gameID"]."/players.dat"));
-//print_r($playerList);
+print_r($playerList);
 $playerListLoc = array_search($_SESSION["playerId"], $playerList);
 $pGameID = $playerList[$playerListLoc+1]*-1;
 $_SESSION["instance"] = $_GET["gameID"];
 
-if ($pGameID == FALSE) {
+echo 'found as player '.$pGameID;
+
+if ($pGameID < 0) {
 	echo "<p><p><p><p>Not alrady in game(".$_SESSION["playerId"].")";
 	//print_r($playerList);
 	include("../gameScripts/1001.php");
-
-	exit;}
+	exit;
+}
 
 $_SESSION["gameIDs"][$_GET["gameID"]] = $pGameID;
-
-
-
 
 $gamePath = "../games/".$_GET["gameID"];
 $gameID = $_GET["gameID"];
@@ -54,6 +53,7 @@ $defaultBlockSize = 100;
 $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
+echo 'Load player '.$pGameID;
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
 
 // Load player factories
@@ -282,19 +282,19 @@ echo '
 		xmlhttp.onreadystatechange = function() {
 			if (typeof(trg) == "string") target = document.getElementById(trg);
 			else target = trg;
-			
+
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				
+
 				target.innerHTML = xmlhttp.response;
-				
+
 				ncode_div(target);
-				
+
 				}
 			}
 
 		xmlhttp.send(params);
 		}
-		
+
 	function returnInfo(val) {
 		params = "val1="+val;
 		var xmlhttp = new XMLHttpRequest();
@@ -302,8 +302,8 @@ echo '
 		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {				
-				return xmlhttp.response;				
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				return xmlhttp.response;
 				}
 			}
 

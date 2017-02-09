@@ -157,11 +157,13 @@ class offer {
 		this.objID = details[0];
 		this.qty = details[1];
 		this.price = details[2];
-		this.seller = details[3];
+		this.sellingFactory = details[3];
 		this.quality = details[4];
 		this.pollution = details[5];
 		this.rights = details[6];
-		this.productID = details[7]
+		this.productID = details[7];
+		this.seller = details[8];
+		this.sellCong = details[9];
 	}
 
 	renderSummary(target) {

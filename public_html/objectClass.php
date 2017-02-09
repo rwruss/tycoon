@@ -127,11 +127,8 @@ class business extends object {
 		$this->attrList['money'] = 14;
 		$this->attrList['laborSlot'] = 15;
 		$this->attrList['teamID'] = 17;
-
-		$this->attrList['msgStartSpot'] = 40;
-		$this->attrList['msgStartSize'] = 41;
-		$this->attrList['msgEndSpot'] = 42;
-		$this->attrList['msgEndSize'] = 43;
+		$this->attrList['msgSlot'] = 19;
+		$this->attrList['deals'] = 40;
 
 		$this->attrList['boost1'] = 20;
 		$this->attrList['boost2'] = 21;
@@ -143,6 +140,9 @@ class business extends object {
 		$this->attrList['boost8'] = 27;
 		$this->attrList['boost9'] = 28;
 		$this->attrList['boost10'] = 29;
+
+
+		$this->attrList['openOffers'] = 41;
 
 		for ($i=0; $i<20; $i++) {
 			$this->attrList['service'.$i] = 100+$i;
@@ -723,7 +723,7 @@ function loadObject($id, $file, $size) {
 
 		default:
 			print_r($dat);
-			exit('error '.$dat[4]);
+			exit('error '.$dat[4].' OCH');
 		break;
 	}
 

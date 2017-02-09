@@ -44,7 +44,7 @@ for ($i=$startSpot; $i<100; $i++) {
 echo '];
 
 
-
+showLaborArea.innerHTML = "";
 laborSelect = new uList(laborList);
 laborSelect.addFilter("edClass", "Education");
 laborBox1 = laborSelect.SLsingleButton(showLaborArea);
