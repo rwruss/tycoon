@@ -2,7 +2,7 @@
 
 $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
-$numProducts = 33;
+$numProducts = 38;
 $numFactories = 8;
 
 require_once('./slotFunctions.php');
@@ -14,14 +14,14 @@ if (!isset($_GET["gameID"])) echo "<script>window.location.replace(./index.php)<
 
 // Read game file to determine player number and status.
 //print_r($_SESSION);
-echo 'Look for player '.$_SESSION["playerId"].'in game <p>';
+//echo 'Look for player '.$_SESSION["playerId"].'in game <p>';
 $playerList = unpack("i*", file_get_contents("../games/".$_GET["gameID"]."/players.dat"));
-print_r($playerList);
+//print_r($playerList);
 $playerListLoc = array_search($_SESSION["playerId"], $playerList);
 $pGameID = $playerList[$playerListLoc+1]*-1;
 $_SESSION["instance"] = $_GET["gameID"];
 
-echo 'found as player '.$pGameID;
+//echo 'found as player '.$pGameID;
 
 if ($pGameID < 0) {
 	echo "<p><p><p><p>Not alrady in game(".$_SESSION["playerId"].")";
@@ -53,8 +53,9 @@ $defaultBlockSize = 100;
 $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
-echo 'Load player '.$pGameID;
+//echo 'Load player '.$pGameID;
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
+$_SESSION['game_'.$gameID]['business'] = $thisPlayer->objDat;
 
 // Load player factories
 $factoryList = [];
@@ -1038,7 +1039,8 @@ echo '
 
 		objNames = ['.implode(',', array_slice($namesList, 0, $numProducts)).'];
 		factoryNames = ['.implode(',', array_slice($namesList, $numProducts)).'];
-		laborNames = ['.$laborNameList.']
+		laborNames = ['.$laborNameList.'];
+		console.log(laborNames);
 		console.log(objNames);
 		console.log(factoryNames);
 

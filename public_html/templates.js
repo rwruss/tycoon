@@ -304,7 +304,7 @@ tabSelect = function(target, selection) {
 	document.getElementById(target+"_tab"+selection).style.visibility =  "visible";
 	//alert(document.getElementById(target+"_tabs").style.visibility);
 	if (tabHolder.currentSelection != selection)	{
-		//alert("set " + target+"_tab"+tabHolder.currentSelection + "to 1");
+		console.log("set " + target+"_tab"+tabHolder.currentSelection + "to 1");
 		document.getElementById(target+"_tab"+tabHolder.currentSelection).style.visibility =  "hidden";
 	}
 	tabHolder.currentSelection = selection;
@@ -1191,21 +1191,75 @@ msgSummary = function (trg, fromName, fromID, time, subject, msgStatus, s, e) {
 
 receiveOffers = function(offerDat) {
 	offerList = [];
-	for (var i=0; i<offerDat.length; i+=10) {
-		offerList.push(new offer([offerDat.slice(i, i+11)]));
+	for (var i=0; i<offerDat.length; i+=12) {
+		offerList.push(new offer(offerDat.slice(i, i+12)));
 	}
-	
+
 	showOffers = new uList(offerList);
+	/*
 	showOffers.addSort("Price", price);
 	showOffers.addSort("Qunatity", qty);
 	showOffers.addSort("Quality", quality);
 	showOffers.addSort("Pollution", pollution);
 	showOffers.addSort("Rights", rights);
-	showOffers.SLShowAll(offerArea, function(x, y) {
+	*/
+	showOffers.SLShowAll(orderPane.offerContainer, function(x, y) {
 		let offerItem = x;
 		let item = x.renderSummary(y);
-		item.buyBox.addEventListener("click", function () {scrMod("1010,'.$postVals[1].',"+offerItem.objID + "," +  SLreadSelection(orderPane.orderBox1))});
+		item.buyBox.addEventListener("click", function () {scrMod("1010," + selectedFactory + "," +offerItem.objID + "," +  SLreadSelection(orderPane.orderBox1))});
 		});
-		
-	
+}
+
+showSales = function(trg, saleDat) {
+	console.log("show sales");
+	oList = [];
+	for (var i=0; i<saleDat.length; i+=12) {
+		oList.push(new offer(saleDat.slice(i, i+12)));
+	}
+	for (var i=0; i<oList.length; i++) {
+		console.log("show offer " + i);
+		oList[i].renderCancel(trg);
+	}
+}
+
+class tabMenu {
+	constructor (children = new Array()) {
+		this.childTabs = children;
+		this.renderKids = new Array();
+		this.selected = 0;
+		this.tabItems = new Array();
+	}
+
+	renderTabs(trg) {
+		this.tabContainer = addDiv("", "stdFloatDiv", trg);
+		this.tabHead = addDiv("", "", this.tabContainer);
+		this.tabUL = document.createElement("ul");
+		this.tabHead.appendChild(this.tabUL);
+
+		for (var i=0; i<this.childTabs.length; i++) {
+			let tabItem = document.createElement("li");
+			tabItem.innerHTML = this.childTabs[i];
+			let trgItem = this;
+			let trgNum = i;
+			tabItem.addEventListener("click", function () {
+				trgItem.selectTab(trgNum);
+			});
+			this.tabUL.appendChild(tabItem);
+			this.tabItems[i] = tabItem;
+			this.renderKids.push(addDiv("", "", this.tabContainer));
+			this.renderKids[i].style.visibility = "hidden";
+			this.renderKids[i].innerHTML = "tab " + i;
+		}
+		this.renderKids[0].style.visibility = "visible";
+	}
+
+	selectTab(item) {
+		this.renderKids[this.selected].style.visibility = "hidden";
+		this.renderKids[item].style.visibility = "visible";
+		this.selected = item;
+	}
+
+	tabFunction (trgTab, functionToAttach) {
+		this.tabItems[trgTab].addEventListener("click", functionToAttach);
+	}
 }

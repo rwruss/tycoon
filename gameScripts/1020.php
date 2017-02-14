@@ -38,7 +38,7 @@ for ($i=0; $i<100; $i++) {
 for ($i=$startSpot; $i<100; $i++) {
 	$offset = $thisCity->laborStoreOffset+$i*10+1;
 	if ($thisCity->objDat[$offset] > 0) {
-		echo ', new laborItem({objID:'.$offset.', pay:'.$thisCity->objDat[$offset+5].', ability:'.$thisCity->objDat[$offset+8].', laborType:'.$thisCity->objDat[$offset+1].'})';
+		echo ', new laborItem({objID:'.$i.', pay:'.$thisCity->objDat[$offset+5].', ability:'.$thisCity->objDat[$offset+8].', laborType:'.$thisCity->objDat[$offset+1].'})';
 	}
 }
 echo '];

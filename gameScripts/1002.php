@@ -23,7 +23,7 @@ for (let i=0; i<playerFactories.length; i++) {
 	thisSummary.addEventListener("click", function () {scrMod("1003,"+thisFactory.objID);})
 }
 
-optionBox1 = defaultBuildings.SLsingleButton(headSection, {setVal:33});
+optionBox1 = defaultBuildings.SLsingleButton(headSection, {setVal:38});
 
 sendButton = newButton(headSection, function () {
 	console.log(SLreadSelection(optionBox1));

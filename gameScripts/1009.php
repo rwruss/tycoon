@@ -6,7 +6,6 @@
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-//$offerFile = fopen($gamePath.'/saleOffers.slt', 'rb');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 
 $thisObj = loadObject($postVals[1], $objFile, 400);
@@ -45,28 +44,34 @@ if ($optionCheck && $spotCheck !== false) {
 	// Load the list of offers for the product
 	$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 	$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
-	
+
 	// Search for new items to produce
-	$offerList = new itemSlot($productID, $offerListFile, 1004);
-	$emptyOffers = new itemSlot(0, $offerListFile, 1004);
-	
+	echo 'Read offer slot '.$productID;
+	$offerList = new itemSlot($productID, $offerListFile, 1000);
+	$emptyOffers = new itemSlot(0, $offerListFile, 1000);
+
 	$offerCount = 0;
 	$checkCount = 1;
 	$numOffers = sizeof($offerList->slotData);
-	$showOffers = [0, 100, 299, 0, 50, 50, 50, $productID, 8, 9, 10];
+	$showOffers = [0, 100, 299, 0, 50, 50, 50, 0, 8, 9, 10, $productID];
 	while ($checkCount < $numOffers && $offerCount < 100) {
-		fseek($offerDatFile, $offerList->slotData[$checkCount]*40);
-		$tmpDat = unpack('i*', fread($offerDatFile, 40);
-		if ($tmpDat[1] > 0) {
-			array_push($showOffers, $offerList->slotData[$checkCount], $productID);
-			$showOffers = array_merge($showOffers, $tmpDat);
-		} else {
-			// Delete the reference in the list of offers
-			$offerList->deleteItem($checkCount, $offerListFile);
-			
-			// Add to list of empty offers
-			$emptyOffers->addItem($offerList->slotData[$checkCount]);
+		echo 'Read item #'.$checkCount.' ('.$offerList->slotData[$checkCount].')';
+		if ($offerList->slotData[$checkCount] > 0) {
+			fseek($offerDatFile, $offerList->slotData[$checkCount]);
+			$tmpDat = unpack('i*', fread($offerDatFile, 44));
+			if ($tmpDat[1] > 0) {
+				array_push($showOffers, $offerList->slotData[$checkCount]);
+				$showOffers = array_merge($showOffers, $tmpDat);
+				$offerCount++;
+			} else {
+				// Delete the reference in the list of offers
+				$offerList->deleteItem($checkCount, $offerListFile);
+
+				// Add to list of empty offers
+				$emptyOffers->addItem($offerList->slotData[$checkCount]);
+			}
 		}
+		$checkCount++;
 	}
 
 	echo '<script>receiveOffers(['.implode(',', $showOffers).'])</script>';
@@ -78,7 +83,7 @@ if ($optionCheck && $spotCheck !== false) {
 	4 - quality
 	5 - pollution
 	6 - rights
-	
+
 	this.objID = details[0];
 		this.qty = details[1];
 		this.price = details[2];
@@ -90,7 +95,7 @@ if ($optionCheck && $spotCheck !== false) {
 		this.seller = details[8];
 		this.sellCong = details[9];
 
-	}	
+	}
 	echo '<script>
 	var orderPane = useDeskTop.getPane("xyzPane");
 	offerArea = addDiv("", "", orderPane);
@@ -104,7 +109,7 @@ if ($optionCheck && $spotCheck !== false) {
 		if ($offerList->slotData[$slotItem] > 0) echo 'offerList.push(new offer(['.$placeNum.', '.$offerList->slotData[$slotItem].', '.$offerList->slotData[$slotItem+1].', 3, 4, 5, 6, '.$productID.', 8, 9, 10]));';
 	}
 
-	
+
 	echo 'showOffers = new uList(offerList);
 	showOffers.SLShowAll(offerArea, function(x, y) {
 		let offerItem = x;
@@ -115,7 +120,6 @@ if ($optionCheck && $spotCheck !== false) {
 	*/
 }
 
-fclose($offerFile);
 fclose($objFile);
 
 ?>

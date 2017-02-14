@@ -1,5 +1,5 @@
 <?php
-include('./slotFunctions.php');
+require_once('./slotFunctions.php');
 session_start();
 if (isset($_SESSION['playerId'])) {
 	$playerId = $_SESSION['playerId'];

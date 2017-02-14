@@ -378,6 +378,15 @@
 	border:1px solid green;
 }
 
+.laborPay {
+	position:absolute;
+	left:50;
+	top:20;
+	height:20;
+	width:50;
+	border:1px solid green;
+}
+
 .laborQualBar {
 	position:absolute;
 	left:25;

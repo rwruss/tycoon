@@ -1,5 +1,8 @@
 <?php
 
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
+
 $now = time();
 $constructDelta = $thisObj->get('constructCompleteTime') - $now;
 if ($thisObj->get('factoryLevel') == 0) {
@@ -38,11 +41,39 @@ $currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 //echo 'Load production object '.$thisObj->get('currentProd');
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
 
+// Load factory sales
+for ($i=1; $i<9; $i++) {
+	if ($thisObj->get('offer'.$i) > 0) {
+		fseek($offerDatFile, $thisObj->get('offer'.$i));
+		$tmpDat = unpack('i*', fread($offerDatFile, 44));
+		if ($tmpDat[1] > 0) {
+			$saleDat[] = $thisObj->get('offer'.$i);
+			$saleDat = array_merge($saleDat, $tmpDat);
+		} else {
+			$thisObj->save('offer'.$i, 0);
+		}
+	}
+}
+/*
+$thisBusiness = loadObject($pGameID, $objFile, 400);
+$openSales = new itemSlot($_SESSION['game_'.$gameID]['business'][41], $offerListFile, 1000);
+$saleDat = [];
+for ($i=1; $i<sizeof($openSales->slotData); $i++) {
+	//echo 'Check item '.$openSales->slotData[$i];
+	fseek($offerDatFile, $openSales->slotData[$i]);
+	$tmpDat = unpack('i*', fread($offerDatFile, 44));
+	if ($tmpDat[1] > 0) {
+		$saleDat[] = $openSales->slotData[$i];
+		$saleDat = array_merge($saleDat, $tmpDat);
+	}
+}
+*/
 echo '<script>
 factoryUpgradeProducts = [];
 factoryUpgradeServices = [];
 selectedFactory = '.$postVals[1].';
-businessDiv.innerHTML = "";';
+businessDiv.innerHTML = "";
+factorySales = ['.implode(',', $saleDat).'];';
 
 if ($constructDelta > 0) {
 	echo 'var updateArea = addDiv("", "stdFloatDiv", businessDiv);';
@@ -161,11 +192,16 @@ var orderSection = addDiv("", "stdFloatDiv", businessDiv);
 var orderHead = addDiv("", "stdFloatDiv", orderSection);
 
 businessDiv.orderItems = addDiv("", "stdFloatDiv", orderSection);
+businessDiv.saleItems = addDiv("", "stdFloatDiv", orderSection);
 textBlob("", orderHead, "Current orders");
 showOrders(businessDiv.orderItems, factoryOrders);
+showSales(businessDiv.saleItems, factorySales);
 /*
 
 */
 </script>';
+
+fclose($offerListFile);
+fclose($offerDatFile);
 
 ?>

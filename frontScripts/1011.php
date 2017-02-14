@@ -46,7 +46,7 @@ if ($handle = opendir('../scenarios/'.$postVals[1]))
 	}
 // Add basic player info and unstarted status
 $playerFile = fopen("../games/".$newGameId."/objects.dat", "r+b");
-$gameOfferFile = fopen("../games/".newGameId."/saleOffers.dat", "r+b");
+$gameOfferFile = fopen("../games/".$newGameId."/saleOffers.slt", "r+b");
 fseek($playerFile, 0, SEEK_END);
 
 $pGameID = max(1,ftell($playerFile)/100);
@@ -75,7 +75,7 @@ fwrite($playerFile, pack("C", 99));
 //fseek($playerFile, $pGameID*100);
 //fwrite($playerFile, pack('i*', 0, 0, 0, 1));
 fclose($playerFile);
-fclose($gamerOfferFile);
+fclose($gameOfferFile);
 
 // Prep game slot file
 $gameSlotFile = fopen("../games/".$newGameId."/gameSlots.slt", "wb");

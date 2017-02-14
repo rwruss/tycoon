@@ -48,8 +48,14 @@
 1048 - PROCESS: sending a message
 1049 - MENU: Show options for purchasing services
 1050 - MENU: Show Region Detail
+1051 - PROCESS: Cancel a sales offer
 
 TO DO:
+Create tab object
+Show area demographics vs ruler demographics
+Political leader options and demographic affects
+script 1051
+Don't allow product switching while production is in progress
 Detail regional effects
 Professional Services/Construction, Engineering, Marketing, etc
 Factory upgrades and boosts

@@ -232,12 +232,22 @@ class factory extends object {
 		$this->attrList['orderQty9'] = 82;
 		$this->attrList['orderQty10'] = 85;
 
+		$this->attrList['offer1'] = 231;
+		$this->attrList['offer2'] = 232;
+		$this->attrList['offer3'] = 233;
+		$this->attrList['offer4'] = 234;
+		$this->attrList['offer5'] = 235;
+		$this->attrList['offer6'] = 236;
+		$this->attrList['offer7'] = 237;
+		$this->attrList['offer8'] = 238;
+
+		/*
 		$this->attrList['price1'] = 91;
 		$this->attrList['price2'] = 92;
 		$this->attrList['price3'] = 93;
 		$this->attrList['price4'] = 94;
 		$this->attrList['price5'] = 95;
-
+		*/
 		$inputIndex = 1;
 		$inputInventoryIndex = 61;
 
@@ -660,17 +670,6 @@ class school {
 				$this->schoolRates = array_fill(1, 4, 5);
 			break;
 		}
-	}
-}
-
-class region extends object {
-	function __construct($id, $dat, $file) {
-		parent::__construct($id, $dat, $file);
-
-	$this->attrList['money'] = 10;
-	$this->attrList['internalTax'] = 11;
-	$this->attrList['externalTax'] = 12;
-	$this->attrList['tarrif'] = 13;
 	}
 }
 

@@ -11,7 +11,9 @@ PostVals
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
+
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
@@ -20,7 +22,7 @@ $thisFactory = loadObject($postVals[1], $objFile, 400);
 if ($postVals[2] == 0) {
   // this is the default offer;
   echo 'default offer';
-  $offerDat = [0, 100, 0, 299, 50, 50, 50, 0, 0, 0, 0];
+  $offerDat = [0, 100, 0, 299, 50, 50, 50, 0, 0, 0];
 
   // check that the player has enough money
   $moneyCheck = true;
@@ -35,7 +37,7 @@ if ($postVals[2] == 0) {
   // record in this players pending order slot
   for ($i=1; $i<=10; $i++) {
     if ($thisFactory->get('orderItem'.$i) == 0) {
-      $orderNumber = $i-1;
+      $orderNumber = $i;
       $thisFactory->set('orderTime'.$i, time()+60);
       $thisFactory->set('orderItem'.$i, $postVals[4]);
       $thisFactory->set('orderQty'.$i, 100);
@@ -48,10 +50,10 @@ if ($postVals[2] == 0) {
 
 } else {
   // load the specific offer
-  //$offerList = new blockSlot($postVals[3], $offerFile, 4000);
-  if (flock($offerFile, LOCK_EX)) {
-    fseek($offerFile, $postVals[2]);
-    $offerDat = unpack('i*', fread($offerFile, 44));
+  //$offerList = new blockSlot($postVals[3], $offerDatFile, 4000);
+  if (flock($offerDatFile, LOCK_EX)) {
+    fseek($offerDatFile, $postVals[2]);
+    $offerDat = unpack('i*', fread($offerDatFile, 44));
     print_r($offerDat);
     if ($offerDat[1] > 0 ) {
       // offer still available
@@ -74,7 +76,16 @@ if ($postVals[2] == 0) {
 	$targetFactory = loadObject($offerDat[3], $objFile, 400);
 	$targetFactory->set('totalSales', $targetFactory->get('totalSales')+$totalCost);
 	$targetFactory->set('periodSales', $targetFactory->get('periodSales')+$totalCost);
+
+  // remove the order from the selling factory
+  for ($i=1; $i<9; $i++) {
+    if ($targetFactory->get('offer'.$i) == $postVals[2]) {
+      $targetFactory->set('offer'.$i,0);
+      break;
+    }
+  }
   $targetFactory->saveAll($targetFactory->linkFile);
+
 	if ($targetFactory->get('owner') == $pGameID) {
 		$thisPlayer->set('money', $thisPlayer->get('money')+$totalCost);
 	} else {
@@ -96,10 +107,14 @@ if ($postVals[2] == 0) {
       }
     }
 
-    // overwrite the order in the offer list slotFunctions
-    fseek($offerFile, $postVals[2]);
-    $offerDat = unpack('i*', fwrite($offerFile, pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)));
-    flock($offerFile, LOCK_UN);
+    // overwrite the order in the offer list dat
+    fseek($offerDatFile, $postVals[2]);
+    $offerDat = fwrite($offerDatFile, pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+    flock($offerDatFile, LOCK_UN);
+
+    // overwrite the order in the slot List
+    $offerList = new itemSlot($postVals[4], $offerListFile, 1000);
+    $offerList->deleteByValue($postVals[2], $offerListFile);
   }
 }
 
@@ -121,7 +136,7 @@ thisDiv = useDeskTop.getPane("businessObjects");
 thisPlayer.money = '.$thisPlayer->get('money').'
 </script>';
 
-fclose($offerFile);
+fclose($offerDatFile);
 fclose($objFile);
 
 ?>

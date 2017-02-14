@@ -18,6 +18,18 @@ var showCity = new city(['.$postVals[1].', "some citgy", '.implode(',', array_sl
 showCity.loadDemands(['.implode(',', array_slice($thisCity->objDat, $thisCity->laborDemandOffset-1, 10000)).'], ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborStoreOffset-1, 10000)).']);
 showCity.renderDetail(cityPane);
 var detailSection = addDiv("", "stdFloatDiv", cityPane);
+cityTabs = new tabMenu(["Overview", "Government", "Labor"]);
+cityTabs.renderTabs(detailSection);
+cityTabs.renderKids[0].innerHTML = "overview stuff";
+cityTabs.renderKids[1].innerHTML = "Government stuff";
+cityTabs.renderKids[2].innerHTML = "Labor stuff";
+cityTabs.tabFunction(0, function() {console.log("i select u")});
+/*
+cityTabs = makeTabMenu("cityTabs", detailSection);
+newTab("cityTabs", 1, "Govt");
+cityTabs_tab1.innerHTML = "govt shenanigans";
+newTab("cityTabs", 2, "adf");
+cityTabs_tab2.innerHTML = "adsf shenanigans";
 
 let optionButton1 = newButton(cityPane);
 optionButton1.innerHTML = "Labor at City";
@@ -26,7 +38,8 @@ optionButton1.addEventListener("click", function () {
   scrMod("1020,0,0,'.$postVals[1].'")});
 
 let optionButton2 = newButton(cityPane);
-optionButton2.innerHTML = "Run for Mayor";
+optionButton2.innerHTML = "Government";
+
 
 let optionButton3 = newButton(cityPane);
 optionButton3.innerHTML = "Demographics";
@@ -39,7 +52,7 @@ optionButton4.innerHTML = "Demands/Prices";
 optionButton4.addEventListener("click", function() {
   showCity.demandMenu(detailSection);
   showCity.renderDemands(detailSection, [1, 2, 3, 4, 5,6]);
-});
+});*/
 </script>';
 
 // Output demands for products of the city

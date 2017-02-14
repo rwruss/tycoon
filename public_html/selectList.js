@@ -103,8 +103,8 @@ class objectList {
 			// Get list of options
 			let itemList = ["None"];
 			for (var itemNum = 0; itemNum<this.listItems.length; itemNum++) {
-				console.log(this.parentList[this.listItems[itemNum]])
-				console.log("CHeck " + this.parentList[this.listItems[itemNum]] + " for prop " + prop)
+				//console.log(this.parentList[this.listItems[itemNum]])
+				//console.log("CHeck " + this.parentList[this.listItems[itemNum]] + " for prop " + prop)
 				if (itemList.indexOf(this.parentList[this.listItems[itemNum]][prop]) == -1) {
 					itemList.push(this.parentList[this.listItems[itemNum]][prop]);
 					let newOpt = document.createElement("option");

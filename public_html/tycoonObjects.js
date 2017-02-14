@@ -75,6 +75,8 @@ class city {
 		this.demandLevels = "";
 		this.rTax = objDat[14];
 		this.nTax = objDat[15];
+		this.demo = "";
+		this.leaderDemo = "";
 		//console.log('create product ' + this.objID);
 	}
 
@@ -156,19 +158,20 @@ class city {
 
 class offer {
 	constructor(details) {
+		console.log(details);
 		this.objID = details[0];
-		this.productID = details[1];
-		
-		this.qty = details[2]; //1
-		this.price = details[3]; //2
-		this.sellingFactory = details[4]; //3
-		this.quality = details[5]; //4
-		this.pollution = details[6]; //5
-		this.rights = details[7]; //6
-		this.time = details[8]; //7
-		this.saleLoc = details[9]; //8
-		this.sellerID = details[10]; //9
-		this.sellCongID = details[11]; //10
+		this.productID = details[11];
+
+		this.qty = details[1]; //1
+		this.price = details[2]; //2
+		this.sellingFactory = details[3]; //3
+		this.quality = details[4]; //4
+		this.pollution = details[5]; //5
+		this.rights = details[6]; //6
+		this.time = details[7]; //7
+		this.saleLoc = details[8]; //8
+		this.sellerID = details[9]; //9
+		this.sellCongID = details[10]; //10
 	}
 
 	renderSummary(target) {
@@ -203,6 +206,14 @@ class offer {
 
 		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100;
 		return thisDiv;
+	}
+
+	renderCancel(target) {
+		var thisDiv = this.renderSale(target);
+		thisDiv.buyBox.innerHTML = "cancel";
+
+		let orderID = this.objID;
+		thisDiv.buyBox.addEventListener("click", function() {scrMod("1051,"+orderID)})
 	}
 }
 
@@ -353,6 +364,8 @@ class labor {
 		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
 		thisDiv.eduDiv.innerHTML = this.edClass;
 
+		console.log("labor type " + this.laborType + " == " + laborNames[this.laborType]);
+		console.log(laborNames);
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
 	}
@@ -396,6 +409,9 @@ class laborItem extends labor {
 
 		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
 		thisDiv.eduDiv.innerHTML = this.edClass;
+
+		thisDiv.payDiv = addDiv("", "laborPay", thisDiv);
+		thisDiv.payDiv.innerHTML = this.pay;
 
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
