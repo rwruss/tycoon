@@ -33,13 +33,12 @@
 }
 
 .centeredmenu {
-	top:150;
+	position:relative;
    float:left;
    width:100%;
    background:#fff;
    border-bottom:4px solid #000;
    overflow:hidden;
-   position:absolute;
 }
 .centeredmenu ul {
    //clear:left;
@@ -443,4 +442,17 @@
 .spanStyle {
 	position:absolute;
 	right:0;
+}
+
+.tabContentDiv {
+	position:relative;
+	float:left;
+	width:100%;
+}
+
+.tabBox {
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
 }

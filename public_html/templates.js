@@ -1224,7 +1224,7 @@ showSales = function(trg, saleDat) {
 
 class tabMenu {
 	constructor (children = new Array()) {
-		this.childTabs = children;
+		this.tabNames = children;
 		this.renderKids = new Array();
 		this.selected = 0;
 		this.tabItems = new Array();
@@ -1232,13 +1232,14 @@ class tabMenu {
 
 	renderTabs(trg) {
 		this.tabContainer = addDiv("", "stdFloatDiv", trg);
-		this.tabHead = addDiv("", "", this.tabContainer);
+		this.tabHead = addDiv("", "centeredMenu", this.tabContainer);
 		this.tabUL = document.createElement("ul");
 		this.tabHead.appendChild(this.tabUL);
+		this.tabContent = addDiv("", "tabContentDiv", this.tabContainer);
 
-		for (var i=0; i<this.childTabs.length; i++) {
+		for (var i=0; i<this.tabNames.length; i++) {
 			let tabItem = document.createElement("li");
-			tabItem.innerHTML = this.childTabs[i];
+			tabItem.innerHTML = this.tabNames[i];
 			let trgItem = this;
 			let trgNum = i;
 			tabItem.addEventListener("click", function () {
@@ -1246,12 +1247,14 @@ class tabMenu {
 			});
 			this.tabUL.appendChild(tabItem);
 			this.tabItems[i] = tabItem;
-			this.renderKids.push(addDiv("", "", this.tabContainer));
-			this.renderKids[i].style.visibility = "hidden";
-			this.renderKids[i].innerHTML = "tab " + i;
+			
+			let newTab = addDiv("", "tabBox", this.tabContent);
+			newTab.style.visibility = "hidden";
+			newTab.innerHTML = "tab " + i;
+			this.renderKids.push(newTab);
+			
 		}
-		this.renderKids[0].style.visibility = "visible";
-	}
+		this.renderKids[0].style.visibility = "visible";	}
 
 	selectTab(item) {
 		this.renderKids[this.selected].style.visibility = "hidden";

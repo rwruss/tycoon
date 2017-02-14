@@ -1,0 +1,20 @@
+<link rel="stylesheet" type="text/css" href="e:/websites/tycoon/public_html/gameStyles.css">
+<script src="e:/websites/tycoon/public_html/templates.js"></script>
+<script src="e:/websites/tycoon/public_html/selectList.js"></script>
+<script>
+
+function initTest() {
+	testTabs = new tabMenu(["tab 1", "tab 2", "tab 3"]);
+	trg = document.getElementById("gmPnl");;
+	testTabs.renderTabs(trg);
+	testTabs.renderKids[0].innerHTML = "tab 1";
+	testTabs.renderKids[1].innerHTML = "tab 2";
+	testTabs.renderKids[2].innerHTML = "tab 3";
+}
+
+window.addEventListener("load", initTest);
+</script>
+
+<div id="gmPnl" class="container"></div>
+
+
