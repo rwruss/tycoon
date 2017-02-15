@@ -1,6 +1,7 @@
 <link rel="stylesheet" type="text/css" href="e:/websites/tycoon/public_html/gameStyles.css">
 <script src="e:/websites/tycoon/public_html/templates.js"></script>
 <script src="e:/websites/tycoon/public_html/selectList.js"></script>
+<script src="e:/websites/tycoon/public_html/tycoonObjects.js"></script>
 <script>
 
 function initTest() {
@@ -10,11 +11,15 @@ function initTest() {
 	testTabs.renderKids[0].innerHTML = "tab 1";
 	testTabs.renderKids[1].innerHTML = "tab 2";
 	testTabs.renderKids[2].innerHTML = "tab 3";
+	
+	newCity = new city([]);
+	newCity.renderDemos(testTabs.renderKids[2]);
 }
 
 window.addEventListener("load", initTest);
 </script>
 
 <div id="gmPnl" class="container"></div>
+<div id="demoTest" class="container"></div>
 
 

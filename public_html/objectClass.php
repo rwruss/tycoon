@@ -474,6 +474,7 @@ class city extends object {
 		$this->attrList['nation'] = 21;
 		$this->attrList['rTax'] = 22;
 		$this->attrList['nTax'] = 23;
+		$this->attrList['lawSlot'] = 24;
 	}
 
 	function demandRate($productID) {
@@ -566,7 +567,7 @@ class city extends object {
 				}
 			}
 		}
-echo 'Clear '.(1000-$laborCount).' spots';
+	echo 'Clear '.(1000-$laborCount).' spots';
 	for ($i=$laborCount; $i<1000; $i++) {
 		$offset = $this->laborStoreOffset+$i*10+1;
 		$this->objDat[$offset] = 0; // education level
@@ -600,6 +601,7 @@ echo 'Clear '.(1000-$laborCount).' spots';
 		$newVal = $this->objDat[$loc] + $delta;
 		$this->saveItem($loc, $newVal);
 	}
+
 }
 
 class product extends object {

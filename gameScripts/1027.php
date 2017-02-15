@@ -18,41 +18,31 @@ var showCity = new city(['.$postVals[1].', "some citgy", '.implode(',', array_sl
 showCity.loadDemands(['.implode(',', array_slice($thisCity->objDat, $thisCity->laborDemandOffset-1, 10000)).'], ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborStoreOffset-1, 10000)).']);
 showCity.renderDetail(cityPane);
 var detailSection = addDiv("", "stdFloatDiv", cityPane);
-cityTabs = new tabMenu(["Overview", "Government", "Labor"]);
+cityTabs = new tabMenu(["Overview", "Government", "Labor", "Schools"]);
 cityTabs.renderTabs(detailSection);
-cityTabs.renderKids[0].innerHTML = "overview stuff";
-cityTabs.renderKids[1].innerHTML = "Government stuff";
-cityTabs.renderKids[2].innerHTML = "Labor stuff";
+cityTabs.renderKids[0].innerHTML = "Overview";
+cityTabs.renderKids[1].innerHTML = "Government";
+cityTabs.renderKids[2].innerHTML = "Labor";
+cityTabs.renderKids[3].innerHTML = "Schools";
+
 cityTabs.tabFunction(0, function() {console.log("i select u")});
-/*
-cityTabs = makeTabMenu("cityTabs", detailSection);
-newTab("cityTabs", 1, "Govt");
-cityTabs_tab1.innerHTML = "govt shenanigans";
-newTab("cityTabs", 2, "adf");
-cityTabs_tab2.innerHTML = "adsf shenanigans";
 
-let optionButton1 = newButton(cityPane);
-optionButton1.innerHTML = "Labor at City";
-optionButton1.addEventListener("click", function () {
-  showLaborArea = detailSection;
-  scrMod("1020,0,0,'.$postVals[1].'")});
+showCity.townDemo = ['.(implode(',', array_slice($thisCity->objDat, 50, 20))).'];
+showCity.leaderDemo = ['.(implode(',', array_slice($thisCity->objDat, 70, 20))).'];';
 
-let optionButton2 = newButton(cityPane);
-optionButton2.innerHTML = "Government";
+// Get laws passed in the city
+if ($thisCity->get('lawslot') > 0) {
+	$cityLaws = new itemSlot($thisCity->get('lawslot'), $slotFile, 40);
+}
 
+// Show government options if player is the leader
+if ($thisCity->get('leader') == $pGameID) {
+	echo 'buildParks(cityTabs.renderKids[1]);';
+}
 
-let optionButton3 = newButton(cityPane);
-optionButton3.innerHTML = "Demographics";
-optionButton3.addEventListener("click", function () {
-  detailSection.innerHTML = "DEMOS";
-});
-
-let optionButton4 = newButton(cityPane);
-optionButton4.innerHTML = "Demands/Prices";
-optionButton4.addEventListener("click", function() {
-  showCity.demandMenu(detailSection);
-  showCity.renderDemands(detailSection, [1, 2, 3, 4, 5,6]);
-});*/
+echo '
+buildParks(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2]);
+showCity.renderDemos(cityTabs.renderKids[1]);
 </script>';
 
 // Output demands for products of the city

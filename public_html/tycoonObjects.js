@@ -75,8 +75,8 @@ class city {
 		this.demandLevels = "";
 		this.rTax = objDat[14];
 		this.nTax = objDat[15];
-		this.demo = "";
-		this.leaderDemo = "";
+		this.townDemo = new Array(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
+		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		//console.log('create product ' + this.objID);
 	}
 
@@ -152,6 +152,17 @@ class city {
 
 			containDiv.bar.style.width = barSize;
 			containDiv.bar.style.backgroundColor = "rgb(" + r + ", " + g + ",0)";
+		}
+	}
+	
+	renderDemos(trg) {
+		for (var i=0; i<this.townDemo.length; i++) {
+			let demoContain = addDiv("", "demogBox", trg);
+			let demoBar = addDiv("", "demoBar", demoContain);
+			let townStat = addDiv("", "townDemo", demoContain);
+			let mayorSpot = addDiv("", "ldrDemo", demoContain);
+			townStat.style.left = parseInt(this.townDemo[i]*115/1000+115);
+			mayorSpot.style.left = parseInt(this.leaderDemo[i]*115/1000+115);
 		}
 	}
 }

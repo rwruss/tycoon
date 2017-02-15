@@ -1266,3 +1266,34 @@ class tabMenu {
 		this.tabItems[trgTab].addEventListener("click", functionToAttach);
 	}
 }
+
+edictBox = function (trg, numOpts) {
+	let thisBox = addDiv("", "stdFloatDiv", trg);
+	thisBox.desc = addDiv("", "stdFloatDiv", thisBox);
+	thisBox.effects = addDiv("", "stdCenterDiv", thisBox.desc);
+	thisBox.optionArea = addDiv("", "stdCenterDiv", thisBox);
+	for (i=0; i<numOpts; i++) {
+		thisBox.options[i] = addDiv("", "edictButton", thisBox.optionArea);
+	}
+}
+
+showDemoChange = function(trg, item, qty) {
+	let container = addDiv("", "demoChanger", trg);
+	let itemDiv = addDiv("", "demoChangeItem", container);
+	itemDiv.innerHTML = item + "==>";
+	let qtyDiv = addDiv("", "demoChangeQty", container);
+	qtyDiv.innerHTML = qty;
+	
+}
+
+buildParks = function(trg, cityID, effects) {
+	let edictItem = edictBox(trg, 1);
+	edictItems.cityID = cityID;
+	edictItem.desc.innerHTML = "Adding parks will make the citizens in this area happy.  It will also improve health and environment scores.";
+	edictItem.options[0].innerHTML = "Build more Parks!";
+	edictItems.options.addEventListener("click", function () {scrMod("1052,1,"+this.cityID)});
+	
+	for (i=0; i<effects.length; i+=2) {
+		showDemoChange(edictItem.effects, effects[i], effects[i+1]);
+	}
+}
