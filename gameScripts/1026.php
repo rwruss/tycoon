@@ -12,7 +12,6 @@ echo '<script>
 useDeskTop.newPane("hireLabor");
 thisDiv = useDeskTop.getPane("hireLabor");
 useDeskTop.paneToTop(thisDiv.parentNode.parentObj);
-console.log(thisDiv.parentNode.parentObj);
 thisDiv.innerHTML = "";
 cityList = [new city([1, "Round Rock"])];
 

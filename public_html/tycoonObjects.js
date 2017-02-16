@@ -75,6 +75,7 @@ class city {
 		this.demandLevels = "";
 		this.rTax = objDat[14];
 		this.nTax = objDat[15];
+		this.leader = objDat[16];
 		this.townDemo = new Array(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		//console.log('create product ' + this.objID);
@@ -154,8 +155,9 @@ class city {
 			containDiv.bar.style.backgroundColor = "rgb(" + r + ", " + g + ",0)";
 		}
 	}
-	
+
 	renderDemos(trg) {
+		console.log(this.townDemo);
 		for (var i=0; i<this.townDemo.length; i++) {
 			let demoContain = addDiv("", "demogBox", trg);
 			let demoBar = addDiv("", "demoBar", demoContain);

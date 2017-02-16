@@ -52,8 +52,7 @@
 1052 - PROCESS: Receive an edict order for a city
 
 TO DO:
-Create tab object
-Show area demographics vs ruler demographics
+Political/leader orders at cities
 Political leader options and demographic affects
 script 1051
 Don't allow product switching while production is in progress

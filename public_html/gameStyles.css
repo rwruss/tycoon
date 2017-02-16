@@ -504,3 +504,18 @@
 	display: inline-block;
 	padding:10;
 }
+
+.demoChanger {
+	position:relative;
+	float:left;
+	text-align: center;
+	width:100;
+}
+
+.demoChangeItem {
+	display:inline-block;
+}
+
+.demoChangeQty {
+	display:inline-block;
+}
