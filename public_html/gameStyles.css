@@ -532,9 +532,14 @@
 	float:left;
 }
 
-.schoolLevel {
+.schoolHire {
 	position:relative;
 	float:right;
+}
+
+.schoolLevel {
+	position:relative;
+	float:left;
 	width:200;
 }
 

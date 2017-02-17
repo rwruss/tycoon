@@ -33,6 +33,18 @@ $line = fgets($laborFile);
 $lineItems = explode(',', $line);
 fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
 $laborCount = 1;
+$schoolLists = [];
+$schoolLists[0] = [];
+$schoolLists[1] = [];
+$schoolLists[2] = [];
+$schoolLists[3] = [];
+$schoolLists[4] = [];
+$schoolLists[5] = [];
+$schoolLists[6] = [];
+$schoolLists[7] = [];
+$schoolLists[8] = [];
+$schoolLists[9] = [];
+$schoolLists[10] = [];
 while (($line = fgets($laborFile)) !== false) {
 	$lineItems = explode(',', $line);
 	fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
@@ -50,19 +62,44 @@ while (($line = fgets($laborFile)) !== false) {
 	$eqArray[$laborItemNum] = 10000;
 
 	echo '<p>EQS for item #'.$laborCount.' - item #'.$laborItemNum.'<br>';
-		if ($lineItems[11] != '') {
-			for ($j=11; $j<sizeof($lineItems); $j+=2) {
+		if ($lineItems[21] != '') {
+			for ($j=21; $j<sizeof($lineItems); $j+=2) {
 				$eqItemNum = $laborItems[trim($lineItems[$j])];
  				echo 'eq for '.trim($lineItems[$j]).' (item #'.$laborItemNum.') is ('.$laborItems[trim($lineItems[$j])].')->> '.trim($lineItems[$j]).'<br>';
 
 				$eqArray[$eqItemNum] = intval($lineItems[$j+1]*100);
 		}
 	}
+	
+	// Add item to relevant school lists
+	for ($i=1; $i<=10; $i++) {
+		if ($lineItems[$i+10] > 0) {
+			$schoolLists[$i][] = $laborCount;
+			$schoolLists[$i][] = $lineItems[$i+10];
+		}
+	}
+	
 	echo 'EQ Array Sum:'.array_sum($eqArray);
 	fseek($laborEqFile, $laborCount*4000);
 	fwrite($laborEqFile, packArray($eqArray));
 	$laborCount++;
 }
+
+// record schools file
+$schoolFile = fopen('../scenarios/'.$scenario.'/schools.dat', 'wb');
+fseek($schoolFile, 88);
+for ($i=1; $i<11; $i++) {
+	fwrite($schoolFile, packArray($schoolLists[$i]));
+}
+fseek($schoolFile, 8);
+$schoolStart = 0;
+for ($i=1; $i<11; $i++) {
+	$spotSize = sizeof($schoolList[$i])*4;
+	fwrite($schoolFile, pack('i*', $schoolStart, $spotSize));
+	$schoolStart += $spotSize;
+}
+
+fclose($schoolFile)
 
 // Load each product description into the product array
 $productFile = fopen('../scenarios/'.$scenario.'/products.csv', 'rb');

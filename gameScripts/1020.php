@@ -20,9 +20,18 @@ $citySchools = new itemSlot($thisCity->get('schoolSlot'), $slotFile, 40);
 $citySchools->slotData[1] = 1;
 print_r($citySchools->slotData);
 
+// Read city schools and output possible items
 
+echo '</script>
+showSchools(cityTabs.renderKids[3], '.$postVals[1].', ['.implode(',', array_slice($thisCity->objDat, 80, 30)).']);;
+</script>';
+/*
 $thisCity->updateLabor($now, $citySchools, $laborRates);
 //print_r($thisCity->objDat);
+
+
+
+
 echo '<script>
 
 laborList = [';
@@ -56,7 +65,7 @@ hireButton =  newButton(thisDiv, function () {
 })
 hireButton.innerHTML = "Hire";
 </script>';
-
+*/
 fclose($objFile);
 fclose($slotFile);
 fclose($cityFile);

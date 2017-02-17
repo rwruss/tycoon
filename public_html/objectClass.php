@@ -517,7 +517,8 @@ class city extends object {
 		$elapsed = $now-$this->get('lastUpdate');
 		return(min($elapsed*$this->demandRate($productNumber)/(3600*1000000)+$this->demandLevel($productNumber), 2.0*$this->baseDemand($productNumber)));
 	}
-
+	
+	/*
 	function updateLabor($now, $schoolList, $baseRates) {
 
 		if ($now - $this->get('laborUpdateTime') < 60) {
@@ -586,7 +587,7 @@ class city extends object {
 
 	$this->set('laborUpdateTime', $now);
 	$this->saveAll($this->linkFile);
-	}
+	}*/
 
 	function changeLaborItem($spotNumber, $attrArray) {
 		$datStr = pack('i*', $attrArray[0], $attrArray[1], $attrArray[2], $attrArray[3], $attrArray[4], $attrArray[5], $attrArray[6], $attrArray[7], $attrArray[8], $attrArray[9]);

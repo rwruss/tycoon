@@ -321,7 +321,6 @@ class labor {
 		thisDiv.ownerObject = this.objID;
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
 		addImg("asdf", "laborImg", thisDiv); // labor image
 
@@ -331,7 +330,6 @@ class labor {
 		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
 
 		thisDiv.qualNum = addDiv("asdf", "laborQualNum", thisDiv);
-		//thisDiv.qualNum.innerHTML = parseInt((3600-this.quality)/60);
 		thisDiv.qualNum.innerHTML = this.quality;
 
 		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
@@ -339,6 +337,17 @@ class labor {
 
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
+	}
+	
+	renderHire(target, quality, sendStr) {
+		thisDiv = this.renderSummary(target);
+		
+		thisDiv.qualNum.innerHTML = quality;
+		
+		thisDiv.hireButton = addButton(thisDiv);
+		thisDiv.hireButton.innerHTML = "Hire!";
+		thisDiv.hireButton.sendStr = sendStr;
+		thisDiv.addEventListener("click", function () {scrMod("1057,"+this.sendStr)});
 	}
 
 	renderQty(target, qty) {
@@ -710,11 +719,8 @@ class school {
 		contain.schName.innerHTML = this.schName;
 		//textBlob("", contain, "this school can train the following labor items");
 		contain.schoolLvl = addDiv("", "schoolLevel", contain);
+		
 		contain.laborSect = addDiv("", "schoolLabor", contain);
-		/*
-		for (var i=0; i<3; i++) {
-			laborArray[this.laborItems[i]].renderSimple(contain.laborSect);
-		}*/
 		laborArray[this.laborItems[0]].renderSimple(contain.laborSect);
 		laborArray[this.laborItems[1]].renderSimple(contain.laborSect);
 		laborArray[this.laborItems[2]].renderSimple(contain.laborSect);
@@ -729,11 +735,17 @@ class school {
 		buyButton.addEventListener("click", function() {scrMod("1054,"+schID+","+cityNum)});
 	}
 
-	renderCitySchools(trg, cityID, lvl, status, price) {
+	renderCitySchools(trg, cityID, lvl, factoryID, schStatus, price) {
 		let contain = this.renderSummary(trg);
-		if (status == 100) contain.schoolLvl.innerHTML = "Level " + lvl;
+		
+		contain.hireButton = addDiv("", "schoolHire", contain);
+		contain.hireButton.innerHTML = "hire from here";
+		contain.hireButton.sendStr = cityID+","+factoryID;
+		contain.hireButton.addEventListener("click", function () {scrMod("1056,"+this.sendStr)})
+		
+		if (schStatus == 100) contain.schoolLvl.innerHTML = "Level " + lvl;
 		else {
-			contain.schoolLvl.innerHTML = "Level " + lvl + ", " + status + "%";
+			contain.schoolLvl.innerHTML = "Level " + lvl + ", " + schStatus + "%";
 			// create pricing slide area
 			contain.schPrice = addDiv("", "schoolPrice", contain);
 
@@ -747,6 +759,5 @@ class school {
 				console.log(document.getElementById("sp-"+this.schID));
 				scrMod("1055,"+this.schID + ","+document.getElementById("sp-"+this.schID).value)});
 		}
-		//contain.schoolStatus.innerHTML = status + "%";
 	}
 }

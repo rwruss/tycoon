@@ -1301,12 +1301,14 @@ buildParks = function(trg, cityID, effects) {
 	}
 }
 
-showSchools = function(trg, cityID, customInfo) {
+showSchools = function(trg, cityID, factoryID, customInfo) {
 	console.log(schoolList);
 	for (var i=0; i<schoolList.length; i++) {
-			schoolList[i].renderCitySchools(trg, cityID, customInfo[i*3], customInfo[i*3+1], customInfo[i*3+2]);
+			schoolList[i].renderCitySchools(trg, cityID, factoryID, customInfo[i*3], customInfo[i*3+1], customInfo[i*3+2]);
 	}
 }
+
+showSchoolsHire = function(trg, cityID, customInfo)
 
 edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 	let edictItem = edictBox(trg, buttonDescs.length);

@@ -51,8 +51,16 @@
 1051 - PROCESS: Cancel a sales offer
 1052 - PROCESS: Receive an edict order for a city
 1053 - MENU: Build schools menu
+1054 - PROCESS: Create/upgrade school at town
+1055 - PROCESS: update percent construction cost for school
+1056 - MENU: Show labor for hire at a school
+1057 - PROCESS: Hire labor from a city (new)
 
 TO DO:
+Change labor to be ordered from city school rather than from a city as a whole
+Adjustments to worker pay
+Worker pay expectations
+Worker pool for when they quit
 Political/leader orders at cities
 Political leader options and demographic affects
 script 1051
