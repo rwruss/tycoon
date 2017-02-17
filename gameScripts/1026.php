@@ -18,7 +18,7 @@ cityList = [new city([1, "Round Rock"])];
 console.log(cityList);
 for (var i=0; i<cityList.length; i++) {
   let thisCity = cityList[i].renderSummary(thisDiv);
-  let cityNum = i;
+  let cityNum = cityList[i].objID;
   thisCity.addEventListener("click", function () {scrMod("1027,"+cityNum)});
 }';
 

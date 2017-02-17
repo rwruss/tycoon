@@ -1250,7 +1250,7 @@ class tabMenu {
 
 			let newTab = addDiv("", "tabBox", this.tabContent);
 			newTab.style.visibility = "hidden";
-			newTab.innerHTML = "tab " + i;
+			//newTab.innerHTML = "tab " + i;
 			this.renderKids.push(newTab);
 
 		}
@@ -1301,12 +1301,10 @@ buildParks = function(trg, cityID, effects) {
 	}
 }
 
-schoolDetail = function(trg, dtls, laborItems) {
-	let contain = addDiv("", "stdFloatDiv", trg);
-	textBlob("", contain, "this school can train the following labor items");
-	for (var i=0; i<laborItems.length; i++) {
-		console.log("render " + laborItems[i])
-		laborArray[laborItems[i]].renderSimple(contain);
+showSchools = function(trg, cityID, customInfo) {
+	console.log(schoolList);
+	for (var i=0; i<schoolList.length; i++) {
+			schoolList[i].renderCitySchools(trg, cityID, customInfo[i*3], customInfo[i*3+1], customInfo[i*3+2]);
 	}
 }
 

@@ -696,3 +696,57 @@ class message {
 		this.renderObject.contentBox.innerHTML = this.content;
 	}
 }
+
+class school {
+	constructor(details, laborTypes) {
+		this.schoolID = details[0];
+		this.schName = details[1];
+		this.laborItems = laborTypes;
+	}
+
+	renderSummary(trg) {
+		let contain = addDiv("", "schoolContain", trg);
+		contain.schName = addDiv("", "schoolName", contain);
+		contain.schName.innerHTML = this.schName;
+		//textBlob("", contain, "this school can train the following labor items");
+		contain.schoolLvl = addDiv("", "schoolLevel", contain);
+		contain.laborSect = addDiv("", "schoolLabor", contain);
+		/*
+		for (var i=0; i<3; i++) {
+			laborArray[this.laborItems[i]].renderSimple(contain.laborSect);
+		}*/
+		laborArray[this.laborItems[0]].renderSimple(contain.laborSect);
+		laborArray[this.laborItems[1]].renderSimple(contain.laborSect);
+		laborArray[this.laborItems[2]].renderSimple(contain.laborSect);
+		return contain;
+	}
+
+	buildOpt(trg, id, cityNum) {
+		let contain = this.renderSummary(trg);
+		let buyButton = newButton(contain);
+		let schID = this.schoolID;
+		buyButton.innerHTML = "Build this School";
+		buyButton.addEventListener("click", function() {scrMod("1054,"+schID+","+cityNum)});
+	}
+
+	renderCitySchools(trg, cityID, lvl, status, price) {
+		let contain = this.renderSummary(trg);
+		if (status == 100) contain.schoolLvl.innerHTML = "Level " + lvl;
+		else {
+			contain.schoolLvl.innerHTML = "Level " + lvl + ", " + status + "%";
+			// create pricing slide area
+			contain.schPrice = addDiv("", "schoolPrice", contain);
+
+			slideValBar(contain.schPrice, "sp-"+cityID+","+this.schoolID, 0, 1000); //(trg, slideID, low, hi)
+			let savePrice = newButton(contain.schPrice);
+			savePrice.innerHTML = "Set Price";
+			savePrice.schID = cityID+","+this.schoolID;
+
+			savePrice.addEventListener("click", function () {
+				console.log("look for sp-"+this.schID);
+				console.log(document.getElementById("sp-"+this.schID));
+				scrMod("1055,"+this.schID + ","+document.getElementById("sp-"+this.schID).value)});
+		}
+		//contain.schoolStatus.innerHTML = status + "%";
+	}
+}

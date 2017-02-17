@@ -519,3 +519,33 @@
 .demoChangeQty {
 	display:inline-block;
 }
+
+.schoolContain {
+	position:relative;
+	float:left;
+	height:200;
+	width:400;
+}
+
+.schoolName {
+	position:relative;
+	float:left;
+}
+
+.schoolLevel {
+	position:relative;
+	float:right;
+	width:200;
+}
+
+.schoolLabor {
+	position:relative;
+	float:left;
+	width:400;
+}
+
+.schoolPrice {
+	position:relative;
+	float:left;
+	width:400;
+}

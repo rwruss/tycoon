@@ -50,6 +50,7 @@
 1050 - MENU: Show Region Detail
 1051 - PROCESS: Cancel a sales offer
 1052 - PROCESS: Receive an edict order for a city
+1053 - MENU: Build schools menu
 
 TO DO:
 Political/leader orders at cities

@@ -21,28 +21,24 @@ var detailSection = addDiv("", "stdFloatDiv", cityPane);
 cityTabs = new tabMenu(["Overview", "Government", "Labor", "Schools"]);
 cityTabs.renderTabs(detailSection);
 cityTabs.renderKids[0].innerHTML = "Overview";
-cityTabs.renderKids[1].innerHTML = "Government";
 cityTabs.renderKids[2].innerHTML = "Labor";
-cityTabs.renderKids[3].innerHTML = "Schools";
 
 cityTabs.tabFunction(0, function() {console.log("i select u")});
 
 showCity.townDemo = ['.(implode(',', array_slice($thisCity->objDat, 50, 20))).'];
 showCity.leaderDemo = ['.(implode(',', array_slice($thisCity->objDat, 70, 20))).'];';
 
-// Get laws passed in the city
-if ($thisCity->get('lawslot') > 0) {
-	$cityLaws = new itemSlot($thisCity->get('lawslot'), $slotFile, 40);
-}
-
-// Show government options if player is the leader
-if ($thisCity->get('leader') == $pGameID) {
-	echo 'buildParks(cityTabs.renderKids[1]);';
-}
 
 echo '
-buildParks(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2]);
+textBlob("", cityTabs.renderKids[1], "Government and demographic information");
 showCity.renderDemos(cityTabs.renderKids[1]);
+buildParks(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2]);
+edictDetail(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2], "Adjust Taxes", ["Increase 1%", "Decrease 1%"]);
+
+showSchools(cityTabs.renderKids[3], '.$postVals[1].', ['.implode(',', array_slice($thisCity->objDat, 80, 30)).']);
+let buildSchools = newButton(cityTabs.renderKids[3]);
+buildSchools.innerHTML = "Build new Schools";
+buildSchools.addEventListener("click", function () {scrMod("1053,'.$postVals[1].'")})
 </script>';
 
 // Output demands for products of the city

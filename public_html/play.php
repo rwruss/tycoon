@@ -1040,6 +1040,10 @@ echo '
 		objNames = ['.implode(',', array_slice($namesList, 0, $numProducts)).'];
 		factoryNames = ['.implode(',', array_slice($namesList, $numProducts)).'];
 		laborNames = ['.$laborNameList.'];
+		schoolList = new Array();
+		schoolList[0] = new school([1, "Primary Schools"], [1,2,3]);
+		schoolList[1] = new school([2, "Trade School"], [1,2,3]);
+		schoolList[2] = new school([3, "Community College"], [1,2,3]);
 		console.log(laborNames);
 		console.log(objNames);
 		console.log(factoryNames);
