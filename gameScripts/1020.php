@@ -18,12 +18,13 @@ $citySchools = new itemSlot($thisCity->get('schoolSlot'), $slotFile, 40);
 
 //insert testVal into schoolSlot
 $citySchools->slotData[1] = 1;
-print_r($citySchools->slotData);
+//print_r($citySchools->slotData);
 
 // Read city schools and output possible items
 
-echo '</script>
-showSchools(cityTabs.renderKids[3], '.$postVals[1].', ['.implode(',', array_slice($thisCity->objDat, 80, 30)).']);;
+echo '<script>
+console.log("show school options");
+showSchools(showLaborArea, '.$postVals[3].', 0, ['.implode(',', array_slice($thisCity->objDat, 80, 30)).']);;
 </script>';
 /*
 $thisCity->updateLabor($now, $citySchools, $laborRates);

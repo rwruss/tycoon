@@ -70,7 +70,7 @@ while (($line = fgets($laborFile)) !== false) {
 				$eqArray[$eqItemNum] = intval($lineItems[$j+1]*100);
 		}
 	}
-	
+
 	// Add item to relevant school lists
 	for ($i=1; $i<=10; $i++) {
 		if ($lineItems[$i+10] > 0) {
@@ -78,7 +78,7 @@ while (($line = fgets($laborFile)) !== false) {
 			$schoolLists[$i][] = $lineItems[$i+10];
 		}
 	}
-	
+
 	echo 'EQ Array Sum:'.array_sum($eqArray);
 	fseek($laborEqFile, $laborCount*4000);
 	fwrite($laborEqFile, packArray($eqArray));
@@ -92,14 +92,16 @@ for ($i=1; $i<11; $i++) {
 	fwrite($schoolFile, packArray($schoolLists[$i]));
 }
 fseek($schoolFile, 8);
-$schoolStart = 0;
+$schoolStart = 88;
 for ($i=1; $i<11; $i++) {
-	$spotSize = sizeof($schoolList[$i])*4;
+	$spotSize = sizeof($schoolLists[$i])*4;
+	echo 'School '.$i.' size is '.$spotSize;
+
 	fwrite($schoolFile, pack('i*', $schoolStart, $spotSize));
 	$schoolStart += $spotSize;
 }
 
-fclose($schoolFile)
+fclose($schoolFile);
 
 // Load each product description into the product array
 $productFile = fopen('../scenarios/'.$scenario.'/products.csv', 'rb');

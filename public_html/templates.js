@@ -721,7 +721,7 @@ class deskTop {
 			} else {
 				var mkPane = new regPane(desc, this);
 				this.paneList[desc] = mkPane;
-				console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
+				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			}
 			//console.log("created " + desc);
 		}
@@ -1048,14 +1048,15 @@ function showInventory(factory, inventory) {
 
 function showLabor(factory, factoryLabor) {
 	businessDiv.laborSection.aassigned.innerHTML = "";
+	let trgFactory = factory;
 	for (var i=1; i<factoryLabor.length; i++) {
 
 		let laborItem = factoryLabor[i].renderSummary(businessDiv.laborSection.aassigned);
 		let itemNum = i;
 		if (factoryLabor[i] > 0) 	{}
-		laborItem.addEventListener("click", function () {scrMod("1023,'.$postVals[1].',"+itemNum)});
+		laborItem.addEventListener("click", function () {scrMod("1023,"+factory+","+itemNum)});
 	}
-	let trgFactory = factory;
+
 	laborButton = newButton(businessDiv.laborSection.aassigned, function () {scrMod("1018,"+trgFactory)});
 	laborButton.innerHTML = "Adjust Labor";
 }
@@ -1302,13 +1303,15 @@ buildParks = function(trg, cityID, effects) {
 }
 
 showSchools = function(trg, cityID, factoryID, customInfo) {
-	console.log(schoolList);
+	console.log(customInfo);
+	console.log("factory ID is " + factoryID);
 	for (var i=0; i<schoolList.length; i++) {
+			console.log("draw school "+i)
 			schoolList[i].renderCitySchools(trg, cityID, factoryID, customInfo[i*3], customInfo[i*3+1], customInfo[i*3+2]);
 	}
 }
 
-showSchoolsHire = function(trg, cityID, customInfo)
+showSchoolsHire = function(trg, cityID, customInfo) {}
 
 edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 	let edictItem = edictBox(trg, buttonDescs.length);
@@ -1321,5 +1324,11 @@ edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 
 	for (i=0; i<effects.length; i+=2) {
 		showDemoChange(edictItem.effects, effects[i], effects[i+1]);
+	}
+}
+
+loadCompanyLabor = function (laborDat) {
+	for (var i=0; i<laborDat.length; i+=10) {
+		companyLabor.push(new laborItem({objID:(i+1), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]});
 	}
 }

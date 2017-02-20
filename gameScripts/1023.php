@@ -37,12 +37,18 @@ newPay.slider.slide.step = ".01";
 setSlideVal(newPay, '.($laborDetails[5]/100).');
 payButton = newButton(payArea, function() {scrMod("1024,'.$postVals[1].','.$postVals[2].',"+newPay.slider.slide.value)});
 
-promotionArea = addDiv("", "stdFloatDiv", thisDiv);
-textBlob("", promotionArea, "Promotion options");
+thisDiv.promotionArea = addDiv("", "stdFloatDiv", thisDiv);
+textBlob("", thisDiv.promotionArea, "Promotion options");
 
 proSelect = new uList(laborArray, {items:['.implode(',', $promoOpts).']});
-proSelectButton = proSelect.SLsingleButton(promotionArea, {setVal:0});
-savePromote = newButton(promotionArea, function () {scrMod("1025,'.$postVals[1].','.$postVals[2].',"+SLreadSelection(proSelectButton))});
+proSelectButton = proSelect.SLsingleButton(thisDiv.promotionArea, {setVal:0});
+savePromote = newButton(thisDiv.promotionArea, function () {scrMod("1025,'.$postVals[1].','.$postVals[2].',"+SLreadSelection(proSelectButton))});
+
+thisDiv.hireArea = addDiv("", "stdFloatDiv", thisDiv);
+textBlob("", thisDiv.hireArea, "Hire Options");
+
+cLaborList = new uList(companyLabor);
+cLaborList.showAll(thisDiv.hireArea);
 </script>';
 
 fclose($cityFile);

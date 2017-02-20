@@ -83,6 +83,33 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 if ($thisPlayer->objDat[1] == 0) {include("../gameScripts/1001.php"); exit;}
 */
 
+// Load company labor
+echo 'Labor in slot '.$thisPlayer->get('laborSlot');
+$laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
+print_r($laborSlot->slotData);
+
+echo '<script>
+
+companyLabor = [';
+
+$startSpot = 1;
+for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
+	if ($laborSlot->slotData[$i] > 0) {
+		echo 'new laborItem({objID:'.($i+10).', pay:'.$laborSlot->slotData[$i+5].', ability:'.$laborSlot->slotData[$i+8].', laborType:'.$laborSlot->slotData[$i].'})';
+		$startSpot = $i+10;
+		break;
+	}
+}
+for ($i=$startSpot; $i<sizeof($laborSlot->slotData); $i+=10) {
+	if ($laborSlot->slotData[$i] > 0) {
+		echo ', new laborItem({objID:'.($i+10).', pay:'.$laborSlot->slotData[$i+5].', ability:'.$laborSlot->slotData[$i+8].', laborType:'.$laborSlot->slotData[$i].'})';
+	}
+}
+
+
+//echo 'new laborItem({objID:11, pay:1000, ability:50, laborType:4}), new laborItem({objID:12, pay:1000, ability:50, laborType:6}),new laborItem({objID:13, pay:1000, ability:50, laborType:5})];
+echo '];';
+
 
 echo '
 <link rel="stylesheet" type="text/css" href="gameStyles.css">
@@ -1044,6 +1071,9 @@ echo '
 		schoolList[0] = new school([1, "Primary Schools"], [1,2,3]);
 		schoolList[1] = new school([2, "Trade School"], [1,2,3]);
 		schoolList[2] = new school([3, "Community College"], [1,2,3]);
+		schoolList[3] = new school([4, "University"], [1,2,3]);
+		schoolList[4] = new school([5, "Technical University"], [1,2,3]);
+		schoolList[5] = new school([6, "Business School"], [1,2,3]);
 		console.log(laborNames);
 		console.log(objNames);
 		console.log(factoryNames);

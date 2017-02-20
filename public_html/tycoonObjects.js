@@ -338,16 +338,16 @@ class labor {
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
 	}
-	
+
 	renderHire(target, quality, sendStr) {
-		thisDiv = this.renderSummary(target);
-		
-		thisDiv.qualNum.innerHTML = quality;
-		
-		thisDiv.hireButton = addButton(thisDiv);
-		thisDiv.hireButton.innerHTML = "Hire!";
-		thisDiv.hireButton.sendStr = sendStr;
-		thisDiv.addEventListener("click", function () {scrMod("1057,"+this.sendStr)});
+		let hireContain = this.renderSummary(target);
+
+		hireContain.qualNum.innerHTML = quality;
+
+		hireContain.hireButton = newButton(hireContain);
+		hireContain.hireButton.innerHTML = "Hire!";
+		hireContain.hireButton.sendStr = sendStr;
+		hireContain.hireButton.addEventListener("click", function () {scrMod("1057,"+this.sendStr)});
 	}
 
 	renderQty(target, qty) {
@@ -386,8 +386,8 @@ class labor {
 		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
 		thisDiv.eduDiv.innerHTML = this.edClass;
 
-		console.log("labor type " + this.laborType + " == " + laborNames[this.laborType]);
-		console.log(laborNames);
+		//console.log("labor type " + this.laborType + " == " + laborNames[this.laborType]);
+		//console.log(laborNames);
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
 	}
@@ -400,18 +400,6 @@ class laborItem extends labor {
 	}
 
 	renderSummary(target) {
-		/*
-		var thisDiv = addDiv(null, 'productHolder', target);
-		thisDiv.setAttribute('ownerObject', this.objID);
-		//thisDiv.ownerObject = this.objID;
-		//console.log(thisDiv.ownerObject);
-
-		thisDiv.nameDiv = addDiv("asdf", "productName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
-
-		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "(" + this.laborType + ")" + "<br>Pay: " + this.pay;
-		return thisDiv;
-		*/
 		var thisDiv = addDiv(null, 'productHolder', target);
 
 		thisDiv.ownerObject = this.objID;
@@ -433,7 +421,7 @@ class laborItem extends labor {
 		thisDiv.eduDiv.innerHTML = this.edClass;
 
 		thisDiv.payDiv = addDiv("", "laborPay", thisDiv);
-		thisDiv.payDiv.innerHTML = this.pay;
+		thisDiv.payDiv.innerHTML = (this.pay/100).toFixed(2);
 
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
@@ -719,7 +707,7 @@ class school {
 		contain.schName.innerHTML = this.schName;
 		//textBlob("", contain, "this school can train the following labor items");
 		contain.schoolLvl = addDiv("", "schoolLevel", contain);
-		
+
 		contain.laborSect = addDiv("", "schoolLabor", contain);
 		laborArray[this.laborItems[0]].renderSimple(contain.laborSect);
 		laborArray[this.laborItems[1]].renderSimple(contain.laborSect);
@@ -735,14 +723,16 @@ class school {
 		buyButton.addEventListener("click", function() {scrMod("1054,"+schID+","+cityNum)});
 	}
 
-	renderCitySchools(trg, cityID, lvl, factoryID, schStatus, price) {
+	renderCitySchools(trg, cityID, factoryID, lvl, schStatus, price) {
+		console.log(this);
+		console.log("RCS factory ID is " + factoryID);
 		let contain = this.renderSummary(trg);
-		
+
 		contain.hireButton = addDiv("", "schoolHire", contain);
 		contain.hireButton.innerHTML = "hire from here";
-		contain.hireButton.sendStr = cityID+","+factoryID;
+		contain.hireButton.sendStr = cityID+","+factoryID+","+this.schoolID;
 		contain.hireButton.addEventListener("click", function () {scrMod("1056,"+this.sendStr)})
-		
+
 		if (schStatus == 100) contain.schoolLvl.innerHTML = "Level " + lvl;
 		else {
 			contain.schoolLvl.innerHTML = "Level " + lvl + ", " + schStatus + "%";

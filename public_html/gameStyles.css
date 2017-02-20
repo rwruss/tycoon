@@ -250,7 +250,7 @@
 .productHolder {
 	position:relative;
 	width:100;
-	height:100;
+	height:120;
 	border: 1px solid pink;
 	float:left;
 	background:pink;
@@ -391,6 +391,7 @@
 	height:20;
 	width:50;
 	border:1px solid green;
+	text-align: right;
 }
 
 .laborQualBar {
@@ -523,8 +524,8 @@
 .schoolContain {
 	position:relative;
 	float:left;
-	height:200;
-	width:400;
+	height:225;
+	width:306;
 }
 
 .schoolName {
@@ -540,17 +541,17 @@
 .schoolLevel {
 	position:relative;
 	float:left;
-	width:200;
+	padding:5px;
 }
 
 .schoolLabor {
 	position:relative;
 	float:left;
-	width:400;
+	width:306;
 }
 
 .schoolPrice {
 	position:relative;
 	float:left;
-	width:400;
+	width:306;
 }

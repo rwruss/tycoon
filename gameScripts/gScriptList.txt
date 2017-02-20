@@ -57,6 +57,7 @@
 1057 - PROCESS: Hire labor from a city (new)
 
 TO DO:
+finish company labor script in play.php
 Change labor to be ordered from city school rather than from a city as a whole
 Adjustments to worker pay
 Worker pay expectations
