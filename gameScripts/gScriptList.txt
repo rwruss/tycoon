@@ -78,29 +78,25 @@ Business Deals/Agreements with other companies and conglomerates
 Protect empty order list writing in 1014
 
 VERIFY DONE
+Simulator and AI Engine
 Fix labor type sales at cities (based on schools available) - verify this is done
 TO DO ON HOLD
-Adjust player object for "C" type dat (Hold off on this for now)
-CORRECT GAME JOIN/START SCRIPIT 1001
- - Create standard slots (offers) in slot files and record locations
 Fix & expand Sale options/market - sorting and filtering (1013)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
-
-
-http://www.linuxhowtos.org/C_C++/socket.htm
-
-IDEAS:
-Politics/mayors for cities - set polices and influence city and population demands
 
 DONE -
 Assigning labor to production tasks at factory
 Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
 
-http://playdosgamesonline.com/capitalism.html
+IDEAS:
+Politics/mayors for cities - set polices and influence city and population demands
+http://www.linuxhowtos.org/C_C++/socket.htm
+
 
 
 Get a job
 http://loudprogrammer.net/interview-with-rob-percival-how-to-land-your-first-junior-developer-job/?utm_source=quora&utm_medium=answer#.WG7ISvkrKUk
+https://www.topcoder.com/
 
 Baby Swing:
 https://www.youtube.com/watch?v=4i-TcJVnsFA
@@ -108,7 +104,6 @@ https://www.youtube.com/watch?v=MGDR5OfqOtU
 http://www.jameco.com/z/RF-500TB-18280-R-Nichibo-Taiwan-3-Volt-Dc-Motor-2104-Rpm-1-3-Volt-Range_2158442.html?CID=GOOG&gclid=CJrzz7yc9M8CFQuLaQodhpUKhg
 
 Other
-Travian Game
 http://www.bbc.com/earth/story/20161021-why-there-could-be-many-copies-of-you
 http://www.bbcgoodfood.com/howto/guide/5-mulled-drinks-you-can-make-minutes
 http://cdn.preterhuman.net/texts/math/Data_Structure_And_Algorithms/Algorithms%20and%20Data%20Structures%20-%20Niklaus%20Wirth.pdf
@@ -123,3 +118,6 @@ Game List:
 Kingdom Come: Deliverance
 Dual Universe
 Sea of Thieves
+Travian Game
+From the depths
+http://playdosgamesonline.com/capitalism.html
