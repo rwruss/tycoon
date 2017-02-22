@@ -30,14 +30,16 @@ thisDiv.innerHTML = "";
 thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
 thisLaborItem = new laborItem({objID:'.$postVals[2].', pay:'.$laborDetails[5].', ability:'.$laborDetails[8].', laborType:'.$laborDetails[0].'});
 factoryLaborDetail(thisLaborItem, '.$postVals[1].', thisDiv.laborDescArea);
-/*
 
+/*
 thisLaborItem.renderSummary(thisDiv.laborDescArea);
 */
+
 thisDiv.payArea = addDiv("", "stdFloatDiv", thisDiv);
 laborPaySettings(thisLaborItem, '.$postVals[1].', thisDiv.payArea);
 thisDiv.promotionArea = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", thisDiv.promotionArea, "Promotion options");
+
 /*
 proSelect = new uList(laborArray, {items:['.implode(',', $promoOpts).']});
 proSelectButton = proSelect.SLsingleButton(thisDiv.promotionArea, {setVal:0});
@@ -51,8 +53,8 @@ textBlob("", thisDiv.laborArea, "Other Labor Options");
 laborTabs = new tabMenu(["Company Labor", "Hire Labor"]);
 laborTabs.renderTabs(thisDiv.laborArea);
 
-console.log(companyLabor);
-companyLaborOptions(companyLabor, '.$postVals[1].', laborTabs.renderKids[0]);
+tmpLabor = companyLabor;
+companyLaborOptions(tmpLabor, '.$postVals[1].', laborTabs.renderKids[0]);
 </script>';
 
 fclose($cityFile);

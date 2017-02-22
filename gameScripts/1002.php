@@ -15,6 +15,7 @@ businessDiv.innerHTML = "";
 
 var headSection = addDiv("", "stdFloatDiv", businessDiv);
 var listSection = addDiv("", "stdFloatDiv", businessDiv);
+var laborSection = addaddDiv("", "stdFloatDiv", businessDiv);
 
 console.log(playerFactories);
 for (let i=0; i<playerFactories.length; i++) {
@@ -32,6 +33,9 @@ sendButton = newButton(headSection, function () {
 	if (checkSelection[checkSelection.length-1] != "0")	scrMod("1008,"+SLreadSelection(optionBox1));
 });
 sendButton.innerHTML = "Build This";
+
+tmpLabor = companyLabor;
+companyLaborOptions(tmpLabor, 0, laborSection);
 </script>';
 fclose($slotFile);
 fclose($objFile);

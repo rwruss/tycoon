@@ -55,20 +55,7 @@ for ($i=1; $i<9; $i++) {
 		}
 	}
 }
-/*
-$thisBusiness = loadObject($pGameID, $objFile, 400);
-$openSales = new itemSlot($_SESSION['game_'.$gameID]['business'][41], $offerListFile, 1000);
-$saleDat = [];
-for ($i=1; $i<sizeof($openSales->slotData); $i++) {
-	//echo 'Check item '.$openSales->slotData[$i];
-	fseek($offerDatFile, $openSales->slotData[$i]);
-	$tmpDat = unpack('i*', fread($offerDatFile, 44));
-	if ($tmpDat[1] > 0) {
-		$saleDat[] = $openSales->slotData[$i];
-		$saleDat = array_merge($saleDat, $tmpDat);
-	}
-}
-*/
+
 echo '<script>
 factoryUpgradeProducts = [];
 factoryUpgradeServices = [];
@@ -101,6 +88,8 @@ factoryOrders = new Array();
 for (var i=0; i<materialOrder.length; i+=3) {
 	factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 }
+loadFactoryLabor(['.implode(array_slice($thisObj->objDat, ($thisObj->laborOffset-1), 100).']);
+/*
 factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0})';
 $startVals = [];
 for ($i=0; $i<10; $i++) {
@@ -115,7 +104,7 @@ for ($i=0; $i<10; $i++) {
 }
 
 echo '];
-
+*/
 inventoryItems = [];
 for (i=0; i<materialInv.length; i+=2) {
 	inventoryItems.push(new product({objID:materialInv[i]}));
@@ -152,7 +141,6 @@ startButton4.innerHTML = "Work for - 8 hour";
 prodContain = addDiv("", "orderContain", headSection);
 fProduction = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100);
 fProductionBox = fProduction.render(prodContain);
-//console.log(fProductionBox);
 factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
 
 upgradeButton = newButton(headSection, function () {

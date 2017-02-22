@@ -1333,6 +1333,12 @@ loadCompanyLabor = function (laborDat) {
 	}
 }
 
+loadFactoryLabor = function (laborDat) {
+	for (var i=0; i<laborDat.length; i+=10) {
+		factoryLabor.push(new laborItem({objID:(laborDat[i]/10+1), pay:(laborDat[i+5]), ability:(laborDat[i+8]), laborType:laborDat[i]}))
+	}
+}
+
 factoryLaborDetail = function(thisLabor, factoryID, target) {
 	let item = thisLabor.renderSummary(target);
 	item.itemNo = 0;
@@ -1358,27 +1364,27 @@ laborPaySettings = function(laborItem, factoryID, target) {
 	setSlideVal(thisDiv.laborPay, laborItem.pay/100);
 }
 
-companyLaborOptions = function(companyLabor, factoryID, trg) {
-	console.log(companyLabor);
+companyLaborOptions = function(laborList, factoryID, trg) {
+	console.log(laborList);
 	trg.innerHTML = "";
-	cLaborList = new uList(companyLabor);
+	cLaborList = new uList(laborList);
 	cLaborList.SLShowAll(trg, function(x,y,z) {
 		let item = x.renderSummary(y);
 		item.itemNo = z;
 		item.addEventListener("click", function(z) {
-			console.log("remove item " + this.itemNo + "(type) " + companyLabor[this.itemNo].laborType)
+			console.log("remove item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType)
 			if (thisLaborItem.laborType > 0) {
-				let tmp = companyLabor[this.itemNo];
-				companyLabor[this.itemNo] = thisLaborItem;
+				let tmp = laborList[this.itemNo];
+				laborList[this.itemNo] = thisLaborItem;
 				thisLaborItem = tmp;
 			} else {
 
 			}
 			console.log("remove item " + this.itemNo)
-			thisLaborItem = companyLabor[this.itemNo];
-			companyLabor.splice(this.itemNo, 1);
+			thisLaborItem = laborList[this.itemNo];
+			laborList.splice(this.itemNo, 1);
 
-			companyLaborOptions(companyLabor, factoryID, trg);
+			companyLaborOptions(laborList, factoryID, trg);
 			console.log("move labor item up");
 			thisDiv.laborDescArea.innerHTML = "";
 

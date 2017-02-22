@@ -107,6 +107,8 @@ echo '
 
 <script type="text/javascript">
 	var companyLabor = new Array();
+	var factoryLabor;
+	var tmpLabor;
 	var playerUnits;
 	var moveString = new Array();
 	var umList = [];

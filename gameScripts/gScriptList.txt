@@ -20,8 +20,8 @@
 1020 - PROCESS: Load labor available at city
 1021 - PROCESS: Hire labor from a city to a factory or a company
 1022 - PROCESS: Move labor from company to factory or Vice Versa (from 1018)
-1023 - Labor Item detail - NOT CURRENTLY USED
-1024 - PROCESS: Save adjusted pay rate for a worker
+1023 - Labor Item detail
+1024 - PROCESS: Save adjusted pay rate for a worker - NOT CURRENTLY USED
 1025 - PROCESS: Save adjust job title for a worker
 1026 - List of cities/markets
 1027 - PROCESS: Show City Details
@@ -58,12 +58,11 @@
 1058 - PROCESS: Adjust labor at factory
 
 TO DO:
-resolve temporary adds to company labor when moving labor from factory to company
-finish company labor script in play.php
+resolve temporary adds to company labor when moving labor from factory to company - done?
 Change labor to be ordered from city school rather than from a city as a whole
-Adjustments to worker pay
-Worker pay expectations
-Worker pool for when they quit
+Adjustments to worker pay - done?
+Worker pay expectations - needs to calc based on job/experience and location/origin
+Worker pool for when they quit/get fired
 Political/leader orders at cities
 Political leader options and demographic affects
 script 1051
@@ -89,6 +88,7 @@ DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
 DONE -
 Assigning labor to production tasks at factory
 Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
+finish company labor script in play.php
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
@@ -99,6 +99,7 @@ http://www.linuxhowtos.org/C_C++/socket.htm
 Get a job
 http://loudprogrammer.net/interview-with-rob-percival-how-to-land-your-first-junior-developer-job/?utm_source=quora&utm_medium=answer#.WG7ISvkrKUk
 https://www.topcoder.com/
+http://sagecode.net/certification/web-dev/
 
 Baby Swing:
 https://www.youtube.com/watch?v=4i-TcJVnsFA

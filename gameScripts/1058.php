@@ -107,6 +107,18 @@ $thisFactory->set('prodRate', $productionRate);
 $startFactoryLabor = array_slice($thisFactory->objDat, $lOff-1, 100);
 print_r($startFactoryLabor);
 
+// Reload company labor
+$companyLabor = [];
+for ($i=1; $i<sizeof($businessLabor->slotData); $i+=10) {
+	if ($businessLabor->slotData[$i]>0) $companyLabor = array_merge($companyLabor, array_slice($businessLabor->slotData, $i-1, 10));
+}
+//output revised company labor and factory labor
+echo '<script>
+loadCompanyLabor(['.implode(',', $companyLabor).']);
+loadFactoryLabor(['.implode(array_slice($thisFactory->objDat, ($thisFactory->laborOffset-1), 100).']);
+showLabor('.$postVals[1].', factoryLabor);
+</script>';
+
 fclose($objFile);
 fclose($slotFile);
 fclose($laborEqFile);
