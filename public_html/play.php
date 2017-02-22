@@ -85,7 +85,11 @@ if ($thisPlayer->objDat[1] == 0) {include("../gameScripts/1001.php"); exit;}
 
 // Load company labor
 echo 'Labor in slot '.$thisPlayer->get('laborSlot');
+$companyLabor = [];
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
+for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
+	if ($laborSlot->slotData[$i]>0) $companyLabor = array_merge($companyLabor, array_slice($laborSlot->slotData, $i-1, 10));
+}
 
 echo '
 <link rel="stylesheet" type="text/css" href="gameStyles.css">
@@ -102,7 +106,7 @@ echo '
 </script>
 
 <script type="text/javascript">
-	var companyLabor;
+	var companyLabor = new Array();
 	var playerUnits;
 	var moveString = new Array();
 	var umList = [];
@@ -1092,8 +1096,8 @@ echo '
 
 		// initialize windows
 		useDeskTop.newPane("dialogPane");
-		
-		loadCompanyLabor(['.implode(',', $laborSlot->slotData).']);
+
+		loadCompanyLabor(['.implode(',', $companyLabor).']);
 	}
 
 	function showDiagnostics() {

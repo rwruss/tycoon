@@ -20,7 +20,7 @@
 1020 - PROCESS: Load labor available at city
 1021 - PROCESS: Hire labor from a city to a factory or a company
 1022 - PROCESS: Move labor from company to factory or Vice Versa (from 1018)
-1023 - Labor Item detail
+1023 - Labor Item detail - NOT CURRENTLY USED
 1024 - PROCESS: Save adjusted pay rate for a worker
 1025 - PROCESS: Save adjust job title for a worker
 1026 - List of cities/markets
@@ -55,8 +55,10 @@
 1055 - PROCESS: update percent construction cost for school
 1056 - MENU: Show labor for hire at a school
 1057 - PROCESS: Hire labor from a city (new)
+1058 - PROCESS: Adjust labor at factory
 
 TO DO:
+resolve temporary adds to company labor when moving labor from factory to company
 finish company labor script in play.php
 Change labor to be ordered from city school rather than from a city as a whole
 Adjustments to worker pay

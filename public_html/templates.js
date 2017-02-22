@@ -1329,6 +1329,61 @@ edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 
 loadCompanyLabor = function (laborDat) {
 	for (var i=0; i<laborDat.length; i+=10) {
-		companyLabor.push(new laborItem({objID:(i+1), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]});
+		companyLabor.push(new laborItem({objID:(i+100), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]}));
 	}
+}
+
+factoryLaborDetail = function(thisLabor, factoryID, target) {
+	let item = thisLabor.renderSummary(target);
+	item.itemNo = 0;
+
+	item.addEventListener("click", function () {
+		let emptyLabor = new laborItem({objID:0, pay:0, ability:0, laborType:0});
+		if (thisLabor.laborType > 0) {
+			companyLabor.push(thisLabor);
+			companyLaborOptions(companyLabor, factoryID, laborTabs.renderKids[0]);
+			thisLaborItem = emptyLabor;
+		}
+	target.innerHTML = "";
+	emptyLabor.renderSummary(target);
+	thisDiv.payArea.innerHTML = "";
+	})
+}
+
+laborPaySettings = function(laborItem, factoryID, target) {
+	target.innerHTML = "";
+	textBlob("", target, "Current pay for this employee");
+	thisDiv.laborPay = payBox(target, 1000);
+	thisDiv.laborPay.slider.slide.step = ".01";
+	setSlideVal(thisDiv.laborPay, laborItem.pay/100);
+}
+
+companyLaborOptions = function(companyLabor, factoryID, trg) {
+	console.log(companyLabor);
+	trg.innerHTML = "";
+	cLaborList = new uList(companyLabor);
+	cLaborList.SLShowAll(trg, function(x,y,z) {
+		let item = x.renderSummary(y);
+		item.itemNo = z;
+		item.addEventListener("click", function(z) {
+			console.log("remove item " + this.itemNo + "(type) " + companyLabor[this.itemNo].laborType)
+			if (thisLaborItem.laborType > 0) {
+				let tmp = companyLabor[this.itemNo];
+				companyLabor[this.itemNo] = thisLaborItem;
+				thisLaborItem = tmp;
+			} else {
+
+			}
+			console.log("remove item " + this.itemNo)
+			thisLaborItem = companyLabor[this.itemNo];
+			companyLabor.splice(this.itemNo, 1);
+
+			companyLaborOptions(companyLabor, factoryID, trg);
+			console.log("move labor item up");
+			thisDiv.laborDescArea.innerHTML = "";
+
+			factoryLaborDetail(thisLaborItem, factoryID, thisDiv.laborDescArea);
+			laborPaySettings(thisLaborItem, factoryID, thisDiv.payArea);
+		})
+	});
 }

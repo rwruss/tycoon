@@ -321,10 +321,9 @@ class factory extends object {
 				// Record labor eq rates
 				$this->objDat[$this->eqRateOffset+$i] = $effectiveRate*10000;
 				$productionItems++;
-			}
-			$this->saveAll($this->linkFile);
+			}			
 		}
-
+		$this->saveAll($this->linkFile);
 		$totalRate = intval($thisProduct->get('baseRate')*$productionRate/$productionItems*100);
 		return $totalRate;
 	}
@@ -517,7 +516,7 @@ class city extends object {
 		$elapsed = $now-$this->get('lastUpdate');
 		return(min($elapsed*$this->demandRate($productNumber)/(3600*1000000)+$this->demandLevel($productNumber), 2.0*$this->baseDemand($productNumber)));
 	}
-	
+
 	/*
 	function updateLabor($now, $schoolList, $baseRates) {
 

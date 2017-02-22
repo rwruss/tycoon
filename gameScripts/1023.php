@@ -25,30 +25,34 @@ print_r($laborDetails);
 echo '<script>
 useDeskTop.newPane("laborItemPane");
 thisDiv = useDeskTop.getPane("laborItemPane");
+thisDiv.innerHTML = "";
 
+thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
+thisLaborItem = new laborItem({objID:'.$postVals[2].', pay:'.$laborDetails[5].', ability:'.$laborDetails[8].', laborType:'.$laborDetails[0].'});
+factoryLaborDetail(thisLaborItem, '.$postVals[1].', thisDiv.laborDescArea);
+/*
 
-thisLaborItem = new laborItem({objID:'.$postVals[2].', pay:'.$laborDetails[5].', ability:'.$laborDetails[8].', laborType:'.$laborDetails[1].'});
-thisLaborItem.renderSummary(thisDiv);
-
-payArea = addDiv("", "stdFloatDiv", thisDiv);
-textBlob("", payArea, "Current pay for this employee");
-newPay = payBox(payArea, 1000);
-newPay.slider.slide.step = ".01";
-setSlideVal(newPay, '.($laborDetails[5]/100).');
-payButton = newButton(payArea, function() {scrMod("1024,'.$postVals[1].','.$postVals[2].',"+newPay.slider.slide.value)});
-
+thisLaborItem.renderSummary(thisDiv.laborDescArea);
+*/
+thisDiv.payArea = addDiv("", "stdFloatDiv", thisDiv);
+laborPaySettings(thisLaborItem, '.$postVals[1].', thisDiv.payArea);
 thisDiv.promotionArea = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", thisDiv.promotionArea, "Promotion options");
-
+/*
 proSelect = new uList(laborArray, {items:['.implode(',', $promoOpts).']});
 proSelectButton = proSelect.SLsingleButton(thisDiv.promotionArea, {setVal:0});
 savePromote = newButton(thisDiv.promotionArea, function () {scrMod("1025,'.$postVals[1].','.$postVals[2].',"+SLreadSelection(proSelectButton))});
+*/
 
-thisDiv.hireArea = addDiv("", "stdFloatDiv", thisDiv);
-textBlob("", thisDiv.hireArea, "Hire Options");
+saveSettings = newButton(thisDiv.promotionArea);
+saveSettings.addEventListener("click", function() {scrMod("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)})
+thisDiv.laborArea = addDiv("", "stdFloatDiv", thisDiv);
+textBlob("", thisDiv.laborArea, "Other Labor Options");
+laborTabs = new tabMenu(["Company Labor", "Hire Labor"]);
+laborTabs.renderTabs(thisDiv.laborArea);
 
-cLaborList = new uList(companyLabor);
-cLaborList.showAll(thisDiv.hireArea);
+console.log(companyLabor);
+companyLaborOptions(companyLabor, '.$postVals[1].', laborTabs.renderKids[0]);
 </script>';
 
 fclose($cityFile);

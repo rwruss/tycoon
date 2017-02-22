@@ -1,13 +1,19 @@
 <?php
 
 //print_r($postVals);
+/*
+pvs
+1-factory ID
+2-factory labor slot
+3-new labor item
+4-new labor item pay rate
+*/
 
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb');
 
 // Load the business & factory
@@ -130,6 +136,5 @@ showLabor('.$postVals[1].', factoryLabor);
 fclose($laborEqFile);
 fclose($objFile);
 fclose($slotFile);
-fclose($cityFile);
 
 ?>

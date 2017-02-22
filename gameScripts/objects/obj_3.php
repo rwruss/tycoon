@@ -42,6 +42,7 @@ $currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
 
 // Load factory sales
+$saleDat = [];
 for ($i=1; $i<9; $i++) {
 	if ($thisObj->get('offer'.$i) > 0) {
 		fseek($offerDatFile, $thisObj->get('offer'.$i));
