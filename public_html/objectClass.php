@@ -476,6 +476,7 @@ class city extends object {
 		$this->attrList['lawSlot'] = 24;
 		$this->attrList['factoryList'] = 25;
 		$this->attrList['money'] = 26;
+		$this->attrList['cityLaborSlot'] = 27;
 	}
 
 	function demandRate($productID) {

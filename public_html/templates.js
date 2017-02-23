@@ -1413,3 +1413,13 @@ companyLaborList = function(laborList, trg) {
 		})
 	});
 }
+
+showCityLabor = function(trg, cityID, laborList) {
+	cLaborList = new uList(laborList);
+	cLaborList.SLShowAll(trg, function(x,y,z) {
+		let item = x.renderSummary(y);
+		item.itemNo = z;
+		item.addEventListener("click", function(z) {
+			console.log("detail for item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType);
+		})
+}

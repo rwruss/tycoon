@@ -3,9 +3,23 @@
 //print_R($postVals);
 require_once('./objectClass.php');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
 
 // Load the city information
 $thisCity = loadCity($postVals[1], $cityFile);
+
+// Load the city labor
+$laborPool = [];
+if ($thisCity->get('cityLaborSlot')>0) {
+	$cityLabor = new itemSlot($thisCity->get('cityLaborSlot'), $laborSlotFile, 40);
+	for ($i=1; $i<sizeof($cityLabor->slotData); $i+=10) {
+		if ($cityLabor->slotData[$i] > 0) {
+			$laborPool = array_merge($laborPool, array_slice($cityLabor->slotData, $i-1, 10);
+		}
+	}
+}
+
 
 // Output parameters of the city (population, wealth, etc)
 echo '<script>
@@ -35,6 +49,7 @@ showCity.renderDemos(cityTabs.renderKids[1]);
 buildParks(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2]);
 edictDetail(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2], "Adjust Taxes", ["Increase 1%", "Decrease 1%"]);
 
+showCityLabor(cityTabs.renderKids[2], '.$postVals[1].', ['.implode(',', $laborPool).']);
 showSchools(cityTabs.renderKids[3], '.$postVals[1].',0, ['.implode(',', array_slice($thisCity->objDat, 80, 30)).']);
 let buildSchools = newButton(cityTabs.renderKids[3]);
 buildSchools.innerHTML = "Build new Schools";
@@ -44,5 +59,7 @@ buildSchools.addEventListener("click", function () {scrMod("1053,'.$postVals[1].
 // Output demands for products of the city
 
 fclose($cityFile);
+fclose($laborPoolFile);
+fclose($laborSlotFile);
 
 ?>
