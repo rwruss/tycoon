@@ -15,7 +15,7 @@ businessDiv.innerHTML = "";
 
 var headSection = addDiv("", "stdFloatDiv", businessDiv);
 var listSection = addDiv("", "stdFloatDiv", businessDiv);
-var laborSection = addaddDiv("", "stdFloatDiv", businessDiv);
+var laborSection = addDiv("", "stdFloatDiv", businessDiv);
 
 console.log(playerFactories);
 for (let i=0; i<playerFactories.length; i++) {
@@ -34,8 +34,10 @@ sendButton = newButton(headSection, function () {
 });
 sendButton.innerHTML = "Build This";
 
+textBlob("", laborSection, "company labor");
+
 tmpLabor = companyLabor;
-companyLaborOptions(tmpLabor, 0, laborSection);
+companyLaborList(tmpLabor, laborSection);
 </script>';
 fclose($slotFile);
 fclose($objFile);

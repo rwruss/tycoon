@@ -14,9 +14,9 @@ pvs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb');
+$laborEqFile = fopen($scnPath.'/laborEq.dat', 'r+b');
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
@@ -115,7 +115,7 @@ for ($i=1; $i<sizeof($businessLabor->slotData); $i+=10) {
 //output revised company labor and factory labor
 echo '<script>
 loadCompanyLabor(['.implode(',', $companyLabor).']);
-loadFactoryLabor(['.implode(array_slice($thisFactory->objDat, ($thisFactory->laborOffset-1), 100).']);
+loadFactoryLabor(['.implode(',', array_slice($thisFactory->objDat, ($thisFactory->laborOffset-1), 100)).']);
 showLabor('.$postVals[1].', factoryLabor);
 </script>';
 

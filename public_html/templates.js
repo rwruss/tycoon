@@ -1047,18 +1047,20 @@ function showInventory(factory, inventory) {
 }
 
 function showLabor(factory, factoryLabor) {
+	console.log(factoryLabor);
 	businessDiv.laborSection.aassigned.innerHTML = "";
 	let trgFactory = factory;
 	for (var i=1; i<factoryLabor.length; i++) {
 
 		let laborItem = factoryLabor[i].renderSummary(businessDiv.laborSection.aassigned);
+		console.log("draw yupe " + factoryLabor[i].laborType)
 		let itemNum = i;
 		if (factoryLabor[i] > 0) 	{}
 		laborItem.addEventListener("click", function () {scrMod("1023,"+factory+","+itemNum)});
 	}
 
-	laborButton = newButton(businessDiv.laborSection.aassigned, function () {scrMod("1018,"+trgFactory)});
-	laborButton.innerHTML = "Adjust Labor";
+	//laborButton = newButton(businessDiv.laborSection.aassigned, function () {scrMod("1018,"+trgFactory)});
+	//laborButton.innerHTML = "Adjust Labor";
 }
 
 function updateMaterialInv(factory, materialInv) {
@@ -1334,9 +1336,13 @@ loadCompanyLabor = function (laborDat) {
 }
 
 loadFactoryLabor = function (laborDat) {
+	factoryLabor = new Array();
+	factoryLabor.push(new laborItem({objID:0, pay:0, ability:0, laborType:0}));
 	for (var i=0; i<laborDat.length; i+=10) {
-		factoryLabor.push(new laborItem({objID:(laborDat[i]/10+1), pay:(laborDat[i+5]), ability:(laborDat[i+8]), laborType:laborDat[i]}))
+		factoryLabor.push(new laborItem({objID:(laborDat[i]/10+1), pay:(laborDat[i+5]), ability:(laborDat[i+8]), laborType:laborDat[i]}));
 	}
+	console.log("loaded factory labor");
+	console.log(factoryLabor);
 }
 
 factoryLaborDetail = function(thisLabor, factoryID, target) {
@@ -1390,6 +1396,20 @@ companyLaborOptions = function(laborList, factoryID, trg) {
 
 			factoryLaborDetail(thisLaborItem, factoryID, thisDiv.laborDescArea);
 			laborPaySettings(thisLaborItem, factoryID, thisDiv.payArea);
+		})
+	});
+}
+
+companyLaborList = function(laborList, trg) {
+	console.log(laborList);
+	trg.innerHTML = "";
+	cLaborList = new uList(laborList);
+	cLaborList.SLShowAll(trg, function(x,y,z) {
+		let item = x.renderSummary(y);
+		item.itemNo = z;
+		item.addEventListener("click", function(z) {
+			console.log("detail for item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType)
+
 		})
 	});
 }

@@ -421,7 +421,7 @@ class laborItem extends labor {
 		thisDiv.eduDiv.innerHTML = this.edClass;
 
 		thisDiv.payDiv = addDiv("", "laborPay", thisDiv);
-		thisDiv.payDiv.innerHTML = (this.pay/100).toFixed(2);
+		thisDiv.payDiv.innerHTML = "$"+(this.pay/100).toFixed(2);
 
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;

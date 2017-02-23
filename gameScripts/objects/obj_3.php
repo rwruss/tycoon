@@ -88,23 +88,9 @@ factoryOrders = new Array();
 for (var i=0; i<materialOrder.length; i+=3) {
 	factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 }
-loadFactoryLabor(['.implode(array_slice($thisObj->objDat, ($thisObj->laborOffset-1), 100).']);
-/*
-factoryLabor = [new laborItem({objID:0, pay:0, ability:0, laborType:0})';
-$startVals = [];
-for ($i=0; $i<10; $i++) {
-	if ($thisObj->objDat[$thisObj->laborOffset + $i*10] == 0) {
-		$useID = 0;
-		$startVals[$i] = 0;
-	} else {
-		$startVals[$i] = $i+1;
-		$useID = $i+1;
-	}
-	echo ', new laborItem({objID:"'.$useID.'", pay:'.$thisObj->objDat[$thisObj->laborOffset+5 + $i*10].', ability:'.$thisObj->objDat[$thisObj->laborOffset+8 + $i*10].', laborType:'.$thisObj->objDat[$thisObj->laborOffset + $i*10].'})';
-}
-
-echo '];
-*/
+loadFactoryLabor(['.implode(',', array_slice($thisObj->objDat, ($thisObj->laborOffset-1), 100)).']);
+console.log("flabor is");
+console.log(factoryLabor);
 inventoryItems = [];
 for (i=0; i<materialInv.length; i+=2) {
 	inventoryItems.push(new product({objID:materialInv[i]}));

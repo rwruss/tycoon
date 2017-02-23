@@ -58,11 +58,9 @@
 1058 - PROCESS: Adjust labor at factory
 
 TO DO:
-resolve temporary adds to company labor when moving labor from factory to company - done?
 Change labor to be ordered from city school rather than from a city as a whole
-Adjustments to worker pay - done?
-Worker pay expectations - needs to calc based on job/experience and location/origin
-Worker pool for when they quit/get fired
+*Worker pay expectations - needs to calc based on job/experience and location/origin
+**Worker pool for when they quit/get fired
 Political/leader orders at cities
 Political leader options and demographic affects
 script 1051
@@ -86,6 +84,8 @@ Fix & expand Sale options/market - sorting and filtering (1013)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
 
 DONE -
+Adjustments to worker pay - done?
+resolve temporary adds to company labor when moving labor from factory to company - done?
 Assigning labor to production tasks at factory
 Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
 finish company labor script in play.php
