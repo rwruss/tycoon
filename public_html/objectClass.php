@@ -70,7 +70,7 @@ class object {
 	}
 
 	function saveBlock($loc, $str) {
-		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc*4);
+		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc*4-4);
 		fwrite($this->linkFile, $str);
 	}
 
@@ -321,7 +321,7 @@ class factory extends object {
 				// Record labor eq rates
 				$this->objDat[$this->eqRateOffset+$i] = $effectiveRate*10000;
 				$productionItems++;
-			}			
+			}
 		}
 		$this->saveAll($this->linkFile);
 		$totalRate = intval($thisProduct->get('baseRate')*$productionRate/$productionItems*100);

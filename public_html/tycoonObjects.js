@@ -420,12 +420,16 @@ class laborItem extends labor {
 		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
 		thisDiv.eduDiv.innerHTML = this.edClass;
 
+		thisDiv.fireDiv = addDiv("asdf", "laborFire", thisDiv);
+		thisDiv.fireDiv.innerHTML = "F";
+
 		thisDiv.payDiv = addDiv("", "laborPay", thisDiv);
 		thisDiv.payDiv.innerHTML = "$"+(this.pay/100).toFixed(2);
 
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
 	}
+
 }
 
 class gamePlayer {

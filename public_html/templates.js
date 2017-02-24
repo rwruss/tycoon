@@ -1407,10 +1407,12 @@ companyLaborList = function(laborList, trg) {
 	cLaborList.SLShowAll(trg, function(x,y,z) {
 		let item = x.renderSummary(y);
 		item.itemNo = z;
-		item.addEventListener("click", function(z) {
-			console.log("detail for item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType)
-
-		})
+		item.fireDiv.sendStr = "1059,"+z+",0";
+		item.fireDiv.addEventListener("click", function(z) {
+			console.log("detail for item " + this.parentNode.itemNo + "(type) " + laborList[this.parentNode.itemNo].laborType);
+			console.log("fure " + this.sendStr);
+			scrMod(this.sendStr);
+		});
 	});
 }
 
@@ -1421,5 +1423,6 @@ showCityLabor = function(trg, cityID, laborList) {
 		item.itemNo = z;
 		item.addEventListener("click", function(z) {
 			console.log("detail for item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType);
-		})
+		});
+	});
 }

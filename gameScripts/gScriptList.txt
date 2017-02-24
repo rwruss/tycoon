@@ -59,6 +59,8 @@
 1059 - PROCESS: Fire labor from a company and send to global pool
 
 TO DO:
+Create starting laborpool and labor slot files
+Verify that saveBlock in objectClass (line 72) is saving at the correct location
 Change labor to be ordered from city school rather than from a city as a whole
 *Worker pay expectations - needs to calc based on job/experience and location/origin
 **Worker pool for when they quit/get fired

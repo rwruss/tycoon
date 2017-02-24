@@ -1,6 +1,7 @@
 <?php
 
 //print_R($postVals);
+require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
@@ -15,7 +16,7 @@ if ($thisCity->get('cityLaborSlot')>0) {
 	$cityLabor = new itemSlot($thisCity->get('cityLaborSlot'), $laborSlotFile, 40);
 	for ($i=1; $i<sizeof($cityLabor->slotData); $i+=10) {
 		if ($cityLabor->slotData[$i] > 0) {
-			$laborPool = array_merge($laborPool, array_slice($cityLabor->slotData, $i-1, 10);
+			$laborPool = array_merge($laborPool, array_slice($cityLabor->slotData, $i-1, 10));
 		}
 	}
 }
