@@ -11,6 +11,7 @@ $laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
 $thisCity = loadCity($postVals[1], $cityFile);
 
 // Load the city labor
+echo 'Check slot '.$thisCity->get('cityLaborSlot');
 $laborPool = [];
 if ($thisCity->get('cityLaborSlot')>0) {
 	$cityLabor = new itemSlot($thisCity->get('cityLaborSlot'), $laborSlotFile, 40);
@@ -50,6 +51,8 @@ showCity.renderDemos(cityTabs.renderKids[1]);
 buildParks(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2]);
 edictDetail(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2], "Adjust Taxes", ["Increase 1%", "Decrease 1%"]);
 
+cityTabs.renderKids[2].subTarget = addDiv("", "stdFloatDiv", cityTabs.renderKids[2]);
+laborTypeMenu(cityTabs.renderKids[2]);
 showCityLabor(cityTabs.renderKids[2], '.$postVals[1].', ['.implode(',', $laborPool).']);
 showSchools(cityTabs.renderKids[3], '.$postVals[1].',0, ['.implode(',', array_slice($thisCity->objDat, 80, 30)).']);
 let buildSchools = newButton(cityTabs.renderKids[3]);

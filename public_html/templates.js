@@ -857,7 +857,6 @@ collect = function (group) {
 
 
 slideValBar = function (trg, slideID, low, hi) {
-	console.log("Add a slide bar to " + trg)
 	var contain = addDiv("", "slideContain", trg);
 	contain.descr = addDiv("", "slideTitle", contain);
 
@@ -1305,10 +1304,7 @@ buildParks = function(trg, cityID, effects) {
 }
 
 showSchools = function(trg, cityID, factoryID, customInfo) {
-	console.log(customInfo);
-	console.log("factory ID is " + factoryID);
 	for (var i=0; i<schoolList.length; i++) {
-			console.log("draw school "+i)
 			schoolList[i].renderCitySchools(trg, cityID, factoryID, customInfo[i*3], customInfo[i*3+1], customInfo[i*3+2]);
 	}
 }
@@ -1333,6 +1329,15 @@ loadCompanyLabor = function (laborDat) {
 	for (var i=0; i<laborDat.length; i+=10) {
 		companyLabor.push(new laborItem({objID:(i+100), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]}));
 	}
+}
+
+loadLaborItems = function(laborDat) {
+	let tmpArray = new Array();
+	for (var i=0; i<laborDat.length; i+=10) {
+		tmpArray.push(new laborItem({objID:(i+100), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]}));
+	}
+
+	return tmpArray;
 }
 
 loadFactoryLabor = function (laborDat) {
@@ -1425,4 +1430,40 @@ showCityLabor = function(trg, cityID, laborList) {
 			console.log("detail for item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType);
 		});
 	});
+}
+
+laborHireList = function(trg, laborList) {
+	console.log(laborList);
+	let laborItems = loadLaborItems(laborList);
+
+	cLaborList = new uList(laborItems);
+	cLaborList.SLShowAll(trg, function(x,y,z) {
+		let item = x.renderHire(y);
+		item.itemNo = z;
+		item.addEventListener("click", function(z) {
+			console.log("detail for item " + this.itemNo + "(type) " + laborItems[this.itemNo].laborType);
+		});
+	});
+}
+
+laborTypeMenu = function(trg) {
+	let newMenu = document.createElement("select");
+
+	for (var i=1; i<laborNames.length; i++) {
+		let newItem = document.createElement("option");
+		newItem.appendChild(document.createTextNode(laborNames[i]));
+		newItem.value = i;
+		newMenu.appendChild(newItem);
+	}
+
+	newMenu.addEventListener("change", function() {
+		loadData("1060,"+this.value, function (x) {
+			if (x.length > 0) {
+				let list = new Array();
+				list = x.split(",");
+				laborHireList(trg.subTarget, list);
+			} else (trg.subTarget.innerHTML = "no items");
+		});
+	});
+	trg.appendChild(newMenu);
 }

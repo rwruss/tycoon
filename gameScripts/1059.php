@@ -10,11 +10,11 @@ PVs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
-$cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b');
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b');
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 
 $emptyData = pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 if ($postVals[2] > 0) {

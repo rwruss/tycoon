@@ -85,6 +85,12 @@ while (($line = fgets($laborFile)) !== false) {
 	$laborCount++;
 }
 
+// Create slots in the labor pool for each type of labor
+$laborSlotFile = fopen('../scenarios/'.$scenario.'/laborLists.slt', 'r+b');
+fseek($laborSlotFile, $laborCount*40-4);
+fwrite($laborSlotFile, pack('i', 0));
+fclose($laborSlotFile);
+
 // record schools file
 $schoolFile = fopen('../scenarios/'.$scenario.'/schools.dat', 'wb');
 fseek($schoolFile, 88);

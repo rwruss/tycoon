@@ -342,12 +342,11 @@ class labor {
 	renderHire(target, quality, sendStr) {
 		let hireContain = this.renderSummary(target);
 
-		hireContain.qualNum.innerHTML = quality;
-
 		hireContain.hireButton = newButton(hireContain);
 		hireContain.hireButton.innerHTML = "Hire!";
 		hireContain.hireButton.sendStr = sendStr;
-		hireContain.hireButton.addEventListener("click", function () {scrMod("1057,"+this.sendStr)});
+
+		return hireContain;
 	}
 
 	renderQty(target, qty) {
@@ -419,10 +418,10 @@ class laborItem extends labor {
 
 		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
 		thisDiv.eduDiv.innerHTML = this.edClass;
-
+		/*
 		thisDiv.fireDiv = addDiv("asdf", "laborFire", thisDiv);
 		thisDiv.fireDiv.innerHTML = "F";
-
+		*/
 		thisDiv.payDiv = addDiv("", "laborPay", thisDiv);
 		thisDiv.payDiv.innerHTML = "$"+(this.pay/100).toFixed(2);
 
@@ -728,8 +727,6 @@ class school {
 	}
 
 	renderCitySchools(trg, cityID, factoryID, lvl, schStatus, price) {
-		console.log(this);
-		console.log("RCS factory ID is " + factoryID);
 		let contain = this.renderSummary(trg);
 
 		contain.hireButton = addDiv("", "schoolHire", contain);
