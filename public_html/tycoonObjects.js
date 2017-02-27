@@ -348,6 +348,16 @@ class labor {
 
 		return hireContain;
 	}
+	
+	renderFire(target) {
+		let hireContain = this.renderSummary(target);
+
+		hireContain.hireButton = newButton(hireContain);
+		hireContain.hireButton.innerHTML = "Fire!";
+		hireContain.hireButton.sendStr = sendStr;
+
+		return hireContain;
+	}
 
 	renderQty(target, qty) {
 		console.log("renderdqty");

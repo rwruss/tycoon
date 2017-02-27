@@ -1050,16 +1050,12 @@ function showLabor(factory, factoryLabor) {
 	businessDiv.laborSection.aassigned.innerHTML = "";
 	let trgFactory = factory;
 	for (var i=1; i<factoryLabor.length; i++) {
-
-		let laborItem = factoryLabor[i].renderSummary(businessDiv.laborSection.aassigned);
+		let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned);
 		console.log("draw yupe " + factoryLabor[i].laborType)
 		let itemNum = i;
 		if (factoryLabor[i] > 0) 	{}
 		laborItem.addEventListener("click", function () {scrMod("1023,"+factory+","+itemNum)});
 	}
-
-	//laborButton = newButton(businessDiv.laborSection.aassigned, function () {scrMod("1018,"+trgFactory)});
-	//laborButton.innerHTML = "Adjust Labor";
 }
 
 function updateMaterialInv(factory, materialInv) {
@@ -1432,13 +1428,14 @@ showCityLabor = function(trg, cityID, laborList) {
 	});
 }
 
-laborHireList = function(trg, laborList) {
+laborHireList = function(trg, factoryID, laborList) {
 	console.log(laborList);
 	let laborItems = loadLaborItems(laborList);
 
 	cLaborList = new uList(laborItems);
 	cLaborList.SLShowAll(trg, function(x,y,z) {
-		let item = x.renderHire(y);
+		sendStr = "0,"+(z*40)+","+factoryID+",0";
+		let item = x.renderHire(y, x.quality, sendStr);
 		item.itemNo = z;
 		item.addEventListener("click", function(z) {
 			console.log("detail for item " + this.itemNo + "(type) " + laborItems[this.itemNo].laborType);
@@ -1446,7 +1443,7 @@ laborHireList = function(trg, laborList) {
 	});
 }
 
-laborTypeMenu = function(trg) {
+laborTypeMenu = function(trg, factoryID) {
 	let newMenu = document.createElement("select");
 
 	for (var i=1; i<laborNames.length; i++) {
@@ -1461,7 +1458,7 @@ laborTypeMenu = function(trg) {
 			if (x.length > 0) {
 				let list = new Array();
 				list = x.split(",");
-				laborHireList(trg.subTarget, list);
+				laborHireList(trg.subTarget, factoryID, list);
 			} else (trg.subTarget.innerHTML = "no items");
 		});
 	});
