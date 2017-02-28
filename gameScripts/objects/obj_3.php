@@ -171,9 +171,7 @@ businessDiv.saleItems = addDiv("", "stdFloatDiv", orderSection);
 textBlob("", orderHead, "Current orders");
 showOrders(businessDiv.orderItems, factoryOrders);
 showSales(businessDiv.saleItems, factorySales);
-/*
 
-*/
 </script>';
 
 fclose($offerListFile);

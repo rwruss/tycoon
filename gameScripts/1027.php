@@ -52,7 +52,7 @@ buildParks(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2]);
 edictDetail(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2], "Adjust Taxes", ["Increase 1%", "Decrease 1%"]);
 
 cityTabs.renderKids[2].subTarget = addDiv("", "stdFloatDiv", cityTabs.renderKids[2]);
-laborTypeMenu(cityTabs.renderKids[2]);
+laborTypeMenu(cityTabs.renderKids[2], 0);
 showCityLabor(cityTabs.renderKids[2], '.$postVals[1].', ['.implode(',', $laborPool).']);
 showSchools(cityTabs.renderKids[3], '.$postVals[1].',0, ['.implode(',', array_slice($thisCity->objDat, 80, 30)).']);
 let buildSchools = newButton(cityTabs.renderKids[3]);

@@ -75,20 +75,14 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 	}
 }
 
-//print_r($factoryList);
-//echo "thisplayer is a ".get_class ($thisPlayer);
-//$playerDat = unpack("i*", file_get_contents($gamePath."/unitDat.dat", NULL, NULL, $pGameID*100, 400));
-
-/*
-if ($thisPlayer->objDat[1] == 0) {include("../gameScripts/1001.php"); exit;}
-*/
-
 // Load company labor
 echo 'Labor in slot '.$thisPlayer->get('laborSlot');
 $companyLabor = [];
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
+print_r($laborSlot->slotData);
 for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
-	if ($laborSlot->slotData[$i]>0) $companyLabor = array_merge($companyLabor, array_slice($laborSlot->slotData, $i-1, 10));
+	//if ($laborSlot->slotData[$i]>0) $companyLabor = array_merge($companyLabor, array_slice($laborSlot->slotData, $i-1, 10));
+	$companyLabor = $laborSlot->slotData;
 }
 
 echo '
@@ -1115,8 +1109,8 @@ echo '
 
 		// initialize windows
 		useDeskTop.newPane("dialogPane");
-
-		loadCompanyLabor(['.implode(',', $companyLabor).']);
+		companyLabor = loadLaborItems(['.implode(',', $companyLabor).']);
+		//loadCompanyLabor(['.implode(',', $companyLabor).']);
 	}
 
 	function showDiagnostics() {

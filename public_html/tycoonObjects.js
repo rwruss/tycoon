@@ -346,15 +346,24 @@ class labor {
 		hireContain.hireButton.innerHTML = "Hire!";
 		hireContain.hireButton.sendStr = sendStr;
 
+		hireContain.addEventListener("click", function () {
+			scrMod("1057,"+sendStr);
+		});
+
 		return hireContain;
 	}
-	
-	renderFire(target) {
+
+	renderFire(target, sendStr) {
 		let hireContain = this.renderSummary(target);
 
 		hireContain.hireButton = newButton(hireContain);
 		hireContain.hireButton.innerHTML = "Fire!";
 		hireContain.hireButton.sendStr = sendStr;
+
+		hireContain.addEventListener("click", function () {
+			event.stopPropagation();
+			scrMod(sendStr);
+		});
 
 		return hireContain;
 	}

@@ -8,11 +8,13 @@ class dataSlot {
 	private $slotSize, $useFile;
 	public $start, $size;
 
-	function __construct($start, $slotFile, $size) {
-		if ($start > 0) {
+	function __construct($start, $slotFile, $size, $zeroCheck = FALSE) {
+
+		if ($start > 0 || $zeroCheck) {
 			$this->init($start, $slotFile, $size);
 			$this->useFile = $slotFile;
 		} else {
+			echo 'Check failed';
 			$this->slotData = [];
 		}
 	}
@@ -24,7 +26,7 @@ class dataSlot {
 		$slotSize = $size;
 		$nextSlot = $start;
 		$this->itemsPerSlot = ($size-4)/4;
-		while ($nextSlot > 0) {
+		do {
 			$seekto = $nextSlot*$size;
 
 			$this->slotList[] = $nextSlot;
@@ -34,7 +36,7 @@ class dataSlot {
 			$tmpA = unpack("N", $tmpDat);
 			$nextSlot = $tmpA[1];
 			//echo 'seek to '.$seekto.' for next slot '.$nextSlot.'<br>';
-		}
+		} while ($nextSlot > 0);
 	}
 
 	function save($file) {
@@ -110,8 +112,8 @@ class dataSlot {
 }
 
 class itemSlot extends dataSlot {
-	function __construct($start, $slotFile, $size) {
-		parent::__construct($start, $slotFile, $size);
+	function __construct($start, $slotFile, $size, $zeroCheck = FALSE) {
+		parent::__construct($start, $slotFile, $size, $zeroCheck);
 
 		$this->slotData = unpack('i*', $this->dataString);
 	}

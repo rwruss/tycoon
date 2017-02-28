@@ -60,8 +60,9 @@
 1060 - PROCESS: load labor of specific type
 
 TO DO:
+**start cities not filled with 1000
 **factory locations
-correct hire and fire buttons and options
+***correct hire and fire buttons and options
 Create starting laborpool and labor slot files
 Verify that saveBlock in objectClass (line 72) is saving at the correct location
 Change labor to be ordered from city school rather than from a city as a whole
@@ -85,6 +86,7 @@ Protect empty order list writing in 1014
 VERIFY DONE
 **Worker pool for when they quit/get fired
 Fix labor type sales at cities (based on schools available) - verify this is done
+
 TO DO ON HOLD
 Fix & expand Sale options/market - sorting and filtering (1013)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET

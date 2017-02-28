@@ -1048,10 +1048,9 @@ function showInventory(factory, inventory) {
 function showLabor(factory, factoryLabor) {
 	console.log(factoryLabor);
 	businessDiv.laborSection.aassigned.innerHTML = "";
-	let trgFactory = factory;
+
 	for (var i=1; i<factoryLabor.length; i++) {
-		let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned);
-		console.log("draw yupe " + factoryLabor[i].laborType)
+		let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned, "1059,"+i+","+factory);
 		let itemNum = i;
 		if (factoryLabor[i] > 0) 	{}
 		laborItem.addEventListener("click", function () {scrMod("1023,"+factory+","+itemNum)});
@@ -1320,17 +1319,19 @@ edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 		showDemoChange(edictItem.effects, effects[i], effects[i+1]);
 	}
 }
-
+/*
 loadCompanyLabor = function (laborDat) {
 	for (var i=0; i<laborDat.length; i+=10) {
+		if ()
 		companyLabor.push(new laborItem({objID:(i+100), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]}));
 	}
+	console.log(companyLabor);
 }
-
+*/
 loadLaborItems = function(laborDat) {
 	let tmpArray = new Array();
 	for (var i=0; i<laborDat.length; i+=10) {
-		tmpArray.push(new laborItem({objID:(i+100), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]}));
+		if (laborDat[i]>0) tmpArray.push(new laborItem({objID:(Math.floor(i/10)), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]}));
 	}
 
 	return tmpArray;
@@ -1406,14 +1407,15 @@ companyLaborList = function(laborList, trg) {
 	trg.innerHTML = "";
 	cLaborList = new uList(laborList);
 	cLaborList.SLShowAll(trg, function(x,y,z) {
-		let item = x.renderSummary(y);
-		item.itemNo = z;
-		item.fireDiv.sendStr = "1059,"+z+",0";
+		let item = x.renderFire(y, "1059,"+x.objID+",0");
+		//item.itemNo = z;
+		//item.fireDiv.sendStr = "1059,"+z+",0";
+		/*
 		item.fireDiv.addEventListener("click", function(z) {
 			console.log("detail for item " + this.parentNode.itemNo + "(type) " + laborList[this.parentNode.itemNo].laborType);
 			console.log("fure " + this.sendStr);
 			scrMod(this.sendStr);
-		});
+		});*/
 	});
 }
 
@@ -1458,7 +1460,7 @@ laborTypeMenu = function(trg, factoryID) {
 			if (x.length > 0) {
 				let list = new Array();
 				list = x.split(",");
-				laborHireList(trg.subTarget, factoryID, list);
+				laborHireList(trg.subTarget, factoryID, loadLaborItems(list));
 			} else (trg.subTarget.innerHTML = "no items");
 		});
 	});
