@@ -1466,3 +1466,47 @@ laborTypeMenu = function(trg, factoryID) {
 	});
 	trg.appendChild(newMenu);
 }
+
+factoryBuildMenu = function () {
+	useDeskTop.newPane("newFactory");
+	thisDiv = useDeskTop.getPane("newFactory");
+	thisDiv.innerHTML = "";
+	
+	thisDiv.locationBar = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.nationBar = addDiv("", "", thisDiv.locationBar);
+	thisDiv.stateBar = addDiv("", "", thisDiv.locationBar);
+	thisDiv.cityBar = addDiv("", "", thisDiv.locationBar);
+	
+	// output location selection menus
+	let countrySelect = listSelectMenu(thisDiv.nationBar, nationList);
+	countrySelect.addEventListener("change", function() {
+		loadData("1061,"+this.value, function (x) {
+			if (x.length > 0) {
+				let list = new Array();
+				list = x.split(",");
+				
+				if (list[0] == 1) {
+					
+				}
+			}
+		});
+	});
+}
+
+areaSelectMenu(trg, startCount, itemList, dst1, dst2) {
+	let thisSelect = 
+}
+
+listSelectMenu = function (trg, itemList) {
+	let newMenu = document.createElement("select");
+
+	for (var i=1; i<itemList.length; i++) {
+		let newItem = document.createElement("option");
+		newItem.appendChild(document.createTextNode(itemList[i]));
+		newItem.value = i;
+		newMenu.appendChild(newItem);
+	}
+	
+	trg.appendChild(newMenu);
+	return newMenu;
+}

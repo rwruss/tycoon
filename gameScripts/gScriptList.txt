@@ -62,6 +62,7 @@
 TO DO:
 **start cities not filled with 1000
 **factory locations
+**Overview/interactive Map
 ***correct hire and fire buttons and options
 Create starting laborpool and labor slot files
 Verify that saveBlock in objectClass (line 72) is saving at the correct location
@@ -108,6 +109,9 @@ Get a job
 http://loudprogrammer.net/interview-with-rob-percival-how-to-land-your-first-junior-developer-job/?utm_source=quora&utm_medium=answer#.WG7ISvkrKUk
 https://www.topcoder.com/
 http://sagecode.net/certification/web-dev/
+
+Companies list
+Malauzai
 
 Baby Swing:
 https://www.youtube.com/watch?v=4i-TcJVnsFA

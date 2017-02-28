@@ -32,7 +32,7 @@ sendButton = newButton(headSection, function () {
 	let checkSelection = setVal.split(',');
 	if (checkSelection[checkSelection.length-1] != "0")	scrMod("1008,"+SLreadSelection(optionBox1));
 });
-sendButton.innerHTML = "Build This";
+sendButton.innerHTML = "Build a new facility";
 
 textBlob("", laborSection, "company labor");
 
