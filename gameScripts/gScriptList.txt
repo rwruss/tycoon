@@ -60,6 +60,7 @@
 1060 - PROCESS: load labor of specific type
 
 TO DO:
+Load all default factories
 **start cities not filled with 1000
 **factory locations
 **Overview/interactive Map

@@ -1474,11 +1474,8 @@ factoryBuildMenu = function () {
 	thisDiv.innerHTML = "new factory";
 
 	thisDiv.locationBar = addDiv("", "stdFloatDiv", thisDiv);
-	thisDiv.nationBar = addDiv("", "", thisDiv.locationBar);
-	thisDiv.stateBar = addDiv("", "", thisDiv.locationBar);
-	thisDiv.cityBar = addDiv("", "", thisDiv.locationBar);
 
-	locationSelect(thisDiv.nationBar, nationList, 1);
+	locationSelect(thisDiv.locationBar, nationList, 1);
 }
 
 locationSelect = function (trg, itemList, tier, offset=0) {
@@ -1487,25 +1484,25 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 	newSelect.regionTier = tier;
 	newSelect.id = "location_"+tier;
 	newSelect.addEventListener("change", function() {
-			let newTarget = this.parentNode;
-			let oldTier = this.regionTier;
-			loadData("1061,"+this.value+","+this.regionTier, function (x) {
-			if (x.length > 0 || true) {
-				let list = new Array();
-				list = x.split(",");
-				let nextTier = list.splice(0,1);
-				let startOffset = list.splice(0,1);
-				if (oldTier < 3) locationSelect(newTarget, list, nextTier, startOffset);
-				if (nextTier > 2) {
-					let selectCity = newButton(newTarget.parentNode);
-					selectCity.innerHTML = "Select this city";
-					selectCity.addEventListener("click", function () {
-						let trgSelect = document.getElementById("location_3")
-						if (trgSelect.value != "null") {
-							console.log("Selected " + trgSelect.value);
-						} else {
-							console.log("SELECT A CITY!");
-						}
+		let newTarget = this.parentNode;
+		let oldTier = this.regionTier;
+		loadData("1061,"+this.value+","+this.regionTier, function (x) {
+		if (x.length > 0 || true) {
+			let list = new Array();
+			list = x.split(",");
+			let nextTier = list.splice(0,1);
+			let startOffset = list.splice(0,1);
+			if (oldTier < 3) locationSelect(newTarget, list, nextTier, startOffset);
+			if (nextTier == 3) {
+				let selectCity = newButton(newTarget.parentNode);
+				selectCity.innerHTML = "Select this city";
+				selectCity.addEventListener("click", function () {
+					let trgSelect = document.getElementById("location_3")
+					if (trgSelect.value != "null") {
+						console.log("Selected " + trgSelect.value);
+					} else {
+						console.log("SELECT A CITY!");
+					}
 					})
 				}
 			}
