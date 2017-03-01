@@ -9,8 +9,8 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 
 echo '<script>
-useDeskTop.newPane("businessObjects");
-businessDiv = useDeskTop.getPane("businessObjects");
+businessDiv = useDeskTop.newPane("businessObjects");
+//useDeskTop.getPane("businessObjects");
 businessDiv.innerHTML = "";
 
 var headSection = addDiv("", "stdFloatDiv", businessDiv);
@@ -26,12 +26,10 @@ for (let i=0; i<playerFactories.length; i++) {
 
 optionBox1 = defaultBuildings.SLsingleButton(headSection, {setVal:38});
 
-sendButton = newButton(headSection, function () {
-	console.log(SLreadSelection(optionBox1));
-	let setVal=SLreadSelection(optionBox1);
-	let checkSelection = setVal.split(',');
-	if (checkSelection[checkSelection.length-1] != "0")	scrMod("1008,"+SLreadSelection(optionBox1));
-});
+sendButton = newButton(headSection);
+sendButton.addEventListener("click", function () {
+	event.stopPropagation();
+	factoryBuildMenu();});
 sendButton.innerHTML = "Build a new facility";
 
 textBlob("", laborSection, "company labor");

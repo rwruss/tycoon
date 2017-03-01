@@ -646,10 +646,13 @@ class pane {
 		//this.element.childNodes[0].parentObj = this;
 		this.element.parentObj = this;
 		this.element.destructFunctions = [];
-		this.deskHolder.arrangePanes();
+		//this.deskHolder.arrangePanes();
 		this.nodeType = "pane";
 
-		this.element.addEventListener("click", function(event) {this.parentObj.toTop()});
+		this.element.addEventListener("click", function(event) {
+			//console.log("move up via click");
+			this.parentObj.toTop();
+		});
 
 		this.element.childNodes[0].addEventListener("click", function (event) {
 			//console.log("destroying " + this.parentNode.parentObj.nodeType + "  via " + this);
@@ -660,15 +663,9 @@ class pane {
 			this.parentNode.parentObj.destroyWindow();
 			event.stopPropagation();
 			});
-		/*
-		this.element.addEventListener("dragstart", function (event) {
-			this.parentObj.toTop();
-			event.dataTransfer.setData('application/node type', this);
-			bPos = [parseInt(this.offsetLeft), parseInt(this.offsetTop), event.clientX, event.clientY];
 
-			console.log(bPos);
-		});*/
-		this.toTop();
+		//this.toTop();
+		//return this.element.childNodes[1];
 	}
 
 	destroyWindow() {
@@ -696,6 +693,7 @@ class regPane extends pane {
 		super(desc, desktop);
 		//console.log("set regPane style for " + this.element);
 		this.element.className = "regPane";
+		//return this.element.childNodes[1];
 	}
 }
 
@@ -710,22 +708,22 @@ class deskTop {
 	newPane (desc, type="") {
 		//console.log("start list " + Object.keys(this.paneList))
 		if (this.paneList[desc]) {
-
 			//console.log("already made: " + this.constructor.name + " -> " + Object.keys(this.paneList));
 		} else {
-
 			if (type == "menu") {
 				var mkPane = new menu(desc, this);
 				this.paneList[desc] = mkPane;
 				console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			} else {
 				var mkPane = new regPane(desc, this);
+				console.log(mkPane);
 				this.paneList[desc] = mkPane;
 				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			}
 			//console.log("created " + desc);
 		}
 		this.paneToTop(this.paneList[desc]);
+		return this.paneList[desc].element.childNodes[1];
 	}
 
 	arrangePanes() {
@@ -748,10 +746,12 @@ class deskTop {
 	}
 
 	paneToTop(thisPane) {
-		//console.log("move " + thisPane.desc + " to the top");
-		delete this.paneList[thisPane.desc];
-		this.paneList[thisPane.desc] = thisPane;
-		this.arrangePanes();
+		if (this.paneList[this.paneList.length-1] != thisPane.desc) {
+			//console.log("move " + thisPane.desc + " to the top");
+			delete this.paneList[thisPane.desc];
+			this.paneList[thisPane.desc] = thisPane;
+			this.arrangePanes();
+		}
 	}
 
 	removePane (thisPane) {
@@ -1468,45 +1468,68 @@ laborTypeMenu = function(trg, factoryID) {
 }
 
 factoryBuildMenu = function () {
-	useDeskTop.newPane("newFactory");
-	thisDiv = useDeskTop.getPane("newFactory");
-	thisDiv.innerHTML = "";
-	
+	console.log("factorybuildmenu");
+	thisDiv = useDeskTop.newPane("adsfasfdsf");
+	//thisDiv = useDeskTop.getPane("adsfasfdsf");
+	thisDiv.innerHTML = "new factory";
+
 	thisDiv.locationBar = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.nationBar = addDiv("", "", thisDiv.locationBar);
 	thisDiv.stateBar = addDiv("", "", thisDiv.locationBar);
 	thisDiv.cityBar = addDiv("", "", thisDiv.locationBar);
-	
+
+	locationSelect(thisDiv.nationBar, nationList, 1);
+}
+
+locationSelect = function (trg, itemList, tier, offset=0) {
 	// output location selection menus
-	let countrySelect = listSelectMenu(thisDiv.nationBar, nationList);
-	countrySelect.addEventListener("change", function() {
-		loadData("1061,"+this.value, function (x) {
-			if (x.length > 0) {
+	let newSelect = listSelectMenu(trg, itemList, offset);
+	newSelect.regionTier = tier;
+	newSelect.id = "location_"+tier;
+	newSelect.addEventListener("change", function() {
+			let newTarget = this.parentNode;
+			let oldTier = this.regionTier;
+			loadData("1061,"+this.value+","+this.regionTier, function (x) {
+			if (x.length > 0 || true) {
 				let list = new Array();
 				list = x.split(",");
-				
-				if (list[0] == 1) {
-					
+				let nextTier = list.splice(0,1);
+				let startOffset = list.splice(0,1);
+				if (oldTier < 3) locationSelect(newTarget, list, nextTier, startOffset);
+				if (nextTier > 2) {
+					let selectCity = newButton(newTarget.parentNode);
+					selectCity.innerHTML = "Select this city";
+					selectCity.addEventListener("click", function () {
+						let trgSelect = document.getElementById("location_3")
+						if (trgSelect.value != "null") {
+							console.log("Selected " + trgSelect.value);
+						} else {
+							console.log("SELECT A CITY!");
+						}
+					})
 				}
 			}
 		});
 	});
 }
 
-areaSelectMenu(trg, startCount, itemList, dst1, dst2) {
-	let thisSelect = 
-}
-
-listSelectMenu = function (trg, itemList) {
+listSelectMenu = function (trg, itemList, startCount = 0) {
 	let newMenu = document.createElement("select");
 
-	for (var i=1; i<itemList.length; i++) {
+	let newItem = document.createElement("option");
+	newItem.appendChild(document.createTextNode("- Select an Option -"));
+	newItem.value = null
+	newItem.disabled = true;
+	newItem.selected = true;
+	newMenu.appendChild(newItem);
+
+	for (var i=0; i<itemList.length; i++) {
 		let newItem = document.createElement("option");
 		newItem.appendChild(document.createTextNode(itemList[i]));
-		newItem.value = i;
+		newItem.value = i+parseInt(startCount);
 		newMenu.appendChild(newItem);
 	}
-	
+
 	trg.appendChild(newMenu);
 	return newMenu;
 }

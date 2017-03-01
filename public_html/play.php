@@ -92,7 +92,6 @@ echo '
 <script type="text/javascript" src="templates.js"></script>
 <script type="text/javascript" src="selectList.js"></script>
 <script type="text/javascript" src="tycoonObjects.js"></script>
-<script type="text/javascript" src="tycoonShaders.js"></script>
 
 <script id="shader-fs" type="x-shader/x-fragment">
 </script>
@@ -106,7 +105,7 @@ echo '
 	var tmpLabor;
 	var playerUnits;
 	var moveString = new Array();
-	
+
 	var selectedFactory;
 	var buildTimeBox;
 	var boostTarget;
@@ -331,8 +330,7 @@ echo '
 	function handleMapTextures(texture, x, y, tileNum) {
 		}
 		
-	baseOffset[0] = (baseMap[0]-baseTile[0]*120*zoomLvl)/(12*zoomLvl)
-	baseOffset[1] = -(baseTile[1]*120*zoomLvl-baseMap[1])/(12*zoomLvl);
+	var  baseMap;
 
 	function tileSwitch() {
 		if (switchOption == 0) {
@@ -400,7 +398,7 @@ echo '
 			document.getElementById("baseOff").value = baseOffset[0]+", "+baseOffset[1];
 			}
 		else if (switchOption == 6) loadTiles();
-		}	
+		}
 
 	function checkLoad() {
 		loaded++;
@@ -413,7 +411,7 @@ echo '
 		}
 
 	function loadTiles() {
-		}	
+		}
 
 	function setClick(params, style, trg) {
 	}
@@ -429,7 +427,7 @@ echo '
 			}
 		}
 
-	
+
 
 	function showDiagnostics() {
 		if (document.getElementById("diagCB").checked) document.getElementById("diagBox").style.width = "300";
@@ -447,12 +445,12 @@ echo '
 		info = info  + ","+document.getElementById(src).value;
 		passClick(info, trg);
 	}
-	
+
 	function initGame() {
 		thisPlayer = new gamePlayer(['.$thisPlayer->get('money').', '.$_SESSION['gold'].']);
 		thisPlayer.setBoosts('.implode(',', $_SESSION['boosts']).');
 		useDeskTop = new deskTop;
-		
+
 		objNames = ['.implode(',', array_slice($namesList, 0, $numProducts)).'];
 		factoryNames = ['.implode(',', array_slice($namesList, $numProducts)).'];
 		laborNames = ['.$laborNameList.'];
@@ -502,7 +500,7 @@ echo '
 		}
 		console.log(factoryArray);
 		defaultBuildings = new uList(factoryArray);
-		
+
 		nationList = new Array("Canada", "Mexico", "United States");
 
 		// initialize windows
