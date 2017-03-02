@@ -50,7 +50,15 @@ class factory extends object {
 	}
 
 	renderDetail (target) {
+		var thisDiv = addDiv(null, 'factoryDetailContainer', target);
+		this.renderSummary(thisDiv);
 
+		thisDiv.productsDiv = addDiv(null, "factoryProducts", thisDiv);
+		thisDiv.laborDiv = addDiv(null, "factoryLabor", thisDiv);
+
+		thisDiv.buttonDiv = addDiv(null, "factoryButton", thisDiv);
+		//console.log(thisDiv);
+		return thisDiv;
 	}
 
 }

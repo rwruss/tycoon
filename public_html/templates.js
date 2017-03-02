@@ -1486,36 +1486,48 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 	newSelect.regionTier = tier;
 	newSelect.id = "location_"+tier;
 	newSelect.addEventListener("change", function() {
-		let newTarget = this.parentNode;
-		let oldTier = this.regionTier;
-		loadData("1061,"+this.value+","+this.regionTier, function (x) {
-		if (x.length > 0 || true) {
-			let list = new Array();
-			list = x.split(",");
-			let nextTier = list.splice(0,1);
-			let startOffset = list.splice(0,1);
-			if (oldTier < 3) locationSelect(newTarget, list, nextTier, startOffset);
-			if (nextTier == 3) {
-				let selectCity = newButton(newTarget);
-				selectCity.innerHTML = "Select this city";
-				selectCity.addEventListener("click", function () {
-					let trgSelect = document.getElementById("location_3")
-					if (trgSelect.value != "null") {
-						buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
-					} else {
-						console.log("SELECT A CITY!");
+		if (this.regionTier < 3) {
+			let newTarget = this.parentNode;
+			let oldTier = this.regionTier;
+			loadData("1061,"+this.value+","+this.regionTier, function (x) {
+			if (x.length > 0 || true) {
+				let list = new Array();
+				list = x.split(",");
+				let nextTier = list.splice(0,1);
+				let startOffset = list.splice(0,1);
+				if (oldTier < 3) locationSelect(newTarget, list, nextTier, startOffset);
+				if (nextTier == 3) {
+					console.log("NT is " + nextTier)
+					let selectCity = newButton(newTarget);
+					selectCity.innerHTML = "Select this city";
+					selectCity.addEventListener("click", function () {
+						let trgSelect = document.getElementById("location_3")
+						if (trgSelect.value != "null") {
+							buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
+						} else {
+							console.log("SELECT A CITY!");
+						}
+						})
 					}
-					})
 				}
-			}
-		});
+			});
+		}
 	});
 }
 
 buildOptionList = function(trg, detailTrg, bldgList) {
+	trg.innerHTML = "";
 	let bldgSelect = listSelectMenu(trg, factoryNames);
-	bldgSelect.addEventLister("change", function () {
-		factoryDetail(detailTrg);
+	bldgSelect.addEventListener("change", function () {
+		console.log(this.value)
+		let item = factoryList[this.value].renderDetail(detailTrg);
+		console.log(item);
+		let buildButton = newButton(item.buttonDiv);
+		buildButton.innerHTML = "build this factory";
+		let trgSelect = this;
+		buildButton.addEventListener("click", function () {
+			console.log(trgSelect.value+","+document.getElementById("location_3").value);
+		});
 	});
 }
 

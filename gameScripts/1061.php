@@ -3,9 +3,10 @@
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 // Load list of subregions for a given parent region
+/*
 $regionListFile = fopen($gamePath.'/regionSlots.slt', 'rb');
 $thisRegionList = new itemList($postVals[1], $regionListFile, 40);
-
+*/
 /*
 $newTier = $postVals[2]+1;
 echo ($newTier).','.$tierOffset[$newTier].','.array_filter($thisRegionList->slotData);

@@ -102,6 +102,7 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
+	var factoryList;
 	var tmpLabor;
 	var playerUnits;
 	var moveString = new Array();
@@ -329,7 +330,7 @@ echo '
 
 	function handleMapTextures(texture, x, y, tileNum) {
 		}
-		
+
 	var  baseMap;
 
 	function tileSwitch() {
@@ -492,14 +493,13 @@ echo '
 			laborArray.push(new labor({objType:product, objID:(i), objName:"labor " + i, edClass:(descSwith[i%2]), laborType:(i)}));
 		}
 
-		factoryArray = new Array();
-		//factoryArray.push(new factory({objType:factory, objID:0, objName:"None"}));
+		factoryList = new Array();
 		for (var i=0; i<numFactories; i++) {
 			console.log("make factory " + objNames[numProducts+i]);
-			factoryArray.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i), items:[1,2,3,4,5], prices:[6, 7, 8, 9, 10]}));
+			factoryList.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i), items:[1,2,3,4,5], prices:[6, 7, 8, 9, 10]}));
 		}
-		console.log(factoryArray);
-		defaultBuildings = new uList(factoryArray);
+		console.log(factoryList);
+		defaultBuildings = new uList(factoryList);
 
 		nationList = new Array("Canada", "Mexico", "United States");
 

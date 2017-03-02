@@ -564,3 +564,24 @@
 	float:left;
 	width:306;
 }
+
+.factoryDetailContainer {
+	position:relative;
+	float:left;
+	width:500;
+	height:300;
+}
+
+.factoryProducts {
+	position:relative;
+	float:left;
+	width:250;
+	height:100;
+}
+
+.factoryLabor {
+	position:relative;
+	float:left;
+	width:250;
+	height:100;
+}
