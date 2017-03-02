@@ -1474,6 +1474,8 @@ factoryBuildMenu = function () {
 	thisDiv.innerHTML = "new factory";
 
 	thisDiv.locationBar = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.buildingSelect = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.buildingDetail = addDiv("", "stdFloatDiv", thisDiv);
 
 	locationSelect(thisDiv.locationBar, nationList, 1);
 }
@@ -1494,12 +1496,12 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 			let startOffset = list.splice(0,1);
 			if (oldTier < 3) locationSelect(newTarget, list, nextTier, startOffset);
 			if (nextTier == 3) {
-				let selectCity = newButton(newTarget.parentNode);
+				let selectCity = newButton(newTarget);
 				selectCity.innerHTML = "Select this city";
 				selectCity.addEventListener("click", function () {
 					let trgSelect = document.getElementById("location_3")
 					if (trgSelect.value != "null") {
-						console.log("Selected " + trgSelect.value);
+						buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
 					} else {
 						console.log("SELECT A CITY!");
 					}
@@ -1507,6 +1509,13 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 				}
 			}
 		});
+	});
+}
+
+buildOptionList = function(trg, detailTrg, bldgList) {
+	let bldgSelect = listSelectMenu(trg, factoryNames);
+	bldgSelect.addEventLister("change", function () {
+		factoryDetail(detailTrg);
 	});
 }
 
