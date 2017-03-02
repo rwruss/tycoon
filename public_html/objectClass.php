@@ -160,7 +160,8 @@ class factory extends object {
 		$this->attrList['factoryStatus'] = 2;
 		$this->attrList['constructCompleteTime'] = 3;
 		$this->attrList['upgradeInProgress'] = 8;
-		$this->attrList['region'] = 11;
+		$this->attrList['region_3'] = 11;
+		
 		$this->attrList['totalSales'] = 12;
 		$this->attrList['periodSales'] = 13;
 
@@ -172,6 +173,8 @@ class factory extends object {
 		$this->attrList['currentProd'] = 19; // Product ID that is currently being produced
 		$this->attrList['initProdDuration'] = 20;
 		$this->attrList['prodRate'] = 21;
+		$this->attrList['region_1'] = 22;
+		$this->attrList['region_2'] = 23;
 
 		$this->attrList['inputInv1'] = 31;
 		$this->attrList['inputInv2'] = 32;

@@ -58,10 +58,10 @@
 1058 - PROCESS: Adjust labor at factory
 1059 - PROCESS: Fire labor from a company and send to global pool
 1060 - PROCESS: load labor of specific type
+1061 - PROCESS: load regions and sub regions for list
+1062 - PROCESS: load city data for display
 
 TO DO:
-Load all default factories
-**start cities not filled with 1000
 **factory locations
 **Overview/interactive Map
 ***correct hire and fire buttons and options
@@ -99,6 +99,7 @@ resolve temporary adds to company labor when moving labor from factory to compan
 Assigning labor to production tasks at factory
 Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
 finish company labor script in play.php
+start cities not filled with 1000
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

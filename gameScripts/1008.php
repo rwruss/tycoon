@@ -1,5 +1,14 @@
 <?php
 
+/*
+PVs
+2 = new factory type
+3 = city location for factory
+*/
+
+$factoryType = $postVals[1];
+$cityLoc = $postVals[2];
+
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
@@ -7,7 +16,7 @@ $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 // Load template data
-fseek($objFile, $postVals[2]*$templateBlockSize);
+fseek($objFile, $factoryType*$templateBlockSize);
 $templateDat = unpack('i*', fread($objFile, $templateBlockSize));
 
 // Verify that the player has enough money to build this factory
@@ -30,7 +39,7 @@ if (flock($objFile, LOCK_EX)) {
   fseek($objFile, $newID*$defaultBlockSize + 996);
   fwrite($objFile, pack('i', 0));
 
-	echo 'Template type: '.$postVals[2].' for new object '.$newID;
+	echo 'Template type: '.$factoryType.' for new object '.$newID;
 	$newObjDat = array_fill(1, 250, 0);
   $newObj = new factory($newID, $newObjDat, $objFile);
 
@@ -44,7 +53,10 @@ if (flock($objFile, LOCK_EX)) {
 	$newObj->set('oType', 3);
 	$newObj->set('owner', $pGameID);
 	$newObj->set('lastUpdate', $now);
-	$newObj->set('subType', $postVals[2]);
+	$newObj->set('subType', $factoryType);
+	$newObj->set('region_3', $cityLoc);
+	$newObj->set('region_2', 0);
+	$newObj->set('region_1', 0);
 	$newObj->saveAll($objFile);
 
 	$testDat = unpack('i*', fread($slotFile, 40));

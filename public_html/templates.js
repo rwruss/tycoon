@@ -1475,6 +1475,7 @@ factoryBuildMenu = function () {
 
 	thisDiv.locationBar = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.buildingSelect = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.cityDetail = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.buildingDetail = addDiv("", "stdFloatDiv", thisDiv);
 
 	locationSelect(thisDiv.locationBar, nationList, 1);
@@ -1503,6 +1504,10 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 					selectCity.addEventListener("click", function () {
 						let trgSelect = document.getElementById("location_3")
 						if (trgSelect.value != "null") {
+							loadData("1062,"+document.getElementById("location_3").value, function (x) {
+								renderCityDetail(newTarget.parentNode.cityDetail, x.split(","));
+							});
+							
 							buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
 						} else {
 							console.log("SELECT A CITY!");
@@ -1550,4 +1555,9 @@ listSelectMenu = function (trg, itemList, startCount = 0) {
 
 	trg.appendChild(newMenu);
 	return newMenu;
+}
+
+renderCityDetail(trg, data) {
+	tmpCity = new city(data);
+	tmpCity.renderDetail(trg);
 }
