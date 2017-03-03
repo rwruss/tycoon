@@ -74,7 +74,7 @@ setBar = function (id, desc, pct) {
 }
 
 class city {
-	constructor(objDat) {
+	constructor(objDat, laws, taxes) {
 		this.objID = objDat[0];
 		this.objName = objDat[1];
 		this.details = objDat;
@@ -85,6 +85,8 @@ class city {
 		this.leader = objDat[16];
 		this.townDemo = new Array(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
+		this.laws = laws;
+		this.taxes = taxes;
 	}
 
 	renderSummary(target) {
@@ -120,6 +122,46 @@ class city {
 		containerDiv.education.innerHTML = "Education: " + this.details[14];
 		containerDiv.affluence.innerHTML = "Aff: " + this.details[15];
 		containerDiv.region.innerHTML = "Region: " + this.details[20];
+		
+		containerDiv.taxes = addDiv(null, "cityTax", containerDiv);
+		let taxTable = document.createElemnt("table");
+		taxTable.cells = new Array();
+		for (let i=0; i<7; i++) {
+			let thisRow = taxTable.insertRow(-1);
+			for (let j=0; j<5; j++) {
+				let thisCell = thisRow.insertCell(-1);				
+			}
+		}
+		
+		taxTable.rows[1].cells[1].innerHTML = this.taxes[0];
+		taxTable.rows[1].cells[2].innerHTML = this.taxes[1];
+		taxTable.rows[1].cells[3].innerHTML = this.taxes[2];
+		taxTable.rows[1].cells[4].innerHTML = this.taxes[0] + this.taxes[1] + this.taxes[2];
+		
+		taxTable.rows[2].cells[1].innerHTML = this.taxes[3];
+		taxTable.rows[2].cells[2].innerHTML = this.taxes[4];
+		taxTable.rows[2].cells[3].innerHTML = this.taxes[5];
+		taxTable.rows[2].cells[4].innerHTML = this.taxes[3] + this.taxes[4] + this.taxes[5];
+		
+		taxTable.rows[3].cells[1].innerHTML = this.taxes[6];
+		taxTable.rows[3].cells[2].innerHTML = this.taxes[7];
+		taxTable.rows[3].cells[3].innerHTML = this.taxes[8];
+		taxTable.rows[3].cells[4].innerHTML = this.taxes[6] + this.taxes[7] + this.taxes[8];
+		
+		taxTable.rows[4].cells[1].innerHTML = this.taxes[9];
+		taxTable.rows[4].cells[2].innerHTML = this.taxes[10];
+		taxTable.rows[4].cells[3].innerHTML = this.taxes[11];
+		taxTable.rows[4].cells[4].innerHTML = this.taxes[9] + this.taxes[10] + this.taxes[11];
+		
+		taxTable.rows[2].cells[1].innerHTML = this.taxes[12];
+		taxTable.rows[2].cells[2].innerHTML = this.taxes[13];
+		taxTable.rows[2].cells[3].innerHTML = this.taxes[14];
+		taxTable.rows[2].cells[4].innerHTML = this.taxes[12] + this.taxes[13] + this.taxes[14];
+		
+		taxTable.rows[4].cells[1].innerHTML = this.taxes[15];
+		taxTable.rows[4].cells[2].innerHTML = this.taxes[16];
+		taxTable.rows[4].cells[3].innerHTML = this.taxes[17];
+		taxTable.rows[4].cells[4].innerHTML = this.taxes[15] + this.taxes[16] + this.taxes[17];
 
 		return containerDiv;
 	}

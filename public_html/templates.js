@@ -1510,7 +1510,8 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 						let trgSelect = document.getElementById("location_3")
 						if (trgSelect.value != "null") {
 							loadData("1062,"+document.getElementById("location_3").value, function (x) {
-								renderCityDetail(newTarget.parentNode.cityDetail, x.split(","));
+								let cityLists = x.split(";");
+								renderCityDetail(newTarget.parentNode.cityDetail, cityLists[0].split(","), cityLists[1].split(","), cityLists[2].split(","));
 							});
 
 							buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
