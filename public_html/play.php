@@ -74,7 +74,7 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 		}
 	}
 }
-
+print_r($factoryList);
 // Load company labor
 echo 'Labor in slot '.$thisPlayer->get('laborSlot');
 $companyLabor = [];
@@ -102,7 +102,7 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
-	var factoryList;
+	var factoryList, playerFactories;
 	var tmpLabor;
 	var playerUnits;
 	var moveString = new Array();

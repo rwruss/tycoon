@@ -1051,8 +1051,12 @@ function showLabor(factory, factoryLabor) {
 
 	for (var i=1; i<factoryLabor.length; i++) {
 		let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned, "1059,"+i+","+factory);
+		if (factoryLabor[i].laborType > 0) {
+			//let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned, "1059,"+i+","+factory);
+		} else {
+			//let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned, "1059,"+i+","+factory);
+		}
 		let itemNum = i;
-		if (factoryLabor[i] > 0) 	{}
 		laborItem.addEventListener("click", function () {scrMod("1023,"+factory+","+itemNum)});
 	}
 }
@@ -1471,11 +1475,12 @@ factoryBuildMenu = function () {
 	console.log("factorybuildmenu");
 	thisDiv = useDeskTop.newPane("adsfasfdsf");
 	//thisDiv = useDeskTop.getPane("adsfasfdsf");
-	thisDiv.innerHTML = "new factory";
+	thisDiv.innerHTML = "Where would you like to build this factory?";
 
 	thisDiv.locationBar = addDiv("", "stdFloatDiv", thisDiv);
-	thisDiv.buildingSelect = addDiv("", "stdFloatDiv", thisDiv);
+
 	thisDiv.cityDetail = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.buildingSelect = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.buildingDetail = addDiv("", "stdFloatDiv", thisDiv);
 
 	locationSelect(thisDiv.locationBar, nationList, 1);
@@ -1507,7 +1512,7 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 							loadData("1062,"+document.getElementById("location_3").value, function (x) {
 								renderCityDetail(newTarget.parentNode.cityDetail, x.split(","));
 							});
-							
+
 							buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
 						} else {
 							console.log("SELECT A CITY!");
@@ -1522,16 +1527,18 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 
 buildOptionList = function(trg, detailTrg, bldgList) {
 	trg.innerHTML = "";
-	let bldgSelect = listSelectMenu(trg, factoryNames);
+	let bldgSelect = listSelectMenu(trg, factoryNames, numProducts);
 	bldgSelect.addEventListener("change", function () {
 		console.log(this.value)
-		let item = factoryList[this.value].renderDetail(detailTrg);
+		detailTrg.innerHTML = "";
+		let item = factoryList[this.value-numProducts].renderDetail(detailTrg);
 		console.log(item);
 		let buildButton = newButton(item.buttonDiv);
 		buildButton.innerHTML = "build this factory";
 		let trgSelect = this;
 		buildButton.addEventListener("click", function () {
 			console.log(trgSelect.value+","+document.getElementById("location_3").value);
+			scrMod("1008,"+trgSelect.value+","+document.getElementById("location_3").value)
 		});
 	});
 }
@@ -1557,7 +1564,8 @@ listSelectMenu = function (trg, itemList, startCount = 0) {
 	return newMenu;
 }
 
-renderCityDetail(trg, data) {
+renderCityDetail = function (trg, data) {
+	trg.innerHTML = "";
 	tmpCity = new city(data);
 	tmpCity.renderDetail(trg);
 }

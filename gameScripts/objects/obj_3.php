@@ -10,17 +10,18 @@ if ($thisObj->get('factoryLevel') == 0) {
 	if ($constructDelta > 0) {
 		echo '<script>
 		selectedFactory = '.$postVals[1].';
-		businessDiv.innerHTML = "";
-		textBlob("", businessDiv, "This facility is still being built.  Would you like to speed it up?;");
+		factoryDiv = useDeskTop.newPane("factoryInfo");
+		factoryDiv.innerHTML = "";
+		textBlob("", factoryDiv, "This facility is still being built.  Would you like to speed it up?;");
 		/*
-		var buildTimeBox = addDiv("", "orderTime", businessDiv);
+		var buildTimeBox = addDiv("", "orderTime", factoryDiv);
 		buildTimeBox.runClock = true;
 		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
-		speedUpButton = newButton(businessDiv, function () {scrMod("1029,1,'.$postVals[1].'")});
+		speedUpButton = newButton(factoryDiv, function () {scrMod("1029,1,'.$postVals[1].'")});
 		speedUpButton.innerHTML = "Speed Up Construction";
 		console.log("done");*/
 		thisUpgrade = new factoryUpgrade('.$postVals[1].', '.($thisObj->get('constructCompleteTime')).');
-		thisUpgrade.render(businessDiv);
+		thisUpgrade.render(factoryDiv);
 		</script>';
 		exit();
 	}
@@ -60,11 +61,11 @@ echo '<script>
 factoryUpgradeProducts = [];
 factoryUpgradeServices = [];
 selectedFactory = '.$postVals[1].';
-businessDiv.innerHTML = "";
+factoryDiv.innerHTML = "";
 factorySales = ['.implode(',', $saleDat).'];';
 
 if ($constructDelta > 0) {
-	echo 'var updateArea = addDiv("", "stdFloatDiv", businessDiv);';
+	echo 'var updateArea = addDiv("", "stdFloatDiv", factoryDiv);';
 
 	if ($thisObj->get('factoryLevel') == 0) {
 		// this is new construction
@@ -103,7 +104,7 @@ for ($i=2; $i<6; $i++) {
 	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
 }
 echo ']);
-headSection = addDiv("", "stdFloatDiv", businessDiv);
+headSection = addDiv("", "stdFloatDiv", factoryDiv);
 headSection.rate = textBlob("", headSection, "Rate: '.($thisObj->get('prodRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
 sellButton = newButton(headSection, function () {scrMod("1043,'.$postVals[1].'")});
@@ -135,42 +136,42 @@ upgradeButton = newButton(headSection, function () {
 	});
 upgradeButton.innerHTML = "Upgrade Factory";
 
-productInvSection = addDiv("", "stdFloatDiv", businessDiv);
+productInvSection = addDiv("", "stdFloatDiv", factoryDiv);
 textBlob("", productInvSection, "Output Inventory");
 
 showOutputs(productInvSection, productStores);
 
-salesSection = addDiv("", "stdFloatDiv", businessDiv);
+salesSection = addDiv("", "stdFloatDiv", factoryDiv);
 saleButton = newButton(salesSection, function () {scrMod("1013,'.$postVals[1].'")});
 saleButton.innerHTML = "Sell Products";
 
-businessDiv.laborSection = addDiv("", "stdFloatDiv", businessDiv);
-businessDiv.laborPool = addDiv("", "stdFloatDiv", businessDiv);
-textBlob("", businessDiv.laborPool, "Unassigned Labor");
-businessDiv.laborSection.aassigned = addDiv("", "stdFloatDiv", businessDiv.laborSection);
-textBlob("", businessDiv.laborSection.aassigned, "Labor working here");
+factoryDiv.laborSection = addDiv("", "stdFloatDiv", factoryDiv);
+factoryDiv.laborPool = addDiv("", "stdFloatDiv", factoryDiv);
+textBlob("", factoryDiv.laborPool, "Unassigned Labor");
+factoryDiv.laborSection.aassigned = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
+textBlob("", factoryDiv.laborSection.aassigned, "Labor working here");
 showLabor('.$postVals[1].', factoryLabor);
 
-reqBox = addDiv("", "stdFloatDiv", businessDiv);
+reqBox = addDiv("", "stdFloatDiv", factoryDiv);
 textBlob("", reqBox, "Per unit of production, this requires:");
 reqBox.materials = addDiv("", "stdFloatDiv", reqBox);
 showProdRequirements(reqBox.materials, productMaterial);
 
-businessDiv.laborSection.required = addDiv("", "stdFloatDiv", businessDiv.laborSection);
-showRequiredLabor(businessDiv.laborSection.required, productLabor);
+factoryDiv.laborSection.required = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
+showRequiredLabor(factoryDiv.laborSection.required, productLabor);
 
 
-reqBox.stores = addDiv("", "stdFloatDiv", businessDiv);
+reqBox.stores = addDiv("", "stdFloatDiv", factoryDiv);
 showInventory('.$postVals[1].', materialInv);
 
-var orderSection = addDiv("", "stdFloatDiv", businessDiv);
+var orderSection = addDiv("", "stdFloatDiv", factoryDiv);
 var orderHead = addDiv("", "stdFloatDiv", orderSection);
 
-businessDiv.orderItems = addDiv("", "stdFloatDiv", orderSection);
-businessDiv.saleItems = addDiv("", "stdFloatDiv", orderSection);
+factoryDiv.orderItems = addDiv("", "stdFloatDiv", orderSection);
+factoryDiv.saleItems = addDiv("", "stdFloatDiv", orderSection);
 textBlob("", orderHead, "Current orders");
-showOrders(businessDiv.orderItems, factoryOrders);
-showSales(businessDiv.saleItems, factorySales);
+showOrders(factoryDiv.orderItems, factoryOrders);
+showSales(factoryDiv.saleItems, factorySales);
 
 </script>';
 

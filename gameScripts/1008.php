@@ -77,7 +77,7 @@ if (flock($objFile, LOCK_EX)) {
 		this.status = options.status || 0,
 		this.objID = options.objID;
   */
-  echo '<script>factoryArray.push(new factory({objType:factory, status:1, objID:'.$newID.', prod:0, rate:0}))</script>';
+  echo '<script>playerFactories.push(new factory({subType:('.$factoryType.'-numProducts), objID:'.$newID.', prod:0, rate:0}))</script>';
 
 	print_r($ownedObjects->slotData);
 	flock($objFile, LOCK_UN);
