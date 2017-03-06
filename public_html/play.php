@@ -105,10 +105,13 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
-	var factoryList, playerFactories, factoryDiv;
-	var tmpLabor;
+	var factoryList, playerFactories, factoryDiv, tmpLabor, infoPane;
 	var playerUnits;
 	var moveString = new Array();
+	
+	var taxTypes = ["None", "city income tax", "city property tax", "city VAT", "city personal income tax", "city polltion tax", "city rights tax", 
+		"regional income tax", "regional property tax", "regional VAT", "regional personal income tax", "regional polltion tax", "regional rights tax", 
+		"national income tax", "national property tax", "national VAT", "national personal income tax", "national polltion tax", "national rights tax"];
 
 	var selectedFactory;
 	var buildTimeBox;

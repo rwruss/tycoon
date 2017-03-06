@@ -619,3 +619,9 @@
 .taxTable tr:nth-child(even){
 	background: silver;
 }
+
+.taxEx {
+	position:absolute;
+	right:0;
+	top:0;
+}

@@ -60,6 +60,7 @@
 1060 - PROCESS: load labor of specific type
 1061 - PROCESS: load regions and sub regions for list
 1062 - PROCESS: load city data for display
+1063 - PROCESS: load tax exception data for a city
 
 TO DO:
 **factory locations

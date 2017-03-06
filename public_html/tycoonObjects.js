@@ -87,7 +87,7 @@ class city {
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		this.laws = laws;
 		//this.taxes = taxes;
-		this.taxes = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+		this.taxes = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,0];
 	}
 
 	renderSummary(target) {
@@ -178,11 +178,53 @@ class city {
 		taxTable.rows[6].cells[2].innerHTML = this.taxes[16]/100;
 		taxTable.rows[6].cells[3].innerHTML = this.taxes[17]/100;
 		taxTable.rows[6].cells[4].innerHTML = (this.taxes[15] + this.taxes[16] + this.taxes[17])/100;
+		
+		containerDiv.taxes.taxEx = addDiv("", "taxEx", containerDiv.taxes);
+		containerDiv.taxes.taxEx.parentObj = this;
+		containerDiv.taxes.taxEx.addEventListener("click", function (this.parentObj.taxExes()));
+		containerDiv.taxes.taxEx.innerHTML = "EX";
 
 		containerDiv.demos = addDiv(null, "cdDemos", containerDiv);
 		this.renderDemos(containerDiv.demos);
 
 		return containerDiv;
+	}
+	
+	taxExes() {
+		infoPane = useDeskTop.newPane("infoPane");
+		/*
+		if (this.taxes[20] == 0) {
+			loadData("1063,"+this.objID, function (x) {})
+		}*/
+		infoPane.type_1 = addDiv("", "stdFloatDiv", infoPane);
+		infoPane.type_2 = addDiv("", "stdFloatDiv", infoPane);
+		infoPane.type_3 = addDiv("", "stdFloatDiv", infoPane);
+		infoPane.type_4 = addDiv("", "stdFloatDiv", infoPane);
+		infoPane.type_5 = addDiv("", "stdFloatDiv", infoPane);
+		infoPane.type_6 = addDiv("", "stdFloatDiv", infoPane);
+		
+		for (var i=20; i<this.taxes.length; i+=5) {
+			switch(this.taxes[i]) {
+				case 1:
+					textBlob("", infoPane.type_1, "Company " + this.taxes[i+4] + " has a " + taxTypes[this.taxes[i+1]] + " rate of " + this.taxes[i+3]);
+					break;
+				case 2:
+					textBlob("", infoPane.type_2, "Factory type " + this.taxes[i+4] + " has a " + taxTypes[this.taxes[i+1]] + " rate of " + this.taxes[i+3]);
+					break;
+				case 3:
+					textBlob("", infoPane.type_3, "Industry type " + this.taxes[i+4] + " has a " + taxTypes[this.taxes[i+1]] + " rate of " + this.taxes[i+3]);
+					break;
+				case 4:
+					textBlob("", infoPane.type_4, "Factory " + this.taxes[i+4] + " has a " + taxTypes[this.taxes[i+1]] + " rate of " + this.taxes[i+3]);
+					break;
+				case 5:
+					textBlob("", infoPane.type_5, "Conglomerate " + this.taxes[i+4] + " has a " + taxTypes[this.taxes[i+1]] + " rate of " + this.taxes[i+3]);
+					break;
+				case 6:
+					textBlob("", infoPane.type_6, "Product " + this.taxes[i+4] + " has a " + taxTypes[this.taxes[i+1]] + " rate of " + this.taxes[i+3]);
+					break;
+			}
+		}
 	}
 
 	loadDemands(demandRates, demandLevels) {

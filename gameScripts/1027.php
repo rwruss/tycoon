@@ -25,8 +25,8 @@ if ($thisCity->get('cityLaborSlot')>0) {
 
 // Output parameters of the city (population, wealth, etc)
 echo '<script>
-useDeskTop.newPane("cityInfo");
-var cityPane = useDeskTop.getPane("cityInfo");
+cityPane = useDeskTop.newPane("cityInfo");
+//var cityPane = useDeskTop.getPane("cityInfo");
 cityPane.innerHTML = "";
 
 textBlob("", cityPane, "City information");
