@@ -19,8 +19,6 @@ if ($laborDetails[8]/518400 > $promoDat[1]) {
 	$promoOpts = [$promoDat[2], $promoDat[3], $promoDat[4], $promoDat[5], $promoDat[6], $promoDat[7], $promoDat[8], $promoDat[9], $promoDat[10], $promoDat[11]];
 }
 
-print_r($laborDetails);
-
 // Out put promotion options and set pay...
 echo '<script>
 useDeskTop.newPane("laborItemPane");
@@ -31,23 +29,14 @@ thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
 thisLaborItem = new laborItem({objID:'.$postVals[2].', pay:'.$laborDetails[5].', ability:'.$laborDetails[8].', laborType:'.$laborDetails[0].'});
 factoryLaborDetail(thisLaborItem, '.$postVals[1].', thisDiv.laborDescArea);
 
-/*
-thisLaborItem.renderSummary(thisDiv.laborDescArea);
-*/
-
 thisDiv.payArea = addDiv("", "stdFloatDiv", thisDiv);
 laborPaySettings(thisLaborItem, '.$postVals[1].', thisDiv.payArea);
 thisDiv.promotionArea = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", thisDiv.promotionArea, "Promotion options");
 
-/*
-proSelect = new uList(laborArray, {items:['.implode(',', $promoOpts).']});
-proSelectButton = proSelect.SLsingleButton(thisDiv.promotionArea, {setVal:0});
-savePromote = newButton(thisDiv.promotionArea, function () {scrMod("1025,'.$postVals[1].','.$postVals[2].',"+SLreadSelection(proSelectButton))});
-*/
-
 saveSettings = newButton(thisDiv.promotionArea);
 saveSettings.addEventListener("click", function() {scrMod("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)})
+saveSettings.innerHTML = "Save Settings";
 thisDiv.laborArea = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", thisDiv.laborArea, "Other Labor Options");
 laborTabs = new tabMenu(["Company Labor", "Hire Labor"]);
@@ -55,6 +44,8 @@ laborTabs.renderTabs(thisDiv.laborArea);
 
 tmpLabor = companyLabor;
 companyLaborOptions(tmpLabor, '.$postVals[1].', laborTabs.renderKids[0]);
+factoryHireMenu(laborTabs.renderKids[1], '.$postVals[1].');
+laborTabs.renderKids[1].subTarget = addDiv("", "stdFloatDiv", laborTabs.renderKids[1]);
 </script>';
 
 fclose($cityFile);

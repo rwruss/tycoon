@@ -161,7 +161,7 @@ class factory extends object {
 		$this->attrList['constructCompleteTime'] = 3;
 		$this->attrList['upgradeInProgress'] = 8;
 		$this->attrList['region_3'] = 11;
-		
+
 		$this->attrList['totalSales'] = 12;
 		$this->attrList['periodSales'] = 13;
 
@@ -244,13 +244,6 @@ class factory extends object {
 		$this->attrList['offer7'] = 237;
 		$this->attrList['offer8'] = 238;
 
-		/*
-		$this->attrList['price1'] = 91;
-		$this->attrList['price2'] = 92;
-		$this->attrList['price3'] = 93;
-		$this->attrList['price4'] = 94;
-		$this->attrList['price5'] = 95;
-		*/
 		$inputIndex = 1;
 		$inputInventoryIndex = 61;
 
@@ -432,8 +425,9 @@ class factory extends object {
 	function adjustLabor($laborSpot, $laborDat) {
 		$packDat = pack('i*', $laborDat[0], $laborDat[1], $laborDat[2], $laborDat[3], $laborDat[4], $laborDat[5], $laborDat[6], $laborDat[7], $laborDat[8], $laborDat[9]);
 
-		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->laborOffset+$laborSpot*10)*4-4);
-		fwrite($this->linkFile, $packDat);
+		$this->saveBlock($this->laborOffset+$laborSpot*10, $packDat);
+		//fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->laborOffset+$laborSpot*10)*4-4);
+		//fwrite($this->linkFile, $packDat);
 
 		$this->objDat[$this->laborOffset+$laborSpot*10] = $laborDat[0];
 		$this->objDat[$this->laborOffset+$laborSpot*10+1] = $laborDat[1];
@@ -474,16 +468,18 @@ class city extends object {
 		$this->attrList['parentRegion'] = 19;
 		$this->attrList['leader'] = 20;
 		$this->attrList['nation'] = 21;
-		$this->attrList['cTax'] = 22;
-		$this->attrList['rTax'] = 23;
-		$this->attrList['nTax'] = 24;
+
 		$this->attrList['factoryList'] = 25;
 		$this->attrList['money'] = 26;
 		$this->attrList['cityLaborSlot'] = 27;
-		
-		$this->attrList['lawSlot'] = 28;
-		$this->attrList['taxEx'] = 29;
-		
+
+		$this->attrList['cTax'] = 31;
+		$this->attrList['rTax'] = 32;
+		$this->attrList['nTax'] = 33;
+		$this->attrList['cLaw'] = 34;
+		$this->attrList['rLaw'] = 35;
+		$this->attrList['nLaw'] = 36;
+
 	}
 
 	function demandRate($productID) {

@@ -410,15 +410,6 @@ newTaskOpt = function(id, target) {
 	thisDetail.innerHTML = id;
 }
 
-unitTaskOpt = function(id, target, desc) {
-	var thisOpt = addDiv("utOpt_"+id, "tdHolder", target);
-	thisOpt.innerHTML = desc;
-
-	thisOpt.addEventListener("click", function () {
-		//makeBox("taskDtl", "1060,"+id, 500, 500, 200, 50);
-	scrMod("1060,"+id)});
-}
-
 charTaskOpt = function(id, target, desc) {
 	var thisOpt = addDiv("utOpt_"+id, "tdHolder", document.getElementById(target));
 	thisOpt.innerHTML = desc;
@@ -1047,14 +1038,14 @@ function showInventory(factory, inventory) {
 
 function showLabor(factory, factoryLabor) {
 	console.log(factoryLabor);
-	businessDiv.laborSection.aassigned.innerHTML = "";
+	factoryDiv.laborSection.aassigned.innerHTML = "";
 
 	for (var i=1; i<factoryLabor.length; i++) {
-		let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned, "1059,"+i+","+factory);
+		let laborItem = factoryLabor[i].renderFire(factoryDiv.laborSection.aassigned, "1059,"+i+","+factory);
 		if (factoryLabor[i].laborType > 0) {
-			//let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned, "1059,"+i+","+factory);
+			//let laborItem = factoryLabor[i].renderFire(factoryDiv.laborSection.aassigned, "1059,"+i+","+factory);
 		} else {
-			//let laborItem = factoryLabor[i].renderFire(businessDiv.laborSection.aassigned, "1059,"+i+","+factory);
+			//let laborItem = factoryLabor[i].renderFire(factoryDiv.laborSection.aassigned, "1059,"+i+","+factory);
 		}
 		let itemNum = i;
 		laborItem.addEventListener("click", function () {scrMod("1023,"+factory+","+itemNum)});
@@ -1334,8 +1325,9 @@ loadCompanyLabor = function (laborDat) {
 */
 loadLaborItems = function(laborDat) {
 	let tmpArray = new Array();
-	for (var i=0; i<laborDat.length; i+=10) {
-		if (laborDat[i]>0) tmpArray.push(new laborItem({objID:(Math.floor(i/10)), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]}));
+	for (var i=0; i<laborDat.length; i+=11) {
+		console.log("TYPE " + laborDat[i]);
+		if (laborDat[i+1]>0) tmpArray.push(new laborItem({objID:laborDat[i], pay:laborDat[i+6], ability:laborDat[i+9], laborType:laborDat[i+1]}));
 	}
 
 	return tmpArray;
@@ -1436,15 +1428,15 @@ showCityLabor = function(trg, cityID, laborList) {
 
 laborHireList = function(trg, factoryID, laborList) {
 	console.log(laborList);
-	let laborItems = loadLaborItems(laborList);
+	//let laborItems = loadLaborItems(laborList);
 
-	cLaborList = new uList(laborItems);
+	cLaborList = new uList(laborList);
 	cLaborList.SLShowAll(trg, function(x,y,z) {
-		sendStr = "0,"+(z*40)+","+factoryID+",0";
+		sendStr = "0,"+x.objID+","+factoryID+",0";
 		let item = x.renderHire(y, x.quality, sendStr);
 		item.itemNo = z;
 		item.addEventListener("click", function(z) {
-			console.log("detail for item " + this.itemNo + "(type) " + laborItems[this.itemNo].laborType);
+			console.log("detail for item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType);
 		});
 	});
 }
@@ -1460,12 +1452,13 @@ laborTypeMenu = function(trg, factoryID) {
 	}
 
 	newMenu.addEventListener("change", function() {
+		let menu = this;
 		loadData("1060,"+this.value, function (x) {
 			if (x.length > 0) {
 				let list = new Array();
 				list = x.split(",");
 				laborHireList(trg.subTarget, factoryID, loadLaborItems(list));
-			} else (trg.subTarget.innerHTML = "no items");
+			} else (trg.subTarget.innerHTML = "no " + menu.options[menu.value-1].text + " available");
 		});
 	});
 	trg.appendChild(newMenu);
@@ -1484,6 +1477,11 @@ factoryBuildMenu = function () {
 	thisDiv.buildingDetail = addDiv("", "stdFloatDiv", thisDiv);
 
 	locationSelect(thisDiv.locationBar, nationList, 1);
+}
+
+factoryHireMenu = function(trg, factoryID) {
+	laborTypeMenu(trg, factoryID);
+	//locationSelect(trg, nationList, 1);
 }
 
 locationSelect = function (trg, itemList, tier, offset=0) {
@@ -1510,6 +1508,7 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 						let trgSelect = document.getElementById("location_3")
 						if (trgSelect.value != "null") {
 							loadData("1062,"+document.getElementById("location_3").value, function (x) {
+								console.log(x);
 								let cityLists = x.split(";");
 								renderCityDetail(newTarget.parentNode.cityDetail, cityLists[0].split(","), cityLists[1].split(","), cityLists[2].split(","));
 							});

@@ -10,12 +10,13 @@ $thisBusiness = loadObject($pGameID, $objFile, 400);
 
 echo '<script>
 businessDiv = useDeskTop.newPane("businessObjects");
-//useDeskTop.getPane("businessObjects");
 businessDiv.innerHTML = "";
 
 var headSection = addDiv("", "stdFloatDiv", businessDiv);
 var listSection = addDiv("", "stdFloatDiv", businessDiv);
-var laborSection = addDiv("", "stdFloatDiv", businessDiv);
+businessDiv.laborHead = addDiv("abcd", "stdFloatDiv", businessDiv);
+businessDiv.laborSection = addDiv("abcd", "stdFloatDiv", businessDiv);
+
 
 console.log(playerFactories);
 for (let i=0; i<playerFactories.length; i++) {
@@ -24,18 +25,17 @@ for (let i=0; i<playerFactories.length; i++) {
 	thisSummary.addEventListener("click", function () {scrMod("1003,"+thisFactory.objID);})
 }
 
-optionBox1 = defaultBuildings.SLsingleButton(headSection, {setVal:38});
+//optionBox1 = defaultBuildings.SLsingleButton(headSection, {setVal:38});
 
 sendButton = newButton(headSection);
 sendButton.addEventListener("click", function () {
 	event.stopPropagation();
 	factoryBuildMenu();});
 sendButton.innerHTML = "Build a new facility";
-
-textBlob("", laborSection, "company labor");
+textBlob("", businessDiv.laborHead, "company labor");
 
 tmpLabor = companyLabor;
-companyLaborList(tmpLabor, laborSection);
+companyLaborList(tmpLabor, businessDiv.laborSection);
 </script>';
 fclose($slotFile);
 fclose($objFile);

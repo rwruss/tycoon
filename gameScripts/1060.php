@@ -18,6 +18,7 @@ for ($i=1; $i<=sizeof($laborSlot->slotData); $i++) {
     fseek($laborPoolFile, $laborSlot->slotData[$i]);
     $laborDat = unpack('i*', fread($laborPoolFile, 40));
     //print_R($laborDat);
+    $laborList[] = $laborSlot->slotData[$i];
     $laborList = array_merge($laborList, $laborDat);
   }
 }

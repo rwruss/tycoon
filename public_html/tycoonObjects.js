@@ -86,7 +86,8 @@ class city {
 		this.townDemo = new Array(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		this.laws = laws;
-		this.taxes = taxes;
+		//this.taxes = taxes;
+		this.taxes = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 	}
 
 	renderSummary(target) {
@@ -110,58 +111,76 @@ class city {
 	}
 
 	renderDetail(target) {
-		var containerDiv = addDiv(null, 'udHolder', target);
+		var containerDiv = addDiv(null, 'cityDetailContain', target);
 		//containerDiv.innerHTML = this.objName;
 
-		containerDiv.population = addDiv(null, "", containerDiv);
-		containerDiv.education = addDiv(null, "", containerDiv);
-		containerDiv.affluence = addDiv(null, "", containerDiv);
-		containerDiv.region = addDiv(null, "", containerDiv);
+		containerDiv.stats = addDiv(null, "cdStats", containerDiv);
+		containerDiv.population = addDiv(null, "cdPop", containerDiv.stats);
+		containerDiv.education = addDiv(null, "cdEd", containerDiv.stats);
+		containerDiv.affluence = addDiv(null, "", containerDiv.stats);
+		containerDiv.region = addDiv(null, "", containerDiv.stats);
 
 		containerDiv.population.innerHTML = "Pop: " + this.details[13];
 		containerDiv.education.innerHTML = "Education: " + this.details[14];
 		containerDiv.affluence.innerHTML = "Aff: " + this.details[15];
 		containerDiv.region.innerHTML = "Region: " + this.details[20];
-		
-		containerDiv.taxes = addDiv(null, "cityTax", containerDiv);
-		let taxTable = document.createElemnt("table");
+
+		containerDiv.taxes = addDiv(null, "cdTax", containerDiv);
+		let taxTable = document.createElement("table");
+		taxTable.className = "taxTable";
 		taxTable.cells = new Array();
 		for (let i=0; i<7; i++) {
 			let thisRow = taxTable.insertRow(-1);
 			for (let j=0; j<5; j++) {
-				let thisCell = thisRow.insertCell(-1);				
+				let thisCell = thisRow.insertCell(-1);
 			}
 		}
-		
-		taxTable.rows[1].cells[1].innerHTML = this.taxes[0];
-		taxTable.rows[1].cells[2].innerHTML = this.taxes[1];
-		taxTable.rows[1].cells[3].innerHTML = this.taxes[2];
-		taxTable.rows[1].cells[4].innerHTML = this.taxes[0] + this.taxes[1] + this.taxes[2];
-		
-		taxTable.rows[2].cells[1].innerHTML = this.taxes[3];
-		taxTable.rows[2].cells[2].innerHTML = this.taxes[4];
-		taxTable.rows[2].cells[3].innerHTML = this.taxes[5];
-		taxTable.rows[2].cells[4].innerHTML = this.taxes[3] + this.taxes[4] + this.taxes[5];
-		
-		taxTable.rows[3].cells[1].innerHTML = this.taxes[6];
-		taxTable.rows[3].cells[2].innerHTML = this.taxes[7];
-		taxTable.rows[3].cells[3].innerHTML = this.taxes[8];
-		taxTable.rows[3].cells[4].innerHTML = this.taxes[6] + this.taxes[7] + this.taxes[8];
-		
-		taxTable.rows[4].cells[1].innerHTML = this.taxes[9];
-		taxTable.rows[4].cells[2].innerHTML = this.taxes[10];
-		taxTable.rows[4].cells[3].innerHTML = this.taxes[11];
-		taxTable.rows[4].cells[4].innerHTML = this.taxes[9] + this.taxes[10] + this.taxes[11];
-		
-		taxTable.rows[2].cells[1].innerHTML = this.taxes[12];
-		taxTable.rows[2].cells[2].innerHTML = this.taxes[13];
-		taxTable.rows[2].cells[3].innerHTML = this.taxes[14];
-		taxTable.rows[2].cells[4].innerHTML = this.taxes[12] + this.taxes[13] + this.taxes[14];
-		
-		taxTable.rows[4].cells[1].innerHTML = this.taxes[15];
-		taxTable.rows[4].cells[2].innerHTML = this.taxes[16];
-		taxTable.rows[4].cells[3].innerHTML = this.taxes[17];
-		taxTable.rows[4].cells[4].innerHTML = this.taxes[15] + this.taxes[16] + this.taxes[17];
+
+		containerDiv.taxes.appendChild(taxTable);
+
+		taxTable.rows[0].cells[1].innerHTML = "C";
+		taxTable.rows[0].cells[2].innerHTML = "R";
+		taxTable.rows[0].cells[3].innerHTML = "N";
+		taxTable.rows[0].cells[4].innerHTML = "T";
+
+		taxTable.rows[1].cells[0].innerHTML = "IT";
+		taxTable.rows[1].cells[1].innerHTML = this.taxes[0]/100;
+		taxTable.rows[1].cells[2].innerHTML = this.taxes[1]/100;
+		taxTable.rows[1].cells[3].innerHTML = this.taxes[2]/100;
+		taxTable.rows[1].cells[4].innerHTML = (this.taxes[0] + this.taxes[1] + this.taxes[2])/100;
+
+		taxTable.rows[2].cells[0].innerHTML = "PT";
+		taxTable.rows[2].cells[1].innerHTML = this.taxes[3]/100;
+		taxTable.rows[2].cells[2].innerHTML = this.taxes[4]/100;
+		taxTable.rows[2].cells[3].innerHTML = this.taxes[5]/100;
+		taxTable.rows[2].cells[4].innerHTML = (this.taxes[3] + this.taxes[4] + this.taxes[5])/100;
+
+		taxTable.rows[3].cells[0].innerHTML = "VT";
+		taxTable.rows[3].cells[1].innerHTML = this.taxes[6]/100;
+		taxTable.rows[3].cells[2].innerHTML = this.taxes[7]/100;
+		taxTable.rows[3].cells[3].innerHTML = this.taxes[8]/100;
+		taxTable.rows[3].cells[4].innerHTML = (this.taxes[6] + this.taxes[7] + this.taxes[8])/100;
+
+		taxTable.rows[4].cells[0].innerHTML = "PI";
+		taxTable.rows[4].cells[1].innerHTML = this.taxes[9]/100;
+		taxTable.rows[4].cells[2].innerHTML = this.taxes[10]/100;
+		taxTable.rows[4].cells[3].innerHTML = this.taxes[11]/100;
+		taxTable.rows[4].cells[4].innerHTML = (this.taxes[9] + this.taxes[10] + this.taxes[11])/100;
+
+		taxTable.rows[5].cells[0].innerHTML = "PO";
+		taxTable.rows[5].cells[1].innerHTML = this.taxes[12]/100;
+		taxTable.rows[5].cells[2].innerHTML = this.taxes[13]/100;
+		taxTable.rows[5].cells[3].innerHTML = this.taxes[14]/100;
+		taxTable.rows[5].cells[4].innerHTML = (this.taxes[12] + this.taxes[13] + this.taxes[14])/100;
+
+		taxTable.rows[6].cells[0].innerHTML = "RT";
+		taxTable.rows[6].cells[1].innerHTML = this.taxes[15]/100;
+		taxTable.rows[6].cells[2].innerHTML = this.taxes[16]/100;
+		taxTable.rows[6].cells[3].innerHTML = this.taxes[17]/100;
+		taxTable.rows[6].cells[4].innerHTML = (this.taxes[15] + this.taxes[16] + this.taxes[17])/100;
+
+		containerDiv.demos = addDiv(null, "cdDemos", containerDiv);
+		this.renderDemos(containerDiv.demos);
 
 		return containerDiv;
 	}
@@ -403,15 +422,16 @@ class labor {
 
 	renderFire(target, sendStr) {
 		let hireContain = this.renderSummary(target);
+		if (this.laborType > 0) {
+			hireContain.hireButton = newButton(hireContain);
+			hireContain.hireButton.innerHTML = "Fire!";
+			hireContain.hireButton.sendStr = sendStr;
 
-		hireContain.hireButton = newButton(hireContain);
-		hireContain.hireButton.innerHTML = "Fire!";
-		hireContain.hireButton.sendStr = sendStr;
-
-		hireContain.addEventListener("click", function () {
-			event.stopPropagation();
-			scrMod(sendStr);
-		});
+			hireContain.addEventListener("click", function () {
+				event.stopPropagation();
+				scrMod(sendStr);
+			});
+		}
 
 		return hireContain;
 	}
@@ -471,7 +491,7 @@ class laborItem extends labor {
 		thisDiv.ownerObject = this.objID;
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
 		addImg("asdf", "laborImg", thisDiv); // labor image
 
@@ -492,7 +512,7 @@ class laborItem extends labor {
 		thisDiv.payDiv = addDiv("", "laborPay", thisDiv);
 		thisDiv.payDiv.innerHTML = "$"+(this.pay/100).toFixed(2);
 
-		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
+		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "(" +this.laborType+ ")";
 		return thisDiv;
 	}
 

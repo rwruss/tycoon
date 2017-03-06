@@ -74,17 +74,20 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 		}
 	}
 }
-print_r($factoryList);
+//print_r($factoryList);
 // Load company labor
 echo 'Labor in slot '.$thisPlayer->get('laborSlot');
 $companyLabor = [];
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
-print_r($laborSlot->slotData);
+//print_r($laborSlot->slotData);
+$laborCount = 0;
 for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
-	//if ($laborSlot->slotData[$i]>0) $companyLabor = array_merge($companyLabor, array_slice($laborSlot->slotData, $i-1, 10));
-	$companyLabor = $laborSlot->slotData;
+	$companyLabor[] = $laborCount;
+	$companyLabor = array_merge($companyLabor, array_slice($laborSlot->slotData, $i-1, 10));
+	//$companyLabor = $laborSlot->slotData;
+	$laborCount++;
 }
-
+print_r($companyLabor);
 echo '
 <link rel="stylesheet" type="text/css" href="gameStyles.css">
 <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
@@ -102,7 +105,7 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
-	var factoryList, playerFactories;
+	var factoryList, playerFactories, factoryDiv;
 	var tmpLabor;
 	var playerUnits;
 	var moveString = new Array();

@@ -10,17 +10,16 @@ PVs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
-$cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b');
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b');
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 
 $emptyData = pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 if ($postVals[2] > 0) {
 	// this labor is at a factory
-
-
+	echo 'Factory labor';
 	$thisFactory = loadObject($postVals[2], $objFile, 1000);
 
 	// get the labor dat
@@ -37,7 +36,6 @@ if ($postVals[2] > 0) {
 } else {
 	// this labor is in a company list
 	$a = ($postVals[1]*10)+1;
-
 
 	$thisBusiness = loadObject($pGameID, $objFile, 400);
 	$businessLabor = new blockSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
@@ -58,7 +56,7 @@ if ($postVals[2] > 0) {
 if (flock($laborPoolFile, LOCK_EX)) {
 	if (flock($laborSlotFile, LOCK_EX)) {
 		fseek($laborPoolFile, 0, SEEK_END);
-		$laborSpot = ftell($laborPoolFile);
+		$laborSpot = max(40,ftell($laborPoolFile));
 
 		$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 		for ($i=1; $i<sizeof($emptySpots->slotData); $i++) {

@@ -20,17 +20,20 @@ this.objID = objDat[0];
 
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
+
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
-$cityTaxEx = new itemSlot($cityFile->get('cityTax'), $slotFile, 40);
-$regionTaxEx = new itemSlot($cityFile->get('regionTax'), $slotFile, 40);
-$nationTaxEx = new itemSlot($cityFile->get('nationTax'), $slotFile, 40);
-
-$cityLaws = new itemSlot($cityFile->get('cityLaw'), $slotFile, 40);
-$regionLaws = new itemSlot($cityFile->get('regionLaw'), $slotFile, 40);
-$nationLaws = new itemSlot($cityFile->get('nationLaw'), $slotFile, 40);
 
 $thisCity = loadCity($postVals[1], $cityFile);
+
+$cityTaxEx = new itemSlot($thisCity->get('cTax'), $slotFile, 40);
+$regionTaxEx = new itemSlot($thisCity->get('rTax'), $slotFile, 40);
+$nationTaxEx = new itemSlot($thisCity->get('nTax'), $slotFile, 40);
+
+$cityLaws = new itemSlot($thisCity->get('cLaw'), $slotFile, 40);
+$regionLaws = new itemSlot($thisCity->get('rLaw'), $slotFile, 40);
+$nationLaws = new itemSlot($thisCity->get('nLaw'), $slotFile, 40);
 
 // basic city info
 echo $postVals[1].',"City Name"'.implode(',', array_slice($thisCity->objDat, 11, 25)).','.implode(',', array_slice($thisCity->objDat, 50, 40)).','.implode(',', array_slice($thisCity->objDat, 120, 20)).';';

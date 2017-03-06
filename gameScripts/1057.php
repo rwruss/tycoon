@@ -14,14 +14,15 @@ require_once('./objectClass.php');
 require_once('./slotFunctions.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$schoolFile = fopen($gamePath.'/schools.dat', 'rb');
-$cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$schoolFile = fopen($gamePath.'/schools.dat', 'r+b');
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 
+$now = time();
 
 // if factory is hiring - load the factory and check that player controls it
 if ($postVals[3] > 0) {
-	$thisFactory = loadObject($postVals[1], $objFile, 1000);
+	$thisFactory = loadObject($postVals[3], $objFile, 1000);
 	if ($thisFactory->get('owner') != $pGameID) exit("You are not authorized to hire at this factory");
 
 	$spotFail = true;
@@ -58,6 +59,8 @@ if ($postVals[1] > 0) {
 	}
 
 	if ($schoolFail) exit("This school cannot train this type of labor");
+
+	$laborDat = [$postVals[2], 0, 0, $now, 0, 0, $now, $now, $postVals[3], 0];
 } else {
 	// hiring from the global labor pool
 	echo 'Hire labor item '.$postVals[2].' from the labor pool';
@@ -73,6 +76,7 @@ if ($postVals[1] > 0) {
 			print_r($laborDat);
 
 			// add a marker for an empty labor spot
+			echo 'record empty marker';
 			$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 			$emptySpots->addItem($postVals[2], $laborSlotFile);
 
@@ -95,10 +99,10 @@ if ($postVals[1] > 0) {
 }
 
 // Add the labor to the factory or the company
-$now = time();
+
 if ($postVals[3] > 0) {
 	echo 'Add to factory labor spot '.$factorySpot;
-	$thisFactory->changeLaborItem($factorySpot, [$postVals[2], 0, 0, $now, 0, 0, $now, $now, 0, 0]); //($spotNumber, $attrArray)
+	$thisFactory->adjustLabor($factorySpot, array_values($laborDat)); //($spotNumber, $attrArray)
 } else {
 	echo 'Add to company labor spot';
 	$thisBusiness = loadObject($pGameID, $objFile, 400);

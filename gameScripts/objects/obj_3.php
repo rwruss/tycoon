@@ -56,12 +56,13 @@ for ($i=1; $i<9; $i++) {
 		}
 	}
 }
-
+print_r($thisObj->objDat);
 echo '<script>
 factoryUpgradeProducts = [];
 factoryUpgradeServices = [];
 selectedFactory = '.$postVals[1].';
-factoryDiv.innerHTML = "";
+factoryDiv = useDeskTop.newPane("factoryInfo");
+factoryDiv.innerHTML = "factory";
 factorySales = ['.implode(',', $saleDat).'];';
 
 if ($constructDelta > 0) {
