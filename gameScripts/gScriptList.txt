@@ -25,7 +25,7 @@
 1025 - PROCESS: Save adjust job title for a worker
 1026 - List of cities/markets
 1027 - PROCESS: Show City Details
-1028 - PROCESS: Start work on products at a factory
+1028 - PROCESS: Start work on products at a factory production
 1029 - MENU: Construction Speed Up at Factory
 1030 - PROCESS: Construction Speed Up at Factory
 1031 - PROCESS: Start upgrade at factory (from 1039)
@@ -63,36 +63,33 @@
 1063 - PROCESS: load tax exception data for a city
 
 TO DO:
-**factory locations
 **Overview/interactive Map
 ***correct hire and fire buttons and options
-Create starting laborpool and labor slot files
-Verify that saveBlock in objectClass (line 72) is saving at the correct location
 Change labor to be ordered from city school rather than from a city as a whole
 *Worker pay expectations - needs to calc based on job/experience and location/origin
 Simulator and AI Engine
 Political/leader orders at cities
 Political leader options and demographic affects
 script 1051 - cancel a sales offer
-Don't allow product switching while production is in progress
-Detail regional effects
+Detail regional effects - taxes, politics, etc
 Professional Services/Construction, Engineering, Marketing, etc
 Factory upgrades and boosts
 Politics
 Messages
 Company storylines
-Resolve comma splitting of input with messages
 Player information detail (1045)
 Business Deals/Agreements with other companies and conglomerates
 Protect empty order list writing in 1014
 
 VERIFY DONE
 **Worker pool for when they quit/get fired
-Fix labor type sales at cities (based on schools available) - verify this is done
+Fix labor type sales at cities (based on schools available)
+Don't allow product switching while production is in progress
 
 TO DO ON HOLD
 Fix & expand Sale options/market - sorting and filtering (1013)
 DIFFERENT TYPES OF PACKING FOR OBJECT TYPES- NOT YET
+Resolve comma splitting of input with messages
 
 DONE -
 Adjustments to worker pay - done?
@@ -101,6 +98,9 @@ Assigning labor to production tasks at factory
 Adjust production rates based on labor - Do this in the labor and production change scripts - verify that this works
 finish company labor script in play.php
 start cities not filled with 1000
+Create starting laborpool and labor slot files
+Verify that saveBlock in objectClass (line 72) is saving at the correct location
+factory locations
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

@@ -281,13 +281,25 @@ class city {
 
 	renderDemos(trg) {
 		console.log(this.townDemo);
+		let r,g,b, townP, ldrP, demoP;
 		for (var i=0; i<this.townDemo.length; i++) {
 			let demoContain = addDiv("", "demogBox", trg);
 			let demoBar = addDiv("", "demoBar", demoContain);
 			let townStat = addDiv("", "townDemo", demoContain);
 			let mayorSpot = addDiv("", "ldrDemo", demoContain);
-			townStat.style.left = parseInt(this.townDemo[i]*115/1000+115);
-			mayorSpot.style.left = parseInt(this.leaderDemo[i]*115/1000+115);
+			
+			townP = this.townDemo[i]/1000;
+			ldrP = this.leaderDemo[i]/1000;
+			demoP = 0;
+			
+			townStat.style.width = parseInt(townP*120/1000+120);
+			townStat.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*townP) + ", " + Math.floor(122.5 + 122.5*townP) + ",0)";
+			
+			mayorSpot.style.width = parseInt(ldrP*120/1000+120);
+			mayorSpot.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*ldrP) + ", " + Math.floor(122.5 + 122.5*ldrP) + ",0)";
+			
+			demoBar.style.width = parseInt(demoP*120/1000+120);
+			mayorSpot.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*demoP) + ", " + Math.floor(122.5 + 122.5*demoP) + ",0)";
 		}
 	}
 }
