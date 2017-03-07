@@ -1510,6 +1510,9 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 							loadData("1062,"+document.getElementById("location_3").value, function (x) {
 								console.log(x);
 								let cityLists = x.split(";");
+								console.log(cityLists[0]);
+								console.log(cityLists[1]);
+								console.log(cityLists[2]);
 								renderCityDetail(newTarget.parentNode.cityDetail, cityLists[0].split(","), cityLists[1].split(","), cityLists[2].split(","));
 							});
 
@@ -1564,8 +1567,8 @@ listSelectMenu = function (trg, itemList, startCount = 0) {
 	return newMenu;
 }
 
-renderCityDetail = function (trg, data) {
+renderCityDetail = function (trg, data, laws, taxes) {
 	trg.innerHTML = "";
-	tmpCity = new city(data);
+	tmpCity = new city(data, laws, taxes);
 	tmpCity.renderDetail(trg);
 }

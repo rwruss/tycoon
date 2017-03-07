@@ -75,6 +75,9 @@ setBar = function (id, desc, pct) {
 
 class city {
 	constructor(objDat, laws, taxes) {
+		console.log(objDat);
+		console.log(laws);
+		console.log(taxes);
 		this.objID = objDat[0];
 		this.objName = objDat[1];
 		this.details = objDat;
@@ -87,8 +90,11 @@ class city {
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		this.laws = laws;
 		//this.taxes = taxes;
-		this.taxes = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,0];
-	}
+		this.taxes = taxes.map(function(x) {
+			if (x.match(/^[0-9]/)) {
+				return parseInt(x,10);
+			}	else return x;
+	})}
 
 	renderSummary(target) {
 		//console.log('draw ' + this.type)
@@ -137,6 +143,7 @@ class city {
 		}
 
 		containerDiv.taxes.appendChild(taxTable);
+		let total;
 
 		taxTable.rows[0].cells[1].innerHTML = "C";
 		taxTable.rows[0].cells[2].innerHTML = "R";
@@ -147,41 +154,49 @@ class city {
 		taxTable.rows[1].cells[1].innerHTML = this.taxes[0]/100;
 		taxTable.rows[1].cells[2].innerHTML = this.taxes[1]/100;
 		taxTable.rows[1].cells[3].innerHTML = this.taxes[2]/100;
-		taxTable.rows[1].cells[4].innerHTML = (this.taxes[0] + this.taxes[1] + this.taxes[2])/100;
+		total = this.taxes[0]/100 + this.taxes[1]/100 + this.taxes[2]/100;
+		taxTable.rows[1].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[2].cells[0].innerHTML = "PT";
 		taxTable.rows[2].cells[1].innerHTML = this.taxes[3]/100;
 		taxTable.rows[2].cells[2].innerHTML = this.taxes[4]/100;
 		taxTable.rows[2].cells[3].innerHTML = this.taxes[5]/100;
-		taxTable.rows[2].cells[4].innerHTML = (this.taxes[3] + this.taxes[4] + this.taxes[5])/100;
+		total = this.taxes[3]/100 + this.taxes[4]/100 + this.taxes[5]/100;
+		taxTable.rows[2].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[3].cells[0].innerHTML = "VT";
 		taxTable.rows[3].cells[1].innerHTML = this.taxes[6]/100;
 		taxTable.rows[3].cells[2].innerHTML = this.taxes[7]/100;
 		taxTable.rows[3].cells[3].innerHTML = this.taxes[8]/100;
-		taxTable.rows[3].cells[4].innerHTML = (this.taxes[6] + this.taxes[7] + this.taxes[8])/100;
+		total = this.taxes[6]/100 + this.taxes[7]/100 + this.taxes[8]/100;
+		taxTable.rows[3].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[4].cells[0].innerHTML = "PI";
 		taxTable.rows[4].cells[1].innerHTML = this.taxes[9]/100;
 		taxTable.rows[4].cells[2].innerHTML = this.taxes[10]/100;
 		taxTable.rows[4].cells[3].innerHTML = this.taxes[11]/100;
-		taxTable.rows[4].cells[4].innerHTML = (this.taxes[9] + this.taxes[10] + this.taxes[11])/100;
+		total = this.taxes[9]/100 + this.taxes[10]/100 + this.taxes[11]/100;
+		taxTable.rows[4].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[5].cells[0].innerHTML = "PO";
 		taxTable.rows[5].cells[1].innerHTML = this.taxes[12]/100;
 		taxTable.rows[5].cells[2].innerHTML = this.taxes[13]/100;
 		taxTable.rows[5].cells[3].innerHTML = this.taxes[14]/100;
-		taxTable.rows[5].cells[4].innerHTML = (this.taxes[12] + this.taxes[13] + this.taxes[14])/100;
+		total = this.taxes[12]/100 + this.taxes[13]/100 + this.taxes[14]/100;
+		taxTable.rows[5].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[6].cells[0].innerHTML = "RT";
 		taxTable.rows[6].cells[1].innerHTML = this.taxes[15]/100;
 		taxTable.rows[6].cells[2].innerHTML = this.taxes[16]/100;
 		taxTable.rows[6].cells[3].innerHTML = this.taxes[17]/100;
-		taxTable.rows[6].cells[4].innerHTML = (this.taxes[15] + this.taxes[16] + this.taxes[17])/100;
-		
+		total = this.taxes[15]/100 + this.taxes[16]/100 + this.taxes[17]/100;
+		taxTable.rows[6].cells[4].innerHTML = total.toFixed(2);
+
 		containerDiv.taxes.taxEx = addDiv("", "taxEx", containerDiv.taxes);
 		containerDiv.taxes.taxEx.parentObj = this;
-		containerDiv.taxes.taxEx.addEventListener("click", function (this.parentObj.taxExes()));
+		containerDiv.taxes.taxEx.addEventListener("click", function () {
+			event.stopPropagation();
+			this.parentObj.taxExes()});
 		containerDiv.taxes.taxEx.innerHTML = "EX";
 
 		containerDiv.demos = addDiv(null, "cdDemos", containerDiv);
@@ -189,23 +204,22 @@ class city {
 
 		return containerDiv;
 	}
-	
+
 	taxExes() {
 		infoPane = useDeskTop.newPane("infoPane");
-		/*
-		if (this.taxes[20] == 0) {
-			loadData("1063,"+this.objID, function (x) {})
-		}*/
+		infoPane.innerHTML = "TAX DETAILS";
 		infoPane.type_1 = addDiv("", "stdFloatDiv", infoPane);
 		infoPane.type_2 = addDiv("", "stdFloatDiv", infoPane);
 		infoPane.type_3 = addDiv("", "stdFloatDiv", infoPane);
 		infoPane.type_4 = addDiv("", "stdFloatDiv", infoPane);
 		infoPane.type_5 = addDiv("", "stdFloatDiv", infoPane);
 		infoPane.type_6 = addDiv("", "stdFloatDiv", infoPane);
-		
-		for (var i=20; i<this.taxes.length; i+=5) {
+
+		for (var i=18; i<this.taxes.length; i+=5) {
+			//console.log("switch " + this.taxes[i]);
 			switch(this.taxes[i]) {
 				case 1:
+					//console.log("Company " + this.taxes[i+4] + " has a " + taxTypes[this.taxes[i+1]] + " rate of " + this.taxes[i+3]);
 					textBlob("", infoPane.type_1, "Company " + this.taxes[i+4] + " has a " + taxTypes[this.taxes[i+1]] + " rate of " + this.taxes[i+3]);
 					break;
 				case 2:

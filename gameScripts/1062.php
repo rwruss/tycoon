@@ -26,7 +26,7 @@ $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
 
 $thisCity = loadCity($postVals[1], $cityFile);
-
+/* off for testing
 $cityTaxEx = new itemSlot($thisCity->get('cTax'), $slotFile, 40);
 $regionTaxEx = new itemSlot($thisCity->get('rTax'), $slotFile, 40);
 $nationTaxEx = new itemSlot($thisCity->get('nTax'), $slotFile, 40);
@@ -43,7 +43,11 @@ echo implode(',', $cityLaws->slotData).';';
 
 // city tax exemptions
 echo implode(',', $cityTaxEx->slotData).';';
+*/
 
+echo $postVals[1].',"City Name"'.implode(',', array_slice($thisCity->objDat, 11, 25)).','.implode(',', array_slice($thisCity->objDat, 50, 40)).','.implode(',', array_slice($thisCity->objDat, 120, 20)).';';
+echo ';';
+echo '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,1,2,102,500,"Some COmpany"';
 fclose($cityFile);
 
 ?>

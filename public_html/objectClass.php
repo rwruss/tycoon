@@ -8,7 +8,7 @@ class object {
 		$this->linkFile = $file;
 
 		if (sizeof($dat) == 0) {
-			echo 'Start a blank unit';
+			//echo 'Start a blank unit';
 			$this->objDat = array_fill(1, 100, 0);
 		} else {
 			$this->objDat = $dat;
