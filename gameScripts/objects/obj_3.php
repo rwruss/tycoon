@@ -30,8 +30,8 @@ if ($thisObj->get('factoryLevel') == 0) {
 if ($constructDelta > 0) {
 	//echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
 }
-
-$thisObj->updateStocks();
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
+$thisObj->updateStocks($offerDatFile);
 if ($thisObj->get('currentProd') > 0) {
 	$currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 } else $currentProduction = '';
@@ -57,6 +57,20 @@ for ($i=1; $i<9; $i++) {
 	}
 }
 print_r($thisObj->objDat);
+
+// Load updated material order information for this factory
+
+
+$materialOrders = [];
+for ($i=0; $i<10; $i++) {
+	if ($thisFactory->objDat[$thisFactory->orderListStart+$i] > 0) {
+		fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart+$i]);
+		$offerDat = unpack('i*', fread($offerDatFile, 52));
+		array_push($materialOrders, $offerDat[1], $offerDat[11], $offerDat[13]); //id, qty, time
+	}
+}
+fclose($offerDatFile);
+
 echo '<script>
 factoryUpgradeProducts = [];
 factoryUpgradeServices = [];
@@ -83,7 +97,7 @@ productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->p
 productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
 productLabor = ['.implode(',', $productInfo->reqLabor).'];
 materialInv = ['.implode(',', $thisObj->resourceInv()).'];
-materialOrder = ['.implode(',', $thisObj->materialOrders()).'];
+materialOrder = ['.implode(',', $materialOrders).'];
 inProduction = ['.$thisObj->get('prodLength').', '.$thisObj->get('prodStart').', '.$thisObj->get('prodQty').'];
 
 factoryOrders = new Array();

@@ -151,10 +151,15 @@ class business extends object {
 }
 
 class factory extends object {
-	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset;
+	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights, $orderListStart;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->inputCost = 82;
+		$this->inputPollution = 98;
+		$this->inputRights = 114
+		$this->orderListStart = 52;
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
@@ -192,16 +197,14 @@ class factory extends object {
 		$this->attrList['inputInv14'] = 44;
 		$this->attrList['inputInv15'] = 45;
 		$this->attrList['inputInv16'] = 46;
-		$this->attrList['inputInv17'] = 47;
-		$this->attrList['inputInv18'] = 48;
-		$this->attrList['inputInv19'] = 49;
-		$this->attrList['inputInv20'] = 50;
-		$this->attrList['prodInv1'] = 51;
-		$this->attrList['prodInv2'] = 52;
-		$this->attrList['prodInv3'] = 53;
-		$this->attrList['prodInv4'] = 54;
-		$this->attrList['prodInv5'] = 55;
 
+		$this->attrList['prodInv1'] = 47;
+		$this->attrList['prodInv2'] = 48;
+		$this->attrList['prodInv3'] = 49;
+		$this->attrList['prodInv4'] = 50;
+		$this->attrList['prodInv5'] = 51;
+		
+		/*
 		$this->attrList['orderTime1'] = 56;
 		$this->attrList['orderTime2'] = 59;
 		$this->attrList['orderTime3'] = 62;
@@ -234,6 +237,7 @@ class factory extends object {
 		$this->attrList['orderQty8'] = 79;
 		$this->attrList['orderQty9'] = 82;
 		$this->attrList['orderQty10'] = 85;
+		*/
 
 		$this->attrList['offer1'] = 231;
 		$this->attrList['offer2'] = 232;
@@ -264,11 +268,11 @@ class factory extends object {
 
 		$this->resourceStores = $this->resourceInv();
 
+		$this->productStores[] = $this->objDat[47];
+		$this->productStores[] = $this->objDat[48];
+		$this->productStores[] = $this->objDat[49];
+		$this->productStores[] = $this->objDat[50];
 		$this->productStores[] = $this->objDat[51];
-		$this->productStores[] = $this->objDat[52];
-		$this->productStores[] = $this->objDat[53];
-		$this->productStores[] = $this->objDat[54];
-		$this->productStores[] = $this->objDat[55];
 	}
 
 	function setProdRate($prodID, $thisProduct, $laborEqFile) {
@@ -345,7 +349,7 @@ class factory extends object {
 		else echo $desc.' not found in the template';
 	}
 
-	function updateStocks() {
+	function updateStocks($orderDatFile) {
 		$now = time();
 		$saveFactory = false;
 
@@ -360,12 +364,29 @@ class factory extends object {
 		// Sort material requirements into the storage index for the factory
 
 		$rscSpots = [];
-
 		for ($i=0; $i<sizeof($this->resourceStores)/2; $i++) {
 			$rscSpots[$this->resourceStores[$i*2]] = $i;
 		}
+		
+		// Check for pending material orders
+		for ($i=0; $i<10; $i++ {
+			if ($thisFactory->objDat[$thisFactory->orderListStart+$i] > 0) {
+				fseek($orderDatFile, $thisFactory->objDat[$thisFactory->orderListStart+$i]);
+				$orderDat = unpack('i*', fread($orderDatFile, 52);
+				
+				if ($orderDat[13] <= $now) {
+					$this->objDat[31+$rscSpots[$orderDat[11]] += $orderDat[1]; // adjust the material quantity
+					$this->objDat[$this->inputCost + $rscSpots[$orderDat[11]] += $orderDat[1]*$orderDat[2];  // adjust the inventory costs
+					$this->objDat[$this->inputPollution + $rscSpots[$orderDat[11]] += $orderDat[5]; // adjust the inventroy pollution
+					$this->objDat[$this->inputRights + $rscSpots[$orderDat[11]] += $orderDat[6]; // adjust the inventory rights
 
+					$thisFactory->objDat[$thisFactory->orderListStart+$i] = 0; // delete the reference to the order
+					$saveFactory = true;
+				}
+			}
+		)
 		//order info : time, resource type #, qty
+		/*
 		for ($i=0; $i<10; $i++) {
 			if ($this->objDat[56+$i*3] <= $now && $this->objDat[56+$i*3] != 0) {
 				// Add material from arrived order
@@ -374,18 +395,18 @@ class factory extends object {
 				$this->objDat[56+$i*3] = 0;
 				$this->objDat[57+$i*3] = 0;
 				$this->objDat[58+$i*3] = 0;
-
-				$this->productStores[0] = $this->objDat[51];
-				$this->productStores[1] = $this->objDat[52];
-				$this->productStores[2] = $this->objDat[53];
-				$this->productStores[3] = $this->objDat[54];
-				$this->productStores[4] = $this->objDat[55];
-
+				
+				$this->productStores[0] = $this->objDat[47];
+				$this->productStores[1] = $this->objDat[48];
+				$this->productStores[2] = $this->objDat[49];
+				$this->productStores[3] = $this->objDat[50];
+				$this->productStores[4] = $this->objDat[51];
+				
 				$saveFactory = true;
 			} else {
 				//echo $this->objDat[56+$i*3].' > '.$now.'<br>';
 			}
-		}
+		}*/
 
 		// Update production
 		if ($this->get('prodStart') + $this->get('prodLength') <= $now && $this->get('prodStart') > 0) {
@@ -419,7 +440,7 @@ class factory extends object {
 	}
 
 	function materialOrders() {
-		return array_slice($this->objDat, 55, 30);
+		return array_slice($this->objDat, 51, 10);
 	}
 
 	function adjustLabor($laborSpot, $laborDat) {

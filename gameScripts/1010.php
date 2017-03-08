@@ -1,6 +1,7 @@
 <?php
 
 /*
+1010 - PROCESS: Order materials for a factory
 PostVals
 1 = factory ID
 2 = Order ID
@@ -18,6 +19,7 @@ $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 $thisFactory = loadObject($postVals[1], $objFile, 400);
+$now = time();
 
 if ($postVals[2] == 0) {
   // this is the default offer;
@@ -33,7 +35,16 @@ if ($postVals[2] == 0) {
 
   // deduct the money from this player
   $thisPlayer->set('money', $thisPlayer->get('money')-$totalCost);
-
+  
+  // record in this players pending order slot
+	$orderItems = $thisObj->materialOrders();
+    for ($i=0; $i<10; $i++) {
+		if ($orderItems[$i] == 0) {
+		$orderNumber = $i;
+		break;
+	}
+	$thisFactory->save($thisFactory->orderListStart+$orderNumber, $postVals[2]);
+	/*
   // record in this players pending order slot
   for ($i=1; $i<=10; $i++) {
     if ($thisFactory->get('orderItem'.$i) == 0) {
@@ -46,14 +57,14 @@ if ($postVals[2] == 0) {
 
       break;
     }
-  }
+  }*/
 
 } else {
   // load the specific offer
   //$offerList = new blockSlot($postVals[3], $offerDatFile, 4000);
   if (flock($offerDatFile, LOCK_EX)) {
     fseek($offerDatFile, $postVals[2]);
-    $offerDat = unpack('i*', fread($offerDatFile, 44));
+    $offerDat = unpack('i*', fread($offerDatFile, 52));
     print_r($offerDat);
     if ($offerDat[1] > 0 ) {
       // offer still available
@@ -96,7 +107,14 @@ if ($postVals[2] == 0) {
 
 
     // record in this players pending order slot
-    for ($i=1; $i<=10; $i++) {
+	$orderItems = $thisObj->materialOrders();
+    for ($i=0; $i<10; $i++) {
+		if ($orderItems[$i] == 0) {
+		$orderNumber = $i;
+		break;
+	}
+	$thisFactory->save($thisFactory->orderListStart+$orderNumber, $postVals[2]);
+	/*
       if ($thisFactory->get('orderItem'.$i) == 0) {
         $thisFactory->set('orderTime'.$i, time()+60);
         $thisFactory->set('orderItem'.$i, $postVals[4]);
@@ -104,13 +122,21 @@ if ($postVals[2] == 0) {
         $thisFactory->saveAll($objFile);
         $orderNumber = $i;
         break;
-      }
+      }*/
+	  
     }
 
     // overwrite the order in the offer list dat
+	/*
     fseek($offerDatFile, $postVals[2]);
     $offerDat = fwrite($offerDatFile, pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
     flock($offerDatFile, LOCK_UN);
+	*/
+	
+	// Record the player ordering and the arrival time in the offer list file
+	fseek($offerDatFile, $postVals[2]+44);
+	fwrite($offerDatFile, pack('i*', $pGameID, $now));
+	flock($offerDatFile, LOCK_UN);
 
     // overwrite the order in the slot List
     $offerList = new itemSlot($postVals[4], $offerListFile, 1000);
@@ -118,8 +144,18 @@ if ($postVals[2] == 0) {
   }
 }
 
+// Load updated material order information for this factory
+$materialOrders = [];
+for ($i=0; $i<10; $i++) {
+	if ($thisFactory->objDat[$thisFactory->orderListStart+$i] > 0) {
+		fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart+$i]);
+		$offerDat = unpack('i*', fread($offerDatFile, 52));
+		array_push($materialOrders, $offerDat[13], $offerDat[1], $offerDat[11]); //time, id, qty
+	}
+}
+
 echo '<script>
-materialOrder = ['.implode(',', $thisFactory->materialOrders()).'];
+materialOrder = ['.implode(',', $materialOrders).'];
 //businessDiv.orderItems.innerHTML = "";
 
 /*

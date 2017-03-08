@@ -65,7 +65,7 @@ $checkGroup = 0;
 if (flock($offerDatFile, LOCK_EX)) {
 	fseek($offerDatFile, 0, SEEK_END);
 	$offerSize = ftell($offerDatFile);
-	$offerGroups = floor($offerSize/4000);
+	//$offerGroups = floor($offerSize/4000);
 
 	$offerLoc=0;
 	$emptyOffers = new itemSlot(0, $offerListFile, 1004);
@@ -76,7 +76,7 @@ if (flock($offerDatFile, LOCK_EX)) {
 			break;
 		}
 	}
-	if ($offerLoc == 0) $offerLoc = max(40,ceil($offerSize/40)*40);
+	if ($offerLoc == 0) $offerLoc = max(52,ceil($offerSize/52)*52);
 
 	fseek($offerDatFile, $offerLoc);
 	fwrite($offerDatFile, $saleDat);
