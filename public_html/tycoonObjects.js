@@ -91,9 +91,12 @@ class city {
 		this.laws = laws;
 		//this.taxes = taxes;
 		this.taxes = taxes.map(function(x) {
-			if (x.match(/^[0-9]/)) {
-				return parseInt(x,10);
-			}	else return x;
+			console.log(x);
+			if (isNaN(x)) {
+				if (x.match(/^[0-9]/)) {
+					return parseInt(x,10);
+				}	else return x;
+			} else return x;
 	})}
 
 	renderSummary(target) {
@@ -287,19 +290,19 @@ class city {
 			let demoBar = addDiv("", "demoBar", demoContain);
 			let townStat = addDiv("", "townDemo", demoContain);
 			let mayorSpot = addDiv("", "ldrDemo", demoContain);
-			
+
 			townP = this.townDemo[i]/1000;
 			ldrP = this.leaderDemo[i]/1000;
 			demoP = 0;
-			
+
 			townStat.style.width = parseInt(townP*120/1000+120);
 			townStat.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*townP) + ", " + Math.floor(122.5 + 122.5*townP) + ",0)";
-			
+
 			mayorSpot.style.width = parseInt(ldrP*120/1000+120);
 			mayorSpot.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*ldrP) + ", " + Math.floor(122.5 + 122.5*ldrP) + ",0)";
-			
+
 			demoBar.style.width = parseInt(demoP*120/1000+120);
-			mayorSpot.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*demoP) + ", " + Math.floor(122.5 + 122.5*demoP) + ",0)";
+			demoBar.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*demoP) + ", " + Math.floor(122.5 + 122.5*demoP) + ",0)";
 		}
 	}
 }
