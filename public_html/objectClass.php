@@ -180,6 +180,8 @@ class factory extends object {
 		$this->attrList['prodRate'] = 21;
 		$this->attrList['region_1'] = 22;
 		$this->attrList['region_2'] = 23;
+		
+		$this->attrList['factory'] = 24
 
 		$this->attrList['inputInv1'] = 31;
 		$this->attrList['inputInv2'] = 32;

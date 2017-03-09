@@ -31,7 +31,7 @@ $now = time();
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
 if ($thisFactory->objDat[$thisFactory->orderListStart + $postVals[2]] > 0) {
 	fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart + $postVals[2]]);
-	$objDat = unpack('i*', fread($offerDatFile, 52));
+	$objDat = unpack('i*', fread($offerDatFile, 64));
 	if ($objDat[13] > $now) {
 		fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart + $postVals[2]] + 48);
 		fwrite($offerDatFile, $objDat[13]-$boostDurations[$postVals[3]]);

@@ -65,7 +65,7 @@ $materialOrders = [];
 for ($i=0; $i<10; $i++) {
 	if ($thisFactory->objDat[$thisFactory->orderListStart+$i] > 0) {
 		fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart+$i]);
-		$offerDat = unpack('i*', fread($offerDatFile, 52));
+		$offerDat = unpack('i*', fread($offerDatFile, 64));
 		array_push($materialOrders, $offerDat[1], $offerDat[11], $offerDat[13]); //id, qty, time
 	}
 }

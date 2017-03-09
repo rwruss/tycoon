@@ -76,7 +76,7 @@ if (flock($offerDatFile, LOCK_EX)) {
 			break;
 		}
 	}
-	if ($offerLoc == 0) $offerLoc = max(52,ceil($offerSize/52)*52);
+	if ($offerLoc == 0) $offerLoc = max(64,ceil($offerSize/64)*64);
 
 	fseek($offerDatFile, $offerLoc);
 	fwrite($offerDatFile, $saleDat);

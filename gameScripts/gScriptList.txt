@@ -63,6 +63,8 @@
 1063 - PROCESS: load tax exception data for a city
 
 TO DO:
+Adjust offers for labor and input costs
+calculation of taxes when things are sold
 complete 1038 - speed up factory orders
 *** Rework order system to go by order ID
 **Tax on sales of goods when selling

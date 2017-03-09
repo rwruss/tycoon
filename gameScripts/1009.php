@@ -59,7 +59,7 @@ if ($optionCheck && $spotCheck !== false) {
 		echo 'Read item #'.$checkCount.' ('.$offerList->slotData[$checkCount].')';
 		if ($offerList->slotData[$checkCount] > 0) {
 			fseek($offerDatFile, $offerList->slotData[$checkCount]);
-			$tmpDat = unpack('i*', fread($offerDatFile, 52));
+			$tmpDat = unpack('i*', fread($offerDatFile, 64));
 			if ($tmpDat[1] > 0) {
 				array_push($showOffers, $offerList->slotData[$checkCount]);
 				$showOffers = array_merge($showOffers, $tmpDat);
