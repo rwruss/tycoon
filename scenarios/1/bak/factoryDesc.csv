@@ -1,0 +1,9 @@
+0 - Description,1 - Product 1,2 - Product 2,3 - Product 3,4 - Product 4,5 - Product 5,6 - Cost (in cents)
+Grain Farm,Wheat,Corn,None,None,None,1000
+Chicken Farm,Chicken,None,None,None,None,1000
+Ranch,Cattle,None,None,None,None,1000
+Meat Processor,Packaged Chicken,Packaged Beef,Pigs,None,None,1000
+Fruit Farm,Grapes,Berries,None,None,None,1000
+Brewery,Wine,Beer,Spirits,None,None,1000
+Metal Mill,Steel,Aluminum Cans,None,None,None,1000
+Electronics Plant,Computer Parts,CPUs,Computers,None,None,1000
