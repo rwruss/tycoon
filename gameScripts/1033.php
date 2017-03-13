@@ -2,8 +2,8 @@
 
 echo '<script>
 
-useDeskTop.newPane("boostStore");
-boostDiv = useDeskTop.getPane("boostStore");
+boostDiv = useDeskTop.newPane("boostStore");
+boostDiv.innerHTML = "";
 optionList = ["1 Minute Speed Up", "10 Minute Speed Up", "30 Minute Speed Up", "60 Minute Speed Up"];
 saleButtons = new Array();
 for (var i=0; i<optionList.length; i++) {

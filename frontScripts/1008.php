@@ -31,7 +31,7 @@ while (1< 2) {
 	//echo "CheckPoint: ".$checkPoint.", Interval: ".$interval.", Mult: ".$mult."<br>";
 	fseek($nameFile, 100+$checkPoint*40);
 	$compareName = strtolower(trim(fread($nameFile, 36)));
-	//echo $testName." vs ".trim($compareName)."<br>";
+	echo $testName." vs ".trim($compareName)."<br>";
 	if ($testName < $compareName) {
 		if ($mult == 1) $interval = intval($interval/2);
 		$mult = -1;
@@ -50,7 +50,7 @@ while (1< 2) {
 
 	}
 // Iterate through last 10 candidates for matches
-//echo "FINAL - CheckPoint: ".$checkPoint.", Interval: ".$interval.", Mult: ".$mult."<br>";
+echo "FINAL - CheckPoint: ".$checkPoint.", Interval: ".$interval.", Mult: ".$mult."<br>";
 fseek($nameFile, 100+$checkPoint*40);
 $finalRead = fread($nameFile, min(400, ($numNames-$checkPoint)*40));
 for ($i=0; $i<min(10, $numNames-$checkPoint); $i++) {

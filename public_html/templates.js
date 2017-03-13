@@ -1074,14 +1074,14 @@ function incrBox(target) {
 	container.display = addDiv("container", "slideContain", container);
 	container.lgStepDn = addDiv("", "slideMin", container);
 	container.smStepDn = addDiv("", "slideMin", container);
-	container.lgStepUp = addDiv("", "slideMin", container);
 	container.smStepUp = addDiv("", "slideMin", container);
+	container.lgStepUp = addDiv("", "slideMin", container);
 
 	container.display.innerHTML = "0";
 	container.lgStepDn.innerHTML = "<<";
 	container.smStepDn.innerHTML = "<";
-	container.lgStepUp.innerHTML = ">>";
 	container.smStepUp.innerHTML = ">";
+	container.lgStepUp.innerHTML = ">>";
 
 	container.lgStepDn.addEventListener("click", function () {incrStep(this, -10);});
 	container.smStepDn.addEventListener("click", function () {incrStep(this, -1);});
@@ -1157,9 +1157,11 @@ factoryRate = function (trg, rate) {
 }
 
 showOutputs = function (trg, productStores) {
+	console.log(productStores);
 	trg.innerHTML = "";
 	for (var i=0; i<5; i++) {
 		if (productStores[i]>0) {
+			console.log("render " + i);
 			productArray[productStores[i]].renderQty(trg, productStores[i+5]);
 		}
 	}
@@ -1183,8 +1185,8 @@ msgSummary = function (trg, fromName, fromID, time, subject, msgStatus, s, e) {
 
 receiveOffers = function(offerDat) {
 	offerList = [];
-	for (var i=0; i<offerDat.length; i+=12) {
-		offerList.push(new offer(offerDat.slice(i, i+12)));
+	for (var i=0; i<offerDat.length; i+=17) {
+		offerList.push(new offer(offerDat.slice(i, i+17)));
 	}
 
 	showOffers = new uList(offerList);
@@ -1314,15 +1316,17 @@ edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 		showDemoChange(edictItem.effects, effects[i], effects[i+1]);
 	}
 }
-/*
+
 loadCompanyLabor = function (laborDat) {
-	for (var i=0; i<laborDat.length; i+=10) {
-		if ()
-		companyLabor.push(new laborItem({objID:(i+100), pay:laborDat[i+5], ability:laborDat[i+8], laborType:laborDat[i]}));
+	console.log(laborDat);
+	let tmpArray = new Array();
+	for (var i=0; i<laborDat.length; i+=11) {
+		console.log("TYPE " + laborDat[i]);
+		if (laborDat[i+1]>0)	tmpArray.push(new laborItem({objID:laborDat[i]+100, pay:laborDat[i+6], ability:laborDat[i+9], laborType:laborDat[i+1]}));
 	}
-	console.log(companyLabor);
+	return tmpArray;
 }
-*/
+
 loadLaborItems = function(laborDat) {
 	let tmpArray = new Array();
 	for (var i=0; i<laborDat.length; i+=11) {

@@ -12,14 +12,31 @@ PostVals
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'rb');
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
-$thisFactory = loadObject($postVals[1], $objFile, 400);
+$thisFactory = loadObject($postVals[1], $objFile, 1100);
 $now = time();
+
+$taxes = array_fill(0,31,0);
+
+// Verify that there are open order spots
+$spotFail = TRUE;
+$orderNumber = 0;
+$orderItems = $thisFactory->materialOrders();
+  for ($i=0; $i<10; $i++) {
+    if ($orderItems[$i] == 0) {
+    $orderNumber = $i;
+    $spotFail = FALSE;
+    break;
+   }
+ }
+
+if ($spotFail) exit('error 0101-1');
 
 if ($postVals[2] == 0) {
   // this is the default offer;
@@ -35,29 +52,10 @@ if ($postVals[2] == 0) {
 
   // deduct the money from this player
   $thisPlayer->set('money', $thisPlayer->get('money')-$totalCost);
-  
-  // record in this players pending order slot
-	$orderItems = $thisObj->materialOrders();
-    for ($i=0; $i<10; $i++) {
-		if ($orderItems[$i] == 0) {
-		$orderNumber = $i;
-		break;
-	}
-	$thisFactory->save($thisFactory->orderListStart+$orderNumber, $postVals[2]);
-	/*
-  // record in this players pending order slot
-  for ($i=1; $i<=10; $i++) {
-    if ($thisFactory->get('orderItem'.$i) == 0) {
-      $orderNumber = $i;
-      $thisFactory->set('orderTime'.$i, time()+60);
-      $thisFactory->set('orderItem'.$i, $postVals[4]);
-      $thisFactory->set('orderQty'.$i, 100);
-      $thisFactory->saveAll($objFile);
-      //print_r($thisFactory->objDat);
 
-      break;
-    }
-  }*/
+  // record in this players pending order slot
+
+	$thisFactory->save($thisFactory->orderListStart+$orderNumber, $postVals[2]);
 
 } else {
   // load the specific offer
@@ -72,7 +70,6 @@ if ($postVals[2] == 0) {
       exit('offer no longer available');
     }
 
-
     // check that the player has enough money
     $moneyCheck = true;
     $totalCost = $offerDat[1]*$offerDat[2];
@@ -82,29 +79,47 @@ if ($postVals[2] == 0) {
 
     // deduct the money from this player
     $thisPlayer->set('money', $thisPlayer->get('money')-$totalCost);
-	
-	$targetFactory = loadObject($offerDat[3], $objFile, 400);
-	$targetCity = loadCity($targetFactory->get('region3'), $cityFile);
-	
+
+	$targetFactory = loadObject($offerDat[3], $objFile, 1100);
+	$targetCity = loadCity($targetFactory->get('region_3'), $cityFile);
+
 	$targetPlayer = loadObject($targetFactory->get('owner'), $objFile, 400);
-	
+
 	// calculate taxes on the selling player
-	$taxes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 	$inputCost = 0;
-	$taxInfo = [$targetFactory->get('owner'), $targetFactory->get('subType'), $targetFactory->get('industry'), $offerDat[3], $targetPlayer->get('teamID'), ]; // [company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID]
-	
+	$taxInfo = [0, $targetFactory->get('owner'), $targetFactory->get('subType'), $targetFactory->get('industry'), $offerDat[3], $targetPlayer->get('teamID'), ]; // [company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID]
+
 	$cityTaxEx = new itemSlot($targetCity->get('cTax'), $slotFile, 40);
 	$regionTaxEx = new itemSlot($targetCity->get('rTax'), $slotFile, 40);
 	$nationTaxEx = new itemSlot($targetCity->get('nTax'), $slotFile, 40);
 
+
+  //overRideDurs
+  $cityTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10,1,1,460,-10];
+  $regionTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
+  $nationTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
+
+  for ($i=1; $i<11; $i++) {
+    $taxes[$i] = $cityTaxEx->slotData[$i];
+    $taxes[$i+10] = $regionTaxEx->slotData[$i];
+    $taxes[$i+20] = $nationTaxEx->slotData[$i];
+  }
+
+
+  echo 'Tax infor for player ('.$pGameID.')';
+  print_r($taxInfo);
+
 	$cityLaws = new itemSlot($targetCity->get('cLaw'), $slotFile, 40);
 	$regionLaws = new itemSlot($targetCity->get('rLaw'), $slotFile, 40);
 	$nationLaws = new itemSlot($targetCity->get('nLaw'), $slotFile, 40);
-	
+
 	calcTaxes($cityTaxEx->slotData, $taxInfo);
 	calcTaxes($regionTaxEx->slotData, $taxInfo);
 	calcTaxes($nationTaxEx->slotData, $taxInfo);
-	
+
+  echo 'Final tax rates:';
+  print_r($taxes);
+
 	$taxAmounts = array_fill(1, 30, 0);
 	/*
 	$taxAmounts[1] = $taxes[1]* ($totalCost-$inputCost - $laborCost); // Income Tax
@@ -112,13 +127,13 @@ if ($postVals[2] == 0) {
 	$taxAmounts[5] = $taxes[5]*$offerDat[5]; // Pollution Tax
 	$taxAmounts[6] = $taxes[6]*$offerDat[6]; // Rights Tax
 	$taxAmounts[7] = $taxes[7] * $totalCost; // Sales Tax
-	
+
 	$taxAmounts[11] = $taxes[11]* ($totalCost-$inputCost - $laborCost); // Income Tax
 	$taxAmounts[13] = $taxes[13] * ($totalCost - $inputCost); // VAT
 	$taxAmounts[15] = $taxes[15]*$offerDat[5]; // Pollution Tax
 	$taxAmounts[16] = $taxes[16]*$offerDat[6]; // Rights Tax
 	$taxAmounts[17] = $taxes[17] * $totalCost; // Sales Tax
-	
+
 	$taxAmounts[21] = $taxes[21]* ($totalCost-$inputCost - $laborCost); // Income Tax
 	$taxAmounts[23] = $taxes[23] * ($totalCost - $inputCost); // VAT
 	$taxAmounts[25] = $taxes[25]*$offerDat[5]; // Pollution Tax
@@ -129,8 +144,8 @@ if ($postVals[2] == 0) {
     // add the money to the selling player
 	$targetFactory->set('totalSales', $targetFactory->get('totalSales')+$totalCost);
 	$targetFactory->set('periodSales', $targetFactory->get('periodSales')+$totalCost);
-	
-	
+
+
 	$targetPlayer->set('money', $targetPlayer->get('money')+$totalCost);
 
   // remove the order from the selling factory
@@ -150,34 +165,9 @@ if ($postVals[2] == 0) {
 		$targetPlayer->save('money', $targetPlayer->get('money')+$totalCost);
 	}
 
-
     // record in this players pending order slot
-	$orderItems = $thisObj->materialOrders();
-    for ($i=0; $i<10; $i++) {
-		if ($orderItems[$i] == 0) {
-		$orderNumber = $i;
-		break;
-	}
 	$thisFactory->save($thisFactory->orderListStart+$orderNumber, $postVals[2]);
-	/*
-      if ($thisFactory->get('orderItem'.$i) == 0) {
-        $thisFactory->set('orderTime'.$i, time()+60);
-        $thisFactory->set('orderItem'.$i, $postVals[4]);
-        $thisFactory->set('orderQty'.$i, $offerDat[1]);
-        $thisFactory->saveAll($objFile);
-        $orderNumber = $i;
-        break;
-      }*/
-	  
-    }
 
-    // overwrite the order in the offer list dat
-	/*
-    fseek($offerDatFile, $postVals[2]);
-    $offerDat = fwrite($offerDatFile, pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
-    flock($offerDatFile, LOCK_UN);
-	*/
-	
 	// Record the player ordering and the arrival time in the offer list file
 	fseek($offerDatFile, $postVals[2]+44);
 	fwrite($offerDatFile, pack('i*', $pGameID, $now));
@@ -219,61 +209,27 @@ thisPlayer.money = '.$thisPlayer->get('money').'
 fclose($cityFile);
 fclose($offerDatFile);
 fclose($objFile);
+fclose($slotFile);
 
 function calcTaxes($slotData, $thisInfo) { // [company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID]
-	$taxes[1] += $slotData[1];
+  global $taxes;
+
+  print_r($slotData);
+  $taxes[1] += $slotData[1];
 	$taxes[2] += $slotData[2];
 	$taxes[3] += $slotData[3];
 	$taxes[4] += $slotData[4];
 	$taxes[5] += $slotData[5];
 	$taxes[6] += $slotData[6];
 	$taxes[6] += $slotData[7];
-	
-	for ($i=10; $i<sizeof($slotData); $i+=4) {
+
+	for ($i=11; $i<sizeof($slotData); $i+=4) {
+    echo $thisInfo[$slotData[$i]].' vs '.$slotData[$i+2].' --> ';
 		if ($thisInfo[$slotData[$i]] == $slotData[$i+2]) {
+      echo 'adjust tax type '.$slotData[$i+1].' by '.$slotData[$i+3];
 			$taxes[$slotData[$i+1]] += $slotData[$i+3];
 		}
 	}
-	/*
-	for ($i=10; $i<sizeof($slotData); $i+=4) {
-		switch($slotData[$i]) {
-			case 1: // exemptions by company
-				if ($slotData[$i+2] == $thisCompany) {
-					$taxes[$slotData[$i+1]] += $slotData[$i+3];
-				}
-				break;
-			
-			case 2: // exemptions by factory type
-				if ($slotData[$i+2] == $thisFactoryType) {
-					$taxes[$slotData[$i+1]] += $slotData[$i+3];
-				}
-				break;
-				
-			case 3: // exemptions by industry
-				if ($slotData[$i+2] == $thisIndustry) {
-					$taxes[$slotData[$i+1]] += $slotData[$i+3];
-				}
-				break;
-				
-			case 4: // exemptions by factory ID
-				if ($slotData[$i+2] == $thisFID) {
-						$taxes[$slotData[$i+1]] += $slotData[$i+3];
-					}
-				break;
-			
-			case 5: // exemptions by conglomerate
-				if ($slotData[$i+2] == $thisCongID) {
-						$taxes[$slotData[$i+1]] += $slotData[$i+3];
-					}
-				break;
-				
-			case 6: // exemptions by product
-			if ($slotData[$i+2] == $thisProduct) {
-						$taxes[$slotData[$i+1]] += $slotData[$i+3];
-					}
-				break;
-		}
-	}*/
 }
 
 ?>

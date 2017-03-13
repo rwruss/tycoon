@@ -498,7 +498,7 @@ class labor {
 			hireContain.hireButton.innerHTML = "Fire!";
 			hireContain.hireButton.sendStr = sendStr;
 
-			hireContain.addEventListener("click", function () {
+			hireContain.hireButton.addEventListener("click", function () {
 				event.stopPropagation();
 				scrMod(sendStr);
 			});

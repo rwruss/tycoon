@@ -1,7 +1,6 @@
 <?php
 
 $offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 
 $now = time();
 $constructDelta = $thisObj->get('constructCompleteTime') - $now;
@@ -56,18 +55,18 @@ for ($i=1; $i<9; $i++) {
 		}
 	}
 }
-print_r($thisObj->objDat);
+//print_r($thisObj->objDat);
 
 // Load updated material order information for this factory
 
 
 $materialOrders = [];
 for ($i=0; $i<10; $i++) {
-	if ($thisFactory->objDat[$thisFactory->orderListStart+$i] > 0) {
-		fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart+$i]);
+	if ($thisObj->objDat[$thisObj->orderListStart+$i] > 0) {
+		fseek($offerDatFile, $thisObj->objDat[$thisObj->orderListStart+$i]);
 		$offerDat = unpack('i*', fread($offerDatFile, 64));
 		array_push($materialOrders, $offerDat[1], $offerDat[11], $offerDat[13]); //id, qty, time
-	}
+	} else array_push($materialOrders, 0,0,0);
 }
 fclose($offerDatFile);
 
@@ -76,7 +75,7 @@ factoryUpgradeProducts = [];
 factoryUpgradeServices = [];
 selectedFactory = '.$postVals[1].';
 factoryDiv = useDeskTop.newPane("factoryInfo");
-factoryDiv.innerHTML = "factory";
+factoryDiv.innerHTML = "";
 factorySales = ['.implode(',', $saleDat).'];';
 
 if ($constructDelta > 0) {
@@ -191,6 +190,6 @@ showSales(factoryDiv.saleItems, factorySales);
 </script>';
 
 fclose($offerListFile);
-fclose($offerDatFile);
+//fclose($offerDatFile);
 
 ?>

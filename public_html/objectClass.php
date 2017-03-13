@@ -181,7 +181,7 @@ class factory extends object {
 		$this->attrList['region_1'] = 22;
 		$this->attrList['region_2'] = 23;
 
-		$this->attrList['factory'] = 24;
+		$this->attrList['industry'] = 24;
 
 		$this->attrList['inputInv1'] = 31;
 		$this->attrList['inputInv2'] = 32;
@@ -206,41 +206,6 @@ class factory extends object {
 		$this->attrList['prodInv4'] = 50;
 		$this->attrList['prodInv5'] = 51;
 
-		/*
-		$this->attrList['orderTime1'] = 56;
-		$this->attrList['orderTime2'] = 59;
-		$this->attrList['orderTime3'] = 62;
-		$this->attrList['orderTime4'] = 65;
-		$this->attrList['orderTime5'] = 68;
-		$this->attrList['orderTime6'] = 71;
-		$this->attrList['orderTime7'] = 74;
-		$this->attrList['orderTime8'] = 77;
-		$this->attrList['orderTime9'] = 80;
-		$this->attrList['orderTime10'] = 83;
-
-		$this->attrList['orderItem1'] = 57;
-		$this->attrList['orderItem2'] = 60;
-		$this->attrList['orderItem3'] = 63;
-		$this->attrList['orderItem4'] = 66;
-		$this->attrList['orderItem5'] = 69;
-		$this->attrList['orderItem6'] = 72;
-		$this->attrList['orderItem7'] = 75;
-		$this->attrList['orderItem8'] = 78;
-		$this->attrList['orderItem9'] = 81;
-		$this->attrList['orderItem10'] = 84;
-
-		$this->attrList['orderQty1'] = 58;
-		$this->attrList['orderQty2'] = 61;
-		$this->attrList['orderQty3'] = 64;
-		$this->attrList['orderQty4'] = 67;
-		$this->attrList['orderQty5'] = 70;
-		$this->attrList['orderQty6'] = 73;
-		$this->attrList['orderQty7'] = 76;
-		$this->attrList['orderQty8'] = 79;
-		$this->attrList['orderQty9'] = 82;
-		$this->attrList['orderQty10'] = 85;
-		*/
-
 		$this->attrList['offer1'] = 231;
 		$this->attrList['offer2'] = 232;
 		$this->attrList['offer3'] = 233;
@@ -254,13 +219,14 @@ class factory extends object {
 		$inputInventoryIndex = 61;
 
 		$this->laborOffset = 131;
-		$this->eqRateOffset = 24;
+		$this->eqRateOffset = 264;
 
 		// Load template information
+		//echo 'load factory type '.$dat[9];
 		global $templateBlockSize;
 		fseek($file, $dat[9]*$templateBlockSize);
 		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
-		//print_r($tmpDat);
+		//print_r($this->templateDat);
 
 		$this->tempList['prod1'] = $this->templateDat[11];
 		$this->tempList['prod2'] = $this->templateDat[12];
@@ -285,8 +251,9 @@ class factory extends object {
 		// Check first 7 labor types at the factory
 		for ($i=0; $i<7; $i++) {
 			if ($thisProduct->objDat[38+$i] > 0) {
-				echo 'Check labor type '.$this->objDat[$this->laborOffset+10*$i+1];
-				fseek($laborEqFile, $this->objDat[$this->laborOffset+10*$i+1]*4000);
+				print_r($this->objDat);
+				echo 'Check labor type '.$this->objDat[$this->laborOffset+10*$i];
+				fseek($laborEqFile, $this->objDat[$this->laborOffset+10*$i]*4000);
 				$eqDat = unpack('i*', fread($laborEqFile, 80));
 				print_r($eqDat);
 
@@ -312,21 +279,23 @@ class factory extends object {
 				$eqArray[19] = $eqDat[1];
 				$eqArray[20] = $eqDat[1];
 
-				$effectiveRate = $eqArray[$this->objDat[$this->laborOffset+10*$i+1]]/10000;
+				$effectiveRate = $eqArray[$this->objDat[$this->laborOffset+10*$i]]/10000;
 
-				$workTime = max(1,$this->objDat[$this->laborOffset+10*$i+1]);
+				$workTime = max(1,$this->objDat[$this->laborOffset+10*$i]);
 				//$laborLevel = log($workTime, 2.0)+1;
 				$laborLevel = $workTime/36000;
 				$productionRate += (0.5+$laborLevel)*$effectiveRate;
-				echo 'Labor item '.($this->objDat[$this->laborOffset+10*$i+1]*4000).' rate is '.((0.5+$laborLevel)*$effectiveRate).' ->> (0.5 + '.$laborLevel.') * '.$effectiveRate;
+				echo 'Labor item '.($this->objDat[$this->laborOffset+10*$i]*4000).' rate is '.((0.5+$laborLevel)*$effectiveRate).' ->> (0.5 + '.$laborLevel.') * '.$effectiveRate;
 
 				// Record labor eq rates
 				$this->objDat[$this->eqRateOffset+$i] = $effectiveRate*10000;
 				$productionItems++;
 			}
 		}
-		$this->saveAll($this->linkFile);
+
 		$totalRate = intval($thisProduct->get('baseRate')*$productionRate/$productionItems*100);
+		$this->set('prodRate', $totalRate);
+		$this->saveAll($this->linkFile);
 		return $totalRate;
 	}
 
@@ -372,8 +341,8 @@ class factory extends object {
 
 		// Check for pending material orders
 		for ($i=0; $i<10; $i++) {
-			if ($thisFactory->objDat[$thisFactory->orderListStart+$i] > 0) {
-				fseek($orderDatFile, $thisFactory->objDat[$thisFactory->orderListStart+$i]);
+			if ($this->objDat[$this->orderListStart+$i] > 0) {
+				fseek($orderDatFile, $this->objDat[$this->orderListStart+$i]);
 				$orderDat = unpack('i*', fread($orderDatFile, 52));
 
 				if ($orderDat[13] <= $now) {
@@ -422,7 +391,7 @@ class factory extends object {
 					break;
 				}
 			}
-			$this->objDat[51+$productIndex] += $this->get('prodQty');
+			$this->objDat[47+$productIndex] += $this->get('prodQty');
 
 			$this->set('prodStart', 0);
 

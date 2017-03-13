@@ -58,7 +58,7 @@ if ($facSlot == 0) exit ('Can\'t create any more offers for this factory');
 // create sale dat
 $location = 0;
 $conglID = 0;
-$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID, $postVals[3]);
+$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID, $postVals[3], 0, 0, 0, 0, 0);
 
 // Look for space in the offerDatFile
 $checkGroup = 0;
@@ -68,7 +68,7 @@ if (flock($offerDatFile, LOCK_EX)) {
 	//$offerGroups = floor($offerSize/4000);
 
 	$offerLoc=0;
-	$emptyOffers = new itemSlot(0, $offerListFile, 1004);
+	$emptyOffers = new itemSlot(0, $offerListFile, 1004, TRUE);
 	for ($i=1; $i<sizeof($emptyOffers); $i++) {
 		if ($emptyOffers[$i] > 0) {
 			$offerLoc = $emptyOffers[$i];

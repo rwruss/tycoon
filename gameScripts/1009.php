@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
 Find options for purchasing resources for a factory
 */
 
@@ -49,15 +49,18 @@ if ($optionCheck && $spotCheck !== false) {
 	// Search for new items to produce
 	echo 'Read offer slot '.$productID;
 	$offerList = new itemSlot($productID, $offerListFile, 1000);
-	$emptyOffers = new itemSlot(0, $offerListFile, 1000);
+	print_R($offerList->slotData);
+	$emptyOffers = new itemSlot(0, $offerListFile, 1000, TRUE);
 
 	$offerCount = 0;
 	$checkCount = 1;
 	$numOffers = sizeof($offerList->slotData);
-	$showOffers = [0, 100, 299, 0, 50, 50, 50, 0, 8, 9, 10, $productID];
+	//$showOffers = [0, 100, 299, 0, 50, 50, 50, 0, 8, 9, 10, $productID];
+	$showOffers = [];
 	while ($checkCount < $numOffers && $offerCount < 100) {
 		echo 'Read item #'.$checkCount.' ('.$offerList->slotData[$checkCount].')';
 		if ($offerList->slotData[$checkCount] > 0) {
+			echo 'Load offer #'.$offerList->slotData[$checkCount].' at spot '.$checkCount;
 			fseek($offerDatFile, $offerList->slotData[$checkCount]);
 			$tmpDat = unpack('i*', fread($offerDatFile, 64));
 			if ($tmpDat[1] > 0) {

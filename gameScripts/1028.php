@@ -3,10 +3,11 @@
 require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 
 // Load target factory
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
-$thisFactory->updateStocks();
+$thisFactory->updateStocks($offerDatFile);
 
 //print_r($thisFactory->objDat);
 //print_r($thisFactory->resourceInv());
@@ -133,6 +134,7 @@ factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProductio
 updateMaterialInv('.$postVals[1].', ['.implode(',', $thisFactory->resourceInv()).']);
 </script>';
 
+fclose($offerDatFile);
 fclose($objFile);
 
 ?>

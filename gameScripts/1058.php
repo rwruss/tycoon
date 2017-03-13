@@ -14,13 +14,13 @@ pvs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$laborEqFile = fopen($scnPath.'/laborEq.dat', 'r+b');
+$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb');
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
-$thisFactory = loadObject($postVals[1], $objFile, 1000);
+$thisFactory = loadObject($postVals[1], $objFile, 1100);
 
 $lOff = $thisFactory->laborOffset;
 $startFactoryLabor = array_slice($thisFactory->objDat, $lOff-1, 100);

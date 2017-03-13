@@ -4,14 +4,16 @@ $playerFile = fopen("../users/userDat.dat", "r+b");
 
 if (flock($playerFile, LOCK_EX)) {  // acquire an exclusive lock
 	$newID = max(1,filesize("../users/userDat.dat")/500);
-	/*
+
 	fseek($nameFile, 100+$numNames*40);
 	fwrite($nameFile, $testName);
 	fseek($nameFile, 100+$numNames*40+36);
 	fwrite($nameFile, pack("N", $newID));
-	*/
+	
 	fseek($playerFile, $newID*500+499);
 	fwrite($playerFile, pack("C", 0));
+
+	echo 'New id is '.$newID;
 
 	$pFile = fopen("../users/userCheck.dat", "r+b");
 

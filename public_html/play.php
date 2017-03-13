@@ -511,7 +511,7 @@ echo '
 
 		// initialize windows
 		useDeskTop.newPane("dialogPane");
-		companyLabor = loadLaborItems(['.implode(',', $companyLabor).']);
+		companyLabor = loadCompanyLabor(['.implode(',', $companyLabor).']);
 		//loadCompanyLabor(['.implode(',', $companyLabor).']);
 		webGLStart();
 	}
