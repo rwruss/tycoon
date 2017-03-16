@@ -63,6 +63,7 @@
 1063 - PROCESS: load tax exception data for a city
 
 TO DO:
+Verify buy order option in 1010 works for new offer format and calc taxes
 Adjust offers for labor and input costs
 calculation of taxes when things are sold
 complete 1038 - speed up factory orders

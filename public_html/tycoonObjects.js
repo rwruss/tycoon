@@ -700,9 +700,11 @@ class factoryOrder {
 
 			textBlob("", orderPane, "Select which item you want to order");
 			invList.reset();
+
 			orderPane.orderBox1 = invList.SLsingleButton(orderPane);
-			orderPane.offerContainer = addDiv("", "stdContain", orderPane);
 			var orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(orderPane.orderBox1))});
+			orderPane.offerContainer = addDiv("", "stdContain", orderPane);
+
 			orderSelectButton.innerHTML = "Find Offers";
 
 			});

@@ -1190,6 +1190,7 @@ receiveOffers = function(offerDat) {
 	}
 
 	showOffers = new uList(offerList);
+	console.log(offerList);
 	/*
 	showOffers.addSort("Price", price);
 	showOffers.addSort("Qunatity", qty);
@@ -1197,6 +1198,7 @@ receiveOffers = function(offerDat) {
 	showOffers.addSort("Pollution", pollution);
 	showOffers.addSort("Rights", rights);
 	*/
+	orderPane.offerContainer.innerHTML = "";
 	showOffers.SLShowAll(orderPane.offerContainer, function(x, y) {
 		let offerItem = x;
 		let item = x.renderSummary(y);
