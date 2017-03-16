@@ -151,7 +151,7 @@ class business extends object {
 }
 
 class factory extends object {
-	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights, $orderListStart;
+	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights, $orderListStart, $padTaxOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -160,6 +160,7 @@ class factory extends object {
 		$this->inputPollution = 98;
 		$this->inputRights = 114;
 		$this->orderListStart = 52;
+		$this->paidTaxOffset = 274;
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;

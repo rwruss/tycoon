@@ -36,12 +36,12 @@ if (flock($objFile, LOCK_EX)) {
 	fseek($objFile, 0, SEEK_END);
 	$newID = ftell($objFile)/100;
 
-  fseek($objFile, $newID*$defaultBlockSize + 1096);
+  fseek($objFile, $newID*$defaultBlockSize + 1596);
   fwrite($objFile, pack('i', 0));
 
 	echo 'Template type: '.$factoryType.' for new object '.$newID;
-	$newObjDat = array_fill(1, 275, 0);
-  $newObj = new factory($newID, $newObjDat, $objFile);
+	$newObjDat = array_fill(1, 400, 0);
+	$newObj = new factory($newID, $newObjDat, $objFile);
 
 	// Set default parameters for this factory
 	$now = time();

@@ -55,6 +55,12 @@ for ($i=1; $i<9; $i++) {
 
 if ($facSlot == 0) exit ('Can\'t create any more offers for this factory');
 
+// Calculate material cost for the sale (bit screen?)
+//($x >> 1) & 1;
+
+// Calculate labor cost for the sale
+//($x >> 1) & 1;
+
 // create sale dat
 $location = 0;
 $conglID = 0;

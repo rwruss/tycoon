@@ -19,7 +19,7 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
-$thisFactory = loadObject($postVals[1], $objFile, 1100);
+$thisFactory = loadObject($postVals[1], $objFile, 1600);
 $now = time();
 
 $taxes = array_fill(0,31,0);
@@ -72,15 +72,15 @@ if ($postVals[2] == 0) {
 
     // check that the player has enough money
     $moneyCheck = true;
-    $totalCost = $offerDat[1]*$offerDat[2];
+    $totalCost = $offerDat[1]*$offerDat[2]; // Quantity * Unit Price
     if ($totalCost <= $thisPlayer->get('money')) $moneyCheck = false;
 
-    if ($moneyCheck) exit('not enough money for this deal.  Have'.$thisPlayer->get('money').' -> Need '.$totalCost);
+    if ($moneyCheck) exit('not enough money for this deal.  Have'.$thisPlayer->get('money').' -> Need '.$totalCost);	
 
     // deduct the money from this player
     $thisPlayer->set('money', $thisPlayer->get('money')-$totalCost);
 
-	$targetFactory = loadObject($offerDat[3], $objFile, 1100);
+	$targetFactory = loadObject($offerDat[3], $objFile, 1600);
 	$targetCity = loadCity($targetFactory->get('region_3'), $cityFile);
 
 	$targetPlayer = loadObject($targetFactory->get('owner'), $objFile, 400);
@@ -106,8 +106,8 @@ if ($postVals[2] == 0) {
   }
 
 
-  echo 'Tax infor for player ('.$pGameID.')';
-  print_r($taxInfo);
+	echo 'Tax infor for player ('.$pGameID.')';
+	print_r($taxInfo);
 
 	$cityLaws = new itemSlot($targetCity->get('cLaw'), $slotFile, 40);
 	$regionLaws = new itemSlot($targetCity->get('rLaw'), $slotFile, 40);
@@ -117,8 +117,8 @@ if ($postVals[2] == 0) {
 	calcTaxes($regionTaxEx->slotData, $taxInfo);
 	calcTaxes($nationTaxEx->slotData, $taxInfo);
 
-  echo 'Final tax rates:';
-  print_r($taxes);
+	echo 'Final tax rates:';
+	print_r($taxes);
 
 	$taxAmounts = array_fill(1, 30, 0);
 	/*
@@ -140,13 +140,26 @@ if ($postVals[2] == 0) {
 	$taxAmounts[26] = $taxes[26]*$offerDat[6]; // Rights Tax
 	$taxAmounts[27] = $taxes[27] * $totalCost; // Sales Tax
 	*/
+	
+	$totalTax = array_sum($taxAmounts);
+	$sellerTax = $totalTax - $taxAmounts[7]-$taxAmounts[17]-$taxAmounts[27];
+	$buyerTax = $taxAmounts[7]+$taxAmounts[17]+$taxAmounts[27];
+	
+	// Record the taxes paid
+	for ($i=1; $i<7; $i++) {
+		$targetFactory->objDat[$targetFactory->paidTaxOffset + $i] += $taxAmounts[$i];
+		$targetFactory->objDat[$targetFactory->paidTaxOffset + $i+10] += $taxAmounts[$i+10];
+		$targetFactory->objDat[$targetFactory->paidTaxOffset + $i+20] += $taxAmounts[$i+20];
+	}
+	
+	// Add the tax to city/region/nation treasuries
+	
 
     // add the money to the selling player
-	$targetFactory->set('totalSales', $targetFactory->get('totalSales')+$totalCost);
-	$targetFactory->set('periodSales', $targetFactory->get('periodSales')+$totalCost);
+	$targetFactory->set('totalSales', $targetFactory->get('totalSales')+$totalCost-$sellerTax);
+	$targetFactory->set('periodSales', $targetFactory->get('periodSales')+$totalCost-$sellerTax);
 
-
-	$targetPlayer->set('money', $targetPlayer->get('money')+$totalCost);
+	$targetPlayer->set('money', $targetPlayer->get('money')+$totalCost-$sellerTax);
 
   // remove the order from the selling factory
   for ($i=1; $i<9; $i++) {
@@ -154,7 +167,7 @@ if ($postVals[2] == 0) {
       $targetFactory->set('offer'.$i,0);
       break;
     }
-  }
+  
   $targetFactory->saveAll($targetFactory->linkFile);
 
 	if ($targetFactory->get('owner') == $pGameID) {
@@ -170,7 +183,7 @@ if ($postVals[2] == 0) {
 
 	// Record the player ordering and the arrival time in the offer list file
 	fseek($offerDatFile, $postVals[2]+44);
-	fwrite($offerDatFile, pack('i*', $pGameID, $now));
+	fwrite($offerDatFile, pack('i*', $pGameID, $now+600, ));
 	flock($offerDatFile, LOCK_UN);
 
     // overwrite the order in the slot List

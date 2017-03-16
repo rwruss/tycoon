@@ -63,8 +63,9 @@
 1063 - PROCESS: load tax exception data for a city
 
 TO DO:
-Verify buy order option in 1010 works for new offer format and calc taxes
-Adjust offers for labor and input costs
+in 1010 - add taxes paid to city/region/nation
+update tax calculations for exemptions based on product location/region
+in 1014 - Adjust offers for labor and input costs
 calculation of taxes when things are sold
 complete 1038 - speed up factory orders
 *** Rework order system to go by order ID
