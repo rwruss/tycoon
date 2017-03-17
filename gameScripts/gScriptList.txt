@@ -63,6 +63,9 @@
 1063 - PROCESS: load tax exception data for a city
 
 TO DO:
+*** Fix loading cities
+import/tarrif taxes for buyers
+Adjustmetns to quality, pollution, and rights in this factory during production
 in 1010 - add taxes paid to city/region/nation
 update tax calculations for exemptions based on product location/region
 in 1014 - Adjust offers for labor and input costs

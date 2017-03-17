@@ -104,9 +104,38 @@ if (sizeof($rscFail) > 0) {
 }
 // Verify that there are enough required resources -->
 
-// Deduct the required inputs
-foreach ($usageList as $spot => $qty) {
-	$thisFactory->objDat[31+$spot] -= $qty;
+// Deduct the required inputs and calculate input Costs
+$productCost = 0;
+$productQuality = 0;
+$productPollution = 0;
+$productRights = 0;
+
+foreach ($usageList as $spot => $qty) {	
+	// calc amounts for each input trait
+	$inputCost = $thisFactory->objDat[$thisFactory->inputCost+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputOffset+$spot];
+	$inputQuality = $thisFactory->objDat[$thisFactory->inputQuality+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputQuality+$spot];
+	$inputPollution = $thisFactory->objDat[$thisFactory->inputPollution+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputPollution+$spot];
+	$inputRights = $thisFactory->objDat[$thisFactory->inputRights+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputRights+$spot];
+	
+	// adjust total amounts for the factory
+	$thisFactory->objDat[$thisFactory->inputCost+$spot] -= $inputCost;
+	$thisFactory->objDat[$thisFactory->inputQuality+$spot] -= $inputQuality;
+	$thisFactory->objDat[$thisFactory->inputPollution+$spot] -= $inputPollution;
+	$thisFactory->objDat[$thisFactory->inputRights+$spot] -= $inputRights;
+	
+	$thisFactory->objDat[$thisFactory->inputOffset+$spot] -= $qty;
+	
+	// adjsut trait amounts for the product	
+	$productCost += $inputCost;
+	$productQuality += $inputQuality;
+	$productPollution += $inputPollution;
+	$productRights += $inputRights;
+}
+
+// Calculate the labor costs
+$laborCost = 0;
+for ($i=0; $i<7; $i++) {
+	$laborCost += $thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations/3600;
 }
 
 // Start the work
@@ -115,6 +144,10 @@ $thisFactory->set('prodLength', $overRideDurs[$postVals[2]]);
 $thisFactory->set('prodStart', $now);
 $thisFactory->set('prodQty', $production);
 $thisFactory->set('initProdDuration', $overRideDurs[$postVals[2]]);
+$thisFactory->set('prodRights', $productRights);
+$thisFactory->set('prodPollution', $productPollution);
+$thisFactory->set('prodQuality', $productQuality);
+$thisFactory->set('prodCost', $productCost);
 
 $thisFactory->saveAll($thisFactory->linkFile);
 

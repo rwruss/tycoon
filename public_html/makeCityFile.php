@@ -1,15 +1,25 @@
 <?php
 
+$numCities = 10;
+$numRegions = 3444; 
+$numNations = 196;
+
+$areaSlots = ($numCitys+$numRegions+$numNations);
+$areaSize = $baseSlots*1000;
+
 $cityFile = fopen('cities.dat', 'wb');
 
 $numProducts = 10000;
-$numLabor = 1000;
-$laborStorage = 100;
+$numLabor = 0;
+$laborStorage = 0;
 $extra = 250;
 
 $now = time();
 
-$cityArray = array_fill(1, $extra+($numProducts+$numLabor)*2 + $laborStorage*40, 0);
+// size will be (250 + (10000+0)*2 + 0*40) * 4 = 81000;
+
+//$cityArray = array_fill(1, $extra+($numProducts+$numLabor)*2 + $laborStorage*40, 0);
+$cityArray = array_fill(1, 250, 0);
 $cityArray[5] = 5;
 $cityArray[10] = $now;  // update time
 $cityArray[11] = 10; // size tier
@@ -45,17 +55,23 @@ $dataSize = strlen($cityData);
 //print_R($dataCheck);
 echo 'Data block size is '.$dataSize;
 
-for ($i=0; $i<500; $i++) {
+for ($i=0; $i<$areaSlots; $i++) {
   fseek($cityFile, $i*$dataSize);
   fwrite($cityFile, $cityData);
 }
 
+$cityDemands = array_fill(1, 20000, 0);
+$demandStr = packArray($cityDemands, 's');
+for ($i=0; $i<$numCities, $i++) {
+	fwrite($cityFile, $demandStr);
+}
+
 fclose($cityFile);
 
-function packArray($data) {
+function packArray($data, $type='i') {
   $str = '';
   for ($i=1; $i<=sizeof($data); $i++) {
-    $str = $str.pack('i', $data[$i]);
+    $str = $str.pack($type, $data[$i]);
   }
   return $str;
 }

@@ -151,16 +151,23 @@ class business extends object {
 }
 
 class factory extends object {
-	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights, $orderListStart, $padTaxOffset;
+	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights, 
+		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
-		$this->inputCost = 82;
-		$this->inputPollution = 98;
-		$this->inputRights = 114;
+		$this->inputCost = 82;  // offset to input material cost for each product
+		$this->inputPollution = 98; // offset to input pollution level for each input
+		$this->inputRights = 114; // offset to input rights level for each input
 		$this->orderListStart = 52;
 		$this->paidTaxOffset = 274;
+		$this->inputOffset = 31; // offset to inventory for each input
+		$this->inputQuality = 304; // offset to input quality level for each input
+		$this->laborOffset = 131;
+		$this->eqRateOffset = 264;
+		$this->productOffset = 47; // offset to inventory slots for each product made at factory
+		$this->productStats = 239; // offset to stats for each product made (quality, pollution, rights, material cost, labor cost)
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
@@ -183,7 +190,12 @@ class factory extends object {
 		$this->attrList['region_2'] = 23;
 
 		$this->attrList['industry'] = 24;
+		$this->attrList['prodQuality'] = 25;
+		$this->attrList['prodPollution'] = 26;
+		$this->attrList['prodRights'] = 27;
+		$this->attrList['prodCost'] = 28;
 
+		/*
 		$this->attrList['inputInv1'] = 31;
 		$this->attrList['inputInv2'] = 32;
 		$this->attrList['inputInv3'] = 33;
@@ -200,7 +212,8 @@ class factory extends object {
 		$this->attrList['inputInv14'] = 44;
 		$this->attrList['inputInv15'] = 45;
 		$this->attrList['inputInv16'] = 46;
-
+		*/
+		
 		$this->attrList['prodInv1'] = 47;
 		$this->attrList['prodInv2'] = 48;
 		$this->attrList['prodInv3'] = 49;
@@ -218,9 +231,6 @@ class factory extends object {
 
 		$inputIndex = 1;
 		$inputInventoryIndex = 61;
-
-		$this->laborOffset = 131;
-		$this->eqRateOffset = 264;
 
 		// Load template information
 		//echo 'load factory type '.$dat[9];
@@ -334,7 +344,6 @@ class factory extends object {
 		}
 
 		// Sort material requirements into the storage index for the factory
-
 		$rscSpots = [];
 		for ($i=0; $i<sizeof($this->resourceStores)/2; $i++) {
 			$rscSpots[$this->resourceStores[$i*2]] = $i;
@@ -344,43 +353,22 @@ class factory extends object {
 		for ($i=0; $i<10; $i++) {
 			if ($this->objDat[$this->orderListStart+$i] > 0) {
 				fseek($orderDatFile, $this->objDat[$this->orderListStart+$i]);
-				$orderDat = unpack('i*', fread($orderDatFile, 52));
+				$orderDat = unpack('i*', fread($orderDatFile, 64));
 
 				if ($orderDat[13] <= $now) {
-					$this->objDat[31+$rscSpots[$orderDat[11]]]+= $orderDat[1]; // adjust the material quantity
+					$this->objDat[$this->inputOffset+$rscSpots[$orderDat[11]]]+= $orderDat[1]; // adjust the material quantity
 					$this->objDat[$this->inputCost + $rscSpots[$orderDat[11]]] += $orderDat[1]*$orderDat[2];  // adjust the inventory costs
 					$this->objDat[$this->inputPollution + $rscSpots[$orderDat[11]]] += $orderDat[5]; // adjust the inventroy pollution
 					$this->objDat[$this->inputRights + $rscSpots[$orderDat[11]]] += $orderDat[6]; // adjust the inventory rights
-
+					$this->objDat[$this->inputQuality + $rscSpots[$orderDat[11]]] += $orderDat[4]; // adjust the inventory quality					
+					
 					$thisFactory->objDat[$thisFactory->orderListStart+$i] = 0; // delete the reference to the order
 					$saveFactory = true;
 				}
 			}
 		}
-		//order info : time, resource type #, qty
-		/*
-		for ($i=0; $i<10; $i++) {
-			if ($this->objDat[56+$i*3] <= $now && $this->objDat[56+$i*3] != 0) {
-				// Add material from arrived order
-				echo 'adjusted stores: Item: '.$this->objDat[56+$i*3+1].' (Spot '.$rscSpots[$this->objDat[56+$i*3+1]].') + '.$this->objDat[56+$i*3+2].'<>';
-				$this->objDat[31+$rscSpots[$this->objDat[56+$i*3+1]]] += $this->objDat[56+$i*3+2];
-				$this->objDat[56+$i*3] = 0;
-				$this->objDat[57+$i*3] = 0;
-				$this->objDat[58+$i*3] = 0;
 
-				$this->productStores[0] = $this->objDat[47];
-				$this->productStores[1] = $this->objDat[48];
-				$this->productStores[2] = $this->objDat[49];
-				$this->productStores[3] = $this->objDat[50];
-				$this->productStores[4] = $this->objDat[51];
-
-				$saveFactory = true;
-			} else {
-				//echo $this->objDat[56+$i*3].' > '.$now.'<br>';
-			}
-		}*/
-
-		// Update production
+		// Update production and production statistics
 		if ($this->get('prodStart') + $this->get('prodLength') <= $now && $this->get('prodStart') > 0) {
 			// Production is complete
 			echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
@@ -392,7 +380,14 @@ class factory extends object {
 					break;
 				}
 			}
-			$this->objDat[47+$productIndex] += $this->get('prodQty');
+			
+			$this->objDat[$this->productOffset+$productIndex] += $this->get('prodQty');
+			$this->objDat[$this->productStats+$productIndex*5+0] += $this->get(); // product quality
+			$this->objDat[$this->productStats+$productIndex*5+1] += $this->get(); // product Pollution
+			$this->objDat[$this->productStats+$productIndex*5+2] += $this->get(); // product Rights
+			$this->objDat[$this->productStats+$productIndex*5+3] += $this->get(); // product material cost
+			$this->objDat[$this->productStats+$productIndex*5+4] += $this->get(); // product labor cost
+			$this->objDat[]
 
 			$this->set('prodStart', 0);
 
@@ -439,7 +434,7 @@ class factory extends object {
 }
 
 class city extends object {
-	private $dRateOffset, $dLevelOffset;
+	private $dRateOffset, $dLevelOffset, $demandDat;
 	public $laborStoreOffset, $laborDemandOffset;
 
 	function __construct($id, $dat, $file) {
@@ -461,6 +456,8 @@ class city extends object {
 		$this->attrList['parentRegion'] = 19;
 		$this->attrList['leader'] = 20;
 		$this->attrList['nation'] = 21;
+		
+		$this->attrList['fileBaseSize'] = 22;
 
 		$this->attrList['factoryList'] = 25;
 		$this->attrList['money'] = 26;
@@ -473,6 +470,11 @@ class city extends object {
 		$this->attrList['rLaw'] = 35;
 		$this->attrList['nLaw'] = 36;
 
+	}
+	
+	function loadDemands() {
+		fseek($this->linkFile, $this->get('fileBaseSize')+$this->id*1000);
+		$this->demandDat = unpack('s*', fread($this->linkFile, 40000);
 	}
 
 	function demandRate($productID) {
@@ -513,77 +515,6 @@ class city extends object {
 		$elapsed = $now-$this->get('lastUpdate');
 		return(min($elapsed*$this->demandRate($productNumber)/(3600*1000000)+$this->demandLevel($productNumber), 2.0*$this->baseDemand($productNumber)));
 	}
-
-	/*
-	function updateLabor($now, $schoolList, $baseRates) {
-
-		if ($now - $this->get('laborUpdateTime') < 60) {
-			echo "no uptade";
-			return;
-		}
-
-		$addList[1] = 3;
-		$addList[2] = 3;
-		$addList[3] = 3;
-		$addList[4] = 3;
-		$addList[5] = 3;
-		$addList[6] = 3;
-		$addList[7] = 3;
-		$addList[8] = 3;
-		$addList[9] = 3;
-		$addList[10] = 3;
-		$addList[11] = 3;
-		$addList[12] = 3;
-		$addList[13] = 3;
-
-		$laborCount = 0;
-		foreach ($addList as $laborID => $addAmount) {
-			echo 'Add '.$addAmount.' of labor type '.$laborID;
-			for ($n=0; $n<$addAmount; $n++) {
-				$pay = intval($baseRates[$laborID]*$this->get('affluence')*rand(90,110)/(10000));
-				echo 'Pay:'.$pay.' ('.$baseRates[$laborID].' * '.$this->get('affluence').')';
-
-				//$dat = pack('i*', 1, $laborID, 0, 0, 0, $pay, $now, 0, 0, 0);  , , ,  ,  , ,  ,
-				//$dat = pack('i*', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);  // education level, type, ability, start time, home region, expected pay, last update time, target upgrade
-				if ($laborCount > 1000) {
-					echo 'no more space ';
-					break 2;
-				} else {
-
-					$offset = $this->laborStoreOffset+$laborCount*10+1;
-					echo 'Add to loc '.$laborCount;
-					$this->objDat[$offset] = 1; // education level
-					$this->objDat[$offset+1] = $laborID; // type
-					$this->objDat[$offset+2] = 0; // open spot
-					$this->objDat[$offset+3] = $now; // start/creation time
-					$this->objDat[$offset+4] = 0; // job start time
-					$this->objDat[$offset+5] = $pay; // pay
-					$this->objDat[$offset+6] = $now; // last update time
-					$this->objDat[$offset+7] = 0; // home
-					$this->objDat[$offset+8] = 0; // ability
-					$this->objDat[$offset+9] = 0; // target upgrade
-					$laborCount++;
-				}
-			}
-		}
-	echo 'Clear '.(1000-$laborCount).' spots';
-	for ($i=$laborCount; $i<1000; $i++) {
-		$offset = $this->laborStoreOffset+$i*10+1;
-		$this->objDat[$offset] = 0; // education level
-		$this->objDat[$offset+1] = 0; // type
-		$this->objDat[$offset+2] = 0; // open spot
-		$this->objDat[$offset+3] = 0; // start/creation time
-		$this->objDat[$offset+4] = 0; // job start time
-		$this->objDat[$offset+5] = 0; // pay
-		$this->objDat[$offset+6] = 0; // last update time
-		$this->objDat[$offset+7] = 0; // home
-		$this->objDat[$offset+8] = 0; // ability
-		$this->objDat[$offset+9] = 0; // target upgrade
-	}
-
-	$this->set('laborUpdateTime', $now);
-	$this->saveAll($this->linkFile);
-	}*/
 
 	function changeLaborItem($spotNumber, $attrArray) {
 		$datStr = pack('i*', $attrArray[0], $attrArray[1], $attrArray[2], $attrArray[3], $attrArray[4], $attrArray[5], $attrArray[6], $attrArray[7], $attrArray[8], $attrArray[9]);
@@ -683,15 +614,15 @@ function loadProduct($id, $file, $size) {
 }
 
 function loadCity($id, $file) {
-	fseek($file, $id*105000);
-	$dat = unpack('i*', fread($file, 105000));
+	fseek($file, $id*1000);
+	$dat = unpack('i*', fread($file, 1000));
 
 	return new city($id, $dat, $file);
 }
 
 function loadRegion($id, $file) {
-	fseek($file, $id*105000);
-	$dat = unpack('i*', fread($file, 105000));
+	fseek($file, $id*1000);
+	$dat = unpack('i*', fread($file, 1000));
 
 	return new region($id, $dat, $file);
 }

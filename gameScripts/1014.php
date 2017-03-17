@@ -7,7 +7,7 @@ $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
 
-$thisObj = loadObject($postVals[1], $objFile, 1000);
+$sellingFactory = loadObject($postVals[1], $objFile, 1000);
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 
 // Process a sale offer for a factory
@@ -17,7 +17,7 @@ echo 'Factory: '.$postVals[1].' -> Sell '.$postVals[4].' of product '.$postVals[
 /// Locate product inventory numer in factory
 $productCheck = true;
 for ($i=1; $i<6; $i++) {
-	if ($thisObj->tempList['prod'.$i] == $postVals[3]) {
+	if ($sellingFactory->tempList['prod'.$i] == $postVals[3]) {
 		$inventorySlot = $i;
 		$productCheck = false;
 		break;
@@ -31,10 +31,11 @@ if ($productCheck) {
 }
 
 $invCheck = true;
-if ($thisObj->get('prodInv'.$inventorySlot) >= $postVals[4]) {
-	$newQty = $thisObj->get('prodInv'.$inventorySlot) - $postVals[4];
+if ($sellingFactory->get('prodInv'.$inventorySlot) >= $postVals[4]) {
+	//$newQty = $sellingFactory->get('prodInv'.$inventorySlot) - $postVals[4];
+	$newQty = sellingFactory->objDat[$sellingFactory->productOffset+$inventorySlot-1] - $postVals[4];
 	echo 'Set new inventory to '.$newQty;
-	$thisObj->save('prodInv'.$inventorySlot, $newQty);
+	$sellingFactory->save('prodInv'.$inventorySlot, $newQty);
 	$invCheck = false;
 }
 
@@ -47,7 +48,7 @@ if ($invCheck) {
 // confirm that the factory has open sale slots
 $facSlot = 0;
 for ($i=1; $i<9; $i++) {
-	if ($thisObj->get('offer'.$i) == 0) {
+	if ($sellingFactory->get('offer'.$i) == 0) {
 		$facSlot = $i;
 		break;
 	}
@@ -55,16 +56,44 @@ for ($i=1; $i<9; $i++) {
 
 if ($facSlot == 0) exit ('Can\'t create any more offers for this factory');
 
-// Calculate material cost for the sale (bit screen?)
-//($x >> 1) & 1;
+// [0, company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID, city ID, region ID, nation ID]
+$taxInfo = [0, $sellingFactory->get('owner'), $sellingFactory->get('subType'), $sellingFactory->get('industry'), $offerDat[3], 
+	$sellingPlayer->get('teamID'), $sellingFactory->get('region_3'), $sellingFactory->get('region_2'), $sellingFactory->get('region_1')]; 
 
-// Calculate labor cost for the sale
-//($x >> 1) & 1;
+// Calculte sales tax rate for the selling city/region/nation
+$taxes = array_fill(0,31,0);
+$sellingCity = loadCity($sellingFactory->get('region_3'), $cityFile);
+
+$cityTaxEx = new itemSlot($sellingCity->get('cTax'), $slotFile, 40);
+$regionTaxEx = new itemSlot($sellingCity->get('rTax'), $slotFile, 40);
+$nationTaxEx = new itemSlot($sellingCity->get('nTax'), $slotFile, 40);
+
+for ($i=1; $i<11; $i++) {
+		$taxes[$i] = $cityTaxEx->slotData[$i];
+		$taxes[$i+10] = $regionTaxEx->slotData[$i];
+		$taxes[$i+20] = $nationTaxEx->slotData[$i];
+	}
+	
+calcTaxes($cityTaxEx->slotData, $taxInfo, $taxes);
+calcTaxes($regionTaxEx->slotData, $taxInfo, $taxes);
+calcTaxes($nationTaxEx->slotData, $taxInfo, $taxes);
+
+$salesTax = $taxes[7]+$taxes[17]+$taxes[27];
+
+// Calculate material cost for the sale and deduct from inventory material cost
+$productNum = inventorySlot-1;
+$materialCost = $postVals[4]*$sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+3]/$sellingFactory->objDat[$sellingFactory->productOffset + $productNum]; // Num Selling * Material Cost/Total Inventory
+$sellingFactory->saveItem($sellingFactory->productStats+$productNum*5+3, $sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+3] - $materialCost);
+
+// Calculate labor cost for the sale and deduct from inventory material cost
+$laborCost = $postVals[4]*$sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+4]/$sellingFactory->objDat[$sellingFactory->productOffset + $productNum]; // Num Selling * Labor Cost/Total Inventory
+$sellingFactory->saveItem($sellingFactory->productStats+$productNum*5+4, $sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+4] - $laborCost);
 
 // create sale dat
 $location = 0;
 $conglID = 0;
-$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID, $postVals[3], 0, 0, 0, 0, 0);
+// Quantity, Price, Selling Factory ID, Quality, Pollution, Rights, Time, Location, sellerID, Selling Conglomerate ID, Item ID, Buying Player, Delivery Time, Material Cost, Labor Cost, Sales Tax Rate
+$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID, $postVals[3], 0, 0, $materialCost, $laborCost, $salesTax);
 
 // Look for space in the offerDatFile
 $checkGroup = 0;
@@ -112,9 +141,20 @@ if (flock($offerListFile, LOCK_EX)) {
 }
 
 // record the sale dat in the factory
-$thisObj->save('offer'.$facSlot, $offerLoc);
+$sellingFactory->save('offer'.$facSlot, $offerLoc);
 
 fclose($objFile);
 fclose($offerListFile);
 fclose($offerDatFile);
+
+function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID]
+	for ($i=11; $i<sizeof($slotData); $i+=4) {
+    echo $thisInfo[$slotData[$i]].' vs '.$slotData[$i+2].' --> ';
+		if ($thisInfo[$slotData[$i]] == $slotData[$i+2]) {
+      echo 'adjust tax type '.$slotData[$i+1].' by '.$slotData[$i+3];
+			$taxList[$slotData[$i+1]] += $slotData[$i+3];
+		}
+	}
+}
+
 ?>

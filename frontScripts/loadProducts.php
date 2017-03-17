@@ -191,6 +191,7 @@ $factoryFile = fopen('../scenarios/'.$scenario.'/factoryDesc.csv', 'rb');
 // $count = 1; Factories need to be added to the count total since they need unique IDs from the products
 echo '<p>';
 $factoryInventories = [];
+$factoryBitScreens = [];
 fgets($factoryFile);
 while (($line = fgets($factoryFile)) !== false) {
 
@@ -200,35 +201,38 @@ while (($line = fgets($factoryFile)) !== false) {
 
   //$prodReq = array_fill(0, 10, 0);
   $factoryInventories[$lineItems[0]] = array_fill(0,20,0);
+  //$factoryBitScreens[$lineItems[0]] = [0,0,0,0,0];
   $factoryObj = array_fill(1, 250, 0);
   // set object type and subtype
   $factoryObj[4] = 7;
   $factoryObj[8] = $lineItems[6];
   $factoryObj[9] = $count;
 
+  // Load what products the factory can produce and assign inventory slots to the required materials for that product
   for ($i=1; $i<=5; $i++) {
     $requiredProduct = trim($lineItems[$i]);
     $factoryObj[10+$i] = $productList[$requiredProduct];
     echo '#'.$count.' - '.$lineItems[0].' produces '.$lineItems[$i].' which requires '.$productReqs[$requiredProduct][0].'<br>';
 		for ($reqNum=0; $reqNum<10; $reqNum++) {
 			if ($productReqs[$requiredProduct][$reqNum] > 0) {
-
-		    for ($invSpot = 0; $invSpot<20; $invSpot++) {
-		      $inventoryCheck = true;
-		      echo 'Check '.$factoryInventories[$lineItems[0]][$invSpot].' vs '.$productReqs[$requiredProduct][$reqNum].'<br>';
-		      if (intval($factoryInventories[$lineItems[0]][$invSpot]) == intval($productReqs[$requiredProduct][$reqNum])) {
-		        // already in inventory
-		        echo '&nbsp&nbsp&nbsp&nbspAlready there<br>';
-		        $inventoryCheck = false;
-		        break;
-		      }
-		      elseif ($factoryInventories[$lineItems[0]][$invSpot] == 0) {
-		        $factoryInventories[$lineItems[0]][$invSpot] = $productReqs[$requiredProduct][$reqNum];
-		        $inventoryCheck = false;
-		        echo '&nbsp&nbsp&nbsp&nbspAdded to spot<br>';
-		        break;
-		      }
-		    }
+				for ($invSpot = 0; $invSpot<20; $invSpot++) {
+				  $inventoryCheck = true;
+				  echo 'Check '.$factoryInventories[$lineItems[0]][$invSpot].' vs '.$productReqs[$requiredProduct][$reqNum].'<br>';
+				  if (intval($factoryInventories[$lineItems[0]][$invSpot]) == intval($productReqs[$requiredProduct][$reqNum])) {
+					// already in inventory
+					echo '&nbsp&nbsp&nbsp&nbspAlready there<br>';
+					$inventoryCheck = false;
+					//$factoryBitScreens[$lineItems[0]][$i] = $factoryBitScreens[$lineItems[0]][$i] | (1 << $invSpot);
+					break;
+				  }
+				  elseif ($factoryInventories[$lineItems[0]][$invSpot] == 0) {
+					$factoryInventories[$lineItems[0]][$invSpot] = $productReqs[$requiredProduct][$reqNum];
+					$inventoryCheck = false;
+					echo '&nbsp&nbsp&nbsp&nbspAdded to spot<br>';
+					//$factoryBitScreens[$lineItems[0]] = $factoryBitScreens[$lineItems[0]][$i] | (1 << $invSpot);
+					break;
+				  }
+				}
 			}
 		}
 

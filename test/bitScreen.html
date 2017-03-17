@@ -1,0 +1,25 @@
+<script>
+
+function initTest() {
+
+	var screenVal = 0x05;
+	for (var i=0; i<4; i++) {
+		console.log((screenVal>>i)&1);
+	}
+	
+	var baseVal = 0x00;
+	for (i=0; i<16; i+=2) {
+		let mask = 1 << i;
+		baseVal = mask | baseVal;
+	}
+	
+	console.log("Baseval is " + baseVal);
+}
+
+window.addEventListener("load", initTest);
+</script>
+
+<div id="gmPnl" class="container"></div>
+<div id="demoTest" class="container"></div>
+
+
