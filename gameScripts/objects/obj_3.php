@@ -65,8 +65,9 @@ for ($i=0; $i<10; $i++) {
 	if ($thisObj->objDat[$thisObj->orderListStart+$i] > 0) {
 		fseek($offerDatFile, $thisObj->objDat[$thisObj->orderListStart+$i]);
 		$offerDat = unpack('i*', fread($offerDatFile, 64));
-		array_push($materialOrders, $offerDat[1], $offerDat[11], $offerDat[13]); //id, qty, time
-	} else array_push($materialOrders, 0,0,0);
+		array_push($materialOrders, $postVals[1], $i, $offerDat); //id, qty, time
+		$materialOrders = array_merge($materialOrders, $offerDat);
+	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 }
 fclose($offerDatFile);
 
@@ -100,8 +101,9 @@ materialOrder = ['.implode(',', $materialOrders).'];
 inProduction = ['.$thisObj->get('prodLength').', '.$thisObj->get('prodStart').', '.$thisObj->get('prodQty').'];
 
 factoryOrders = new Array();
-for (var i=0; i<materialOrder.length; i+=3) {
-	factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
+for (var i=0; i<materialOrder.length; i+=18) {
+	factoryOrders.push(new factoryOrder(materialOrder.slice(i, i+18)));
+	//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 }
 loadFactoryLabor(['.implode(',', array_slice($thisObj->objDat, ($thisObj->laborOffset-1), 100)).']);
 console.log("flabor is");

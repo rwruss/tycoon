@@ -6,6 +6,8 @@ require_once('./objectClass.php');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
+$cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
 $sellingFactory = loadObject($postVals[1], $objFile, 1000);
 $thisBusiness = loadObject($pGameID, $objFile, 400);
@@ -33,7 +35,7 @@ if ($productCheck) {
 $invCheck = true;
 if ($sellingFactory->get('prodInv'.$inventorySlot) >= $postVals[4]) {
 	//$newQty = $sellingFactory->get('prodInv'.$inventorySlot) - $postVals[4];
-	$newQty = sellingFactory->objDat[$sellingFactory->productOffset+$inventorySlot-1] - $postVals[4];
+	$newQty = $sellingFactory->objDat[$sellingFactory->productOffset+$inventorySlot-1] - $postVals[4];
 	echo 'Set new inventory to '.$newQty;
 	$sellingFactory->save('prodInv'.$inventorySlot, $newQty);
 	$invCheck = false;
@@ -57,8 +59,8 @@ for ($i=1; $i<9; $i++) {
 if ($facSlot == 0) exit ('Can\'t create any more offers for this factory');
 
 // [0, company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID, city ID, region ID, nation ID]
-$taxInfo = [0, $sellingFactory->get('owner'), $sellingFactory->get('subType'), $sellingFactory->get('industry'), $offerDat[3], 
-	$sellingPlayer->get('teamID'), $sellingFactory->get('region_3'), $sellingFactory->get('region_2'), $sellingFactory->get('region_1')]; 
+$taxInfo = [0, $sellingFactory->get('owner'), $sellingFactory->get('subType'), $sellingFactory->get('industry'), $postVals[1],
+	$_SESSION['game_'.$gameID]['teamID'] = 1, $sellingFactory->get('region_3'), $sellingFactory->get('region_2'), $sellingFactory->get('region_1')];
 
 // Calculte sales tax rate for the selling city/region/nation
 $taxes = array_fill(0,31,0);
@@ -68,12 +70,17 @@ $cityTaxEx = new itemSlot($sellingCity->get('cTax'), $slotFile, 40);
 $regionTaxEx = new itemSlot($sellingCity->get('rTax'), $slotFile, 40);
 $nationTaxEx = new itemSlot($sellingCity->get('nTax'), $slotFile, 40);
 
+// override taxes for testing
+$cityTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10,1,1,460,-10];
+$regionTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
+$nationTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
+
 for ($i=1; $i<11; $i++) {
 		$taxes[$i] = $cityTaxEx->slotData[$i];
 		$taxes[$i+10] = $regionTaxEx->slotData[$i];
 		$taxes[$i+20] = $nationTaxEx->slotData[$i];
 	}
-	
+
 calcTaxes($cityTaxEx->slotData, $taxInfo, $taxes);
 calcTaxes($regionTaxEx->slotData, $taxInfo, $taxes);
 calcTaxes($nationTaxEx->slotData, $taxInfo, $taxes);
@@ -81,13 +88,15 @@ calcTaxes($nationTaxEx->slotData, $taxInfo, $taxes);
 $salesTax = $taxes[7]+$taxes[17]+$taxes[27];
 
 // Calculate material cost for the sale and deduct from inventory material cost
-$productNum = inventorySlot-1;
+$productNum = $inventorySlot-1;
 $materialCost = $postVals[4]*$sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+3]/$sellingFactory->objDat[$sellingFactory->productOffset + $productNum]; // Num Selling * Material Cost/Total Inventory
 $sellingFactory->saveItem($sellingFactory->productStats+$productNum*5+3, $sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+3] - $materialCost);
 
 // Calculate labor cost for the sale and deduct from inventory material cost
 $laborCost = $postVals[4]*$sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+4]/$sellingFactory->objDat[$sellingFactory->productOffset + $productNum]; // Num Selling * Labor Cost/Total Inventory
 $sellingFactory->saveItem($sellingFactory->productStats+$productNum*5+4, $sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+4] - $laborCost);
+
+echo 'Sales tax is '.$salesTax;
 
 // create sale dat
 $location = 0;
@@ -146,6 +155,8 @@ $sellingFactory->save('offer'.$facSlot, $offerLoc);
 fclose($objFile);
 fclose($offerListFile);
 fclose($offerDatFile);
+fclose($cityFile);
+fclose($slotFile);
 
 function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID]
 	for ($i=11; $i<sizeof($slotData); $i+=4) {

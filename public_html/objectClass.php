@@ -151,7 +151,7 @@ class business extends object {
 }
 
 class factory extends object {
-	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights, 
+	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights,
 		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats;
 
 	function __construct($id, $dat, $file) {
@@ -194,6 +194,7 @@ class factory extends object {
 		$this->attrList['prodPollution'] = 26;
 		$this->attrList['prodRights'] = 27;
 		$this->attrList['prodCost'] = 28;
+		$this->attrList['prodLaborCost'] = 29;
 
 		/*
 		$this->attrList['inputInv1'] = 31;
@@ -213,7 +214,7 @@ class factory extends object {
 		$this->attrList['inputInv15'] = 45;
 		$this->attrList['inputInv16'] = 46;
 		*/
-		
+
 		$this->attrList['prodInv1'] = 47;
 		$this->attrList['prodInv2'] = 48;
 		$this->attrList['prodInv3'] = 49;
@@ -360,8 +361,8 @@ class factory extends object {
 					$this->objDat[$this->inputCost + $rscSpots[$orderDat[11]]] += $orderDat[1]*$orderDat[2];  // adjust the inventory costs
 					$this->objDat[$this->inputPollution + $rscSpots[$orderDat[11]]] += $orderDat[5]; // adjust the inventroy pollution
 					$this->objDat[$this->inputRights + $rscSpots[$orderDat[11]]] += $orderDat[6]; // adjust the inventory rights
-					$this->objDat[$this->inputQuality + $rscSpots[$orderDat[11]]] += $orderDat[4]; // adjust the inventory quality					
-					
+					$this->objDat[$this->inputQuality + $rscSpots[$orderDat[11]]] += $orderDat[4]; // adjust the inventory quality
+
 					$thisFactory->objDat[$thisFactory->orderListStart+$i] = 0; // delete the reference to the order
 					$saveFactory = true;
 				}
@@ -380,14 +381,13 @@ class factory extends object {
 					break;
 				}
 			}
-			
+
 			$this->objDat[$this->productOffset+$productIndex] += $this->get('prodQty');
-			$this->objDat[$this->productStats+$productIndex*5+0] += $this->get(); // product quality
-			$this->objDat[$this->productStats+$productIndex*5+1] += $this->get(); // product Pollution
-			$this->objDat[$this->productStats+$productIndex*5+2] += $this->get(); // product Rights
-			$this->objDat[$this->productStats+$productIndex*5+3] += $this->get(); // product material cost
-			$this->objDat[$this->productStats+$productIndex*5+4] += $this->get(); // product labor cost
-			$this->objDat[]
+			$this->objDat[$this->productStats+$productIndex*5+0] += $this->get('prodQuality'); // product quality
+			$this->objDat[$this->productStats+$productIndex*5+1] += $this->get('prodPollution'); // product Pollution
+			$this->objDat[$this->productStats+$productIndex*5+2] += $this->get('prodRights'); // product Rights
+			$this->objDat[$this->productStats+$productIndex*5+3] += $this->get('prodCost'); // product material cost
+			$this->objDat[$this->productStats+$productIndex*5+4] += $this->get('prodLaborCost'); // product labor cost
 
 			$this->set('prodStart', 0);
 
@@ -456,7 +456,7 @@ class city extends object {
 		$this->attrList['parentRegion'] = 19;
 		$this->attrList['leader'] = 20;
 		$this->attrList['nation'] = 21;
-		
+
 		$this->attrList['fileBaseSize'] = 22;
 
 		$this->attrList['factoryList'] = 25;
@@ -471,10 +471,10 @@ class city extends object {
 		$this->attrList['nLaw'] = 36;
 
 	}
-	
+
 	function loadDemands() {
 		fseek($this->linkFile, $this->get('fileBaseSize')+$this->id*1000);
-		$this->demandDat = unpack('s*', fread($this->linkFile, 40000);
+		$this->demandDat = unpack('s*', fread($this->linkFile, 40000));
 	}
 
 	function demandRate($productID) {

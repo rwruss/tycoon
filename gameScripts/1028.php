@@ -3,7 +3,7 @@
 require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
 
 // Load target factory
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
@@ -110,22 +110,22 @@ $productQuality = 0;
 $productPollution = 0;
 $productRights = 0;
 
-foreach ($usageList as $spot => $qty) {	
+foreach ($usageList as $spot => $qty) {
 	// calc amounts for each input trait
 	$inputCost = $thisFactory->objDat[$thisFactory->inputCost+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputOffset+$spot];
 	$inputQuality = $thisFactory->objDat[$thisFactory->inputQuality+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputQuality+$spot];
 	$inputPollution = $thisFactory->objDat[$thisFactory->inputPollution+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputPollution+$spot];
 	$inputRights = $thisFactory->objDat[$thisFactory->inputRights+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputRights+$spot];
-	
+
 	// adjust total amounts for the factory
 	$thisFactory->objDat[$thisFactory->inputCost+$spot] -= $inputCost;
 	$thisFactory->objDat[$thisFactory->inputQuality+$spot] -= $inputQuality;
 	$thisFactory->objDat[$thisFactory->inputPollution+$spot] -= $inputPollution;
 	$thisFactory->objDat[$thisFactory->inputRights+$spot] -= $inputRights;
-	
+
 	$thisFactory->objDat[$thisFactory->inputOffset+$spot] -= $qty;
-	
-	// adjsut trait amounts for the product	
+
+	// adjsut trait amounts for the product
 	$productCost += $inputCost;
 	$productQuality += $inputQuality;
 	$productPollution += $inputPollution;
@@ -135,7 +135,8 @@ foreach ($usageList as $spot => $qty) {
 // Calculate the labor costs
 $laborCost = 0;
 for ($i=0; $i<7; $i++) {
-	$laborCost += $thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations/3600;
+	echo 'Labor Cost: '.$thisFactory->objDat[$thisFactory->laborOffset+$i*10+5].' * '.$durations[$postVals[2]].'<br>';
+	$laborCost += $thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations[$postVals[2]]/3600;
 }
 
 // Start the work
@@ -148,6 +149,7 @@ $thisFactory->set('prodRights', $productRights);
 $thisFactory->set('prodPollution', $productPollution);
 $thisFactory->set('prodQuality', $productQuality);
 $thisFactory->set('prodCost', $productCost);
+$thisFactory->set('prodLaborCost', $laborCost);
 
 $thisFactory->saveAll($thisFactory->linkFile);
 

@@ -14,7 +14,7 @@ class dataSlot {
 			$this->init($start, $slotFile, $size);
 			$this->useFile = $slotFile;
 		} else {
-			echo 'Check failed';
+			echo 'Check failed (sF.php)';
 			$this->slotData = [];
 		}
 	}

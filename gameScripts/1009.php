@@ -58,9 +58,9 @@ if ($optionCheck && $spotCheck !== false) {
 	//$showOffers = [0, 100, 299, 0, 50, 50, 50, 0, 8, 9, 10, $productID];
 	$showOffers = [];
 	while ($checkCount < $numOffers && $offerCount < 100) {
-		echo 'Read item #'.$checkCount.' ('.$offerList->slotData[$checkCount].')';
+		//echo 'Read item #'.$checkCount.' ('.$offerList->slotData[$checkCount].')';
 		if ($offerList->slotData[$checkCount] > 0) {
-			echo 'Load offer #'.$offerList->slotData[$checkCount].' at spot '.$checkCount;
+			//echo 'Load offer #'.$offerList->slotData[$checkCount].' at spot '.$checkCount;
 			fseek($offerDatFile, $offerList->slotData[$checkCount]);
 			$tmpDat = unpack('i*', fread($offerDatFile, 64));
 			if ($tmpDat[1] > 0) {

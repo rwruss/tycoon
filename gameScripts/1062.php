@@ -24,7 +24,6 @@ require_once('./objectClass.php');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
-
 $thisCity = loadCity($postVals[1], $cityFile);
 /* off for testing
 $cityTaxEx = new itemSlot($thisCity->get('cTax'), $slotFile, 40);

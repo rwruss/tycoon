@@ -1,10 +1,10 @@
 <?php
 
 $numCities = 10;
-$numRegions = 3444; 
+$numRegions = 3444;
 $numNations = 196;
 
-$areaSlots = ($numCitys+$numRegions+$numNations);
+$baseSlots = ($numCities+$numRegions+$numNations);
 $areaSize = $baseSlots*1000;
 
 $cityFile = fopen('cities.dat', 'wb');
@@ -45,7 +45,7 @@ $cityArray[120] = 100; // school status
 
 $offset = $numProducts*2 + $numLabor + $extra;
 for ($i=1; $i<=1000; $i++) {
-  $cityArray[$offset+$i] = 0;
+  //$cityArray[$offset+$i] = 0;
 }
 
 
@@ -55,14 +55,14 @@ $dataSize = strlen($cityData);
 //print_R($dataCheck);
 echo 'Data block size is '.$dataSize;
 
-for ($i=0; $i<$areaSlots; $i++) {
+for ($i=0; $i<$baseSlots; $i++) {
   fseek($cityFile, $i*$dataSize);
   fwrite($cityFile, $cityData);
 }
 
 $cityDemands = array_fill(1, 20000, 0);
 $demandStr = packArray($cityDemands, 's');
-for ($i=0; $i<$numCities, $i++) {
+for ($i=0; $i<$numCities; $i++) {
 	fwrite($cityFile, $demandStr);
 }
 

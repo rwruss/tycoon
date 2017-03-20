@@ -43,7 +43,7 @@ $paramFile = fopen('../games/'.$gameID.'/params.ini', 'rb');
 $params = unpack('i*', fread($paramFile, 100));
 $_SESSION['game_'.$gameID]['scenario'] = $params[9];
 $_SESSION['game_'.$gameID]['scenario'] = 1;
-$_SESSION['game_'.$gameID]['culture'] = 1; // Set and record player culture
+$_SESSION['game_'.$gameID]['teamID'] = 1; // Set and record player culture
 fclose($paramFile);
 
 $gamePath = "../games/".$gameID;

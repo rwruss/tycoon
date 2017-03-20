@@ -323,6 +323,7 @@ class offer {
 		this.saleLoc = details[8]; //8
 		this.sellerID = details[9]; //9
 		this.sellCongID = details[10]; //10
+		this.salesTax = details[16];
 	}
 
 	renderSummary(target) {
@@ -338,7 +339,7 @@ class offer {
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
-		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100;
+		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100 + " tax " + (this.salesTax/100);
 		return thisDiv;
 	}
 
@@ -652,13 +653,13 @@ class factoryUpgrade {
 }
 
 class factoryOrder {
-	constructor(id, endTime, productID, qty, spotNum) {
-		this.factoryID = id || 0;
-		this.endTime = endTime;
+	constructor(dat) {
+		this.factoryID = dat[0];
+		this.endTime = dat[8];
 		this.timeBoost = 0;
-		this.material = productID;
-		this.qty = qty;
-		this.orderNum = spotNum;
+		this.material = dat[12];
+		this.qty = dat[2];
+		this.orderNum = dat[1];
 	}
 
 	boostClock(deltaT) {
@@ -673,6 +674,17 @@ class factoryOrder {
 		return containerBox;
 	}
 
+	updateOrder() {
+		console.log("update order #" + this.orderNum);
+		this.factoryID = materialOrder[this.orderNum*18];
+		this.endTime = materialOrder[this.orderNum*18+8];
+		this.timeBoost = 0;
+		this.material = materialOrder[this.orderNum*18+12];
+		this.qty = materialOrder[this.orderNum*18+2];
+		this.orderNum = materialOrder[this.orderNum*18+1];
+		this.showItem(this.displayBox, true);
+	}
+	/*
 	updateOrder (id, endTime, productID, qty) {
 		console.log("update order to " + this.displayBox);
 		this.factoryID = id || 0;
@@ -683,7 +695,7 @@ class factoryOrder {
 		//this.displayBox.innerHTML = "";
 		this.showItem(this.displayBox, true);
 		//this.displayBox.innerHTML = "";
-	}
+	}*/
 
 	showItem (containerBox, boost=true) {
 		containerBox.innerHTML = "";
