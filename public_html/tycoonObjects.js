@@ -323,23 +323,45 @@ class offer {
 		this.saleLoc = details[8]; //8
 		this.sellerID = details[9]; //9
 		this.sellCongID = details[10]; //10
+		this.origin = details[11];
 		this.salesTax = details[16];
 	}
 
 	renderSummary(target) {
-		var thisDiv = addDiv(null, 'udHolder', target);
-		console.log("render product "+ this.productID);
+		// product box is 100w x 120h
+		var thisDiv = addDiv(null, 'offerHolder', target);
 		productArray[this.productID].renderSummary(thisDiv);
 
-		thisDiv.setAttribute("data-unitid", this.unitID);
+		//thisDiv.setAttribute("data-unitid", this.unitID);
 
-		thisDiv.buyBox = addDiv("", "", thisDiv);
-		thisDiv.buyBox.innerHTML = "buy";
+		thisDiv.buyBox = addDiv("", "offerTranBox", thisDiv);
+		
+		
+		thisDiv.statBox1 = addDiv("", "offerStatBox", thisDiv);
+		thisDiv.statBox2 = addDiv("", "offerStatBox", thisDiv);
+		thisDiv.statBox3 = addDiv("", "offerStatBox", thisDiv);
+		thisDiv.statBox4 = addDiv("", "offerStatBox", thisDiv);
+		thisDiv.statBox5 = addDiv("", "offerStatBox", thisDiv);
+		
+		thisDiv.statBox1.innerHTML = "Q: " + this.qty;
+		thisDiv.statBox2.innerHTML = "P: " + this.price;
+		thisDiv.statBox3.innerHTML = "U: " + this.quality;
+		thisDiv.statBox4.innerHTML = "O: " + this.pollution;
+		thisDiv.statBox5.innerHTML = "R: " + this.rights;
 
-		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+		let baseCost = this.qty * this.price;
+		let stCost = baseCost * this.salesTax/10000;
+		let importCost = baseCost * 0;
+		let totalCost = baseCost + stCost + importCost;
+		thisDiv.priceBox = addDiv("", "offerPriceBox", thisDiv);
+		this.priceBox.innerHTML = "Base Cost: " + (baseCost) + "<br>Sales Tax: " + stCost + "<br>Import Tax: " + importCost;
+		
+		thisDiv.buyBox.innerHTML = "Buy " + this.qty + " for " + totalCost;
+		
+		//thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
+		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
-		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100 + " tax " + (this.salesTax/100);
+		//thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100 + " tax " + (this.salesTax/100);
 		return thisDiv;
 	}
 
@@ -348,13 +370,13 @@ class offer {
 		console.log("render product "+ this.productID);
 		productArray[this.productID].renderSummary(thisDiv);
 
-		thisDiv.setAttribute("data-unitid", this.unitID);
+		//thisDiv.setAttribute("data-unitid", this.unitID);
 
-		thisDiv.buyBox = addDiv("", "", thisDiv);
+		thisDiv.buyBox = addDiv("", "offerTranBox", thisDiv);
 		thisDiv.buyBox.innerHTML = "sell";
 
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
 		thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100;
 		return thisDiv;
@@ -378,6 +400,7 @@ class product {
 	}
 
 	renderSummary(target) {
+		// product box is 100w x 120h
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);

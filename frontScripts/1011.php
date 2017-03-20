@@ -19,6 +19,7 @@ fwrite($gameListFile, pack("N", $newGameId));
 
 echo "Create game ".$newGameId;
 mkdir("../games/".$newGameId);
+mkdir("../games/".$newGameId."/bak");
 
 $openGamesFile = fopen("../games/openGames.dat", "ab");
 fwrite($openGamesFile, pack("N*", $newGameId, time()));
@@ -32,18 +33,19 @@ $uDat = fread($uDatFile, 500);
 $gameSlot = unpack("N", substr($uDat, 8, 4));
 
 // Copy over game files from scenario folder
-if ($handle = opendir('../scenarios/'.$postVals[1]))
-	{
+if ($handle = opendir('../scenarios/'.$postVals[1])) {
     echo "Entries:\n";
-
     /* This is the correct way to loop over the directory. */
-    while (false !== ($entry = readdir($handle)))
-		{
+    while (false !== ($entry = readdir($handle))) {
         echo "$entry<br>";
 		copy('../scenarios/'.$postVals[1].'/'.$entry, '../games/'.$newGameId.'/'.$entry);
 		}
 	closedir($handle);
 	}
+// create the tax file taxReceipts.txf
+$taxFile = fopen("../games/".$newGameId."/objects.dat", "w");
+fclose($taxFile);
+	
 // Add basic player info and unstarted status
 $playerFile = fopen("../games/".$newGameId."/objects.dat", "r+b");
 $gameOfferFile = fopen("../games/".$newGameId."/saleOffers.slt", "r+b");
@@ -119,6 +121,16 @@ else {
 	}
 fclose($gameSlotFile);
 fclose($uDatFile);
+
+if ($handle = opendir('../games/'.$newGameId)) {
+    echo "Entries:\n";
+    /* This is the correct way to loop over the directory. */
+    while (false !== ($entry = readdir($handle))) {
+        echo "$entry<br>";
+		copy('../games/'.$newGameId.'/'.$entry, '../games/bak/'.$newGameId.'/'.$entry);
+		}
+	closedir($handle);
+	}
 
 function packArray($data) {
   $str = pack('i', current($data));

@@ -64,23 +64,15 @@
 
 TO DO:
 update material orders to show all data for the order (16 items)
-*** Fix loading cities
-import/tarrif taxes for buyers
+*** Fix loading cities demographics
 Adjustmetns to quality, pollution, and rights in this factory during production
-in 1010 - add taxes paid to city/region/nation
-update tax calculations for exemptions based on product location/region
-in 1014 - Adjust offers for labor and input costs
-calculation of taxes when things are sold
+Periodic script to import taxes for each region - taxReceipts.txf
 complete 1038 - speed up factory orders
-*** Rework order system to go by order ID
-**Tax on sales of goods when selling
 **Overview/interactive Map
-***correct hire and fire buttons and options
 *Worker pay expectations - needs to calc based on job/experience and location/origin
 Simulator and AI Engine
 Political/leader orders at cities
 Political leader options and demographic affects
-script 1051 - cancel a sales offer
 Detail regional effects - taxes, politics, etc
 Professional Services/Construction, Engineering, Marketing, etc
 Factory upgrades and boosts
@@ -112,11 +104,19 @@ Create starting laborpool and labor slot files
 Verify that saveBlock in objectClass (line 72) is saving at the correct location
 factory locations
 Change labor to be ordered from city school rather than from a city as a whole
+update tax calculations for exemptions based on product location/region
+in 1014 - Adjust offers for labor and input costs
+calculation of taxes when things are sold
+*** Rework order system to go by order ID
+**Tax on sales of goods when selling
+in 1010 - add taxes paid to city/region/nation
+import/tarrif taxes for buyers
+***correct hire and fire buttons and options
+script 1051 - cancel a sales offer
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
 http://www.linuxhowtos.org/C_C++/socket.htm
-
 
 
 Get a job

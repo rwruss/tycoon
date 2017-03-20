@@ -8,7 +8,7 @@
 1008 - PROCESS: Verify login
 1009 - Show open games
 1010 - Create new game Menu
-1011 - Process create game
+1011 - PROCESS: create game
 1012 - Load Game
 1013 - PROCESS: Join a Game Process
 1014 - Signup Response

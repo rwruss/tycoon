@@ -17,9 +17,6 @@ if ($offerDat[9] != $pGameID) exit('not authorized');
 $thisFactory = loadObject($offerDat[3], $objFile, 400);
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 
-// Process a sale offer for a factory
-echo 'Factory: '.$offerDat[3].' -> Refund '.$offerDat[1].' of product '.$offerDat[11].' at a unit price of '.$offerDat[2];
-
 // Remove the qunatity of items from the factory inventory
 /// Locate product inventory numer in factory
 $productCheck = true;
@@ -33,7 +30,7 @@ for ($i=1; $i<6; $i++) {
 
 $newQty = $thisFactory->get('prodInv'.$inventorySlot) + $offerDat[1];
 echo 'Set new inventory to '.$newQty;
-$thisFactory->save('prodInv'.$inventorySlot, $newQty);
+$thisFactory->set('prodInv'.$inventorySlot, $newQty);
 
 // Remove the sales listing
 fseek($offerDatFile, $postVals[1]);
@@ -48,12 +45,20 @@ echo 'Remove to player slot at '.$thisBusiness->get('openOffers');
 $playerSlot = new itemSlot($thisBusiness->get('openOffers'), $offerListFile, 1000);
 $playerSlot->deleteByValue($postVals[1], $offerListFile);
 
+// remove the slot listing for the conglomerate
 if ($thisBusiness->get('teamID') > 0) {
 	$thisCong = loadObject($thisBusiness->get('teamID'), $objFile, 1000);
 	$congSlot = new itemSlot($thisCong->get('openOffers'), $offerListFile, 1000);
 	$congSlot->deleteByValue($postVals[1], $offerListFile);
 }
 
+// credit the product stats back to the production inventory
+$thisFactory->objDat[$thisFactory->productStats+($inventorySlot-1)*5+4] -= $offerDat[15]; // Labor Costs
+$thisFactory->objDat[$thisFactory->productCheck+($inventorySlot-1)*5+3] -= $offerDat[14]; // Material Costs
+$thisFactory->objDat[$thisFactory->productCheck+($inventorySlot-1)*5] -= $offerDat[4]; // Material Quality
+$thisFactory->objDat[$thisFactory->productCheck+($inventorySlot-1)*5+1] -= $offerDat[5]; // Material Pollution
+$thisFactory->objDat[$thisFactory->productCheck+($inventorySlot-1)*5+2] -= $offerDat[6]; // Material Rights
+$thisFactory->saveAll($objFile);
 
 fclose($objFile);
 fclose($offerListFile);

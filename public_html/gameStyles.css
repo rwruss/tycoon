@@ -621,3 +621,32 @@
 	right:0;
 	top:0;
 }
+
+.offerHolder {	
+	position:relative;
+	float:left;
+	width:200;
+	height:300;
+	border: 1px solid black;
+	background-color:white;
+	text-align:center;
+}
+
+.offerTranBox {
+	position:absolute;
+	top:285;
+	margin:auto;
+}
+
+.offerStatBox {
+	position:relative;
+	float:left;
+	width:100;
+}
+
+.offerPriceBox {
+	position:relative;
+	float:left;
+	width:200;
+}
+

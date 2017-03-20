@@ -168,6 +168,7 @@ class factory extends object {
 		$this->eqRateOffset = 264;
 		$this->productOffset = 47; // offset to inventory slots for each product made at factory
 		$this->productStats = 239; // offset to stats for each product made (quality, pollution, rights, material cost, labor cost)
+		$this->laborCosts = 77;
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
