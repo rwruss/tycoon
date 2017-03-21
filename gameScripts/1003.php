@@ -6,7 +6,7 @@ require_once('./objectClass.php');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
-$thisObj = loadObject($postVals[1], $objFile, 1100);
+$thisObj = loadObject($postVals[1], $objFile, 1600);
 
 // confirm that the player owns this object
 if ($thisObj->get('owner') == $pGameID) {

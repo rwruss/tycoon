@@ -60,7 +60,10 @@
 1060 - PROCESS: load labor of specific type
 1061 - PROCESS: load regions and sub regions for list
 1062 - PROCESS: load city data for display
-1063 - PROCESS: load tax exception data for a city
+1063 - PROCESS: load tax exception data for a city (not used yet)
+1064 - MENU : factory contracts
+1065 - PROCESS: Leave/abandon a contract
+1066 - PROCESS: Create a new contract solicitation at a factory
 
 TO DO:
 contracts for certain amounts of items

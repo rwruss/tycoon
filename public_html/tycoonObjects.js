@@ -334,8 +334,7 @@ class offer {
 
 		//thisDiv.setAttribute("data-unitid", this.unitID);
 
-		thisDiv.buyBox = addDiv("", "offerTranBox", thisDiv);
-		
+		thisDiv.buyBox = addDiv("", "offerTranBox", thisDiv);		
 		
 		thisDiv.statBox1 = addDiv("", "offerStatBox", thisDiv);
 		thisDiv.statBox2 = addDiv("", "offerStatBox", thisDiv);
@@ -945,5 +944,58 @@ class school {
 				console.log(document.getElementById("sp-"+this.schID));
 				scrMod("1055,"+this.schID + ","+document.getElementById("sp-"+this.schID).value)});
 		}
+	}
+}
+
+class contract {
+	constructor(dat) {
+		this.owner = dat[1];
+		this.time = dat[2];
+		this.productID = dat[3];
+		this.quantity = dat[4];
+		this.minQual = dat[5];
+		this.maxPol = dat[6];
+		this.maxRights = dat[7];
+		this.status = dat[8];
+		this.price = dat[9];
+		this.sentAmt = dat[11];
+		this.sentQual = dat[12];
+		this.sentPol = dat[13];
+		this.sentRights = dat[14];
+		this.seller = dat[15];
+		this.contractID = dat[26];
+	}
+	
+	render(trg) {
+		var contractContain = addDiv("", "contractContain", trg);
+		contractContain.parentContract = this;
+		if (this.contractID == 0) {
+			renderEmpty(trg, contractContain);
+		} else {
+			renderActive(trg, contractContain);
+		}
+		
+		return contractContain;
+	}
+	
+	renderActive(trg, contain) {
+		productArray[this.productID].renderSummary(contain);
+		
+		let summArea = addDiv("", "contractSummary", trg);
+		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
+		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " + 
+		 this.sentPol + "/" + this.maxPol;
+		 
+		let leaveButton = newButton(contain, function () {
+			scrMod("1065," + this.parentContract.contractID);
+		})
+	}
+	
+	renderEmpty() {
+		contain.innerHTML = "Create a new contract";
+		
+		contain.addEventListener("click", function () {
+			contractCreateMenu();
+		})
 	}
 }

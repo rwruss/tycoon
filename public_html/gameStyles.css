@@ -650,3 +650,9 @@
 	width:200;
 }
 
+.contractSummary {
+	position:relative;
+	float:left;
+	width:100%;
+}
+

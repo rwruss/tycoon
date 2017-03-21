@@ -152,7 +152,7 @@ class business extends object {
 
 class factory extends object {
 	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights,
-		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats;
+		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats, $contractsOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -169,6 +169,7 @@ class factory extends object {
 		$this->productOffset = 47; // offset to inventory slots for each product made at factory
 		$this->productStats = 239; // offset to stats for each product made (quality, pollution, rights, material cost, labor cost)
 		$this->laborCosts = 77;
+		$this->contractsOffset = 320;
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;

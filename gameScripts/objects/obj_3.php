@@ -27,7 +27,7 @@ if ($thisObj->get('factoryLevel') == 0) {
 }
 
 if ($constructDelta > 0) {
-	//echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
+	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
 }
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 $thisObj->updateStocks($offerDatFile);
@@ -36,7 +36,6 @@ if ($thisObj->get('currentProd') > 0) {
 } else $currentProduction = '';
 
 $currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
-
 
 //echo 'Load production object '.$thisObj->get('currentProd');
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
@@ -122,6 +121,11 @@ for ($i=2; $i<6; $i++) {
 echo ']);
 headSection = addDiv("", "stdFloatDiv", factoryDiv);
 headSection.rate = textBlob("", headSection, "Rate: '.($thisObj->get('prodRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
+
+contractsButton = newButton(headSection, function () {
+	thisDiv = useDeskTop.newPane("factoryContracts");
+	scrMod("1064,'.$postVals[1].'")});
+contractsButton.innerHTML = "Contracts";
 
 sellButton = newButton(headSection, function () {scrMod("1043,'.$postVals[1].'")});
 sellButton.innerHTML = "Sell Factory";

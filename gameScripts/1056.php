@@ -19,8 +19,7 @@ fseek($schoolFile, $schoolHead[1]);
 $schoolDat = unpack('i*', fread($schoolFile, $schoolHead[2]));
 
 echo '<script>
-useDeskTop.newPane("hireLabor");
-thisDiv = useDeskTop.getPane("hireLabor");
+thisDiv = useDeskTop.newPane("hireLabor");
 thisDiv.innerHTML = "";';
 $schoolSize = sizeof($schoolDat);
 for ($i=1; $i<$schoolSize; $i+=2) {
