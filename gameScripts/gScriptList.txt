@@ -63,6 +63,7 @@
 1063 - PROCESS: load tax exception data for a city
 
 TO DO:
+contracts for certain amounts of items
 update material orders to show all data for the order (16 items)
 *** Fix loading cities demographics
 Adjustmetns to quality, pollution, and rights in this factory during production
