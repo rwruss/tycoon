@@ -6,7 +6,7 @@ PVs
 */
 
 // Verify that the player can view this information
-
+require_once('./objectClass.php');
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');

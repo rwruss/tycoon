@@ -64,8 +64,13 @@
 1064 - MENU : factory contracts
 1065 - PROCESS: Leave/abandon a contract
 1066 - PROCESS: Create a new contract solicitation at a factory
+1067 - PROCESS: Output list of available contracts to bid on
+1068 - PROCESS: Receive a bid on a contract
+1069 - PROCESS: Load a list of bids on a contract
+1070 - PROCESS: Receive an accepted bid offer
 
 TO DO:
+cleanup script for expired bids
 contracts for certain amounts of items
 update material orders to show all data for the order (16 items)
 *** Fix loading cities demographics

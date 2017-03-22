@@ -1591,14 +1591,15 @@ contractCreateMenu = function (itemID, optionList = prodList) {
 	textBlob("", contractMenu, "Select what you would like to purchase with this contract");
 	contractItemBox = optionList.SLsingleButton(contractMenu);
 
+	let objQ = slideValBar(contractMenu, "", 0, 10000);
 	let minQual = slideValBar(contractMenu, "", 0, 100);
 	let maxPoll = slideValBar(contractMenu, "", 0, 100);
 	let maxRts = slideValBar(contractMenu, "", 0, 100);
 
 	createButton = newButton(headSection, function () {
 		let tmp = [];
-		tmp.push(SLreadSelection(contractItemBox), minQual.slide.value, maxPoll.slide.value, maxRts.slide.value);
-		scrMod("1005,'.$postVals[1].',"+ tmp.join(","))
+		tmp.push(itemID, SLreadSelection(contractItemBox), objQ.slide.value, minQual.slide.value, maxPoll.slide.value, maxRts.slide.value);
+		scrMod("1065,'.$postVals[1].',"+ tmp.join(","))
 	});
 	createButton.innerHTML = "Upgrade Factory";
 }
