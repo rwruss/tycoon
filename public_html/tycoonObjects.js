@@ -334,14 +334,14 @@ class offer {
 
 		//thisDiv.setAttribute("data-unitid", this.unitID);
 
-		thisDiv.buyBox = addDiv("", "offerTranBox", thisDiv);		
-		
+		thisDiv.buyBox = addDiv("", "offerTranBox", thisDiv);
+
 		thisDiv.statBox1 = addDiv("", "offerStatBox", thisDiv);
 		thisDiv.statBox2 = addDiv("", "offerStatBox", thisDiv);
 		thisDiv.statBox3 = addDiv("", "offerStatBox", thisDiv);
 		thisDiv.statBox4 = addDiv("", "offerStatBox", thisDiv);
 		thisDiv.statBox5 = addDiv("", "offerStatBox", thisDiv);
-		
+
 		thisDiv.statBox1.innerHTML = "Q: " + this.qty;
 		thisDiv.statBox2.innerHTML = "P: " + this.price;
 		thisDiv.statBox3.innerHTML = "U: " + this.quality;
@@ -353,10 +353,10 @@ class offer {
 		let importCost = baseCost * 0;
 		let totalCost = baseCost + stCost + importCost;
 		thisDiv.priceBox = addDiv("", "offerPriceBox", thisDiv);
-		this.priceBox.innerHTML = "Base Cost: " + (baseCost) + "<br>Sales Tax: " + stCost + "<br>Import Tax: " + importCost;
-		
+		thisDiv.priceBox.innerHTML = "Base Cost: " + (baseCost) + "<br>Sales Tax: " + stCost + "<br>Import Tax: " + importCost;
+
 		thisDiv.buyBox.innerHTML = "Buy " + this.qty + " for " + totalCost;
-		
+
 		//thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
 		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
@@ -965,7 +965,7 @@ class contract {
 		this.seller = dat[15];
 		this.contractID = dat[26];
 	}
-	
+
 	render(trg) {
 		var contractContain = addDiv("", "contractContain", trg);
 		contractContain.parentContract = this;
@@ -974,26 +974,26 @@ class contract {
 		} else {
 			renderActive(trg, contractContain);
 		}
-		
+
 		return contractContain;
 	}
-	
+
 	renderActive(trg, contain) {
 		productArray[this.productID].renderSummary(contain);
-		
+
 		let summArea = addDiv("", "contractSummary", trg);
 		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
-		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " + 
+		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		 this.sentPol + "/" + this.maxPol;
-		 
+
 		let leaveButton = newButton(contain, function () {
 			scrMod("1065," + this.parentContract.contractID);
 		})
 	}
-	
+
 	renderEmpty() {
 		contain.innerHTML = "Create a new contract";
-		
+
 		contain.addEventListener("click", function () {
 			contractCreateMenu();
 		})

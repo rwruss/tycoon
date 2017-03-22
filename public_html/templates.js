@@ -1579,22 +1579,22 @@ renderCityDetail = function (trg, data, laws, taxes) {
 	tmpCity.renderDetail(trg);
 }
 
-showContracts(dat, trg) {
+showContracts = function (dat, trg) {
 	for (var i=0; i<dat.length; i+=27) {
 		thisContract = new contract(dat.slice(i, i+27));
 		thisContract.render(trg);
 	}
 }
 
-contractCreateMenu(itemID, var optionList = prodList) {
+contractCreateMenu = function (itemID, optionList = prodList) {
 	contractMenu = useDeskTop.newPane("createContract");
 	textBlob("", contractMenu, "Select what you would like to purchase with this contract");
 	contractItemBox = optionList.SLsingleButton(contractMenu);
-	
+
 	let minQual = slideValBar(contractMenu, "", 0, 100);
 	let maxPoll = slideValBar(contractMenu, "", 0, 100);
 	let maxRts = slideValBar(contractMenu, "", 0, 100);
-	
+
 	createButton = newButton(headSection, function () {
 		let tmp = [];
 		tmp.push(SLreadSelection(contractItemBox), minQual.slide.value, maxPoll.slide.value, maxRts.slide.value);
