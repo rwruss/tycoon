@@ -614,8 +614,9 @@ class laborItem extends labor {
 
 class gamePlayer {
 	constructor(data) {
-		this.moneyCash = data[0] || 0;
-		this.moneyGold = data[1] || 0;
+		this.playerID = data[0];
+		this.moneyCash = data[1] || 0;
+		this.moneyGold = data[2] || 0;
 		this.money = this.moneyCash;
 		this.gold = this.moneyGold;
 		this.boosts = new Array();
@@ -968,7 +969,7 @@ class contract {
 	}
 
 	render(trg) {
-		var contractContain = addDiv("", "contractContain", trg);
+		var contractContain = addDiv("", "contractSummary", trg);
 		contractContain.parentContract = this;
 		if (this.contractID == 0) {
 			this.renderEmpty(trg, contractContain);

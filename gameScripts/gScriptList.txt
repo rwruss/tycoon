@@ -1,5 +1,5 @@
 1001 - Game join options
-1002 - Show objects that a business owns
+1002 - MENU: Business info screen
 1003 - Object detail and options screen
 1004 - Show business details
 1005 - PROCESS: Change production at a factory
@@ -68,11 +68,11 @@
 1068 - PROCESS: Receive a bid on a contract
 1069 - PROCESS: Load a list of bids on a contract
 1070 - PROCESS: Receive an accepted bid offer
+1071 - MENU: Company open contracts menu
 
 TO DO:
 cleanup script for expired bids
 contracts for certain amounts of items
-update material orders to show all data for the order (16 items)
 *** Fix loading cities demographics
 Adjustmetns to quality, pollution, and rights in this factory during production
 Periodic script to import taxes for each region - taxReceipts.txf
@@ -122,6 +122,7 @@ in 1010 - add taxes paid to city/region/nation
 import/tarrif taxes for buyers
 ***correct hire and fire buttons and options
 script 1051 - cancel a sales offer
+update material orders to show all data for the order (16 items)
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
