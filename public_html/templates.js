@@ -1582,7 +1582,12 @@ renderCityDetail = function (trg, data, laws, taxes) {
 showContracts = function (dat, trg) {
 	for (var i=0; i<dat.length; i+=27) {
 		thisContract = new contract(dat.slice(i, i+27));
-		thisContract.render(trg);
+		if (thisContract.owner == thisPlayer.playerID) {
+			thisContract.render(trg.buyContracts);
+		} else {
+			thisContract.render(trg.sellContracts);
+		}
+		
 	}
 }
 

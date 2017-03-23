@@ -143,6 +143,7 @@ class business extends object {
 
 
 		$this->attrList['openOffers'] = 41;
+		$this->attrList['contractList'] = 43;
 
 		for ($i=0; $i<20; $i++) {
 			$this->attrList['service'.$i] = 100+$i;

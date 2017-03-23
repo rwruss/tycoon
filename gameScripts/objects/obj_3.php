@@ -131,6 +131,7 @@ headSection.rate = textBlob("", headSection, "Rate: '.($thisObj->get('prodRate')
 contractsButton = newButton(headSection, function () {
 	event.stopPropagation();
 	thisDiv = useDeskTop.newPane("factoryContracts");
+	thisDiv.buyContracts = addDiv("", "stdFloatDiv", thisDiv);
 	scrMod("1064,'.$postVals[1].'")});
 contractsButton.innerHTML = "Contracts";
 

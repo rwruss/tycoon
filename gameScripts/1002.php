@@ -25,7 +25,14 @@ for (let i=0; i<playerFactories.length; i++) {
 	thisSummary.addEventListener("click", function () {scrMod("1003,"+thisFactory.objID);})
 }
 
-//optionBox1 = defaultBuildings.SLsingleButton(headSection, {setVal:38});
+contractsButton = newButton(headSection);
+contractsButton.addEventListener("click", function () {
+	event.stopPropagation();
+	thisDiv = useDeskTop.newPane("companyContracts");
+	
+	thisDiv.buyContracts = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.sellContracts = addDiv("", "stdFloatDiv", thisDiv);
+	);
 
 sendButton = newButton(headSection);
 sendButton.addEventListener("click", function () {

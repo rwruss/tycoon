@@ -454,7 +454,7 @@ echo '
 	}
 
 	function initGame() {
-		thisPlayer = new gamePlayer(['.$thisPlayer->get('money').', '.$_SESSION['gold'].']);
+		thisPlayer = new gamePlayer(['.$pGameID.', '.$thisPlayer->get('money').', '.$_SESSION['gold'].']);
 		thisPlayer.setBoosts('.implode(',', $_SESSION['boosts']).');
 		useDeskTop = new deskTop;
 
