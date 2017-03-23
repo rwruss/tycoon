@@ -43,9 +43,9 @@ if ($handle = opendir('../scenarios/'.$postVals[1])) {
 	closedir($handle);
 	}
 // create the tax file taxReceipts.txf
-$taxFile = fopen("../games/".$newGameId."/objects.dat", "w");
+$taxFile = fopen("../games/".$newGameId."/taxReceipts.txf", "w");
 fclose($taxFile);
-	
+
 // Add basic player info and unstarted status
 $playerFile = fopen("../games/".$newGameId."/objects.dat", "r+b");
 $gameOfferFile = fopen("../games/".$newGameId."/saleOffers.slt", "r+b");
@@ -87,7 +87,7 @@ fseek($gameSlotFile, 0);
 
 //Create list of players in game
 
-$newFile = fopen("../games/".$newGameId."/players.Dat", "wb");
+$newFile = fopen("../games/".$newGameId."/players.dat", "wb");
 fwrite($newFile, pack("i*", $_SESSION['playerId'], -$pGameID));
 
 
@@ -127,7 +127,7 @@ if ($handle = opendir('../games/'.$newGameId)) {
     /* This is the correct way to loop over the directory. */
     while (false !== ($entry = readdir($handle))) {
         echo "$entry<br>";
-		copy('../games/'.$newGameId.'/'.$entry, '../games/bak/'.$newGameId.'/'.$entry);
+		copy('../games/'.$newGameId.'/'.$entry, '../games/'.$newGameId.'/bak/'.$entry);
 		}
 	closedir($handle);
 	}

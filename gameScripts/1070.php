@@ -36,7 +36,7 @@ for ($i=1; $i<26; $i++) {
 }
 
 // remove the contract from the list of open contracts for the product
-$contractListFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$contractListFile = fopen($gamePath.'/contractList.clf', 'rb');
 $contractSlot = new itemSlot($contractInfo[3], $contractListFile, 40);
 $contractSlot->deleteByValue($postVals[1], $contractListFile);
 fclose($contractListFile);

@@ -957,7 +957,8 @@ class contract {
 		this.maxPol = dat[6];
 		this.maxRights = dat[7];
 		this.status = dat[8];
-		this.price = dat[9];
+		this.price = dat[16];
+		this.targetFactory = dat[12];
 		this.sentAmt = dat[11];
 		this.sentQual = dat[12];
 		this.sentPol = dat[13];
@@ -970,9 +971,9 @@ class contract {
 		var contractContain = addDiv("", "contractContain", trg);
 		contractContain.parentContract = this;
 		if (this.contractID == 0) {
-			renderEmpty(trg, contractContain);
+			this.renderEmpty(trg, contractContain);
 		} else {
-			renderActive(trg, contractContain);
+			this.renderActive(trg, contractContain);
 		}
 
 		return contractContain;
@@ -981,7 +982,7 @@ class contract {
 	renderActive(trg, contain) {
 		productArray[this.productID].renderSummary(contain);
 
-		let summArea = addDiv("", "contractSummary", trg);
+		let summArea = addDiv("", "contractSummary", contain);
 		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		 this.sentPol + "/" + this.maxPol;
@@ -991,11 +992,13 @@ class contract {
 		})
 	}
 
-	renderEmpty() {
+	renderEmpty(trg, contain) {
 		contain.innerHTML = "Create a new contract";
+		contain.trgFactory = this.targetFactory;
 
 		contain.addEventListener("click", function () {
-			contractCreateMenu();
+			event.stopPropagation();
+			contractCreateMenu(this.trgFactory);
 		})
 	}
 }

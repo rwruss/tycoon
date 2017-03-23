@@ -5,16 +5,17 @@
 PVS
 1-factory ID
 2-product ID
-3-quantity
-4-min quality
-5-max pollution
-6-max rights
+3 - junk
+4-quantity
+5-min quality
+6-max pollution
+7-max rights
 */
 
 require_once('./objectClass.php');
 require_once('./slotFunctions.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
 
 // verify that the player is authorized to make this contract
 $thisFactory = loadObject($postVals[1], $objFile, 1600);
@@ -25,10 +26,10 @@ $contractInfo = [];
 $contractInfo[1] = $pGameID; // owner/buyer
 $contractInfo[2] = $now;
 $contractInfo[3] = $postVals[2]; // item being purchased
-$contractInfo[4] = $postVals[3]; // quantity
-$contractInfo[5] = $postVals[4]; // pollutions
-$contractInfo[6] = $postVals[5]; // Max Pollution
-$contractInfo[7] = $postVals[6]; // max Rights
+$contractInfo[4] = $postVals[4]; // quantity
+$contractInfo[5] = $postVals[5]; // pollutions
+$contractInfo[6] = $postVals[6]; // Max Pollution
+$contractInfo[7] = $postVals[7]; // max Rights
 $contractInfo[8] = 1; // status
 $contractInfo[9] = 0; // accepted price
 $contractInfo[10] = $now + 8*3600;
@@ -54,15 +55,15 @@ for ($i=1; $i<26; $i++) {
 }
 
 // save the data for the new contract in the contract file
-$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 if (flock($contractFile, LOCK_EX)) {
 	fseek($contractFile, 0, SEEK_END);
 	$cfSize = ftell($contractFile);
 	$newLoc = max(1,ceil($cfSize/100));
-	
+
 	fseek($contractFile, $newLoc);
 	fwrite($contractFile, $cfDat);
-	
+
 	flock($contractFile, LOCK_UN);
 }
 fclose($contractFile);
@@ -70,12 +71,12 @@ fclose($contractFile);
 // save the contract number in the factory file
 for ($i=0; $i<5; $i++) {
 	if ($thisFactory->objDat[$thisFactory->contractsOffset+$i] == 0) {
-		$thisFactory->saveItem($thisFactory->contractsOffset+$i], $newLoc);
+		$thisFactory->saveItem($thisFactory->contractsOffset+$i, $newLoc);
 	}
 }
 
 // save the contract in the list of bidding contracts for this material
-$contractListFile = fopen($gamePath.'/contracts.ctf', 'r+b');
+$contractListFile = fopen($gamePath.'/contractList.clf', 'rb');
 $productContracts = new itemSlot($postVals[2], $contractListFile, 40);
 $productContracts->addItem($newLoc, $contractListFile);
 

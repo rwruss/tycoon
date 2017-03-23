@@ -17,10 +17,11 @@ if ($thisFactory->get('owner') != $pGameID) exit('error 4601-1');
 
 $contractInfo = [];
 $emptyContract = array_fill(1, 25, 0);
+$emptyContract[12] = $postVals[1];
 for ($i=0; $i<5; $i++) {
 	$contractInfo[] = $i;
-	if ($thisFactory->objDat[$thisFactory->contractOffset+$i] > 0) {
-		fseek($contractFile, $thisFactory->objDat[$thisFactory->contractOffset+$i]);
+	if ($thisFactory->objDat[$thisFactory->contractsOffset+$i] > 0) {
+		fseek($contractFile, $thisFactory->objDat[$thisFactory->contractsOffset+$i]);
 		$contractDat = unpack('i*', fread($contractFile, 100));
 		$contractInfo = array_merge($contractInfo, $contractDat);
 		$contractInfo[] = $thisFactory->objDat[$thisFactory->contractOffset+$i];
@@ -30,7 +31,7 @@ for ($i=0; $i<5; $i++) {
 	}
 }
 
-echo 'showContracts(['.implode(',', $contractInfo).'], thisDiv)';
+echo '<script>showContracts(['.implode(',', $contractInfo).'], thisDiv)</script>';
 
 fclose($objFile);
 fclose($slotFile);

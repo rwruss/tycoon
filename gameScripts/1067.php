@@ -7,7 +7,7 @@ PVS
 */
 require_once('./slotFunctions.php');
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
-$contractListFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$contractListFile = fopen($gamePath.'/contractList.clf', 'rb');
 
 $sendDat = [];
 $contractList = new itemSlot($postVals[1], $contractListFile, 40);

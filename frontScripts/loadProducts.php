@@ -168,6 +168,8 @@ while (($line = fgets($productFile)) !== false) {
   $count++;
 }
 
+$numProducts = $count;
+
 echo '<p>PRODUCT REQUIREMENTS<Br>';
 print_R($productReqs);
 echo '<p>';
@@ -276,6 +278,12 @@ $salesFile = fopen('../scenarios/'.$scenario.'/saleOffers.slt', 'wb');
 fseek($salesFile, 10000*1000-4); // allow for 10k products
 fwrite($salesFile, pack('i', 0));
 fclose($salesFile);
+
+// load contract list file and create slots based on number of products
+$contractListFile = fopen('../scenarios/'.$scenario.'/contractList.clf', 'wb');
+fseek($contractListFile, $numProducts*40-4);
+fwrite($contractListFile, pack('i', 0));
+fclose($contractListFile);
 
 
 function packArray($data) {

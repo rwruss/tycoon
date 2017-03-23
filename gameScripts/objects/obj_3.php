@@ -112,7 +112,13 @@ for (i=0; i<materialInv.length; i+=2) {
 	inventoryItems.push(new product({objID:materialInv[i]}));
 }
 invList = new uList(inventoryItems);
-
+/*
+inputItems = [];
+for (i=0; i<productMaterial.length; i++) {
+	inputItems.push(new product({objID:productMaterial[i]}));
+}
+inputList = new uList(inputItems);
+*/
 prodList = new uList([new product({objID:0}), new product({objID:'.$thisObj->getTemp('prod1').'})';
 
 for ($i=2; $i<6; $i++) {
@@ -123,6 +129,7 @@ headSection = addDiv("", "stdFloatDiv", factoryDiv);
 headSection.rate = textBlob("", headSection, "Rate: '.($thisObj->get('prodRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
 contractsButton = newButton(headSection, function () {
+	event.stopPropagation();
 	thisDiv = useDeskTop.newPane("factoryContracts");
 	scrMod("1064,'.$postVals[1].'")});
 contractsButton.innerHTML = "Contracts";

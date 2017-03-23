@@ -1586,7 +1586,8 @@ showContracts = function (dat, trg) {
 	}
 }
 
-contractCreateMenu = function (itemID, optionList = prodList) {
+contractCreateMenu = function (itemID, optionList = invList) {
+	console.log("factory " + itemID);
 	contractMenu = useDeskTop.newPane("createContract");
 	textBlob("", contractMenu, "Select what you would like to purchase with this contract");
 	contractItemBox = optionList.SLsingleButton(contractMenu);
@@ -1596,10 +1597,10 @@ contractCreateMenu = function (itemID, optionList = prodList) {
 	let maxPoll = slideValBar(contractMenu, "", 0, 100);
 	let maxRts = slideValBar(contractMenu, "", 0, 100);
 
-	createButton = newButton(headSection, function () {
+	createButton = newButton(contractMenu, function () {
 		let tmp = [];
 		tmp.push(itemID, SLreadSelection(contractItemBox), objQ.slide.value, minQual.slide.value, maxPoll.slide.value, maxRts.slide.value);
-		scrMod("1065,'.$postVals[1].',"+ tmp.join(","))
+		scrMod("1066,"+ tmp.join(","))
 	});
-	createButton.innerHTML = "Upgrade Factory";
+	createButton.innerHTML = "Issue Contract";
 }
