@@ -17,18 +17,18 @@ class object {
 }
 
 class factory extends object {
-	constructor(options) {
+	
+	constructor(dat) {
 		super(options);
-		this.factoryType = options.subType || 0,
-		this.prod = options.prod || 0,
-		this.quality = options.quality || 0,
-		this.pollution = options.pol || 0,
-		this.rights = options.rights || 0,
-		this.rate = options.rate || 0,
-		this.items = options.items || [],
-		this.prices = options.prices || [];
+		this.factoryID = dat[3];
+		this.factoryType = dat[15]
+		this.prod = [dat[4], dat[5], dat[6], dat[7], dat[8]];
+		this.prodInv = [dat[9], dat[10], dat[11], dat[12], dat[13]];
+		this.nextUpdate = dat[14];
+		this.currentPrd = dat[1];
+		this.currentRate = dat[2];
 	}
-
+	
 	renderSummary(target) {
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'udHolder', target);
@@ -36,7 +36,7 @@ class factory extends object {
 
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
-
+		/*
 		thisDiv.actDiv = addDiv("asdf", "sumAct", thisDiv);
 		thisDiv.actDiv.setAttribute("data-boxName", "apBar");
 		thisDiv.actDiv.setAttribute("data-boxunitid", this.unitID);
@@ -44,7 +44,7 @@ class factory extends object {
 		thisDiv.expDiv = addDiv("asdf", "sumStr", thisDiv);
 		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
 		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
-
+		*/
 		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID;
 		return thisDiv;
 	}
@@ -59,6 +59,22 @@ class factory extends object {
 		thisDiv.buttonDiv = addDiv(null, "factoryButton", thisDiv);
 		//console.log(thisDiv);
 		return thisDiv;
+	}
+	
+	itemBar(target, prodIndex, contractID) {
+		var container = addDiv("", "", target);
+		container.sendStr = this.factoryID + "," + prodIndex + "," + contractID;
+		
+		let container.factoryDiv = this.renderSummary(container);
+		let container.prodSection = addDiv("", "", container);
+		container.prodSection.innerHTML = "Qty: "+ this.prodInv[prodIndex];
+		
+		container.slide = slideValBar(container, "", 0, this.prodInv[prodIndex]);
+		
+		let button = newButton(container, function () {
+			scrMod("1072,"+this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
+		});
+		button.innerHTML = "send this amount";
 	}
 
 }
@@ -975,6 +991,7 @@ class contract {
 			this.renderEmpty(trg, contractContain);
 		} else {
 			this.renderActive(trg, contractContain);
+			contractContain.item = this;
 		}
 
 		return contractContain;
@@ -987,9 +1004,9 @@ class contract {
 		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		 this.sentPol + "/" + this.maxPol;
-
-		let leaveButton = newButton(contain, function () {
-			scrMod("1065," + this.parentContract.contractID);
+		 
+		contain.addEventListener("click", function () {
+			this.item.renderDetail();
 		})
 	}
 
@@ -1014,5 +1031,24 @@ class contract {
 		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		 this.sentPol + "/" + this.maxPol;
+		 
+		 // check player factories that provide this item
+		if (this.owner == thisPlayer.playerID) {
+			let sendButton = newButton(contain, function () {
+				thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
+				for (var i=0; i<playerFactories.length; i++) {
+					let check = playerFactories[i].prod.indexOf(this.productID);
+					if (check > -1) {
+						// show the factories that provide this with an option to send
+						playerFactories[i].itemBar(thisDetail.optionArea, check, this.contractID);
+					}
+				}
+			});
+		}
+		 
+		let leaveButton = newButton(contain, function () {
+			scrMod("1065," + this.parentContract.contractID);
+		})
+		leaveButton.innerHTML = "Leave the Contract";
 	}
 }

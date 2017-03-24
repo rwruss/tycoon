@@ -69,8 +69,10 @@
 1069 - PROCESS: Load a list of bids on a contract
 1070 - PROCESS: Receive an accepted bid offer
 1071 - MENU: Company open contracts menu
+1072 - PROCESS: Verify that factory can send required materials to a contract
 
 TO DO:
+create tax calculation function for use in different scripts
 cleanup script for expired bids
 contracts for certain amounts of items
 *** Fix loading cities demographics

@@ -68,7 +68,8 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 			//echo 'Object '.$ownedObjects->slotData[$i].'<br>';
 			$thisObject = loadObject($ownedObjects->slotData[$i], $unitFile, 400);
 			if ($thisObject->get('oType') == 3) {
-				array_push($factoryList, $thisObject->get('subType'), $thisObject->get('currentProd'), $thisObject->get('prodRate'), $ownedObjects->slotData[$i]);
+				$factoryList = array_merge($factoryList, $thisObject->overViewInfo());
+				//array_push($factoryList, $thisObject->get('subType'), $thisObject->get('currentProd'), $thisObject->get('prodRate'), $ownedObjects->slotData[$i]);
 			}
 			else echo 'Cull object type '.$thisObject->get('oType');
 		}
@@ -471,9 +472,9 @@ echo '
 
 
 		playerFactories = new Array(';
-		if (sizeof($factoryList) > 0) echo 'new factory({subType:'.($factoryList[0]-$numProducts).', prod:'.$factoryList[1].', rate:'.$factoryList[2].', objID:'.$factoryList[3].'})';
-		for ($i=4; $i<sizeof($factoryList); $i+=4) {
-			echo ', new factory({subType:'.($factoryList[$i]-$numProducts).', prod:'.$factoryList[$i+1].', rate:'.$factoryList[$i+2].', objID:'.$factoryList[$i+3].'})';
+		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',',array_slice($factoryList, 0, 16).'])';
+		for ($i=16; $i<sizeof($factoryList); $i+=16) {
+			echo ', new factory(['.implode(',',array_slice($factoryList, 0, 16).'])';
 		}
 		echo ');
 

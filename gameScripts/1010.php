@@ -71,7 +71,7 @@ if ($postVals[2] == 0) {
       exit('offer no longer available');
     }
     $baseCost = $offerDat[1]*$offerDat[2];
-
+/*
   	// Load information about buying and selling players, factories, and cities
   	$sellingFactory = loadObject($offerDat[3], $objFile, 1600);
   	$sellingCity = loadCity($sellingFactory->get('region_3'), $cityFile);
@@ -143,7 +143,7 @@ if ($postVals[2] == 0) {
   	$taxAmounts[27] = $taxes[27] * $baseCost/10000; // Sales Tax
 
   	$taxAmounts[29] = $importTaxes[29]*$baseCost/10000;
-
+*/
   	$totalTax = array_sum($taxAmounts);
   	$sellerTax = $totalTax - $taxAmounts[7]-$taxAmounts[17]-$taxAmounts[27]-$taxAmounts[29];
   	$buyerTax = $taxAmounts[7]+$taxAmounts[17]+$taxAmounts[27]+$taxAmounts[29];

@@ -75,7 +75,7 @@ class object {
 	}
 
 
-	function saveAll($file) {
+	function saveAll($file = $this->linkFile) {
 		// Pack the char data
 		$packStr = '';
 		foreach ($this->objDat as $value) {
@@ -153,7 +153,7 @@ class business extends object {
 
 class factory extends object {
 	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights,
-		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats, $contractsOffset;
+		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats, $contractsOffset, $nextUpdate;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -171,6 +171,7 @@ class factory extends object {
 		$this->productStats = 239; // offset to stats for each product made (quality, pollution, rights, material cost, labor cost)
 		$this->laborCosts = 77;
 		$this->contractsOffset = 320;
+		$this->prodInv = 47;
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
@@ -256,6 +257,29 @@ class factory extends object {
 		$this->productStores[] = $this->objDat[49];
 		$this->productStores[] = $this->objDat[50];
 		$this->productStores[] = $this->objDat[51];
+	}
+	
+	function overViewInfo() {
+		$tmpA = [];
+		
+		$tmpA[0] = $this->get('subType');
+		$tmpA[1] = $this->get('currentProd');
+		$tmpA[2] = $this->get('prodRate');
+		$tmpA[3] = $this->unitID;
+		$tmpA[4] = $this->tempList['prod1'];
+		$tmpA[5] = $this->tempList['prod2'];
+		$tmpA[6] = $this->tempList['prod3'];
+		$tmpA[7] = $this->tempList['prod4'];
+		$tmpA[8] = $this->tempList['prod5'];
+		$tmpA[9] = $this->get['prodInv1'];
+		$tmpA[10] = $this->get['prodInv2'];
+		$tmpA[11] = $this->get['prodInv3'];
+		$tmpA[12] = $this->get['prodInv4'];
+		$tmpA[13] = $this->get['prodInv5'];
+		$tmpA[14] = $this->nextUpdate;
+		$tmpA[15] = $this->get['subType'];
+		
+		return $tmpA;		
 	}
 
 	function setProdRate($prodID, $thisProduct, $laborEqFile) {
@@ -345,7 +369,7 @@ class factory extends object {
 			$this->set('factoryLevel', $this->get('upgradeInProgress'));
 			$this->set('upgradeInProgress', 0);
 			$saveFactory = true;
-		}
+		} else $this->nextUpdate = $this->get('constructCompleteTime');
 
 		// Sort material requirements into the storage index for the factory
 		$rscSpots = [];
@@ -359,7 +383,7 @@ class factory extends object {
 				fseek($orderDatFile, $this->objDat[$this->orderListStart+$i]);
 				$orderDat = unpack('i*', fread($orderDatFile, 64));
 
-				if ($orderDat[13] <= $now) {
+				if ($orderDat[13] <= $now) { // order has arrived
 					$this->objDat[$this->inputOffset+$rscSpots[$orderDat[11]]]+= $orderDat[1]; // adjust the material quantity
 					$this->objDat[$this->inputCost + $rscSpots[$orderDat[11]]] += $orderDat[1]*$orderDat[2];  // adjust the inventory costs
 					$this->objDat[$this->inputPollution + $rscSpots[$orderDat[11]]] += $orderDat[5]; // adjust the inventroy pollution
@@ -368,42 +392,44 @@ class factory extends object {
 
 					$thisFactory->objDat[$thisFactory->orderListStart+$i] = 0; // delete the reference to the order
 					$saveFactory = true;
-				}
+				} else $this->nextUpdate = min($this->nextUpdate, $orderDat[13]);
 			}
 		}
 
 		// Update production and production statistics
-		if ($this->get('prodStart') + $this->get('prodLength') <= $now && $this->get('prodStart') > 0) {
-			// Production is complete
-			echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
+		if ($this->get('prodStart') > 0) {
+			if ($this->get('prodStart') + $this->get('prodLength') <= $now && ) {
+				// Production is complete
+				echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
 
-			//Find product index
-			for ($i=0; $i<5; $i++){
-				if ($this->templateDat[11+$i] == $this->get('currentProd')) {
-					$productIndex = $i;
-					break;
+				//Find product index
+				for ($i=0; $i<5; $i++){
+					if ($this->templateDat[11+$i] == $this->get('currentProd')) {
+						$productIndex = $i;
+						break;
+					}
 				}
+
+				$this->objDat[$this->productOffset+$productIndex] += $this->get('prodQty');
+				$this->objDat[$this->productStats+$productIndex*5+0] += $this->get('prodQuality'); // product quality
+				$this->objDat[$this->productStats+$productIndex*5+1] += $this->get('prodPollution'); // product Pollution
+				$this->objDat[$this->productStats+$productIndex*5+2] += $this->get('prodRights'); // product Rights
+				$this->objDat[$this->productStats+$productIndex*5+3] += $this->get('prodCost'); // product material cost
+				$this->objDat[$this->productStats+$productIndex*5+4] += $this->get('prodLaborCost'); // product labor cost
+
+				$this->set('prodStart', 0);
+
+				// Update labor experience
+				for ($i=0; $i<7; $i++) {
+					//$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
+					$this->objDat[$this->laborOffset+$i*10+8] += intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000);
+					echo 'Add '.intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000).' to exp. ->> '.$this->get('initProdDuration').' * '.$this->objDat[$this->eqRateOffset+$i];
+				}
+
+				$saveFactory = true;
+			} else {
+				$this->nextUpdate = min($this->nextUpdate, $this->get('prodStart') + $this->get('prodLength'));
 			}
-
-			$this->objDat[$this->productOffset+$productIndex] += $this->get('prodQty');
-			$this->objDat[$this->productStats+$productIndex*5+0] += $this->get('prodQuality'); // product quality
-			$this->objDat[$this->productStats+$productIndex*5+1] += $this->get('prodPollution'); // product Pollution
-			$this->objDat[$this->productStats+$productIndex*5+2] += $this->get('prodRights'); // product Rights
-			$this->objDat[$this->productStats+$productIndex*5+3] += $this->get('prodCost'); // product material cost
-			$this->objDat[$this->productStats+$productIndex*5+4] += $this->get('prodLaborCost'); // product labor cost
-
-			$this->set('prodStart', 0);
-
-			// Update labor experience
-			for ($i=0; $i<7; $i++) {
-				//$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
-				$this->objDat[$this->laborOffset+$i*10+8] += intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000);
-				echo 'Add '.intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000).' to exp. ->> '.$this->get('initProdDuration').' * '.$this->objDat[$this->eqRateOffset+$i];
-			}
-
-			$saveFactory = true;
-		} else {
-			//echo $this->get('prodStart').' + '.$this->get('prodLength').' > '.$now;
 		}
 
 		if ($saveFactory) $this->saveAll($this->linkFile);
