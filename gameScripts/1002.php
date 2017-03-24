@@ -29,10 +29,12 @@ contractsButton = newButton(headSection);
 contractsButton.addEventListener("click", function () {
 	event.stopPropagation();
 	thisDiv = useDeskTop.newPane("companyContracts");
-	
+	thisDiv.innerHTML = "";
 	thisDiv.buyContracts = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.sellContracts = addDiv("", "stdFloatDiv", thisDiv);
-	);
+	scrMod("1071,'.$pGameID.'");
+});
+contractsButton.innerHTML = "Company Contracts";
 
 sendButton = newButton(headSection);
 sendButton.addEventListener("click", function () {

@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
 Output a list of contracts that the player currently has open
 */
 
@@ -12,8 +12,11 @@ $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 
 // Load the player data and the contract slot
-$thisPlayer = loadObject($pGameID, $unitFile, 400);
+
+$thisPlayer = loadObject($pGameID, $objFile, 400);
 $contractList = new itemSlot($thisPlayer->get('contractList'), $slotFile, 40);
+
+echo 'Read slot '.$thisPlayer->get('contractList');
 
 // load each contract
 $buyInfo = [];

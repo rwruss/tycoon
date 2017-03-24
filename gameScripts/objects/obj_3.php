@@ -105,13 +105,14 @@ for (var i=0; i<materialOrder.length; i+=18) {
 	//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 }
 loadFactoryLabor(['.implode(',', array_slice($thisObj->objDat, ($thisObj->laborOffset-1), 100)).']);
-console.log("flabor is");
-console.log(factoryLabor);
+//console.log("flabor is");
+//console.log(factoryLabor);
 inventoryItems = [];
 for (i=0; i<materialInv.length; i+=2) {
 	inventoryItems.push(new product({objID:materialInv[i]}));
 }
 invList = new uList(inventoryItems);
+console.log(invList);
 /*
 inputItems = [];
 for (i=0; i<productMaterial.length; i++) {

@@ -515,7 +515,7 @@ laborBox = function (id, target) {
 }
 
 materialBox = function (id, qty, target) {
-	console.log("show material box for produ " + id);
+	///console.log("show material box for produ " + id);
 	let thisRsc = productArray[id].renderSummary(target);
 
 	thisRsc.qtyDiv = addDiv("asdf", "productQty", thisRsc);
@@ -707,7 +707,7 @@ class deskTop {
 				console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			} else {
 				var mkPane = new regPane(desc, this);
-				console.log(mkPane);
+				//console.log(mkPane);
 				this.paneList[desc] = mkPane;
 				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			}
@@ -1037,7 +1037,7 @@ function showInventory(factory, inventory) {
 }
 
 function showLabor(factory, factoryLabor) {
-	console.log(factoryLabor);
+	//console.log(factoryLabor);
 	factoryDiv.laborSection.aassigned.innerHTML = "";
 
 	for (var i=1; i<factoryLabor.length; i++) {
@@ -1146,7 +1146,7 @@ showRequiredLabor = function(trg, reqdLabor) {
 }
 
 showOrders = function (trg, factoryOrders) {
-	console.log(factoryOrders.length);
+	//console.log(factoryOrders.length);
 	for (i=0; i<factoryOrders.length; i++) {
 		factoryOrders[i].render(trg);
 	}
@@ -1157,11 +1157,10 @@ factoryRate = function (trg, rate) {
 }
 
 showOutputs = function (trg, productStores) {
-	console.log(productStores);
+	//console.log(productStores);
 	trg.innerHTML = "";
 	for (var i=0; i<5; i++) {
 		if (productStores[i]>0) {
-			console.log("render " + i);
 			productArray[productStores[i]].renderQty(trg, productStores[i+5]);
 		}
 	}
@@ -1184,6 +1183,9 @@ msgSummary = function (trg, fromName, fromID, time, subject, msgStatus, s, e) {
 }
 
 receiveOffers = function(offerDat) {
+	if (offerDat.length == 0) {
+		orderPane.offerContainer.innerHTML = "No offers available."
+		return};
 	offerList = [];
 	for (var i=0; i<offerDat.length; i+=17) {
 		offerList.push(new offer(offerDat.slice(i, i+17)));
@@ -1207,7 +1209,7 @@ receiveOffers = function(offerDat) {
 }
 
 showSales = function(trg, saleDat) {
-	console.log("show sales");
+	//console.log("show sales");
 	oList = [];
 	for (var i=0; i<saleDat.length; i+=12) {
 		oList.push(new offer(saleDat.slice(i, i+12)));
@@ -1320,10 +1322,10 @@ edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 }
 
 loadCompanyLabor = function (laborDat) {
-	console.log(laborDat);
+	//console.log(laborDat);
 	let tmpArray = new Array();
 	for (var i=0; i<laborDat.length; i+=11) {
-		console.log("TYPE " + laborDat[i]);
+		//console.log("TYPE " + laborDat[i]);
 		if (laborDat[i+1]>0)	tmpArray.push(new laborItem({objID:laborDat[i]+100, pay:laborDat[i+6], ability:laborDat[i+9], laborType:laborDat[i+1]}));
 	}
 	return tmpArray;
@@ -1332,7 +1334,7 @@ loadCompanyLabor = function (laborDat) {
 loadLaborItems = function(laborDat) {
 	let tmpArray = new Array();
 	for (var i=0; i<laborDat.length; i+=11) {
-		console.log("TYPE " + laborDat[i]);
+		//console.log("TYPE " + laborDat[i]);
 		if (laborDat[i+1]>0) tmpArray.push(new laborItem({objID:laborDat[i], pay:laborDat[i+6], ability:laborDat[i+9], laborType:laborDat[i+1]}));
 	}
 
@@ -1345,8 +1347,6 @@ loadFactoryLabor = function (laborDat) {
 	for (var i=0; i<laborDat.length; i+=10) {
 		factoryLabor.push(new laborItem({objID:(laborDat[i]/10+1), pay:(laborDat[i+5]), ability:(laborDat[i+8]), laborType:laborDat[i]}));
 	}
-	console.log("loaded factory labor");
-	console.log(factoryLabor);
 }
 
 factoryLaborDetail = function(thisLabor, factoryID, target) {
@@ -1405,7 +1405,7 @@ companyLaborOptions = function(laborList, factoryID, trg) {
 }
 
 companyLaborList = function(laborList, trg) {
-	console.log(laborList);
+	//console.log(laborList);
 	trg.innerHTML = "";
 	cLaborList = new uList(laborList);
 	cLaborList.SLShowAll(trg, function(x,y,z) {
@@ -1580,31 +1580,46 @@ renderCityDetail = function (trg, data, laws, taxes) {
 }
 
 showContracts = function (dat, trg) {
+	if (dat.length == 0) {
+		trg.innerHTML = "No open contracts";
+		return;
+	}
 	for (var i=0; i<dat.length; i+=27) {
-		thisContract = new contract(dat.slice(i, i+27));
-		if (thisContract.owner == thisPlayer.playerID) {
-			thisContract.render(trg.buyContracts);
-		} else {
-			thisContract.render(trg.sellContracts);
-		}
-		
+		let thisContract = new contract(dat.slice(i, i+27));
+		let contractItem = thisContract.render(trg);
+		/*
+		contractItem.item = thisContract;
+		contractItem.addEventListener("click", function () {
+			this.item.renderDetail();
+		})*/
 	}
 }
 
 contractCreateMenu = function (itemID, optionList = invList) {
 	console.log("factory " + itemID);
+	console.log(optionList);
 	contractMenu = useDeskTop.newPane("createContract");
 	textBlob("", contractMenu, "Select what you would like to purchase with this contract");
 	contractItemBox = optionList.SLsingleButton(contractMenu);
 
-	let objQ = slideValBar(contractMenu, "", 0, 10000);
-	let minQual = slideValBar(contractMenu, "", 0, 100);
-	let maxPoll = slideValBar(contractMenu, "", 0, 100);
-	let maxRts = slideValBar(contractMenu, "", 0, 100);
+	let quanBox = addDiv("", "stdFloatDiv", contractMenu);
+	let qualBox = addDiv("", "stdFloatDiv", contractMenu);
+	let pollBox = addDiv("", "stdFloatDiv", contractMenu);
+	let rightsBox = addDiv("", "stdFloatDiv", contractMenu);
+
+	quanBox.innerHTML = "Set Quantity";
+	qualBox.innerHTML = "Set Quality";
+	pollBox.innerHTML = "Set Pollution";
+	rightsBox.innerHTML = "Set Rights";
+	let objQ = slideValBar(quanBox, "", 0, 10000);
+	let minQual = slideValBar(qualBox, "", 0, 100);
+	let maxPoll = slideValBar(pollBox, "", 0, 100);
+	let maxRts = slideValBar(rightsBox, "", 0, 100);
 
 	createButton = newButton(contractMenu, function () {
 		let tmp = [];
 		tmp.push(itemID, SLreadSelection(contractItemBox), objQ.slide.value, minQual.slide.value, maxPoll.slide.value, maxRts.slide.value);
+		console.log(tmp);
 		scrMod("1066,"+ tmp.join(","))
 	});
 	createButton.innerHTML = "Issue Contract";

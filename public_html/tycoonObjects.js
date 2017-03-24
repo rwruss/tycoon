@@ -623,13 +623,13 @@ class gamePlayer {
 	}
 
 	set money (x) {
-		console.log("setting player money to " + x);
+		//console.log("setting player money to " + x);
 		this.moneyCash = x;
 		document.getElementById("cashBox").innerHTML = "$" + (this.moneyCash/100).toFixed(2);
 	}
 
 	set gold (x) {
-		console.log("setting playergold to  " + x);
+		//console.log("setting playergold to  " + x);
 		this.moneyGold = x;
 		document.getElementById("goldBox").innerHTML = "G " + this.moneyGold;
 	}
@@ -1001,5 +1001,18 @@ class contract {
 			event.stopPropagation();
 			contractCreateMenu(this.trgFactory);
 		})
+	}
+
+	renderDetail() {
+		let thisDetail = useDeskTop.newPane("contractDetail");
+		thisDetail.innerHTML = "";
+
+		let contain = addDiv("", "contractDetail", thisDetail);
+		productArray[this.productID].renderSummary(contain);
+
+		let summArea = addDiv("", "contractSummary", contain);
+		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
+		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
+		 this.sentPol + "/" + this.maxPol;
 	}
 }

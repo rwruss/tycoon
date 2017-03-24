@@ -21,10 +21,11 @@ $emptyContract[12] = $postVals[1];
 for ($i=0; $i<5; $i++) {
 	$contractInfo[] = $i;
 	if ($thisFactory->objDat[$thisFactory->contractsOffset+$i] > 0) {
+		echo 'Load contract '.$thisFactory->objDat[$thisFactory->contractsOffset+$i];
 		fseek($contractFile, $thisFactory->objDat[$thisFactory->contractsOffset+$i]);
 		$contractDat = unpack('i*', fread($contractFile, 100));
 		$contractInfo = array_merge($contractInfo, $contractDat);
-		$contractInfo[] = $thisFactory->objDat[$thisFactory->contractOffset+$i];
+		$contractInfo[] = $thisFactory->objDat[$thisFactory->contractsOffset+$i];
 	} else {
 		$contractInfo = array_merge($contractInfo, $emptyContract);
 		$contractInfo[] = 0;

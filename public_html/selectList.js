@@ -207,7 +207,7 @@ class objectList {
 class uList extends objectList {
 	constructor(parentList, opts) {
 		super();
-		console.log(parentList);
+		//console.log(parentList);
 		this.listItems = Object.keys(parentList);
 		this.selectedItems = Array(this.listItems.length).fill(0);
 		//this.selectedItems.fill(0, 0, 10);

@@ -468,9 +468,7 @@ echo '
 		schoolList[3] = new school([4, "University"], [1,2,3]);
 		schoolList[4] = new school([5, "Technical University"], [1,2,3]);
 		schoolList[5] = new school([6, "Business School"], [1,2,3]);
-		console.log(laborNames);
-		console.log(objNames);
-		console.log(factoryNames);
+
 
 		playerFactories = new Array(';
 		if (sizeof($factoryList) > 0) echo 'new factory({subType:'.($factoryList[0]-$numProducts).', prod:'.$factoryList[1].', rate:'.$factoryList[2].', objID:'.$factoryList[3].'})';
@@ -478,7 +476,6 @@ echo '
 			echo ', new factory({subType:'.($factoryList[$i]-$numProducts).', prod:'.$factoryList[$i+1].', rate:'.$factoryList[$i+2].', objID:'.$factoryList[$i+3].'})';
 		}
 		echo ');
-		console.log(playerFactories);
 
 		serviceArray = new Array();
 
@@ -501,10 +498,10 @@ echo '
 
 		factoryList = new Array();
 		for (var i=0; i<numFactories; i++) {
-			console.log("make factory " + objNames[numProducts+i]);
+			//console.log("make factory " + objNames[numProducts+i]);
 			factoryList.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i), items:[1,2,3,4,5], prices:[6, 7, 8, 9, 10]}));
 		}
-		console.log(factoryList);
+		//console.log(factoryList);
 		defaultBuildings = new uList(factoryList);
 
 		nationList = new Array("Canada", "Mexico", "United States");
