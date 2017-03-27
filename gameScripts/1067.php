@@ -11,15 +11,17 @@ $contractListFile = fopen($gamePath.'/contractList.clf', 'rb');
 
 $sendDat = [];
 $contractList = new itemSlot($postVals[1], $contractListFile, 40);
-for ($i=0; $i<sizeof($contractList->slotData); $i++) {
+for ($i=1; $i<sizeof($contractList->slotData); $i++) {
 	if ($contractList->slotData[$i] > 0) {
 		fseek($contractFile, $contractList->slotData[$i]);
-		$contractDat = unpack('i*', fread($contractFile, 40));
+		$contractDat = unpack('i*', fread($contractFile, 100));
+		$sendDat[] = 0;
 		$sendDat = array_merge($sendDat, $contractDat);
+		$sendDat[] = $contractList->slotData[$i];
 	}
 }
 
-echo implode(',', $sendDat);
+echo '<script>showContracts(['.implode(',', $sendDat).'], contractBids.results)</script>';
 
 fclose($contractFile);
 fclose($contractListFile);

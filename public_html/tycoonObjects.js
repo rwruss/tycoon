@@ -17,18 +17,19 @@ class object {
 }
 
 class factory extends object {
-	
 	constructor(dat) {
-		super(options);
+		console.log(dat);
+		super(dat);
+		this.objID = dat[3];
 		this.factoryID = dat[3];
-		this.factoryType = dat[15]
+		this.factoryType = dat[15]-numProducts;
 		this.prod = [dat[4], dat[5], dat[6], dat[7], dat[8]];
 		this.prodInv = [dat[9], dat[10], dat[11], dat[12], dat[13]];
 		this.nextUpdate = dat[14];
 		this.currentPrd = dat[1];
 		this.currentRate = dat[2];
 	}
-	
+
 	renderSummary(target) {
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'udHolder', target);
@@ -60,17 +61,17 @@ class factory extends object {
 		//console.log(thisDiv);
 		return thisDiv;
 	}
-	
+
 	itemBar(target, prodIndex, contractID) {
 		var container = addDiv("", "", target);
 		container.sendStr = this.factoryID + "," + prodIndex + "," + contractID;
-		
-		let container.factoryDiv = this.renderSummary(container);
-		let container.prodSection = addDiv("", "", container);
+
+		container.factoryDiv = this.renderSummary(container);
+		container.prodSection = addDiv("", "", container);
 		container.prodSection.innerHTML = "Qty: "+ this.prodInv[prodIndex];
-		
+
 		container.slide = slideValBar(container, "", 0, this.prodInv[prodIndex]);
-		
+
 		let button = newButton(container, function () {
 			scrMod("1072,"+this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
 		});
@@ -966,6 +967,7 @@ class school {
 
 class contract {
 	constructor(dat) {
+		this.spot = dat[0];
 		this.owner = dat[1];
 		this.time = dat[2];
 		this.productID = dat[3];
@@ -1004,8 +1006,9 @@ class contract {
 		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		 this.sentPol + "/" + this.maxPol;
-		 
-		contain.addEventListener("click", function () {
+
+		contain.addEventListener("click", function (e) {
+			e.stopPropagation();
 			this.item.renderDetail();
 		})
 	}
@@ -1014,8 +1017,8 @@ class contract {
 		contain.innerHTML = "Create a new contract";
 		contain.trgFactory = this.targetFactory;
 
-		contain.addEventListener("click", function () {
-			event.stopPropagation();
+		contain.addEventListener("click", function (e) {
+			e.stopPropagation();
 			contractCreateMenu(this.trgFactory);
 		})
 	}
@@ -1023,6 +1026,7 @@ class contract {
 	renderDetail() {
 		let thisDetail = useDeskTop.newPane("contractDetail");
 		thisDetail.innerHTML = "";
+		thisDetail.optionArea = null;
 
 		let contain = addDiv("", "contractDetail", thisDetail);
 		productArray[this.productID].renderSummary(contain);
@@ -1031,21 +1035,26 @@ class contract {
 		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		 this.sentPol + "/" + this.maxPol;
-		 
+
 		 // check player factories that provide this item
-		if (this.owner == thisPlayer.playerID) {
+		if (this.seller != thisPlayer.playerID) {
 			let sendButton = newButton(contain, function () {
-				thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
+				if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
+				console.log("# checks:" + playerFactories.length);
 				for (var i=0; i<playerFactories.length; i++) {
-					let check = playerFactories[i].prod.indexOf(this.productID);
+					let check = playerFactories[i].prod.indexOf(this.parentContract.productID);
+					console.log("Check factory " + i + "for product " + this.parentContract.productID + " with a result of " + check);
+					console.log(playerFactories[i].prod);
 					if (check > -1) {
 						// show the factories that provide this with an option to send
-						playerFactories[i].itemBar(thisDetail.optionArea, check, this.contractID);
+						playerFactories[i].itemBar(thisDetail.optionArea, check, this.parentContract.contractID);
 					}
 				}
 			});
+			sendButton.parentContract = this;
+			sendButton.innerHTML = "Send Products";
 		}
-		 
+
 		let leaveButton = newButton(contain, function () {
 			scrMod("1065," + this.parentContract.contractID);
 		})

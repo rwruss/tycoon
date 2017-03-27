@@ -26,19 +26,35 @@ for (let i=0; i<playerFactories.length; i++) {
 }
 
 contractsButton = newButton(headSection);
-contractsButton.addEventListener("click", function () {
-	event.stopPropagation();
+contractsButton.addEventListener("click", function (e) {
+	e.stopPropagation();
 	thisDiv = useDeskTop.newPane("companyContracts");
 	thisDiv.innerHTML = "";
 	thisDiv.buyContracts = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.sellContracts = addDiv("", "stdFloatDiv", thisDiv);
+
+	cSearch = newButton(thisDiv, function (e) {
+		e.stopPropagation();
+		contractBids = useDeskTop.newPane("contractBids");
+		contractBids.innerHTML = "Select what product to bid on";
+		let selectList = arrayToSelect(contractBids, objNames);
+		contractBids.results = addDiv("", "stdFloatDiv", contractBids);
+		searchButton = newButton(contractBids, function () {
+			console.log(selectList);
+			scrMod("1067," + selectList.options[selectList.selectedIndex].value);
+		});
+		searchButton.innerHTML = "search";
+
+	});
+	cSearch.innerHTML = "Bid on contracts";
+
 	scrMod("1071,'.$pGameID.'");
 });
 contractsButton.innerHTML = "Company Contracts";
 
 sendButton = newButton(headSection);
-sendButton.addEventListener("click", function () {
-	event.stopPropagation();
+sendButton.addEventListener("click", function (e) {
+	e.stopPropagation();
 	factoryBuildMenu();});
 sendButton.innerHTML = "Build a new facility";
 textBlob("", businessDiv.laborHead, "company labor");

@@ -1470,6 +1470,21 @@ laborTypeMenu = function(trg, factoryID) {
 	trg.appendChild(newMenu);
 }
 
+arrayToSelect = function(trg, aList) {
+	console.log(aList);
+	let newMenu = document.createElement("select");
+
+	for (var i=1; i<aList.length; i++) {
+		let newItem = document.createElement("option");
+		newItem.appendChild(document.createTextNode(aList[i]));
+		newItem.value = i;
+		newMenu.appendChild(newItem);
+	}
+
+	trg.appendChild(newMenu);
+	return newMenu;
+}
+
 factoryBuildMenu = function () {
 	console.log("factorybuildmenu");
 	thisDiv = useDeskTop.newPane("adsfasfdsf");

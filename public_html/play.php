@@ -77,7 +77,7 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 }
 //print_r($factoryList);
 // Load company labor
-echo 'Labor in slot '.$thisPlayer->get('laborSlot');
+//echo 'Labor in slot '.$thisPlayer->get('laborSlot');
 $companyLabor = [];
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
 //print_r($laborSlot->slotData);
@@ -472,9 +472,9 @@ echo '
 
 
 		playerFactories = new Array(';
-		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',',array_slice($factoryList, 0, 16).'])';
+		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',', array_slice($factoryList, 0, 16)).'])';
 		for ($i=16; $i<sizeof($factoryList); $i+=16) {
-			echo ', new factory(['.implode(',',array_slice($factoryList, 0, 16).'])';
+			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 16)).'])';
 		}
 		echo ');
 

@@ -19,9 +19,12 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
+
+
 // Load the contract and confirm the sending player is this player
 fseek($contractFile, $postVals[3]);
 $contractInfo = unpack('i*', fread($contractFile, 100));
+print_R($contractInfo);
 if ($contractInfo[21] != $pGameID) exit('error 2701-3');
 
 // Load the factory and get product ID

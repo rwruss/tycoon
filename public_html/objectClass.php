@@ -75,8 +75,9 @@ class object {
 	}
 
 
-	function saveAll($file = $this->linkFile) {
+	function saveAll($file = null) {
 		// Pack the char data
+		if ($file === null) $file = $this->linkFile;
 		$packStr = '';
 		foreach ($this->objDat as $value) {
 			$packStr.=pack('i', $value);
@@ -258,10 +259,10 @@ class factory extends object {
 		$this->productStores[] = $this->objDat[50];
 		$this->productStores[] = $this->objDat[51];
 	}
-	
+
 	function overViewInfo() {
 		$tmpA = [];
-		
+
 		$tmpA[0] = $this->get('subType');
 		$tmpA[1] = $this->get('currentProd');
 		$tmpA[2] = $this->get('prodRate');
@@ -271,15 +272,15 @@ class factory extends object {
 		$tmpA[6] = $this->tempList['prod3'];
 		$tmpA[7] = $this->tempList['prod4'];
 		$tmpA[8] = $this->tempList['prod5'];
-		$tmpA[9] = $this->get['prodInv1'];
-		$tmpA[10] = $this->get['prodInv2'];
-		$tmpA[11] = $this->get['prodInv3'];
-		$tmpA[12] = $this->get['prodInv4'];
-		$tmpA[13] = $this->get['prodInv5'];
+		$tmpA[9] = $this->get('prodInv1');
+		$tmpA[10] = $this->get('prodInv2');
+		$tmpA[11] = $this->get('prodInv3');
+		$tmpA[12] = $this->get('prodInv4');
+		$tmpA[13] = $this->get('prodInv5');
 		$tmpA[14] = $this->nextUpdate;
-		$tmpA[15] = $this->get['subType'];
-		
-		return $tmpA;		
+		$tmpA[15] = $this->get('subType');
+
+		return $tmpA;
 	}
 
 	function setProdRate($prodID, $thisProduct, $laborEqFile) {
@@ -398,7 +399,7 @@ class factory extends object {
 
 		// Update production and production statistics
 		if ($this->get('prodStart') > 0) {
-			if ($this->get('prodStart') + $this->get('prodLength') <= $now && ) {
+			if ($this->get('prodStart') + $this->get('prodLength') <= $now) {
 				// Production is complete
 				echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
 
