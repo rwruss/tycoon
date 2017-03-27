@@ -1037,7 +1037,7 @@ class contract {
 		 this.sentPol + "/" + this.maxPol;
 
 		 // check player factories that provide this item
-		if (this.seller != thisPlayer.playerID) {
+		if (this.seller == thisPlayer.playerID) {
 			let sendButton = newButton(contain, function () {
 				if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
 				console.log("# checks:" + playerFactories.length);
@@ -1053,6 +1053,9 @@ class contract {
 			});
 			sendButton.parentContract = this;
 			sendButton.innerHTML = "Send Products";
+		}
+		else if (this.buyer == thisPlayer.playerID) {
+			console.log("Detail info for the owner of the contract");
 		}
 
 		let leaveButton = newButton(contain, function () {
