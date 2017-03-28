@@ -1050,7 +1050,11 @@ class contract {
 			if (this.buyer == thisPlayer.playerID) {
 				textBlob("", contain, "Cancel taking bids or view bids and stuff");
 			} else {
-				textBlob("", contain, "Bid on contract");
+				textBlob("", contain, "Bid on contract - set your bid price");
+				contain.priceBox = priceBox(contain, "0.00");
+				
+				submitBid = newButton(contain, );
+				
 				if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
 				console.log("# checks:" + playerFactories.length);
 				for (var i=0; i<playerFactories.length; i++) {
