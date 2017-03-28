@@ -72,6 +72,7 @@
 1072 - PROCESS: Verify that factory can send required materials to a contract
 
 TO DO:
+tracking of bids already submitted for contracts
 add option for bidding on a contract in the contrac class
 create tax calculation function for use in different scripts
 cleanup script for expired bids

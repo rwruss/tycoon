@@ -78,6 +78,14 @@ class factory extends object {
 		button.innerHTML = "send this amount";
 	}
 
+	prodDetail(target, prodIndex) {
+		var container = addDiv("", "", target);
+
+		container.factoryDiv = this.renderSummary(container);
+		container.prodSection = addDiv("", "", container);
+		container.prodSection.innerHTML = "Qty: "+ this.prodInv[prodIndex];
+	}
+
 }
 
 setBar = function (id, desc, pct) {
@@ -1037,30 +1045,53 @@ class contract {
 		 this.sentPol + "/" + this.maxPol;
 
 		 // check player factories that provide this item
-		if (this.seller == thisPlayer.playerID) {
-			let sendButton = newButton(contain, function () {
+		if (this.status == 1) {
+			// accepting bids for the contract
+			if (this.buyer == thisPlayer.playerID) {
+				textBlob("", contain, "Cancel taking bids or view bids and stuff");
+			} else {
+				textBlob("", contain, "Bid on contract");
 				if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
 				console.log("# checks:" + playerFactories.length);
 				for (var i=0; i<playerFactories.length; i++) {
-					let check = playerFactories[i].prod.indexOf(this.parentContract.productID);
-					console.log("Check factory " + i + "for product " + this.parentContract.productID + " with a result of " + check);
+					let check = playerFactories[i].prod.indexOf(this.productID);
+					console.log("Check factory " + i + "for product " + this.productID + " with a result of " + check);
 					console.log(playerFactories[i].prod);
 					if (check > -1) {
 						// show the factories that provide this with an option to send
-						playerFactories[i].itemBar(thisDetail.optionArea, check, this.parentContract.contractID);
+						playerFactories[i].prodDetail(thisDetail.optionArea, check);
 					}
 				}
-			});
-			sendButton.parentContract = this;
-			sendButton.innerHTML = "Send Products";
+			}
 		}
-		else if (this.buyer == thisPlayer.playerID) {
-			console.log("Detail info for the owner of the contract");
+		else if (this.status == 2) {
+			// contract is active
+			if (this.seller == thisPlayer.playerID) {
+				let sendButton = newButton(contain, function () {
+					if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
+					console.log("# checks:" + playerFactories.length);
+					for (var i=0; i<playerFactories.length; i++) {
+						let check = playerFactories[i].prod.indexOf(this.parentContract.productID);
+						console.log("Check factory " + i + "for product " + this.parentContract.productID + " with a result of " + check);
+						console.log(playerFactories[i].prod);
+						if (check > -1) {
+							// show the factories that provide this with an option to send
+							playerFactories[i].itemBar(thisDetail.optionArea, check, this.parentContract.contractID);
+						}
+					}
+				});
+				sendButton.parentContract = this;
+				sendButton.innerHTML = "Send Products";
+			}
+			else if (this.buyer == thisPlayer.playerID) {
+				console.log("Detail info for the owner of the contract");
+			}
 		}
 
+		/*
 		let leaveButton = newButton(contain, function () {
 			scrMod("1065," + this.parentContract.contractID);
 		})
-		leaveButton.innerHTML = "Leave the Contract";
+		leaveButton.innerHTML = "Leave the Contract";*/
 	}
 }
