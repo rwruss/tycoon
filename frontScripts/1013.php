@@ -11,6 +11,7 @@ $_SESSION['gameId'] = $postVals[1];
 // record player as a user in this new game
 $playerFile = fopen("../games/".$postVals[1]."/objects.dat", "r+b");
 $gameOfferFile = fopen("../games/".$postVals[1]."/saleOffers.dat", "r+b");
+$generalSlotFile = fopen("../games/".$postVals[1]."/gameSlots.slt", "r+b");
 if (flock($playerFile, LOCK_EX)) {
   fseek($playerFile, 0, SEEK_END);
 
@@ -19,11 +20,15 @@ if (flock($playerFile, LOCK_EX)) {
   
   // Create a new offer slot for this player
   $newSlot = newSlot($gameOfferFile, 1000);
+  $contractSlot = newSlot($generalSlotFile, 40);
+  $bidSlot = newSlot($generalSlotFile, 40);
 
   $playerDat = array_fill(1, 100, 0);
   $playerDat[4] = 1;
   $playerDat[14] = 10000;
   $playerDat[41] = $newSlot;
+  $playerDat[43] = $contractSlot;
+  $playerDat[44] = $bidSlot;
   $playerDat[100] = -1;
 
   fseek($playerFile, $pGameID*100);

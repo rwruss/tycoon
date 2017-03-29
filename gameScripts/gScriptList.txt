@@ -70,6 +70,7 @@
 1070 - PROCESS: Receive an accepted bid offer
 1071 - MENU: Company open contracts menu
 1072 - PROCESS: Verify that factory can send required materials to a contract
+1073 - PROCESS: Show bids for company
 
 TO DO:
 tracking of bids already submitted for contracts

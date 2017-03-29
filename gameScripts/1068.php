@@ -11,6 +11,8 @@ PVS
 require_once('./slotFunctions.php');
 $contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
 $bidFile = fopen($gamePath.'/contractBids.cbf', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
 // Load the contract and confirm that it is open for bid
 fseek($contractFile, $postVals[1]);
@@ -51,7 +53,14 @@ if (flock($bidFile, LOCK_EX)) {
 fseek($contractFile, $postVals[1]+40);
 fwrite($contractFile, pack('i', $useLoc));
 
+// Record the bid in the bidding player's list of bids
+$biddingPlayer = loadObject($pGameID, $objFile, 400);
+$bidSlot = new itemSlot($biddingPlayer->get('openBids', $slotFile, 40));
+$bidSlot->addItem($postVals[1], $slotFile);
+
 fclose($contractFile);
 fclose($bidFile);
+fclose($objFile);
+fclose($slotFile);
 
 ?>

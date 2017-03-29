@@ -1053,7 +1053,7 @@ class contract {
 				textBlob("", contain, "Bid on contract - set your bid price");
 				contain.priceBox = priceBox(contain, "0.00");
 
-				var submitBid = newButton(contain, function () {});
+				var submitBid = newButton(contain, function () {scrMod("1068,"+this.parentContract.contractID + "," + thisPlayer.playerID + ","+this.priceBox.value)});
 				submitBid.innerHTML = "Submit Bid";
 
 				if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
