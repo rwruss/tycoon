@@ -9,7 +9,10 @@ require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
 session_start();
-if (!isset($_SESSION["playerId"])) echo "<script>window.location.replace(./index.php)</script>";
+if (!isset($_SESSION["playerId"])) {
+	echo '<script>window.location.replace("./index.php");</script>';
+	exit();
+};
 if (!isset($_GET["gameID"])) echo "<script>window.location.replace(./index.php)</script>";
 
 // Read game file to determine player number and status.
@@ -26,8 +29,9 @@ $_SESSION["instance"] = $_GET["gameID"];
 if ($pGameID < 0) {
 	echo "<p><p><p><p>Not alrady in game(".$_SESSION["playerId"].")";
 	//print_r($playerList);
-	include("../gameScripts/1001.php");
-	exit;
+	//include("../gameScripts/1001.php");
+	echo '<script>window.location.replace(./play.php?gameID='.$postVals[1].')</script>';
+	exit();
 }
 
 $_SESSION["gameIDs"][$_GET["gameID"]] = $pGameID;

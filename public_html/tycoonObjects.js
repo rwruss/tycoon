@@ -1052,9 +1052,10 @@ class contract {
 			} else {
 				textBlob("", contain, "Bid on contract - set your bid price");
 				contain.priceBox = priceBox(contain, "0.00");
-				
-				submitBid = newButton(contain, );
-				
+
+				var submitBid = newButton(contain, function () {});
+				submitBid.innerHTML = "Submit Bid";
+
 				if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
 				console.log("# checks:" + playerFactories.length);
 				for (var i=0; i<playerFactories.length; i++) {
