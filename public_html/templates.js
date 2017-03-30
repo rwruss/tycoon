@@ -1639,3 +1639,11 @@ contractCreateMenu = function (itemID, optionList = invList) {
 	});
 	createButton.innerHTML = "Issue Contract";
 }
+
+
+showBids = function (bidDat, trg) {
+	for (var i=0; i<bidDat.length; i+=20) {
+		let thisBid = new bid(bidDat.slice(i, i+20));
+		thisBid.renderSummary(trg);
+	}
+}

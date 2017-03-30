@@ -1100,3 +1100,36 @@ class contract {
 		leaveButton.innerHTML = "Leave the Contract";*/
 	}
 }
+
+class bid {
+	constructor(dat) {
+		this.bidPlayer = dat[1];
+		this.bidPrice = dat[2];
+		this.bidQual = dat[3];
+		this.bidPol = dat[4];
+		this.bidRts = dat[5];
+		this.bidTime = dat[6];
+		this.bidID = dat[7];
+		this.sentTime = dat[8];
+		this.exTime = dat[9];
+		this.prodID = dat[10];
+		this.quantity = dat[11];
+	}
+	
+	renderSummary(trg) {
+		let contain = addDiv("", "", trg);
+		contain.bidItem = this;
+		productArray[this.productID].renderSummary(contain);
+		contain.innerHTML = "Bid " + this.bidPrice + " on " + this.quantity;
+		
+		cointain.addEventListener("click", function (e) {
+			e.stopPropagation();
+			bidDtl = useDeskTop.newPane("bidDetail");
+			this.bidItem.renderDetail(bidDtl);
+		});
+	}
+		
+	renderDetail () {
+		
+	}
+}

@@ -58,7 +58,7 @@ bidButton.addEventListener("click", function (e) {
 	thisDiv = useDeskTop.newPane("companyBids");
 	thisDiv.innerHTML = "";
 	
-	scrMod("", + thisPlayer.playerID);
+	scrMod("1073", + thisPlayer.playerID);
 	});
 
 sendButton = newButton(headSection);

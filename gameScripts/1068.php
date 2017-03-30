@@ -9,6 +9,8 @@ PVS
 */
 
 require_once('./slotFunctions.php');
+require_once('./objectClass.php');
+
 $contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
 $bidFile = fopen($gamePath.'/contractBids.cbf', 'r+b');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
@@ -31,7 +33,9 @@ $bidInfo[5] = 0; // bid rights
 $bidInfo[6] = 0; // bid time
 $bidInfo[7] = $postVals[1]; // contract ID
 $bidInfo[8] = time(); // send time
-$bidInfo[9] = 0;
+$bidInfo[9] = 0; // Expire Time
+$bidInfo[10] = $contractDat[3]; // Bid product
+$bidInfo[11] = $contractDat[4]; // Bid quantity
 
 $bidDat = '';
 for ($i=0; $i<20; $i++) {
@@ -56,7 +60,7 @@ fwrite($contractFile, pack('i', $useLoc));
 // Record the bid in the bidding player's list of bids
 $biddingPlayer = loadObject($pGameID, $objFile, 400);
 $bidSlot = new itemSlot($biddingPlayer->get('openBids', $slotFile, 40));
-$bidSlot->addItem($postVals[1], $slotFile);
+$bidSlot->addItem($useLoc, $slotFile);
 
 fclose($contractFile);
 fclose($bidFile);
