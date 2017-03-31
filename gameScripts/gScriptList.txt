@@ -73,11 +73,9 @@
 1073 - PROCESS: Show bids for company
 
 TO DO:
-tracking of bids already submitted for contracts
-add option for bidding on a contract in the contrac class
-create tax calculation function for use in different scripts
+City economies/influence of labor
 cleanup script for expired bids
-contracts for certain amounts of items
+
 *** Fix loading cities demographics
 Adjustmetns to quality, pollution, and rights in this factory during production
 Periodic script to import taxes for each region - taxReceipts.txf
@@ -101,6 +99,7 @@ VERIFY DONE
 **Worker pool for when they quit/get fired
 Fix labor type sales at cities (based on schools available)
 Don't allow product switching while production is in progress
+create tax calculation function for use in different scripts
 
 TO DO ON HOLD
 Fix & expand Sale options/market - sorting and filtering (1013)
@@ -128,6 +127,8 @@ import/tarrif taxes for buyers
 ***correct hire and fire buttons and options
 script 1051 - cancel a sales offer
 update material orders to show all data for the order (16 items)
+tracking of bids already submitted for contracts
+contracts for certain amounts of items
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

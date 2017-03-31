@@ -1104,7 +1104,7 @@ class contract {
 class bid {
 	constructor(dat) {
 		this.bidPlayer = dat[1];
-		this.bidPrice = dat[2];
+		this.bidPrice = dat[2]/100;
 		this.bidQual = dat[3];
 		this.bidPol = dat[4];
 		this.bidRts = dat[5];
@@ -1129,7 +1129,12 @@ class bid {
 		});
 	}
 		
-	renderDetail () {
+	renderDetail (trg) {
+		let contain = addDiv("", "", trg);
+		contain.bidItem = this;
+		productArray[this.productID].renderSummary(contain);
 		
+		contain.qty = addDiv("", "", contain);
+		contain.qty.innerHTML = this.bidPrice;
 	}
 }
