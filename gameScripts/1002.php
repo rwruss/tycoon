@@ -54,12 +54,14 @@ contractsButton.innerHTML = "Company Contracts";
 
 bidButton = newButton(headSection);
 bidButton.addEventListener("click", function (e) {
-	e.stopPropagation;
+	e.stopPropagation();
 	thisDiv = useDeskTop.newPane("companyBids");
 	thisDiv.innerHTML = "";
-	
-	scrMod("1073", + thisPlayer.playerID);
+	console.log(thisPlayer);
+
+	scrMod("1073," + thisPlayer.playerID);
 	});
+	bidButton.innerHTML = "Company Bids";
 
 sendButton = newButton(headSection);
 sendButton.addEventListener("click", function (e) {

@@ -7,7 +7,7 @@ Output current bids that company has made
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$bidFile = fopen($gamePath.'/contractBids.cbf', 'r+b');
+$bidFile = fopen($gamePath.'/contractBids.cbf', 'rb');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
@@ -15,7 +15,10 @@ $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $biddingPlayer = loadObject($pGameID, $objFile, 400);
 
 // Load the list of bid slots
-$bidSlot = new itemSlot($biddingPlayer->get('openBids', $slotFile, 40));
+if ($biddingPlayer->get('openBids') == 0) {
+	exit('<script>showBids([], thisDiv)</script>');
+}
+$bidSlot = new itemSlot($biddingPlayer->get('openBids'), $slotFile, 40);
 
 // Load the bids
 $size = sizeof($bidSlot->slotData);
@@ -26,7 +29,7 @@ for ($i=1; $i<$size; $i++) {
 	$bidList = array_merge($bidList, $bidInfo);
 }
 
-echo implode(',', $bidList);
+echo '<script>showBids(['.implode(',', $bidList).'], thisDiv)</script>';
 
 fclose($bidFile);
 fclose($objFile);
