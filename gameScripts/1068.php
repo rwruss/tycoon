@@ -11,8 +11,8 @@ PVS
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
-$bidFile = fopen($gamePath.'/contractBids.cbf', 'r+b');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$bidFile = fopen($gamePath.'/contractBids.cbf', 'rb');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
@@ -26,7 +26,7 @@ if ($contractDat[8] != 1) exit('error 8601-1');
 $bidInfo = array_fill(0, 20, 0);
 $bidInfo[0] = $contractDat[11];  // previous bid number
 $bidInfo[1] = $postVals[2]; // bidding player
-$bidInfo[2] = $postVals[3]; // bidding price
+$bidInfo[2] = $postVals[3]*100; // bidding price
 $bidInfo[3] = 0; // bid quality
 $bidInfo[4] = 0; // bid pollution
 $bidInfo[5] = 0; // bid rights
@@ -42,14 +42,16 @@ for ($i=0; $i<20; $i++) {
 	$bidDat .= pack('i', $bidInfo[$i]);
 }
 
+print_R($bidInfo);
+
 if (flock($bidFile, LOCK_EX)) {
 	fseek($bidFile, 0, SEEK_END);
 	$size = ftell($bidFile);
-	
+
 	$useLoc = max(1, ceil($size/80));
 	fseek($bidFile, $useLoc);
 	fwrite($bidFile, $bidDat);
-	
+
 	flock($bidFile, LOCK_UN);
 }
 
@@ -59,8 +61,12 @@ fwrite($contractFile, pack('i', $useLoc));
 
 // Record the bid in the bidding player's list of bids
 $biddingPlayer = loadObject($pGameID, $objFile, 400);
-$bidSlot = new itemSlot($biddingPlayer->get('openBids', $slotFile, 40));
-$bidSlot->addItem($useLoc, $slotFile);
+if ($biddingPlayer->get('openBids') >0) {
+	$bidSlot = new itemSlot($biddingPlayer->get('openBids'), $slotFile, 40);
+	$bidSlot->addItem($useLoc, $slotFile);
+} else {
+	exit('error 8601-1');
+}
 
 fclose($contractFile);
 fclose($bidFile);

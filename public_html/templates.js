@@ -1642,6 +1642,11 @@ contractCreateMenu = function (itemID, optionList = invList) {
 
 
 showBids = function (bidDat, trg) {
+	console.log("Show big list");
+	if (bidDat.length == 0) {
+		trg.innerHTML = "No open Bids";
+		return;
+	}
 	for (var i=0; i<bidDat.length; i+=20) {
 		let thisBid = new bid(bidDat.slice(i, i+20));
 		thisBid.renderSummary(trg);

@@ -1039,6 +1039,8 @@ class contract {
 		let contain = addDiv("", "contractDetail", thisDetail);
 		productArray[this.productID].renderSummary(contain);
 
+		contain.parentContract = this;
+
 		let summArea = addDiv("", "contractSummary", contain);
 		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
@@ -1053,7 +1055,7 @@ class contract {
 				textBlob("", contain, "Bid on contract - set your bid price");
 				contain.priceBox = priceBox(contain, "0.00");
 
-				var submitBid = newButton(contain, function () {scrMod("1068,"+this.parentContract.contractID + "," + thisPlayer.playerID + ","+this.priceBox.value)});
+				var submitBid = newButton(contain, function () {scrMod("1068,"+this.parentNode.parentContract.contractID + "," + thisPlayer.playerID + ","+this.parentNode.priceBox.value)});
 				submitBid.innerHTML = "Submit Bid";
 
 				if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
@@ -1115,19 +1117,20 @@ class bid {
 		this.prodID = dat[10];
 		this.quantity = dat[11];
 	}
-	
+
 	renderSummary(trg) {
 		let contain = addDiv("", "", trg);
 		contain.bidItem = this;
 		productArray[this.productID].renderSummary(contain);
 		contain.innerHTML = "Bid " + this.bidPrice + " on " + this.quantity;
-		
+
 		cointain.addEventListener("click", function (e) {
 			e.stopPropagation();
 			bidDtl = useDeskTop.newPane("bidDetail");
 			this.bidItem.renderDetail(bidDtl);
 		});
 	}
+<<<<<<< HEAD
 		
 	renderDetail (trg) {
 		let contain = addDiv("", "", trg);
@@ -1136,5 +1139,10 @@ class bid {
 		
 		contain.qty = addDiv("", "", contain);
 		contain.qty.innerHTML = this.bidPrice;
+=======
+
+	renderDetail () {
+
+>>>>>>> origin/master
 	}
 }
