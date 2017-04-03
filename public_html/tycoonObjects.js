@@ -1131,6 +1131,7 @@ class bid {
 		this.exTime = dat[9];
 		this.prodID = dat[10];
 		this.quantity = dat[11];
+		this.status = dat[18];
 		this.bidID = dat[20];
 	}
 

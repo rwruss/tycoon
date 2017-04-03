@@ -19,8 +19,6 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
-
-
 // Load the contract and confirm the sending player is this player
 fseek($contractFile, $postVals[3]);
 $contractInfo = unpack('i*', fread($contractFile, 100));
@@ -71,6 +69,18 @@ $sellingPlayer = loadObject($sellingFactory->get('owner'), $objFile, 400);
 
 // Apply taxes and adjust money
 $taxAmounts = taxAmounts ($materialCost, $laborCost, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile); //($materialCost, $laborCost, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile) {
+	
+// if autopay is on adjust money.  If not, create an invoice
+if ($contractInfo[23] == 1) {
+	// autopay on -> transfer money
+	
+	// verify buyer has enough money
+}
+if ($contractInfo[23] == 0) {
+	// autopay off -> create invoice
+	
+	
+}
 
 // save items
 $thisFactory->saveAll();

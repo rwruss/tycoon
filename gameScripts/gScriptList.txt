@@ -69,13 +69,13 @@
 1069 - PROCESS: Load a list of bids on a contract
 1070 - PROCESS: Receive an accepted bid offer
 1071 - MENU: Company open contracts menu
-1072 - PROCESS: Verify that factory can send required materials to a contract
+1072 - PROCESS: Send materials for a contract
 1073 - PROCESS: Show bids for company
 
 TO DO:
+Business reputation - adjustments based on orders and sales
 City economies/influence of labor
 cleanup script for expired bids
-
 *** Fix loading cities demographics
 Adjustmetns to quality, pollution, and rights in this factory during production
 Periodic script to import taxes for each region - taxReceipts.txf
@@ -139,6 +139,7 @@ Get a job
 http://loudprogrammer.net/interview-with-rob-percival-how-to-land-your-first-junior-developer-job/?utm_source=quora&utm_medium=answer#.WG7ISvkrKUk
 https://www.topcoder.com/
 http://sagecode.net/certification/web-dev/
+https://www.newitjobs.com/
 
 Companies list
 Malauzai

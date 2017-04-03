@@ -40,6 +40,21 @@ $contractSlot = new itemSlot($contractInfo[3], $contractListFile, 40);
 $contractSlot->deleteByValue($postVals[1], $contractListFile);
 fclose($contractListFile);
 
+// mark rejected bids with updated status (rejected)
+$nextBid[1] = $contractInfo[11];
+$rejected = pack('i', 2);
+while ($nextBid[1] > 0) {
+	fseek($bidFile, $nextBid);
+	$nextBid = unpack('i', fread($bidFile, 4));
+	
+	fseek($bidFile, $nextBid+72);
+	fwrite($bifFile, $rejected);
+}
+
+// Mark selected bid with accepted status
+fseek($bidFile, $postVals[1]+72);
+fwrite($bidFile, pack('i', 1));
+
 fseek($contractFile, $postVals[1]);
 fwrite($contractFile, $contractDat);
 

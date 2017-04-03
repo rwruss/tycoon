@@ -28,6 +28,7 @@ for ($i=1; $i<$size; $i++) {
 	if ($bidSlot->slotData[$i] > 0) {
 		fseek($bidFile, $bidSlot->slotData[$i]);
 		$bidInfo = unpack('i*', fread($bidFile, 80));
+		$bidInfo[] = $bidSlot->slotData[$i];
 		$bidList = array_merge($bidList, $bidInfo);
 	}
 }
