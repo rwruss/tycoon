@@ -3,27 +3,26 @@
 /*
 Receive an acceptance of a bid offer
 PVS
-1 - contractID
-2 - bid ID
+1 - bid ID
 */
 require_once('./slotFunctions.php');
 
-$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $bidFile = fopen($gamePath.'/contractBids.cbf', 'rb');
 
-// verify that the player controls the contract
-fseek($contractFile, $postVals[1]);
+// Load the bid
+fseek($bidFile, $postVals[1]);
+$bidInfo = unpack('i*', fread($bidFile, 80));
+
+// Load the contract
+fseek($contractFile, $bidInfo[8]);
 $contractInfo = unpack('i*', fread($contractFile, 100));
+
+// verify that the player controls the contract
 if ($contractInfo[1] != $pGameID) exit ('error 0701-1');
 
 // verify that there is not already an accepted bid
 if ($contractInfo[8] != 1) exit('error 0701-3');
-
-// verify that the bid is for this contract
-fseek($bidFile, $postVals[2]);
-$bidInfo = unpack('i*', fread($bidFile, 80));
-
-if ($bidInfo[8] != $postVals[1]) exit ('error 0701-2');
 
 // record the bid dat in the contract
 $contractInfo[8] = 2; // update status

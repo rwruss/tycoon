@@ -425,7 +425,7 @@ class product {
 
 	renderSummary(target) {
 		// product box is 100w x 120h
-		//console.log('draw ' + this.type)
+		//console.log('draw ' + this.objID + "(" +objNames[this.objID]+")")
 		var thisDiv = addDiv(null, 'productHolder', target);
 		thisDiv.setAttribute("data-unitid", this.unitID);
 
@@ -984,13 +984,14 @@ class contract {
 		this.maxPol = dat[6];
 		this.maxRights = dat[7];
 		this.status = dat[8];
+		this.bidLink = dat[11];
 		this.price = dat[16];
 		this.targetFactory = dat[12];
-		this.sentAmt = dat[11];
-		this.sentQual = dat[12];
-		this.sentPol = dat[13];
-		this.sentRights = dat[14];
-		this.seller = dat[15];
+		this.sentAmt = dat[17];
+		this.sentQual = dat[18];
+		this.sentPol = dat[19];
+		this.sentRights = dat[20];
+		this.seller = dat[21];
 		this.contractID = dat[26];
 	}
 
@@ -1011,7 +1012,7 @@ class contract {
 		productArray[this.productID].renderSummary(contain);
 
 		let summArea = addDiv("", "contractSummary", contain);
-		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
+		summArea.innerHTML = "C#" + this.contractID +"<br>Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		 this.sentPol + "/" + this.maxPol;
 
@@ -1019,6 +1020,11 @@ class contract {
 			e.stopPropagation();
 			this.item.renderDetail();
 		})
+
+		if (this.bidLink > 0) {
+			let bidArea = addDiv("", "", contain);
+			bidArea.innerHTML = "BIDS RECEIVED (" + this.bidLink +")";
+		}
 	}
 
 	renderEmpty(trg, contain) {
@@ -1049,10 +1055,19 @@ class contract {
 		 // check player factories that provide this item
 		if (this.status == 1) {
 			// accepting bids for the contract
-			if (this.buyer == thisPlayer.playerID) {
+			if (this.owner == thisPlayer.playerID) {
 				textBlob("", contain, "Cancel taking bids or view bids and stuff");
+
+				contain.bidArea = addDiv("", "stdFloatDiv", contain);
+
+				// Load the bid info
+				let bidDat = scrMod("1069,"+this.contractID);
+				loadData("1069,"+this.contractID, function (x) {
+					contractBids(x.split(","), contain.bidArea);
+				});
+
 			} else {
-				textBlob("", contain, "Bid on contract - set your bid price");
+				textBlob("", contain, "Bid on contract - set your bid price" + this.owner + "/" + thisPlayer.playerID);
 				contain.priceBox = priceBox(contain, "0.00");
 
 				var submitBid = newButton(contain, function () {scrMod("1068,"+this.parentNode.parentContract.contractID + "," + thisPlayer.playerID + ","+this.parentNode.priceBox.value)});
@@ -1111,38 +1126,49 @@ class bid {
 		this.bidPol = dat[4];
 		this.bidRts = dat[5];
 		this.bidTime = dat[6];
-		this.bidID = dat[7];
+		this.contractID = dat[7];
 		this.sentTime = dat[8];
 		this.exTime = dat[9];
 		this.prodID = dat[10];
 		this.quantity = dat[11];
+		this.bidID = dat[20];
 	}
 
 	renderSummary(trg) {
 		let contain = addDiv("", "", trg);
 		contain.bidItem = this;
-		productArray[this.productID].renderSummary(contain);
-		contain.innerHTML = "Bid " + this.bidPrice + " on " + this.quantity;
+		contain.innerHTML = "Bid (#" + this.bidID +")" + this.bidPrice + " on " + this.quantity + " of " + this.prodID;
+		productArray[this.prodID].renderSummary(contain);
 
-		cointain.addEventListener("click", function (e) {
+
+		contain.addEventListener("click", function (e) {
 			e.stopPropagation();
-			bidDtl = useDeskTop.newPane("bidDetail");
+			let bidDtl = useDeskTop.newPane("bidDetail");
 			this.bidItem.renderDetail(bidDtl);
 		});
+
+		return contain;
 	}
-<<<<<<< HEAD
-		
+
 	renderDetail (trg) {
 		let contain = addDiv("", "", trg);
 		contain.bidItem = this;
-		productArray[this.productID].renderSummary(contain);
-		
+		productArray[this.prodID].renderSummary(contain);
+
 		contain.qty = addDiv("", "", contain);
 		contain.qty.innerHTML = this.bidPrice;
-=======
+	}
 
-	renderDetail () {
 
->>>>>>> origin/master
+	renderDecision (trg) {
+		let summary = this.renderSummary(trg);
+
+		let acceptButton = newButton(summary);
+		acceptButton.sendStr = "1070,"+this.bidID;
+		acceptButton.innerHTML = "Accept";
+		acceptButton.addEventListener("click", function (e) {
+			e.stopPropagation();
+			scrMod(this.sendStr);
+		});
 	}
 }

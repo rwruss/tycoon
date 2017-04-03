@@ -23,10 +23,13 @@ $bidSlot = new itemSlot($biddingPlayer->get('openBids'), $slotFile, 40);
 // Load the bids
 $size = sizeof($bidSlot->slotData);
 $bidList = [];
+print_r($bidSlot->slotData);
 for ($i=1; $i<$size; $i++) {
-	fseek($bidFile, $bidSlot->slotData[$i]);
-	$bidInfo = unpack('i*', fread($bidFile, 80));
-	$bidList = array_merge($bidList, $bidInfo);
+	if ($bidSlot->slotData[$i] > 0) {
+		fseek($bidFile, $bidSlot->slotData[$i]);
+		$bidInfo = unpack('i*', fread($bidFile, 80));
+		$bidList = array_merge($bidList, $bidInfo);
+	}
 }
 
 echo '<script>showBids(['.implode(',', $bidList).'], thisDiv)</script>';

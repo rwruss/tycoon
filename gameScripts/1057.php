@@ -115,7 +115,7 @@ if ($postVals[3] > 0) {
 	}
 	$laborList = new blockSlot($laborSlot, $slotFile, 40);
 
-	$location = 0;
+	$location = ceil(sizeof($laborList->slotData)/10)*10+1;
 	for ($i=1; $i<sizeof($laborList->slotData); $i+=10) {
 		if ($laborList->slotData[$i] == 0) {
 			$location = $i;

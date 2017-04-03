@@ -2,7 +2,7 @@
 
 /*
 Load a list of bids received for a contract
-PVS 
+PVS
 1 - Proposal Number
 */
 
@@ -22,9 +22,9 @@ $nextBid = $proposalDat[11];
 while($nextBid > 0) {
 	fseek($bidFile, $nextBid);
 	$bidDat = unpack('i*', fread($bidFile, 80));
-	$nextBid = $bidDat[1];
-	
 	$bidInfo = array_merge($bidInfo, $bidDat);
+	$bidInfo[] = $nextBid;
+	$nextBid = $bidDat[1];
 }
 
 // output the bids

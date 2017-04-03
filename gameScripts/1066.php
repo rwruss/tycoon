@@ -15,7 +15,7 @@ PVS
 require_once('./objectClass.php');
 require_once('./slotFunctions.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 // verify that the player is authorized to make this contract
 $thisFactory = loadObject($postVals[1], $objFile, 1600);
@@ -55,7 +55,7 @@ for ($i=1; $i<26; $i++) {
 }
 
 // save the data for the new contract in the contract file
-$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
 if (flock($contractFile, LOCK_EX)) {
 	fseek($contractFile, 0, SEEK_END);
 	$cfSize = ftell($contractFile);
@@ -77,12 +77,12 @@ for ($i=0; $i<5; $i++) {
 }
 
 // save the contract in the list of bidding contracts for this material
-$contractListFile = fopen($gamePath.'/contractList.clf', 'rb');
+$contractListFile = fopen($gamePath.'/contractList.clf', 'r+b');
 $productContracts = new itemSlot($postVals[2], $contractListFile, 40);
 $productContracts->addItem($newLoc, $contractListFile);
 
 // save the contract to the player's list of open contracts
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 if ($thisPlayer->get('contractList') == 0) {
 	$newSlot = newSlot($slotFile, 40);

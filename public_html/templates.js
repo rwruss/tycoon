@@ -1595,6 +1595,7 @@ renderCityDetail = function (trg, data, laws, taxes) {
 }
 
 showContracts = function (dat, trg) {
+	console.log(dat);
 	if (dat.length == 0) {
 		trg.innerHTML = "No open contracts";
 		return;
@@ -1647,8 +1648,16 @@ showBids = function (bidDat, trg) {
 		trg.innerHTML = "No open Bids";
 		return;
 	}
-	for (var i=0; i<bidDat.length; i+=20) {
-		let thisBid = new bid(bidDat.slice(i, i+20));
+	for (var i=0; i<bidDat.length; i+=21) {
+		let thisBid = new bid(bidDat.slice(i, i+21));
 		thisBid.renderSummary(trg);
+	}
+}
+
+contractBids = function (bidDat, trg) {
+	console.log(bidDat);
+	for (var i=0; i<bidDat.length; i+=21) {
+		let thisBid = new bid(bidDat.slice(i, i+21));
+		thisBid.renderDecision(trg);
 	}
 }

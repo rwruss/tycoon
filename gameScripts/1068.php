@@ -11,10 +11,10 @@ PVS
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
-$bidFile = fopen($gamePath.'/contractBids.cbf', 'rb');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
+$bidFile = fopen($gamePath.'/contractBids.cbf', 'r+b');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 
 // Load the contract and confirm that it is open for bid
 fseek($contractFile, $postVals[1]);
@@ -26,7 +26,7 @@ if ($contractDat[8] != 1) exit('error 8601-1');
 $bidInfo = array_fill(0, 20, 0);
 $bidInfo[0] = $contractDat[11];  // previous bid number
 $bidInfo[1] = $postVals[2]; // bidding player
-$bidInfo[2] = $postVals[3]*100; // bidding price
+$bidInfo[2] = floor($postVals[3]*100); // bidding price
 $bidInfo[3] = 0; // bid quality
 $bidInfo[4] = 0; // bid pollution
 $bidInfo[5] = 0; // bid rights

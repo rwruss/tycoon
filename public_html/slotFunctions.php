@@ -206,7 +206,7 @@ class blockSlot extends dataSlot {
 		//print_R($this->slotData);
 		if (flock($file, LOCK_EX)) {  // acquire an exclusive lock
 			// Read the last item that was saved in this slot and version
-			fseek($file, $this->slotList[0]*$this->size+4);
+			//fseek($file, $this->slotList[0]*$this->size+4);
 
 			if ($location == 0) $location = max(sizeof($this->slotData)+1, ceil(strlen($data)/4)+1);
 

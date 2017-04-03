@@ -17,15 +17,25 @@ $thisPlayer = loadObject($pGameID, $objFile, 400);
 $contractList = new itemSlot($thisPlayer->get('contractList'), $slotFile, 40);
 
 echo 'Read slot '.$thisPlayer->get('contractList');
+print_R($contractList->slotData);
 
 // load each contract
 $buyInfo = [];
 $sellInfo = [];
 for ($i=1; $i<sizeof($contractList->slotData); $i++) {
-	fseek($contractFile, $contractList->slotData[$i]);
-	$contractInfo = unpack('i*', fread($contractFile, 100));
-	if ($contractInfo[1] == $pGameID) $buyInfo = array_merge($buyInfo, $contractInfo);
-	else $sellInfo = array_merge($sellInfo, $contractInfo);
+	if ($contractList->slotData[$i] > 0) {
+		fseek($contractFile, $contractList->slotData[$i]);
+		$contractInfo = unpack('i*', fread($contractFile, 100));
+		if ($contractInfo[1] == $pGameID)  {
+			$buyInfo[] = 0;
+			$buyInfo = array_merge($buyInfo, $contractInfo);
+			$buyInfo[] = $contractList->slotData[$i];
+		}	else {
+			$sellInfo[] = 0;
+			$sellInfo = array_merge($sellInfo, $contractInfo);
+			$sellInfo[] = $contractList->slotData[$i];
+		}
+	}
 }
 
 // output the info for each conctract
