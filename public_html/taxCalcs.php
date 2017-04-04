@@ -14,8 +14,8 @@ function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Ty
 	}
 }
 
-function taxAmounts($materialCost, $laborCost, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile) {
-	$baseCost = $offerDat[1]*$offerDat[2];
+function taxAmounts($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile) {
+	$baseCost = $transDat[1]*$transDat[2];
 	
   	// [0, company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID, city ID, region ID, nation ID]
   	$taxInfo = [0, $sellingFactory->get('owner'), $sellingFactory->get('subType'), $sellingFactory->get('industry'), $offerDat[3],
@@ -57,29 +57,27 @@ function taxAmounts($materialCost, $laborCost, $sellingFactory, $buyingCity, $se
   	calcTaxes($nationTaxEx->slotData, $taxInfo, $taxes);
 
   	// calculate taxes on the selling player
-  	//$materialCost = $offerDat[14];
-  	//$laborCost = $offerDat[15];
 
   	echo 'Final tax rates:';
   	print_r($taxes);
 
   	$taxAmounts = array_fill(1, 30, 0);
-  	$taxAmounts[1] = $taxes[1]* ($baseCost-$materialCost - $laborCost)/10000; // Income Tax
-  	$taxAmounts[3] = $taxes[3] * ($baseCost - $materialCost)/10000; // VAT
-  	$taxAmounts[5] = $taxes[5]*$offerDat[5]/10000; // Pollution Tax
-  	$taxAmounts[6] = $taxes[6]*$offerDat[6]/10000; // Rights Tax
+  	$taxAmounts[1] = $taxes[1] * ($baseCost-$transDat[14] - $transDat[15])/10000; // Income Tax
+  	$taxAmounts[3] = $taxes[3] * ($baseCost - $transDat[14])/10000; // VAT
+  	$taxAmounts[5] = $taxes[5] * $offerDat[5]/10000; // Pollution Tax
+  	$taxAmounts[6] = $taxes[6] * $offerDat[6]/10000; // Rights Tax
   	$taxAmounts[7] = $taxes[7] * $baseCost/10000; // Sales Tax
 
-  	$taxAmounts[11] = $taxes[11]* ($baseCost-$materialCost - $laborCost)/10000; // Income Tax
-  	$taxAmounts[13] = $taxes[13] * ($baseCost - $materialCost)/10000; // VAT
-  	$taxAmounts[15] = $taxes[15]*$offerDat[5]/10000; // Pollution Tax
-  	$taxAmounts[16] = $taxes[16]*$offerDat[6]/10000; // Rights Tax
+  	$taxAmounts[11] = $taxes[11] * ($baseCost-$transDat[14] - $transDat[15])/10000; // Income Tax
+  	$taxAmounts[13] = $taxes[13] * ($baseCost - $transDat[14])/10000; // VAT
+  	$taxAmounts[15] = $taxes[15] * $offerDat[5]/10000; // Pollution Tax
+  	$taxAmounts[16] = $taxes[16] * $offerDat[6]/10000; // Rights Tax
   	$taxAmounts[17] = $taxes[17] * $baseCost/10000; // Sales Tax
 
-  	$taxAmounts[21] = $taxes[21]* ($baseCost-$materialCost - $laborCost)/10000; // Income Tax
-  	$taxAmounts[23] = $taxes[23] * ($baseCost - $materialCost)/10000; // VAT
-  	$taxAmounts[25] = $taxes[25]*$offerDat[5]/10000; // Pollution Tax
-  	$taxAmounts[26] = $taxes[26]*$offerDat[6]/10000; // Rights Tax
+  	$taxAmounts[21] = $taxes[21] * ($baseCost-$transDat[14] - $transDat[15])/10000; // Income Tax
+  	$taxAmounts[23] = $taxes[23] * ($baseCost - $transDat[14])/10000; // VAT
+  	$taxAmounts[25] = $taxes[25] * $offerDat[5]/10000; // Pollution Tax
+  	$taxAmounts[26] = $taxes[26] * $offerDat[6]/10000; // Rights Tax
   	$taxAmounts[27] = $taxes[27] * $baseCost/10000; // Sales Tax
 
   	$taxAmounts[29] = $importTaxes[29]*$baseCost/10000;

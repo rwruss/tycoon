@@ -7,7 +7,7 @@
 1007 - PROCESS: Show Purchase options for a factory
 1008 - PROCESS: Build a facility (from 1002)
 1009 - MENU: Order new material for a factory
-1010 - PROCESS: Order materials for a factory
+1010 - PROCESS: Order materials for a factory (buy and sell product)
 1011 - MENU: Set prices for goods at a factory - NOT CURRENTLY USED
 1012 - PROCESS: Save prices set in script 1011 - NOT CURRENTLY USED
 1013 - MENU: Sell items from a factory
@@ -153,6 +153,7 @@ Other
 http://www.bbc.com/earth/story/20161021-why-there-could-be-many-copies-of-you
 http://www.bbcgoodfood.com/howto/guide/5-mulled-drinks-you-can-make-minutes
 http://cdn.preterhuman.net/texts/math/Data_Structure_And_Algorithms/Algorithms%20and%20Data%20Structures%20-%20Niklaus%20Wirth.pdf
+Collatz Conjecture!
 
 Graphics
 https://www.quora.com/Whats-the-coolest-thing-you-can-get-a-computer-to-do-in-10-lines-of-code/answer/Liber-Liu
