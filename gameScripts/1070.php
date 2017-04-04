@@ -7,8 +7,8 @@ PVS
 */
 require_once('./slotFunctions.php');
 
-$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
-$bidFile = fopen($gamePath.'/contractBids.cbf', 'rb');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
+$bidFile = fopen($gamePath.'/contractBids.cbf', 'r+b');
 
 // Load the bid
 fseek($bidFile, $postVals[1]);
@@ -35,7 +35,7 @@ for ($i=1; $i<26; $i++) {
 }
 
 // remove the contract from the list of open contracts for the product
-$contractListFile = fopen($gamePath.'/contractList.clf', 'rb');
+$contractListFile = fopen($gamePath.'/contractList.clf', 'r+b');
 $contractSlot = new itemSlot($contractInfo[3], $contractListFile, 40);
 $contractSlot->deleteByValue($postVals[1], $contractListFile);
 fclose($contractListFile);
@@ -44,18 +44,20 @@ fclose($contractListFile);
 $nextBid[1] = $contractInfo[11];
 $rejected = pack('i', 2);
 while ($nextBid[1] > 0) {
-	fseek($bidFile, $nextBid);
+	fseek($bidFile, $nextBid[1]);
 	$nextBid = unpack('i', fread($bidFile, 4));
-	
-	fseek($bidFile, $nextBid+72);
-	fwrite($bifFile, $rejected);
+
+	fseek($bidFile, $nextBid[1]+72);
+	fwrite($bidFile, $rejected);
 }
+
+print_r($contractInfo);
 
 // Mark selected bid with accepted status
 fseek($bidFile, $postVals[1]+72);
 fwrite($bidFile, pack('i', 1));
 
-fseek($contractFile, $postVals[1]);
+fseek($contractFile, $bidInfo[8]);
 fwrite($contractFile, $contractDat);
 
 fclose($contractFile);

@@ -1014,7 +1014,7 @@ class contract {
 		let summArea = addDiv("", "contractSummary", contain);
 		summArea.innerHTML = "C#" + this.contractID +"<br>Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
-		 this.sentPol + "/" + this.maxPol;
+		 this.sentPol + "/" + this.maxPol + "<br>Status:" + this.status;
 
 		contain.addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -1157,7 +1157,8 @@ class bid {
 		productArray[this.prodID].renderSummary(contain);
 
 		contain.qty = addDiv("", "", contain);
-		contain.qty.innerHTML = this.bidPrice;
+		contain.qty.innerHTML = "Bid Price: " + this.bidPrice/100 + "<br>" +
+		"Bid Status: " + this.status;
 	}
 
 
