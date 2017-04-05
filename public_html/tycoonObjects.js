@@ -1029,9 +1029,9 @@ class contract {
 			}
 		}
 		if (this.status == 2) {
-			if ((this.bidQual*this.quantity - this.sentQual)/(this.quantity - this.sentAmt) > this.bidQual * 1.1) {
-
-			}
+			let claimButton = addButton(contain, function () {scrMod(this.sendStr)});
+			claimButton.sendStr = "1074,"+this.contractID;
+			claimButton.innerHTML = "File a claim";
 		}
 	}
 

@@ -71,6 +71,7 @@
 1071 - MENU: Company open contracts menu
 1072 - PROCESS: Send materials for a contract
 1073 - PROCESS: Show bids for company
+1074 - PROCESS: File a claim on a contract
 
 TO DO:
 Business reputation - adjustments based on orders and sales
