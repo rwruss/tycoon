@@ -276,9 +276,29 @@ echo '
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
 		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				console.log(xmlhttp.response);
+				callback(xmlhttp.response);
+				}
+			}
+
+		xmlhttp.send(params);
+	}
+
+	function loadBuffer(val, callback) {
+		console.log("loadting data");
+		params = "val1="+val;
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.responseType = "arraybuffer";
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				/*
+				if (xmlhttp.response instanceof arraybuffer) {
+					console.log("is a buffer");
+				} else console.log("not a buffer");*/
 				console.log(xmlhttp.response);
 				callback(xmlhttp.response);
 				}

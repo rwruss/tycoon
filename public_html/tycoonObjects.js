@@ -974,7 +974,8 @@ class school {
 }
 
 class contract {
-	constructor(dat) {
+	constructor(buffer) {
+		var dat = new Int32Array(buffer);
 		this.spot = dat[0];
 		this.owner = dat[1];
 		this.time = dat[2];
@@ -1021,9 +1022,16 @@ class contract {
 			this.item.renderDetail();
 		})
 
-		if (this.bidLink > 0) {
-			let bidArea = addDiv("", "", contain);
-			bidArea.innerHTML = "BIDS RECEIVED (" + this.bidLink +")";
+		if (this.status == 1) {
+			if (this.bidLink > 0) {
+				let bidArea = addDiv("", "", contain);
+				bidArea.innerHTML = "BIDS RECEIVED (" + this.bidLink +")";
+			}
+		}
+		if (this.status == 2) {
+			if ((this.bidQual*this.quantity - this.sentQual)/(this.quantity - this.sentAmt) > this.bidQual * 1.1) {
+
+			}
 		}
 	}
 

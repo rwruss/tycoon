@@ -16,20 +16,23 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 $contractList = new itemSlot($thisPlayer->get('contractList'), $slotFile, 40);
 
-echo 'Read slot '.$thisPlayer->get('contractList');
-print_R($contractList->slotData);
-
 // load each contract
 $buyInfo = [];
 $sellInfo = [];
+$buyStr = '';
 for ($i=1; $i<sizeof($contractList->slotData); $i++) {
 	if ($contractList->slotData[$i] > 0) {
 		fseek($contractFile, $contractList->slotData[$i]);
-		$contractInfo = unpack('i*', fread($contractFile, 100));
+		$contractDat = fread($contractFile, 100);
+		$contractInfo = unpack('i*', $contractDat);
 		if ($contractInfo[1] == $pGameID)  {
 			$buyInfo[] = 0;
 			$buyInfo = array_merge($buyInfo, $contractInfo);
 			$buyInfo[] = $contractList->slotData[$i];
+
+			$buyStr .= pack('i', 0);
+			$buyStr .= $contractDat;
+			$buyStr .= pack('i', $contractList->slotData[$i]);
 		}	else {
 			$sellInfo[] = 0;
 			$sellInfo = array_merge($sellInfo, $contractInfo);
@@ -39,8 +42,10 @@ for ($i=1; $i<sizeof($contractList->slotData); $i++) {
 }
 
 // output the info for each conctract
+echo $buyStr;
+/*
 echo '<script>showContracts(['.implode(',',$buyInfo).'], thisDiv.buyContracts);
-showContracts(['.implode(',',$sellInfo).'], thisDiv.sellContracts);</script>';
+showContracts(['.implode(',',$sellInfo).'], thisDiv.sellContracts);</script>';*/
 
 fclose($slotFile);
 fclose($objFile);

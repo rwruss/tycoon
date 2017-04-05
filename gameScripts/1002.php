@@ -48,7 +48,16 @@ contractsButton.addEventListener("click", function (e) {
 	});
 	cSearch.innerHTML = "Bid on contracts";
 
-	scrMod("1071,'.$pGameID.'");
+	//scrMod("1071,'.$pGameID.'");
+	loadBuffer("1071,'.$pGameID.'", function (x) {
+		let test = new Int32Array(x);
+		console.log(test);
+		console.log(test.byteLength);
+		for (var i=0; i<test.byteLength; i+=108) {
+			let thisContract = new contract(x.slice(i, i+108));
+			let contractItem = thisContract.render(thisDiv.buyContracts);
+		}
+	})
 });
 contractsButton.innerHTML = "Company Contracts";
 

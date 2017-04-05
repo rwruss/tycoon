@@ -1596,6 +1596,11 @@ renderCityDetail = function (trg, data, laws, taxes) {
 
 showContracts = function (dat, trg) {
 	console.log(dat);
+	for (var i=0; i<dat.byteLength; i+=108) {
+		let thisContract = new contract(dat.slice, i, i+108);
+		let contractItem = thisContract.render(trg);
+	}
+	/*
 	if (dat.length == 0) {
 		trg.innerHTML = "No open contracts";
 		return;
@@ -1603,12 +1608,7 @@ showContracts = function (dat, trg) {
 	for (var i=0; i<dat.length; i+=27) {
 		let thisContract = new contract(dat.slice(i, i+27));
 		let contractItem = thisContract.render(trg);
-		/*
-		contractItem.item = thisContract;
-		contractItem.addEventListener("click", function () {
-			this.item.renderDetail();
-		})*/
-	}
+	}*/
 }
 
 contractCreateMenu = function (itemID, optionList = invList) {
