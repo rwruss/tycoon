@@ -72,6 +72,7 @@
 1072 - PROCESS: Send materials for a contract
 1073 - PROCESS: Show bids for company
 1074 - PROCESS: File a claim on a contract
+1075 - PROCESS: Add legal support for a claim
 
 TO DO:
 Business reputation - adjustments based on orders and sales

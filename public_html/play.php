@@ -61,6 +61,9 @@ $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
 $_SESSION['game_'.$gameID]['business'] = $thisPlayer->objDat;
 
+// Load professional services
+$serviceSlot = new itemSlot($thisPlayer->get('serviceSlot'); $slotFile, 40);
+
 // Load player factories
 $factoryList = [];
 
@@ -110,7 +113,7 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
-	var factoryList, playerFactories, factoryDiv, tmpLabor, infoPane;
+	var factoryList, playerFactories, factoryDiv, tmpLabor, infoPane, serviceInv;
 	var playerUnits;
 	var moveString = new Array();
 
@@ -501,7 +504,8 @@ echo '
 			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 16)).'])';
 		}
 		echo ');
-
+		
+		serviceInv = ['.$implode(',', $serviceSlot->slotData).'];
 		serviceArray = new Array();
 
 

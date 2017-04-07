@@ -1,6 +1,6 @@
 <?php
 
-// file a claim on a contract
+// add legal support for a claim
 /*
 pvs:
 1 - contract ID;
@@ -13,29 +13,32 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 fseek($contractFile, $postVals[1]);
 $contractInfo = unpack('i*', fread($contractFile, 100));
 
-// update the contract status
+// verify contract status and time
+if ($contractInfo[8] != 3 || $contractInfo[8] != 4) exit('Contract is not in court');
+if ($contractInfo[15] + 86400 < time()) exit('Case has already been completed');
+
+// validate player and update the contract legal support
 $playerCheck = false;
 if ($pGameID == $contractInfo[1]) {
-	// the buyer is filing the claim
-	$contractInfo[11] = 3;
+	// the buyer is adding legal support
+	$contractInfo[24] += 1;
 	$playerCheck = true;
 }
 if ($pGameID == $contractInfo[21]) {
-	$contractInfo[11] = 4;
+	// the seller is adding legal support
+	$contractInfo[25] += 1;
 	$playerCheck = true;
 }
 
 // verify that the player is valid
-if (!$playerCheck) exit("You cannot file a suit on this contract");
+if (!$playerCheck) exit("You cannot add legal services to this contract");
 // set the claim time to now
-$contractInfo[15] = time();
+$contractInfo[24] = time();
 
 $contractDat = '';
 for ($i=1; $i<26; $i++) {
 	$contractDat .= pack('i', $contractInfo[$i]);
 }
-
-// Send notice to the other player
 
 fseek($contractFile, $postVals[1]);
 fwrite($contractFile, $contractDat);

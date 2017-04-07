@@ -1033,6 +1033,23 @@ class contract {
 			claimButton.sendStr = "1074,"+this.contractID;
 			claimButton.innerHTML = "File a claim";
 		}
+		
+		if (this.status == 3 || this.status == 4) {			
+			let legalButton = addButton(contain, function (e) {
+				let contractLegal = useDeskTop.newPane("contractLegal");
+				contractLegal.innerHTML = "";
+				
+				for (i=0; i<serviceInv.length; i+=2) {
+					if ($serviceInv[i] == 1) {
+						
+					}
+				}
+				sendButton = newButton(contractLegal, function() {scrMod(this.sendStr)});
+				sendButton.sendStr = "1075,"+this.contractID;
+			});
+			
+			legalButton.innerHTML = "Add legal support";
+		}
 	}
 
 	renderEmpty(trg, contain) {
