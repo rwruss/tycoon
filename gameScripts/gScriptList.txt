@@ -75,6 +75,7 @@
 1075 - PROCESS: Add legal support for a claim
 
 TO DO:
+Indicates factories being built in build menu and add to it as new items are started
 Add factories to factory list when construction is started
 Business reputation - adjustments based on orders and sales
 City economies/influence of labor
