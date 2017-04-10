@@ -1665,3 +1665,9 @@ contractBids = function (bidDat, trg) {
 		thisBid.renderDecision(trg);
 	}
 }
+
+addFactory = function (dat) {
+	for (var i=0; i<dat.length; i+=16) {
+		playerFactories.push(new factory(dat.slice(i, i+16));
+	}	
+}

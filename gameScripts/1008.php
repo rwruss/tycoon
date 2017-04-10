@@ -71,15 +71,10 @@ if (flock($objFile, LOCK_EX)) {
   $ownedObjects = new itemSlot($thisBusiness->get('ownedObjects'), $slotFile, 40);
   $ownedObjects->addItem($newID, $slotFile);
 
-  /*
-  this.type = options.objType || 'unknown',
-		this.unitName = options.objName || 'unnamed',
-		this.status = options.status || 0,
-		this.objID = options.objID;
-  */
-  echo '<script>playerFactories.push(new factory({subType:('.$factoryType.'-numProducts), objID:'.$newID.', prod:0, rate:0}))</script>';
+  //$newObj->overViewInfo()
+  //echo '<script>playerFactories.push(new factory({subType:('.$factoryType.'-numProducts), objID:'.$newID.', prod:0, rate:0}))</script>';
 
-	print_r($ownedObjects->slotData);
+	//print_r($ownedObjects->slotData);
 	flock($objFile, LOCK_UN);
 }
 
@@ -89,6 +84,7 @@ fclose($objFile);
 fclose($slotFile);
 
 echo '<script>
+addFactory(['.$newObj->overViewInfo().']);
 thisPlayer.money = '.$thisBusiness->get('money').'
 </script>';
 
