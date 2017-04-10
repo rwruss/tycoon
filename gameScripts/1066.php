@@ -34,7 +34,7 @@ $contractInfo[8] = 1; // status
 $contractInfo[9] = 0; // accepted price
 $contractInfo[10] = $now + 8*3600;
 $contractInfo[11] = 0;
-$contractInfo[12] = 0;
+$contractInfo[12] = $postVals[1]; // traget factory
 $contractInfo[13] = 0;
 $contractInfo[14] = 0;
 $contractInfo[15] = 0;
@@ -59,7 +59,7 @@ $contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
 if (flock($contractFile, LOCK_EX)) {
 	fseek($contractFile, 0, SEEK_END);
 	$cfSize = ftell($contractFile);
-	$newLoc = max(100,ceil($cfSize/100));
+	$newLoc = max(100,ceil($cfSize/100)*100);
 
 	fseek($contractFile, $newLoc);
 	fwrite($contractFile, $cfDat);

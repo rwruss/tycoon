@@ -62,7 +62,7 @@ $thisPlayer = loadObject($pGameID, $unitFile, 400);
 $_SESSION['game_'.$gameID]['business'] = $thisPlayer->objDat;
 
 // Load professional services
-$serviceSlot = new itemSlot($thisPlayer->get('serviceSlot'); $slotFile, 40);
+$serviceSlot = new itemSlot($thisPlayer->get('serviceSlot'), $slotFile, 40);
 
 // Load player factories
 $factoryList = [];
@@ -504,8 +504,8 @@ echo '
 			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 16)).'])';
 		}
 		echo ');
-		
-		serviceInv = ['.$implode(',', $serviceSlot->slotData).'];
+
+		serviceInv = ['.implode(',', $serviceSlot->slotData).'];
 		serviceArray = new Array();
 
 
@@ -526,11 +526,13 @@ echo '
 		}
 
 		factoryList = new Array();
+		console.log(factoryNames);
 		for (var i=0; i<numFactories; i++) {
-			//console.log("make factory " + objNames[numProducts+i]);
-			factoryList.push(new factory({objType:factory, objID:(i+numProducts), objName:objNames[numProducts+i], subType:(i), items:[1,2,3,4,5], prices:[6, 7, 8, 9, 10]}));
+			console.log("make factory " + factoryNames[i]);
+			//factoryList.push(new factory({objType:factory, objID:(i+numProducts), objName:factoryNames[i], subType:(i), items:[1,2,3,4,5], prices:[6, 7, 8, 9, 10]}));
+			factoryList.push(new factory([0,0,0,i+numProducts,0,0,0,0,0,0,0,0,0,0,0,i+numProducts]))
 		}
-		//console.log(factoryList);
+		console.log(factoryList);
 		defaultBuildings = new uList(factoryList);
 
 		nationList = new Array("Canada", "Mexico", "United States");

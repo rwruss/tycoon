@@ -18,7 +18,7 @@ class object {
 
 class factory extends object {
 	constructor(dat) {
-		console.log(dat);
+		//console.log(dat);
 		super(dat);
 		this.objID = dat[3];
 		this.factoryID = dat[3];
@@ -1029,25 +1029,25 @@ class contract {
 			}
 		}
 		if (this.status == 2) {
-			let claimButton = addButton(contain, function () {scrMod(this.sendStr)});
+			let claimButton = newButton(contain, function () {scrMod(this.sendStr)});
 			claimButton.sendStr = "1074,"+this.contractID;
 			claimButton.innerHTML = "File a claim";
 		}
-		
-		if (this.status == 3 || this.status == 4) {			
-			let legalButton = addButton(contain, function (e) {
+
+		if (this.status == 3 || this.status == 4) {
+			let legalButton = newButton(contain, function (e) {
 				let contractLegal = useDeskTop.newPane("contractLegal");
 				contractLegal.innerHTML = "";
-				
+
 				for (i=0; i<serviceInv.length; i+=2) {
 					if ($serviceInv[i] == 1) {
-						
+
 					}
 				}
 				sendButton = newButton(contractLegal, function() {scrMod(this.sendStr)});
 				sendButton.sendStr = "1075,"+this.contractID;
 			});
-			
+
 			legalButton.innerHTML = "Add legal support";
 		}
 	}
@@ -1073,15 +1073,19 @@ class contract {
 		contain.parentContract = this;
 
 		let summArea = addDiv("", "contractSummary", contain);
-		summArea.innerHTML = "Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
+		summArea.innerHTML = "Price: " + this.price/100 + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
-		 this.sentPol + "/" + this.maxPol;
+		 this.sentPol + "/" + this.maxPol + "<br>Status: " + this.status;
 
 		 // check player factories that provide this item
 		if (this.status == 1) {
 			// accepting bids for the contract
 			if (this.owner == thisPlayer.playerID) {
-				textBlob("", contain, "Cancel taking bids or view bids and stuff");
+				//textBlob("", contain, "Cancel taking bids or view bids and stuff");
+				let cancelButton = newButton(contain);
+				cancelButton.sendStr = "1076,"+this.contractID;
+				cancelButton.innerHTML = "Cancel taking bids or view bids and stuff";
+				cancelButton.addEventListener("click", function () {scrMod(this.sendStr)});
 
 				contain.bidArea = addDiv("", "stdFloatDiv", contain);
 
@@ -1113,6 +1117,7 @@ class contract {
 		}
 		else if (this.status == 2) {
 			// contract is active
+			console.log("stat 2: " + this.seller + "/" + thisPlayer.playerID + ", " + this.owner + "/" + thisPlayer.playerID);
 			if (this.seller == thisPlayer.playerID) {
 				let sendButton = newButton(contain, function () {
 					if (thisDetail.optionArea == null) thisDetail.optionArea = addDiv("", "stdFloatDiv", thisDetail);
@@ -1130,8 +1135,11 @@ class contract {
 				sendButton.parentContract = this;
 				sendButton.innerHTML = "Send Products";
 			}
-			else if (this.buyer == thisPlayer.playerID) {
+			else if (this.owner == thisPlayer.playerID) {
 				console.log("Detail info for the owner of the contract");
+				let claimButton = newButton(contain, function () {scrMod(this.sendStr)});
+				claimButton.sendStr = "1074,"+this.contractID;
+				claimButton.innerHTML = "File a claim";
 			}
 		}
 

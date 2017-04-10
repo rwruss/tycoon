@@ -33,6 +33,9 @@ contractsButton.addEventListener("click", function (e) {
 	thisDiv.buyContracts = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.sellContracts = addDiv("", "stdFloatDiv", thisDiv);
 
+	thisDiv.buyContracts.innerHTML = "Buyinh";
+	thisDiv.sellContracts.innerHTML = "<span style=\"float:left\">Sellin</span>";
+
 	cSearch = newButton(thisDiv, function (e) {
 		e.stopPropagation();
 		contractBids = useDeskTop.newPane("contractBids");
@@ -41,7 +44,16 @@ contractsButton.addEventListener("click", function (e) {
 		contractBids.results = addDiv("", "stdFloatDiv", contractBids);
 		searchButton = newButton(contractBids, function () {
 			console.log(selectList);
-			scrMod("1067," + selectList.options[selectList.selectedIndex].value);
+			//scrMod("1067," + selectList.options[selectList.selectedIndex].value);
+			loadBuffer("1067," + selectList.options[selectList.selectedIndex].value, function (x) {
+				let test = new Int32Array(x);
+				console.log(test);
+				console.log(test.byteLength);
+				for (var i=0; i<test.byteLength; i+=108) {
+					let thisContract = new contract(x.slice(i, i+108));
+					let contractItem = thisContract.render(contractBids.results);
+				}
+			})
 		});
 		searchButton.innerHTML = "search";
 
@@ -55,7 +67,9 @@ contractsButton.addEventListener("click", function (e) {
 		console.log(test.byteLength);
 		for (var i=0; i<test.byteLength; i+=108) {
 			let thisContract = new contract(x.slice(i, i+108));
-			let contractItem = thisContract.render(thisDiv.buyContracts);
+			//let contractItem = thisContract.render(thisDiv.buyContracts);
+			if (thisContract.owner == thisPlayer.playerID) thisContract.render(thisDiv.buyContracts);
+			else if (thisContract.seller == thisPlayer.playerID) thisContract.render(thisDiv.sellContracts);
 		}
 	})
 });

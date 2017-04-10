@@ -622,7 +622,7 @@
 	top:0;
 }
 
-.offerHolder {	
+.offerHolder {
 	position:relative;
 	float:left;
 	width:200;
@@ -653,6 +653,4 @@
 .contractSummary {
 	position:relative;
 	float:left;
-	width:100%;
 }
-

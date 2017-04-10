@@ -6,9 +6,12 @@ PVS
 1 - bid ID
 */
 require_once('./slotFunctions.php');
+require_once('./objectClass.php');
 
 $contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
 $bidFile = fopen($gamePath.'/contractBids.cbf', 'r+b');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
 
 // Load the bid
 fseek($bidFile, $postVals[1]);
@@ -53,6 +56,12 @@ while ($nextBid[1] > 0) {
 
 print_r($contractInfo);
 
+// Add to list of open contracts for bidding player
+$biddingPlayer = loadObject($bidInfo[2], $objFile, 400);
+echo 'Add contract to slot '.$biddingPlayer->get('contractList');
+$pBidList = new itemSlot($biddingPlayer->get('contractList'), $slotFile, 40);
+$pBidList->addItem($bidInfo[8], $slotFile);
+
 // Mark selected bid with accepted status
 fseek($bidFile, $postVals[1]+72);
 fwrite($bidFile, pack('i', 1));
@@ -62,5 +71,7 @@ fwrite($contractFile, $contractDat);
 
 fclose($contractFile);
 fclose($bidFile);
+fclose($slotFile);
+fclose($objFile);
 
 ?>

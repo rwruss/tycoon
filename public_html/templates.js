@@ -1556,7 +1556,7 @@ buildOptionList = function(trg, detailTrg, bldgList) {
 		console.log(this.value)
 		detailTrg.innerHTML = "";
 		let item = factoryList[this.value-numProducts].renderDetail(detailTrg);
-		console.log(item);
+		console.log(factoryList);
 		let buildButton = newButton(item.buttonDiv);
 		buildButton.innerHTML = "build this factory";
 		let trgSelect = this;
@@ -1611,10 +1611,13 @@ showContracts = function (dat, trg) {
 	}*/
 }
 
+
+
 contractCreateMenu = function (itemID, optionList = invList) {
 	console.log("factory " + itemID);
 	console.log(optionList);
 	contractMenu = useDeskTop.newPane("createContract");
+	contractMenu.innerHTML = "";
 	textBlob("", contractMenu, "Select what you would like to purchase with this contract");
 	contractItemBox = optionList.SLsingleButton(contractMenu);
 
@@ -1655,7 +1658,8 @@ showBids = function (bidDat, trg) {
 }
 
 contractBids = function (bidDat, trg) {
-	console.log(bidDat);
+	console.log(bidDat.length);
+	if (bidDat.length < 21) return;
 	for (var i=0; i<bidDat.length; i+=21) {
 		let thisBid = new bid(bidDat.slice(i, i+21));
 		thisBid.renderDecision(trg);

@@ -48,7 +48,7 @@ if (flock($bidFile, LOCK_EX)) {
 	fseek($bidFile, 0, SEEK_END);
 	$size = ftell($bidFile);
 
-	$useLoc = max(1, ceil($size/80));
+	$useLoc = max(1, ceil($size/80)*80);
 	fseek($bidFile, $useLoc);
 	fwrite($bidFile, $bidDat);
 

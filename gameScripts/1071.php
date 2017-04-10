@@ -16,6 +16,9 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 $contractList = new itemSlot($thisPlayer->get('contractList'), $slotFile, 40);
 
+//echo 'Read slot '.$thisPlayer->get('contractList');
+//print_r($contractList->slotData);
+
 // load each contract
 $buyInfo = [];
 $sellInfo = [];
@@ -37,6 +40,10 @@ for ($i=1; $i<sizeof($contractList->slotData); $i++) {
 			$sellInfo[] = 0;
 			$sellInfo = array_merge($sellInfo, $contractInfo);
 			$sellInfo[] = $contractList->slotData[$i];
+
+			$buyStr .= pack('i', 0);
+			$buyStr .= $contractDat;
+			$buyStr .= pack('i', $contractList->slotData[$i]);
 		}
 	}
 }

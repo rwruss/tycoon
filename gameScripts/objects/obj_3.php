@@ -132,8 +132,17 @@ headSection.rate = textBlob("", headSection, "Rate: '.($thisObj->get('prodRate')
 contractsButton = newButton(headSection, function () {
 	event.stopPropagation();
 	thisDiv = useDeskTop.newPane("factoryContracts");
+	thisDiv.innerHTML = "CONTRACT INFO";
 	thisDiv.buyContracts = addDiv("", "stdFloatDiv", thisDiv);
-	scrMod("1064,'.$postVals[1].'")});
+	//scrMod("1064,'.$postVals[1].'")});
+	loadBuffer("1064,'.$postVals[1].'", function (x) {
+		let test = new Int32Array(x);
+		console.log(test);
+		console.log(test.byteLength);
+		for (var i=0; i<test.byteLength; i+=108) {
+			let thisContract = new contract(x.slice(i, i+108));
+			let contractItem = thisContract.render(thisDiv.buyContracts);
+		}})})
 contractsButton.innerHTML = "Contracts";
 
 sellButton = newButton(headSection, function () {scrMod("1043,'.$postVals[1].'")});
