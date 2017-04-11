@@ -1682,3 +1682,15 @@ inProgressList = function (trg) {
 		inPorgressFactories.render(trg);
 	}
 }
+
+updateFactory = function (dat) {
+	let tmp = new factory(dat);
+	let found = true;
+	for (i=0; i<playerFactories.length; i++) {
+		if (playerFactories[i].factoryID == tmp.factoryID) {
+			playerFactories[i] = tmp;
+			break;
+		}
+	}
+	if (!found) playerFactories.push(tmp)
+}

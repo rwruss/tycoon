@@ -83,6 +83,7 @@ $taxAmounts = taxAmounts ($transaction, $sellFactory, $buyingCity, $sellingCity,
 $totalTax = array_sum($taxAmounts);
 $sellerTax = $totalTax - $taxAmounts[7]-$taxAmounts[17]-$taxAmounts[27]-$taxAmounts[29];
 $buyerTax = $taxAmounts[7]+$taxAmounts[17]+$taxAmounts[27]+$taxAmounts[29];
+$buyerCost = $transaction[1] * $transaction[2] + $buyerTax;
 
 print_r($taxAmounts);
 
@@ -96,8 +97,7 @@ if ($contractInfo[23] == 1 || 1) {
 	echo 'Money check: '.$buyingPlayer->get('money').' vs '.$transaction[1].' * '.$transaction[2].' = '.($transaction[1] * $transaction[2]);
 	if ($buyingPlayer->get('money') < $transaction[1] * $transaction[2]) {
 
-		// transfer the money
-		$buyerCost = $transaction[1] * $transaction[2] + $buyerTax;
+		// transfer the money		
 		echo 'Total buyer cost is '.$buyerCost.' ('.$transaction[1] * $transaction[2].' + '.$buyerTax.')';
 		$buyingPlayer->set('money', $buyingPlayer->get('money')-$buyerCost);
 
@@ -139,51 +139,49 @@ if ($contractInfo[23] == 1 || 1) {
 		$sellFactory->set('periodSales', $sellFactory->get('periodSales')+$baseCost-$sellerTax);
 
 		$sellingPlayer->set('money', $sellingPlayer->get('money')+$baseCost-$sellerTax);
-
+		
 	} else $invoice = true;
 }
 
-if ($contractInfo[23] == 0) $invoice = true;	// autopay off -> create invoice
+// create invoice
+$now = time();
+$invoiceInfo = array_fill(1, 20, 0);
+$invoiceInfo[1] = 1; // status: unpaid
+$invoiceInfo[2] = $contractInfo[3]; // contract Price
+$invoiceInfo[3] = $sentQty;
+$invoiceInfo[4] = $postVals[3];
+$invoiceInfo[5] = $sentQual;
+$invoiceInfo[6] = $sentPol;
+$invoiceInfo[7] = $sentRights;
+$invoiceInfo[8] = $now;
+$invoiceInfo[9] = 0;
+$invoiceInfo[11] = $contractInfo[22]; // invoice link
+$invoiceInfo[12] = $now + 600; // Delivery time
+$invoiceInfo[13] = $buyerCost;
 
-if ($invoice) {
+if (flock($contractFile, LOCK_EX)) {
 	// get a new invoice number
-	if (flock($contractFile, LOCK_EX)) {
-		fseek($contractFile, 0, SEEK_END);
-		$size = ftell($contractFile);
+	fseek($contractFile, 0, SEEK_END);
+	$size = ftell($contractFile);
 
-		// autopay off or not enough money-> create invoice
-		$invoiceInfo = array_fill(1, 10, 0);
-		$invoiceInfo[1] = 1; // status: unpaid
-		$invoiceInfo[2] = $contractInfo[3]; // contract Price
-		$invoiceInfo[3] = $sentQty;
-		$invoiceInfo[4] = $postVals[3];
-		$invoiceInfo[5] = $sentQual;
-		$invoiceInfo[6] = $sentPol;
-		$invoiceInfo[7] = $sentRights;
-		$invoiceInfo[8] = time();
-		$invoiceInfo[9] = 0;
-		$invoiceInfo[10] = $size;
-		$invoiceInfo[11] = $contractInfo[22]; // invoice link
-
-		$invoiceDat = '';
-		for ($i=1; $i<11; $i++) {
-			$invoiceDat .= pack('i', $invoiceInfo[$i]);
-		}
-		for ($i=1; $i<30; $i++) {
-			$invoiceDat .= pack('s', $taxAmounts[$i]);
-		}
-
-		fseek($contractFile, $size);
-		fwrite($contractFile, $invoiceDat);
-		flock($contractFile, LOCK_UN);
-
-		// record new invoice pointer in the contract
-		fseek($contractFile, $postVals[3] + 84);
-		fwrite($contractFile, $size);
+	$invoiceInfo[10] = $size;	
+	
+	$invoiceDat = '';
+	for ($i=1; $i<12; $i++) {
+		$invoiceDat .= pack('i', $invoiceInfo[$i]);
 	}
-}
+	for ($i=1; $i<30; $i++) {
+		$invoiceDat .= pack('s', $taxAmounts[$i]);
+	}
 
-// Add a contract delivery to the BUYING factory
+	fseek($contractFile, $size);
+	fwrite($contractFile, $invoiceDat);
+	flock($contractFile, LOCK_UN);
+
+	// record new invoice pointer in the contract
+	fseek($contractFile, $postVals[3] + 84);
+	fwrite($contractFile, $size);
+}
 
 // save items
 $sellFactory->saveAll();
@@ -196,5 +194,8 @@ fwrite($contractFile, $contractDat);
 
 fclose($contractFile);
 fclose($objFile);
+
+// update the sending factory stats in the browser
+echo '<script>updateFactory(['.implode(',', $sellFactory->overViewInfo()).'])</script>';
 
 ?>

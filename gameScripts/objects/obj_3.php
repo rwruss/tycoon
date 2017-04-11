@@ -70,6 +70,28 @@ for ($i=0; $i<10; $i++) {
 }
 fclose($offerDatFile);
 
+// Load factory contracts and invoice orders
+$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
+for ($i=0; $i<5; $i++) {
+	$contractInfo[] = $i;
+	$contractStr .= pack('i', $i);
+	if ($thisFactory->objDat[$thisFactory->contractsOffset+$i] > 0) {
+		fseek($contractFile, $thisFactory->objDat[$thisFactory->contractsOffset+$i]);
+		$contractDat = fread($contractFile, 100);
+		$contractStr .= $contractDat.pack('i', $thisFactory->objDat[$thisFactory->contractsOffset+$i]);
+		$contractInfo = unpack('i*', $contractDat);
+	}
+	// Load the latest invoices for open contracts
+	if ($contractInfo[11] > 0) {
+		$invoiceNum = $contractInfo[11];
+		while ($invoiceNum > 0) {
+			fseek($contractFile, $invoiceNum);
+			$invoiceDat = fread($contractFile, 100);
+		}
+	} 
+}
+fclose($contractFile);
+
 echo '<script>
 factoryUpgradeProducts = [];
 factoryUpgradeServices = [];

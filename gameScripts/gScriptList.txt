@@ -75,6 +75,8 @@
 1075 - PROCESS: Add legal support for a claim
 
 TO DO:
+Load and show contract deliveries for a factory
+Load and show outstanding invoices for a factory and company
 Transfer of goods when sent via contract (done with an invoice?)
 Indicates factories being built in build menu and add to it as new items are started
 Business reputation - adjustments based on orders and sales
