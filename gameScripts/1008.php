@@ -84,7 +84,7 @@ fclose($objFile);
 fclose($slotFile);
 
 echo '<script>
-addFactory(['.$newObj->overViewInfo().']);
+addFactory(['.implode(',', $newObj->overViewInfo()).']);
 thisPlayer.money = '.$thisBusiness->get('money').'
 </script>';
 

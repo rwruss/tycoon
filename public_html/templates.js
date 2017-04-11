@@ -1496,6 +1496,8 @@ factoryBuildMenu = function () {
 	thisDiv.cityDetail = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.buildingSelect = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.buildingDetail = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.buildingInProgress = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.buildingInProgress.innerHTML = "In Progress";
 
 	locationSelect(thisDiv.locationBar, nationList, 1);
 }
@@ -1538,6 +1540,7 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 							});
 
 							buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
+							inProgressList(newTarget.parentNode.buildingInProgress);
 						} else {
 							console.log("SELECT A CITY!");
 						}
@@ -1668,6 +1671,14 @@ contractBids = function (bidDat, trg) {
 
 addFactory = function (dat) {
 	for (var i=0; i<dat.length; i+=16) {
-		playerFactories.push(new factory(dat.slice(i, i+16));
-	}	
+		playerFactories.push(new factory(dat.slice(i, i+16)));
+		inPorgressFactories.push(new factory(dat.slice(i, i+16)));
+	}
+}
+
+inProgressList = function (trg) {
+	trg.innerHTML = "";
+	for (var i=0; i<inProgressFactories.length; i++) {
+		inPorgressFactories.render(trg);
+	}
 }

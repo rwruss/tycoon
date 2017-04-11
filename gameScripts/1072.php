@@ -13,7 +13,6 @@ require_once('./slotFunctions.php');
 require_once('./taxCalcs.php');
 require_once('./objectClass.php');
 
-//$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
@@ -52,7 +51,7 @@ $contractInfo[18] += $sentQual;
 $contractInfo[19] += $sentPol;
 $contractInfo[20] += $sentRights;
 
-// Adjust the quantities and stats in the factory
+// Adjust the quantities and stats in the SELLING factory
 echo 'Indexes: '.$sellFactory->productStats.' + '.$postVals[2].' *5 +0 = '.($sellFactory->productStats + $postVals[2]*5+0).' - '.$sentQual;
 $sellFactory->objDat['prodInv'+$postVals[2]] -= $sentQty;
 $sellFactory->objDat[$sellFactory->productStats + $postVals[2]*5+0] -= $sentQual;
@@ -85,34 +84,39 @@ $totalTax = array_sum($taxAmounts);
 $sellerTax = $totalTax - $taxAmounts[7]-$taxAmounts[17]-$taxAmounts[27]-$taxAmounts[29];
 $buyerTax = $taxAmounts[7]+$taxAmounts[17]+$taxAmounts[27]+$taxAmounts[29];
 
+print_r($taxAmounts);
+
 // if autopay is on adjust money.  If not, create an invoice
 $invoice = false;
-if ($contractInfo[23] == 1) {
+if ($contractInfo[23] == 1 || 1) {
 	// autopay on -> transfer money
 
 	// verify buyer has enough money
 	$buyingPlayer = loadObject($sellFactory->get('owner'), $objFile, 400);
+	echo 'Money check: '.$buyingPlayer->get('money').' vs '.$transaction[1].' * '.$transaction[2].' = '.($transaction[1] * $transaction[2]);
 	if ($buyingPlayer->get('money') < $transaction[1] * $transaction[2]) {
 
 		// transfer the money
+		$buyerCost = $transaction[1] * $transaction[2] + $buyerTax;
+		echo 'Total buyer cost is '.$buyerCost.' ('.$transaction[1] * $transaction[2].' + '.$buyerTax.')';
 		$buyingPlayer->set('money', $buyingPlayer->get('money')-$buyerCost);
 
 		// Record the taxes paid
 		for ($i=1; $i<7; $i++) {
-			$sellingFactory->objDat[$sellingFactory->paidTaxOffset + $i] += $taxAmounts[$i];
-			$sellingFactory->objDat[$sellingFactory->paidTaxOffset + $i+10] += $taxAmounts[$i+10];
-			$sellingFactory->objDat[$sellingFactory->paidTaxOffset + $i+20] += $taxAmounts[$i+20];
+			$sellFactory->objDat[$sellFactory->paidTaxOffset + $i] += $taxAmounts[$i];
+			$sellFactory->objDat[$sellFactory->paidTaxOffset + $i+10] += $taxAmounts[$i+10];
+			$sellFactory->objDat[$sellFactory->paidTaxOffset + $i+20] += $taxAmounts[$i+20];
 		}
 
 		// Save taxes due to the selling region/city
 		$sllerTaxDat = '';
-		$sellingRegion = $sellingFactory->get('region_2');
-		$sellingNation = $sellingFactory->get('region_1');
+		$sellingRegion = $sellFactory->get('region_2');
+		$sellingNation = $sellFactory->get('region_1');
 
 		// Add the tax to city/region/nation treasuries
 		$taxIncomeFile = fopen($gamePath.'/taxReceipts.txf', 'ab');
 		for ($i=1; $i<10; $i++) {
-			$sllerTaxDat .= pack('s*', $sellingFactory->get('region_3'), $i, $taxAmounts[$i]);
+			$sllerTaxDat .= pack('s*', $sellFactory->get('region_3'), $i, $taxAmounts[$i]);
 			$sllerTaxDat .= pack('s*', $sellingRegion, $i, $taxAmounts[$i+10]);
 			$sllerTaxDat .= pack('s*', $sellingNation, $i, $taxAmounts[$i+20]);
 		}
@@ -120,17 +124,19 @@ if ($contractInfo[23] == 1) {
 		// Add the tax to the buying nation for any import Tax
 		$buyerTaxDat = '';
 		$buyingNation = $buyingFactory->get('region_1');
-		$buyerTaxDat .= pack('s*', $buyingNation, 9, $taxes[29]);
+		$buyerTaxDat .= pack('s*', $buyingNation, 9, $taxAmounts[29]);
 
+		echo 'Record tax transactions';
 		if (flock($taxIncomeFile, LOCK_EX)) {
-			fwrite($taxIncomeFile, $sllerTaxDat);
+			fwrite($taxIncomeFile, $sllerTaxDat.$buyerTaxDat);
 			flock($taxIncomeFile, LOCK_UN);
 		}
 		fclose($taxIncomeFile);
 
 		// add the money to the selling player
-		$sellingFactory->set('totalSales', $sellingFactory->get('totalSales')+$baseCost-$sellerTax);
-		$sellingFactory->set('periodSales', $sellingFactory->get('periodSales')+$baseCost-$sellerTax);
+		$baseCost = $transaction[1] * $transaction[2];
+		$sellFactory->set('totalSales', $sellFactory->get('totalSales')+$baseCost-$sellerTax);
+		$sellFactory->set('periodSales', $sellFactory->get('periodSales')+$baseCost-$sellerTax);
 
 		$sellingPlayer->set('money', $sellingPlayer->get('money')+$baseCost-$sellerTax);
 
@@ -176,6 +182,8 @@ if ($invoice) {
 		fwrite($contractFile, $size);
 	}
 }
+
+// Add a contract delivery to the BUYING factory
 
 // save items
 $sellFactory->saveAll();

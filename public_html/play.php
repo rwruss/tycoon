@@ -113,7 +113,7 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
-	var factoryList, playerFactories, factoryDiv, tmpLabor, infoPane, serviceInv;
+	var factoryList, playerFactories, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv;
 	var playerUnits;
 	var moveString = new Array();
 

@@ -75,8 +75,8 @@
 1075 - PROCESS: Add legal support for a claim
 
 TO DO:
+Transfer of goods when sent via contract (done with an invoice?)
 Indicates factories being built in build menu and add to it as new items are started
-Add factories to factory list when construction is started
 Business reputation - adjustments based on orders and sales
 City economies/influence of labor
 cleanup script for expired bids
@@ -133,6 +133,7 @@ script 1051 - cancel a sales offer
 update material orders to show all data for the order (16 items)
 tracking of bids already submitted for contracts
 contracts for certain amounts of items
+Add factories to factory list when construction is started
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
