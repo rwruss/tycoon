@@ -69,15 +69,17 @@ for ($i=0; $i<10; $i++) {
 	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 }
 fclose($offerDatFile);
-
+/*
 // Load factory contracts and invoice orders
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $contractStr = '';
-$contractItems = array();
+$contractItems = [];
+$contractCount = 0;
 for ($i=0; $i<5; $i++) {
 	$contractItems[] = $i;
-	$contractStr .= pack('i', $i);
+	$contractStr .= pack('i', $i);	
 	if ($thisObj->objDat[$thisObj->contractsOffset+$i] > 0) {
+		$contractCount++;
 		fseek($contractFile, $thisObj->objDat[$thisObj->contractsOffset+$i]);
 		$contractDat = fread($contractFile, 100);
 		$contractStr .= $contractDat.pack('i', $thisObj->objDat[$thisObj->contractsOffset+$i]);
@@ -89,16 +91,56 @@ for ($i=0; $i<5; $i++) {
 	if ($contractInfo[22] > 0) {
 		$invoiceNum = $contractInfo[22];
 		$count = 0;
+		$contractIndex = sizeof($contractItems);
+		$contractItems[] = 0; // add a counter for the number of invoices to be sent
 		while ($invoiceNum > 0 && $count < 10) {
 			fseek($contractFile, $invoiceNum);
-			$invoiceDat = fread($contractFile, 100);
+			$invoiceDat = fread($contractFile, 112);
 			$invoiceInfo = unpack('i*', $invoiceDat);
 			$contractInfo = array_merge($contractInfo, $invoiceInfo);
 			$invoiceNum = $invoiceDat[11];
 			$count++;
 		}
+		$contractItems[$contractIndex] = $count;
+	}
+	$contractItems[0] = $contractCount;
+}
+fclose($contractFile);
+*/
+// Load factory contracts and invoice orders
+$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$headStr = '';
+$contractStr = '';
+$contractCount = 0;
+$invoiceLink = array();
+for ($i=0; $i<5; $i++) {
+	$contractStr .= pack('i', $i);	
+	if ($thisObj->objDat[$thisObj->contractsOffset+$i] > 0) {
+		$contractCount++;
+		fseek($contractFile, $thisObj->objDat[$thisObj->contractsOffset+$i]);
+		$contractDat = fread($contractFile, 100);
+		$contractStr .= $contractDat.pack('i', $thisObj->objDat[$thisObj->contractsOffset+$i]);
+		$contractInfo = unpack('i*', $contractDat);
+		$invoiceLink[] = $contractInfo[22];
 	}
 }
+
+for ($i=0; $sizeof($invoiceLink); $i++) {
+	$invoiceNum = $invoiceLink[$i];
+	$invCount = 0;
+	while ($invoiceNum > 0 && $invCount < 10) {
+		fseek($contractFile, $invoiceNum);
+		$invoiceDat = fread($contractFile, 116);
+		$contractStr .= $invoiceDat;
+		
+		$invoiceInfo = unpack('i*', $invoiceDat);
+		$invoiceNum = $invoiceInfo[11];
+		$invCount++;
+	}
+	$headStr .= pack('i', $invCount);
+}
+$headStr = pack('i', $contractCount).$headStr;
+$contractStr = $headStr.$contractStr;
 fclose($contractFile);
 
 echo '<script>
@@ -244,7 +286,7 @@ showSales(factoryDiv.saleItems, factorySales);
 
 factoryDiv.contracts = addDiv("", "stdFloatDiv", factoryDiv);
 factoryDiv.contracts.innerHTML = "'.implode(',', $contractItems).'";
-factoryContract(['.implode(',', $contractItems).'], factoryDiv.contracts);
+factoryContracts(['.implode(',', $contractItems).'], factoryDiv.contracts);
 
 </script>';
 

@@ -1151,6 +1151,20 @@ class contract {
 	}
 }
 
+class invoice {
+	constructor(dat) {
+		this.invInfo = new Int32Array(dat.slice(0,52);
+		this.taxInfo = new Uint16Array(dat.slice(52, 112));
+	}
+	
+	renderFSum(trg) {
+		let contain = addDiv("", "invoiceContain", trg);
+		contain.innerHTML = "Invoice";
+		
+		return contain;
+	}
+}
+
 class bid {
 	constructor(dat) {
 		this.bidPlayer = dat[1];

@@ -1695,9 +1695,38 @@ updateFactory = function (dat) {
 	if (!found) playerFactories.push(tmp)
 }
 
-factoryContract = function (dat, trg) {
-	contractDat = Int32Array.from(dat);
-	let thisContract = new contract(contractDat.buffer);
-	console.log(thisContract);
-	thisContract.render(trg);
+factoryContracts = function (dat, trg) {
+	let header = Int32Array(dat.slice(0,18);
+	let startPos = header[0]*4+4;
+	let invCount = 0;
+	for (var i=0; i<header[0]; i++) {
+		let contractHolder = addDiv("", "facContract", trg);
+		let thisContract = new contract(dat.slice(startPos + 100*i, startPos + 100*i + 100));
+		console.log(thisContract);
+		thisContract.render(trg);
+		
+		let invStart = header[0]*4+4+header[0]*100 + invCount*116;
+		contractInvoice(dat.slice(invStart, invStart + header[1+i]*116), thisContract);
+	}
+	
+	/*
+	for (var i=0; i<dat[0]; i++) {
+		// show the contract
+		contractDat = Int32Array.from(dat.slice(i, i+25);
+		let thisContract = new contract(contractDat.buffer);
+		console.log(thisContract);
+		thisContract.render(trg);
+		
+		// show the invoices for this contract
+		for (var j=0; j<dat[i+25]; j++) {
+			
+		}
+	}*/
+}
+
+contractInvoice = function (dat, trg) {
+	for (var i=0; i<dat.byteLength; i+=116) {
+		let thisInvoice = new invoice(dat.slice(i, i+116));
+		thisInvoice.renderFSum(trg);
+	}
 }
