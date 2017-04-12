@@ -72,23 +72,32 @@ fclose($offerDatFile);
 
 // Load factory contracts and invoice orders
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$contractStr = '';
+$contractItems = array();
 for ($i=0; $i<5; $i++) {
-	$contractInfo[] = $i;
+	$contractItems[] = $i;
 	$contractStr .= pack('i', $i);
-	if ($thisFactory->objDat[$thisFactory->contractsOffset+$i] > 0) {
-		fseek($contractFile, $thisFactory->objDat[$thisFactory->contractsOffset+$i]);
+	if ($thisObj->objDat[$thisObj->contractsOffset+$i] > 0) {
+		fseek($contractFile, $thisObj->objDat[$thisObj->contractsOffset+$i]);
 		$contractDat = fread($contractFile, 100);
-		$contractStr .= $contractDat.pack('i', $thisFactory->objDat[$thisFactory->contractsOffset+$i]);
+		$contractStr .= $contractDat.pack('i', $thisObj->objDat[$thisObj->contractsOffset+$i]);
 		$contractInfo = unpack('i*', $contractDat);
+		$contractItems = array_merge($contractItems, $contractInfo);
+		$contractItems[] = $thisObj->objDat[$thisObj->contractsOffset+$i];
 	}
 	// Load the latest invoices for open contracts
-	if ($contractInfo[11] > 0) {
-		$invoiceNum = $contractInfo[11];
-		while ($invoiceNum > 0) {
+	if ($contractInfo[22] > 0) {
+		$invoiceNum = $contractInfo[22];
+		$count = 0;
+		while ($invoiceNum > 0 && $count < 10) {
 			fseek($contractFile, $invoiceNum);
 			$invoiceDat = fread($contractFile, 100);
+			$invoiceInfo = unpack('i*', $invoiceDat);
+			$contractInfo = array_merge($contractInfo, $invoiceInfo);
+			$invoiceNum = $invoiceDat[11];
+			$count++;
 		}
-	} 
+	}
 }
 fclose($contractFile);
 
@@ -232,6 +241,10 @@ factoryDiv.saleItems = addDiv("", "stdFloatDiv", orderSection);
 textBlob("", orderHead, "Current orders");
 showOrders(factoryDiv.orderItems, factoryOrders);
 showSales(factoryDiv.saleItems, factorySales);
+
+factoryDiv.contracts = addDiv("", "stdFloatDiv", factoryDiv);
+factoryDiv.contracts.innerHTML = "'.implode(',', $contractItems).'";
+factoryContract(['.implode(',', $contractItems).'], factoryDiv.contracts);
 
 </script>';
 

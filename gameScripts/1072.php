@@ -13,10 +13,10 @@ require_once('./slotFunctions.php');
 require_once('./taxCalcs.php');
 require_once('./objectClass.php');
 
-$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 
 // Load the contract and confirm the sending player is this player
 fseek($contractFile, $postVals[3]);
@@ -97,7 +97,7 @@ if ($contractInfo[23] == 1 || 1) {
 	echo 'Money check: '.$buyingPlayer->get('money').' vs '.$transaction[1].' * '.$transaction[2].' = '.($transaction[1] * $transaction[2]);
 	if ($buyingPlayer->get('money') < $transaction[1] * $transaction[2]) {
 
-		// transfer the money		
+		// transfer the money
 		echo 'Total buyer cost is '.$buyerCost.' ('.$transaction[1] * $transaction[2].' + '.$buyerTax.')';
 		$buyingPlayer->set('money', $buyingPlayer->get('money')-$buyerCost);
 
@@ -139,7 +139,7 @@ if ($contractInfo[23] == 1 || 1) {
 		$sellFactory->set('periodSales', $sellFactory->get('periodSales')+$baseCost-$sellerTax);
 
 		$sellingPlayer->set('money', $sellingPlayer->get('money')+$baseCost-$sellerTax);
-		
+
 	} else $invoice = true;
 }
 
@@ -164,8 +164,9 @@ if (flock($contractFile, LOCK_EX)) {
 	fseek($contractFile, 0, SEEK_END);
 	$size = ftell($contractFile);
 
-	$invoiceInfo[10] = $size;	
-	
+	echo 'Create invoice #'.$size;
+	$invoiceInfo[10] = $size;
+
 	$invoiceDat = '';
 	for ($i=1; $i<12; $i++) {
 		$invoiceDat .= pack('i', $invoiceInfo[$i]);

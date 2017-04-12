@@ -1694,3 +1694,10 @@ updateFactory = function (dat) {
 	}
 	if (!found) playerFactories.push(tmp)
 }
+
+factoryContract = function (dat, trg) {
+	contractDat = Int32Array.from(dat);
+	let thisContract = new contract(contractDat.buffer);
+	console.log(thisContract);
+	thisContract.render(trg);
+}
