@@ -162,13 +162,13 @@ $invoiceInfo[13] = $buyerCost;
 if (flock($contractFile, LOCK_EX)) {
 	// get a new invoice number
 	fseek($contractFile, 0, SEEK_END);
-	$size = ftell($contractFile);
+	$size = max(100, ftell($contractFile));
 
 	echo 'Create invoice #'.$size;
 	$invoiceInfo[10] = $size;
 
 	$invoiceDat = '';
-	for ($i=1; $i<12; $i++) {
+	for ($i=1; $i<14; $i++) {
 		$invoiceDat .= pack('i', $invoiceInfo[$i]);
 	}
 	for ($i=1; $i<30; $i++) {
@@ -177,11 +177,13 @@ if (flock($contractFile, LOCK_EX)) {
 
 	fseek($contractFile, $size);
 	fwrite($contractFile, $invoiceDat);
-	flock($contractFile, LOCK_UN);
 
 	// record new invoice pointer in the contract
-	fseek($contractFile, $postVals[3] + 84);
-	fwrite($contractFile, $size);
+	echo 'record invoice at ('.($postVals[3] + 84).')';
+	$contractInfo[22] = $size;
+	//fseek($contractFile, $postVals[3] + 84);
+	//fwrite($contractFile, pack('i', $size));
+	flock($contractFile, LOCK_UN);
 }
 
 // save items

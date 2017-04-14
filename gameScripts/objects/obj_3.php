@@ -77,7 +77,7 @@ $contractItems = [];
 $contractCount = 0;
 for ($i=0; $i<5; $i++) {
 	$contractItems[] = $i;
-	$contractStr .= pack('i', $i);	
+	$contractStr .= pack('i', $i);
 	if ($thisObj->objDat[$thisObj->contractsOffset+$i] > 0) {
 		$contractCount++;
 		fseek($contractFile, $thisObj->objDat[$thisObj->contractsOffset+$i]);
@@ -114,26 +114,33 @@ $contractStr = '';
 $contractCount = 0;
 $invoiceLink = array();
 for ($i=0; $i<5; $i++) {
-	$contractStr .= pack('i', $i);	
 	if ($thisObj->objDat[$thisObj->contractsOffset+$i] > 0) {
+		$contractStr .= pack('i', $i);
 		$contractCount++;
 		fseek($contractFile, $thisObj->objDat[$thisObj->contractsOffset+$i]);
 		$contractDat = fread($contractFile, 100);
 		$contractStr .= $contractDat.pack('i', $thisObj->objDat[$thisObj->contractsOffset+$i]);
 		$contractInfo = unpack('i*', $contractDat);
+		print_r($contractInfo);
 		$invoiceLink[] = $contractInfo[22];
 	}
 }
 
-for ($i=0; $sizeof($invoiceLink); $i++) {
-	$invoiceNum = $invoiceLink[$i];
+print_r($invoiceLink);
+$invoiceSend = [];
+for ($i=0; $i<sizeof($invoiceLink); $i++) {
 	$invCount = 0;
+	$invoiceNum = $invoiceLink[$i];
+
 	while ($invoiceNum > 0 && $invCount < 10) {
 		fseek($contractFile, $invoiceNum);
 		$invoiceDat = fread($contractFile, 116);
-		$contractStr .= $invoiceDat;
-		
-		$invoiceInfo = unpack('i*', $invoiceDat);
+		//$contractStr .= $invoiceDat;
+
+		$invoiceInfo = unpack('s*', substr($invoiceDat, 56));
+		//$invoiceInfo = array_merge(unpack('i*', substr($invoiceDat, 0, 56)), unpack('s*', substr($invoiceDat, 56)));
+		print_r($invoiceInfo);
+		$invoiceSend = array_merge($invoiceSend, $invoiceInfo);
 		$invoiceNum = $invoiceInfo[11];
 		$invCount++;
 	}
@@ -142,6 +149,8 @@ for ($i=0; $sizeof($invoiceLink); $i++) {
 $headStr = pack('i', $contractCount).$headStr;
 $contractStr = $headStr.$contractStr;
 fclose($contractFile);
+
+echo 'Invoice size is '.sizeof($invoiceInfo);
 
 echo '<script>
 factoryUpgradeProducts = [];
@@ -285,8 +294,7 @@ showOrders(factoryDiv.orderItems, factoryOrders);
 showSales(factoryDiv.saleItems, factorySales);
 
 factoryDiv.contracts = addDiv("", "stdFloatDiv", factoryDiv);
-factoryDiv.contracts.innerHTML = "'.implode(',', $contractItems).'";
-factoryContracts(['.implode(',', $contractItems).'], factoryDiv.contracts);
+factoryContracts(['.implode(',', array_merge(unpack('i*', $contractStr), $invoiceSend)).'], factoryDiv.contracts);
 
 </script>';
 

@@ -1696,19 +1696,23 @@ updateFactory = function (dat) {
 }
 
 factoryContracts = function (dat, trg) {
-	let header = Int32Array(dat.slice(0,18);
-	let startPos = header[0]*4+4;
+	console.log("fac contracts");
+	let startPos = dat[0]+1;
 	let invCount = 0;
-	for (var i=0; i<header[0]; i++) {
+	for (var i=0; i<dat[0]; i++) {
 		let contractHolder = addDiv("", "facContract", trg);
-		let thisContract = new contract(dat.slice(startPos + 100*i, startPos + 100*i + 100));
+		console.log("make con");
+		let thisContract = new contract(new Int32Array(dat.slice(startPos, startPos+27)));
 		console.log(thisContract);
 		thisContract.render(trg);
-		
-		let invStart = header[0]*4+4+header[0]*100 + invCount*116;
-		contractInvoice(dat.slice(invStart, invStart + header[1+i]*116), thisContract);
+
+		let invStart = dat[0]*27+dat[0]+1+invCount*44;
+		//let invBase = new Int32Array(dat.slice(invStart, invStart+14));
+		//let invTaxes = new Int16Array(dat.slice(invStart+14))
+		contractInvoice(dat.slice(invStart, invStart + dat[1+i]*44), contractHolder);
+		invCount += dat[i+1];
 	}
-	
+
 	/*
 	for (var i=0; i<dat[0]; i++) {
 		// show the contract
@@ -1716,17 +1720,21 @@ factoryContracts = function (dat, trg) {
 		let thisContract = new contract(contractDat.buffer);
 		console.log(thisContract);
 		thisContract.render(trg);
-		
+
 		// show the invoices for this contract
 		for (var j=0; j<dat[i+25]; j++) {
-			
+
 		}
 	}*/
 }
 
 contractInvoice = function (dat, trg) {
-	for (var i=0; i<dat.byteLength; i+=116) {
-		let thisInvoice = new invoice(dat.slice(i, i+116));
+	console.log("load invoice size " + dat.length);
+	console.log(dat);
+	for (var i=0; i<dat.length; i+=44) {
+		let invBase = new Int32Array(dat.slice(i, i+14));
+		let invTax = new Int16Array(dat.slice(i+14, i+30));
+		let thisInvoice = new invoice(invBase.buffer + invTax.buffer);
 		thisInvoice.renderFSum(trg);
 	}
 }
