@@ -1331,6 +1331,12 @@ loadCompanyLabor = function (laborDat) {
 	return tmpArray;
 }
 
+addCompanyLabor = function (laborDat, laborArray) {
+	for (var i=0; i<laborDat.length; i+=11) {
+		if (laborDat[i+1]>0)	laborArray.push(new laborItem({objID:laborDat[i]+100, pay:laborDat[i+6], ability:laborDat[i+9], laborType:laborDat[i+1]}));
+	}
+}
+
 loadLaborItems = function(laborDat) {
 	let tmpArray = new Array();
 	for (var i=0; i<laborDat.length; i+=11) {

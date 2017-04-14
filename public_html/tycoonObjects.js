@@ -1160,8 +1160,22 @@ class invoice {
 	renderFSum(trg) {
 		let contain = addDiv("", "invoiceContain", trg);
 		contain.innerHTML = "Invoice";
+		
+		contain.addEventListener("click", function (this.renderDetail));
 
 		return contain;
+	}
+	
+	renderDetail() {
+		let thisDetail = useDeskTop.newPane("invDetail");
+		
+		let contain = addDiv("", "invoiceContain", trg);
+		contain.innerHTML = "Invoice Details";
+		
+		let payButton = newButton(thisDetail, function () {
+			scrMod(this.sendStr);
+		});
+		payButton.sendStr = 
 	}
 }
 

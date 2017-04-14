@@ -73,6 +73,8 @@
 1073 - PROCESS: Show bids for company
 1074 - PROCESS: File a claim on a contract
 1075 - PROCESS: Add legal support for a claim
+1076 - PROCESS: Cancel a contract that hasn't been executed
+1077 - PROCESS: Pay an invoice
 
 TO DO:
 update labor list when labor is hired

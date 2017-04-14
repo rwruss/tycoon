@@ -124,6 +124,8 @@ if ($postVals[3] > 0) {
 	}
 	$laborStr = pack('i*', $postVals[2], 0, 0, $now, 0, 0, $now, $now, 0, 0);
 	$laborList->addItem($slotFile, $laborStr, $location);
+	
+	echo '<script>addCompanyLabor(['.implode(unpack('i*', $laborStr)).'], companyLabor)</script>';
 }
 
 fclose($objFile);
