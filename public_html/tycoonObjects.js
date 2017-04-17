@@ -1153,29 +1153,40 @@ class contract {
 
 class invoice {
 	constructor(dat) {
-		this.invInfo = new Int32Array(dat.slice(0,52));
-		this.taxInfo = new Uint16Array(dat.slice(52, 112));
+		console.log(dat);
+		this.invInfo = new Int32Array(dat.buffer.slice(0,56));
+		this.taxInfo = new Uint16Array(dat.buffer.slice(56, 116));
+		console.log(this);
 	}
 
 	renderFSum(trg) {
 		let contain = addDiv("", "invoiceContain", trg);
-		contain.innerHTML = "Invoice";
-		
-		contain.addEventListener("click", function (this.renderDetail));
+		contain.innerHTML = "QTY: " + this.invInfo[2] + " of product " + this.invInfo[1] + "  with a total cost of " + this.invInfo[12] +
+		". Unit cost is " + this.invInfo[3];
+		contain.parentInvoice = this;
+
+		contain.addEventListener("click", function (e) {
+			console.log("click on FSum");
+			console.log(this.parentInvoice);
+			e.stopPropagation();
+			this.parentInvoice.renderDetail()});
 
 		return contain;
 	}
-	
+
 	renderDetail() {
+		console.log("invoice dtl");
+		console.log(this);
 		let thisDetail = useDeskTop.newPane("invDetail");
-		
-		let contain = addDiv("", "invoiceContain", trg);
-		contain.innerHTML = "Invoice Details";
-		
+
+		let contain = addDiv("", "invoiceContain", thisDetail);
+		contain.innerHTML = "QTY: " + this.invInfo[2] + " of product " + this.invInfo[1] + "  with a total cost of " + this.invInfo[12] +
+		". Unit cost is " + this.invInfo[3];
+
 		let payButton = newButton(thisDetail, function () {
 			scrMod(this.sendStr);
 		});
-		payButton.sendStr = 
+		payButton.sendStr = "1077,"+this.invInfo[9];
 	}
 }
 

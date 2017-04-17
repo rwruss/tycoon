@@ -147,7 +147,7 @@ if ($contractInfo[23] == 1 || 1) {
 $now = time();
 $invoiceInfo = array_fill(1, 20, 0);
 $invoiceInfo[1] = 1; // status: unpaid
-$invoiceInfo[2] = $contractInfo[3]; // contract Price
+$invoiceInfo[2] = $contractInfo[16]; // contract Price
 $invoiceInfo[3] = $sentQty;
 $invoiceInfo[4] = $postVals[3];
 $invoiceInfo[5] = $sentQual;
@@ -158,6 +158,7 @@ $invoiceInfo[9] = 0;
 $invoiceInfo[11] = $contractInfo[22]; // invoice link
 $invoiceInfo[12] = $now + 600; // Delivery time
 $invoiceInfo[13] = $buyerCost;
+$invoiceInfo[14] = $postVals[3];
 
 if (flock($contractFile, LOCK_EX)) {
 	// get a new invoice number
@@ -168,12 +169,14 @@ if (flock($contractFile, LOCK_EX)) {
 	$invoiceInfo[10] = $size;
 
 	$invoiceDat = '';
-	for ($i=1; $i<14; $i++) {
+	for ($i=1; $i<=14; $i++) {
 		$invoiceDat .= pack('i', $invoiceInfo[$i]);
 	}
-	for ($i=1; $i<30; $i++) {
+	for ($i=1; $i<=30; $i++) {
 		$invoiceDat .= pack('s', $taxAmounts[$i]);
 	}
+
+	echo 'Invoice size is '.strlen($invoiceDat);
 
 	fseek($contractFile, $size);
 	fwrite($contractFile, $invoiceDat);

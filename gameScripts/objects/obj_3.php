@@ -137,11 +137,12 @@ for ($i=0; $i<sizeof($invoiceLink); $i++) {
 		$invoiceDat = fread($contractFile, 116);
 		//$contractStr .= $invoiceDat;
 
-		$invoiceInfo = unpack('s*', substr($invoiceDat, 56));
-		//$invoiceInfo = array_merge(unpack('i*', substr($invoiceDat, 0, 56)), unpack('s*', substr($invoiceDat, 56)));
+		//$invoiceInfo = unpack('s*', substr($invoiceDat, 56));
+		$invoiceInfo = array_merge(unpack('i*', substr($invoiceDat, 0, 56)), unpack('s*', substr($invoiceDat, 56)));
+		echo 'SHOW INVOICE INFO for invoice('.$invCount.'):';
 		print_r($invoiceInfo);
 		$invoiceSend = array_merge($invoiceSend, $invoiceInfo);
-		$invoiceNum = $invoiceInfo[11];
+		$invoiceNum = $invoiceInfo[10];
 		$invCount++;
 	}
 	$headStr .= pack('i', $invCount);

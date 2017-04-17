@@ -1702,7 +1702,7 @@ updateFactory = function (dat) {
 }
 
 factoryContracts = function (dat, trg) {
-	console.log("fac contracts");
+	console.log("fac contracts size is  " + dat.length);
 	let startPos = dat[0]+1;
 	let invCount = 0;
 	for (var i=0; i<dat[0]; i++) {
@@ -1710,11 +1710,12 @@ factoryContracts = function (dat, trg) {
 		console.log("make con");
 		let thisContract = new contract(new Int32Array(dat.slice(startPos, startPos+27)));
 		console.log(thisContract);
-		thisContract.render(trg);
+		thisContract.render(contractHolder);
 
 		let invStart = dat[0]*27+dat[0]+1+invCount*44;
 		//let invBase = new Int32Array(dat.slice(invStart, invStart+14));
 		//let invTaxes = new Int16Array(dat.slice(invStart+14))
+		console.log("invoices from " + invStart + " to " + (invStart + dat[1+i]*44))
 		contractInvoice(dat.slice(invStart, invStart + dat[1+i]*44), contractHolder);
 		invCount += dat[i+1];
 	}
@@ -1739,8 +1740,13 @@ contractInvoice = function (dat, trg) {
 	console.log(dat);
 	for (var i=0; i<dat.length; i+=44) {
 		let invBase = new Int32Array(dat.slice(i, i+14));
-		let invTax = new Int16Array(dat.slice(i+14, i+30));
-		let thisInvoice = new invoice(invBase.buffer + invTax.buffer);
+		let invTax = new Int16Array(dat.slice(i+14, i+44));
+		let tmp = new Uint8Array(invBase.byteLength + invTax.byteLength);
+		tmp.set(new Uint8Array(invBase.buffer), 0);
+		tmp.set(new Uint8Array(invTax.buffer), invBase.byteLength);
+		console.log(invBase.byteLength + " + " + invTax.byteLength);
+		console.log("invoice datlenght " + (tmp.byteLength));
+		let thisInvoice = new invoice(tmp);
 		thisInvoice.renderFSum(trg);
 	}
 }
