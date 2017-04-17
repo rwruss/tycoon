@@ -1,0 +1,78 @@
+<link rel="stylesheet" type="text/css" href="e:/websites/tycoon/public_html/gameStyles.css">
+<script src="e:/websites/tycoon/public_html/templates.js"></script>
+<script src="e:/websites/tycoon/public_html/selectList.js"></script>
+<script src="e:/websites/tycoon/public_html/tycoonObjects.js"></script>
+<script>
+
+var useDeskTop = new deskTop;
+var factories = [];
+var numProducts = 0;
+var factoryNames = ["Factory 1", "Factory 2", "Factory 3", "Factory 4", "Factory 5", "Factory 6", "Factory 7"];
+
+
+function initTest() {
+	let botBar = document.getElementById("botPnl");
+	let testDiv = addDiv("testDiv", "", botBar);
+	testDiv.innerHTML = "TEST DIV";
+	let thisDiv = useDeskTop.newPane("dialogPane");
+	
+	factories.push(new factory([0, 1, 2, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1]));
+	factories.push(new factory([0, 1, 2, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 2]));
+	factories.push(new factory([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 3]));
+	
+	factories[2].renderSummary(thisDiv);
+	factories[2].renderSummary(thisDiv);
+	factories[2].renderSummary(thisDiv);
+	factories[2].renderSummary(thisDiv);
+	
+	let incrButton = newButton(botBar, function () {
+		console.log("start the update");
+		for (var i=0; i<factories.length; i++) {
+			factories[i].update([0, 1, 2, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1]);
+		}
+	});
+	incrButton.innerHTML = "Update factory!";
+	
+	let testButton = newButton(botBar, function () {
+		let foundDiv = document.getElementById("testDiv");
+		console.log(foundDiv);
+		console.log(foundDiv.parentNode);
+		foundDiv.parentNode.removeChild(foundDiv);
+		console.log(foundDiv);
+		console.log(foundDiv.parentNode);
+	})
+}
+
+window.addEventListener("load", initTest);
+</script>
+
+<div id="ltPnl" style="position:absolute; top:15; left:10; height:675; width:100; border:1px solid #000000">
+		ID: thbbb<br>
+		<a href="javascript:void(0);" onclick="scrMod(1004)">Financial</a>
+		<a href="javascript:void(0);" onclick="scrMod(1002)">Busineses</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1026)">Markets</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1040)">Services</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1041)">Conglomerate</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1042)">Politics</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1044)">Messages</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1033)" style="position:absolute; bottom:60">Boost Store</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(1032)" style="position:absolute; bottom:40">Buy Gold</a><br>
+		<a href="javascript:void(0);" onclick="scrMod(2001)" style="position:absolute; bottom:20">Gimme Coin</a><br>
+		<a href="./index.php" style="position:absolute; bottom:0">Back to Main</a>
+	</div>
+	<div id="infoBar" style="position:absolute; top:640; left:110; height:50; width:1200; border:1px solid #000000">infoBar</div>
+	<div id="rtPnl" style="position:absolute; top:15; left:1310; height:675; width:200; border:1px solid #000000; display:inline;"></div>
+	<div id="botPnl" style="position:absolute; top:690; left:10; height:40; width:1400; border:1px solid #000000">
+		<a href="javascript:void(0);" id="readMsg">Read Messages</a>
+	</div>
+	<div id="gmPnl" style="position:absolute; top:40; left:110; height:650; width:1200; border:1px solid #000000; overflow:hidden">
+		<canvas style="position:absolute" id="gameCanvas" style="border: none;"></canvas>
+	</div>
+	<div id="topBar" style="position:absolute; top:15; left:110; height:25; width:1200; border:1px solid #000000; overflow:hidden">
+		<div id="cashBox" style="position:absolute; top:0; left:0; height:25; border:1px solid #000000; padding-right:5; overflow:hidden"></div>
+		<div id="goldBox" style="position:absolute; top:0; left:100; height:25; border:1px solid #000000; padding-right:5; overflow:hidden"></div>
+	</div>
+
+	<div id="scrBox" style="width:0; height:0; overflow:hidden;">
+
+

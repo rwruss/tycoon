@@ -76,6 +76,8 @@
 1076 - PROCESS: Cancel a contract that hasn't been executed
 1077 - PROCESS: Pay an invoice
 
+http://stackoverflow.com/questions/12785861/how-to-check-an-element-retrieved-from-dom-is-still-present-in-dom
+
 TO DO:
 update labor list when labor is hired
 Load and show contract deliveries for a factory

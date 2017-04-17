@@ -202,6 +202,7 @@ msgBox = function (trg, prm, opt) {
 killButton = function (trg, src) {
 	var newButton = addDiv("button", "button", trg);
 	newButton.addEventListener("click", function () {
+		console.log("kill the pane");
 		this.parentNode.parentNode.removeChild(this.parentNode);
 		killBox(document.getElementById(trg))});
 }
@@ -531,7 +532,7 @@ paneBox = function(bName, val, h, w, x, y) {
 
 	var killBut = document.createElement('div');
 	killBut.className = "paneCloseButton";
-	killBut.innerHTML = 'X';
+	killBut.innerHTML = "X";
 
 	var newContent = document.createElement('div');
 	newContent.className = "paneContent"
@@ -630,23 +631,23 @@ class unitList {
 class pane {
 	constructor (desc, desktop) {
 		//console.log("Make a pane " + this);
-		this.element = paneBox(desc, 0, 1000, 600, 250, 250);
-		//console.log(this.element.childNodes);
+		this.divEl = paneBox(desc, 0, 1000, 600, 250, 250);
+		//console.log(this.divEl.childNodes);
 		this.desc = desc;
 		this.deskHolder = desktop;
-		//this.element.childNodes[0].parentObj = this;
-		this.element.parentObj = this;
-		this.element.destructFunctions = [];
+		//this.divEl.childNodes[0].parentObj = this;
+		this.divEl.parentObj = this;
+		this.divEl.destructFunctions = [];
 		//this.deskHolder.arrangePanes();
 		this.nodeType = "pane";
 
-		this.element.addEventListener("click", function(event) {
+		this.divEl.addEventListener("click", function(event) {
 			//console.log("move up via click");
 			this.parentObj.toTop();
 		});
 
-		this.element.childNodes[0].addEventListener("click", function (event) {
-			//console.log("destroying " + this.parentNode.parentObj.nodeType + "  via " + this);
+		this.divEl.childNodes[0].addEventListener("click", function (event) {
+			console.log("destroying " + this.parentNode.parentObj.nodeType + "  via " + this);
 			for (var i=0; i<this.parentNode.destructFunctions.length; i++) {
 				console.log("run desfunc " + i);
 				this.parentNode.destructFunctions[i]();
@@ -656,11 +657,13 @@ class pane {
 			});
 
 		//this.toTop();
-		//return this.element.childNodes[1];
+		//return this.divEl.childNodes[1];
 	}
 
 	destroyWindow() {
-		this.element.remove();
+		//this.divEl.remove();
+		this.divEl.innerHTML = "";
+		this.divEl.parentNode.removeChild(this.divEl);
 
 		this.deskHolder.removePane(this);
 		delete this;
@@ -674,17 +677,19 @@ class pane {
 class menu extends pane {
 	constructor(desc, desktop) {
 		super(desc, desktop);
-		//console.log("set menu style for " + this.element);
-		this.element.className = "menu";
+		//console.log("set menu style for " + this.divEl);
+		this.divEl.className = "menu";
 	}
 }
 
 class regPane extends pane {
 	constructor(desc, desktop) {
 		super(desc, desktop);
-		//console.log("set regPane style for " + this.element);
-		this.element.className = "regPane";
-		//return this.element.childNodes[1];
+		//console.log("set regPane style for " + this.divEl);
+		this.divEl.className = "regPane";
+		console.log(this.divEl);
+		console.log("created pane with parent of " + this.divEl.parentNode)
+		//return this.divEl.childNodes[1];
 	}
 }
 
@@ -714,14 +719,14 @@ class deskTop {
 			//console.log("created " + desc);
 		}
 		this.paneToTop(this.paneList[desc]);
-		return this.paneList[desc].element.childNodes[1];
+		return this.paneList[desc].divEl.childNodes[1];
 	}
 
 	arrangePanes() {
 		var count = 1;
 		for (var item in this.paneList) {
 			//console.log("arrange " + item + " = " + count);
-			this.paneList[item].element.style.zIndex = count;
+			this.paneList[item].divEl.style.zIndex = count;
 			count++;
 		}
 	}
@@ -730,7 +735,7 @@ class deskTop {
 		if (this.paneList[desc]) {
 			//console.log("dound " + desc);
 			this.paneToTop(this.paneList[desc]);
-			return this.paneList[desc].element.childNodes[1];
+			return this.paneList[desc].divEl.childNodes[1];
 		} else {
 			//console.log(desc + " does not ex");
 		}
@@ -749,8 +754,18 @@ class deskTop {
 		//console.log("Base array " + Object.keys(this.paneList));
 		//console.log("remove from " + this.constructor.name + " looking for " + thisPane.desc);
 		//this.paneList.splice(thisPane.desc, 1);
+		//console.log(this.paneList[thisPane.desc]);
+		//console.log(this.paneList[thisPane.desc].parentNode);
+		//this.paneList[thisPane.desc].parentNode.removeChild(this.paneList[thisPane.desc]);
+		let x = this.paneList[thisPane.desc].divEl;
+		console.log(x);
+		console.log(x.parentNode);
+
 		delete this.paneList[thisPane.desc];
-		//console.log("current List " + Object.keys(this.paneList) + " leaving a size of " + this.paneList.length);
+		
+		//let i = this.paneList.indexOf(thisPane.desc);
+		//console.log("delete index " + i);
+		//this.paneList.splice(i, 1);
 	}
 }
 

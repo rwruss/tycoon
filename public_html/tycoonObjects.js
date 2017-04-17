@@ -1,4 +1,5 @@
 class object {
+	/*
 	constructor(options) {
 		this.type = options.objType || 'unknown',
 		this.unitName = options.objName || 'unnamed',
@@ -13,6 +14,19 @@ class object {
 		this.unitName = object.unitName || this.unitName,
 		this.tNum = object.tNum || this.tNum;
 		console.log("update unit " + this);
+	}*/
+	renderUpdate() {
+		console.log("look for instances");
+		//console.log(this.instances);
+		for (var i=this.instances.length-1; i>-1; i--) {
+			if (!!this.instances[i].parentNode) {
+				console.log(this.instances[i].parentNode);
+				console.log(this.instances[i]);
+				this.instances[i].updateFunction(this.instances[i]);				
+			} else {
+				console.log("delete instance " + i);
+			}
+		}
 	}
 }
 
@@ -20,6 +34,11 @@ class factory extends object {
 	constructor(dat) {
 		//console.log(dat);
 		super(dat);
+		this.init(dat);
+		this.instances = [];
+	}
+	
+	init(dat) {
 		this.objID = dat[3];
 		this.factoryID = dat[3];
 		this.factoryType = dat[15]-numProducts;
@@ -29,24 +48,33 @@ class factory extends object {
 		this.currentPrd = dat[1];
 		this.currentRate = dat[2];
 	}
+	
+	update(dat) {
+		this.init(dat);
+		console.log(this);
+		this.renderUpdate();
+	}
 
 	renderSummary(target) {
-		//console.log('draw ' + this.type)
-		var thisDiv = addDiv(null, 'udHolder', target);
-		thisDiv.setAttribute("data-unitid", this.unitID);
+		if (target.divType != "factorySummary") {
+			var thisDiv = addDiv(null, 'udHolder', target);
+			this.instances.push(thisDiv);
+		}
+		else {
+			thisDiv = target;
+		}
+		
+		thisDiv.innerHTML = "";
+		//thisDiv.setAttribute("data-unitid", this.unitID);
 
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
-		/*
-		thisDiv.actDiv = addDiv("asdf", "sumAct", thisDiv);
-		thisDiv.actDiv.setAttribute("data-boxName", "apBar");
-		thisDiv.actDiv.setAttribute("data-boxunitid", this.unitID);
+		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+		let me = this;
 
-		thisDiv.expDiv = addDiv("asdf", "sumStr", thisDiv);
-		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
-		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
-		*/
 		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID;
+		thisDiv.updateFunction = function (x) {me.renderSummary(x)};
+		thisDiv.divType = "factorySummary";
+		
 		return thisDiv;
 	}
 
@@ -1156,6 +1184,7 @@ class invoice {
 		console.log(dat);
 		this.invInfo = new Int32Array(dat.buffer.slice(0,56));
 		this.taxInfo = new Uint16Array(dat.buffer.slice(56, 116));
+		this.instances = [];
 		console.log(this);
 	}
 
