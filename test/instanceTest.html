@@ -1,7 +1,7 @@
-<link rel="stylesheet" type="text/css" href="e:/websites/tycoon/public_html/gameStyles.css">
-<script src="e:/websites/tycoon/public_html/templates.js"></script>
-<script src="e:/websites/tycoon/public_html/selectList.js"></script>
-<script src="e:/websites/tycoon/public_html/tycoonObjects.js"></script>
+<link rel="stylesheet" type="text/css" href="../public_html/gameStyles.css">
+<script src="../public_html/templates.js"></script>
+<script src="../public_html/selectList.js"></script>
+<script src="../public_html/tycoonObjects.js"></script>
 <script>
 
 var useDeskTop = new deskTop;
@@ -15,16 +15,16 @@ function initTest() {
 	let testDiv = addDiv("testDiv", "", botBar);
 	testDiv.innerHTML = "TEST DIV";
 	let thisDiv = useDeskTop.newPane("dialogPane");
-	
+
 	factories.push(new factory([0, 1, 2, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1]));
 	factories.push(new factory([0, 1, 2, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 2]));
 	factories.push(new factory([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 3]));
-	
+
 	factories[2].renderSummary(thisDiv);
 	factories[2].renderSummary(thisDiv);
-	factories[2].renderSummary(thisDiv);
-	factories[2].renderSummary(thisDiv);
-	
+	factories[2].renderDetail(thisDiv);
+	factories[2].renderDetail(thisDiv);
+
 	let incrButton = newButton(botBar, function () {
 		console.log("start the update");
 		for (var i=0; i<factories.length; i++) {
@@ -32,7 +32,7 @@ function initTest() {
 		}
 	});
 	incrButton.innerHTML = "Update factory!";
-	
+
 	let testButton = newButton(botBar, function () {
 		let foundDiv = document.getElementById("testDiv");
 		console.log(foundDiv);
@@ -74,5 +74,3 @@ window.addEventListener("load", initTest);
 	</div>
 
 	<div id="scrBox" style="width:0; height:0; overflow:hidden;">
-
-

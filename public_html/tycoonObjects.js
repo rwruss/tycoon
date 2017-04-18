@@ -16,15 +16,27 @@ class object {
 		console.log("update unit " + this);
 	}*/
 	renderUpdate() {
-		console.log("look for instances");
+		console.log("updating... " + this.instances.length + " items");
 		//console.log(this.instances);
 		for (var i=this.instances.length-1; i>-1; i--) {
-			if (!!this.instances[i].parentNode) {
-				console.log(this.instances[i].parentNode);
-				console.log(this.instances[i]);
-				this.instances[i].updateFunction(this.instances[i]);				
-			} else {
-				console.log("delete instance " + i);
+			console.log("(" + i + ") updating... " + this.instances[i]);
+
+			let checkDiv = this.instances[i];
+			while (checkDiv) {
+				let tmp = checkDiv.parentNode;
+				//console.log(checkDiv);
+				if (checkDiv.tagName == "BODY") {
+					this.instances[i].updateFunction(this.instances[i]);
+					console.log(this.instances[i]);
+					console.log(this.instances[i].updateFunction);
+					break;
+				}
+				checkDiv = tmp;
+			}
+			if (!checkDiv) {
+				//console.log("delete this instance " + i);
+				this.instances.splice(i, 1);
+				//this.instances = [];
 			}
 		}
 	}
@@ -37,7 +49,7 @@ class factory extends object {
 		this.init(dat);
 		this.instances = [];
 	}
-	
+
 	init(dat) {
 		this.objID = dat[3];
 		this.factoryID = dat[3];
@@ -48,7 +60,7 @@ class factory extends object {
 		this.currentPrd = dat[1];
 		this.currentRate = dat[2];
 	}
-	
+
 	update(dat) {
 		this.init(dat);
 		console.log(this);
@@ -56,31 +68,44 @@ class factory extends object {
 	}
 
 	renderSummary(target) {
+		var thisDiv;
 		if (target.divType != "factorySummary") {
-			var thisDiv = addDiv(null, 'udHolder', target);
+			thisDiv = addDiv(null, 'udHolder', target);
+			this.instances.push(thisDiv);
+			thisDiv.updateFunction = function (x) {
+				console.log("update summary");
+				me.renderSummary(x)};
+			let me = this;
+		}
+		else {
+			thisDiv = target;
+		}
+
+		thisDiv.innerHTML = "";
+		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
+		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID;
+		thisDiv.divType = "factorySummary";
+
+		return thisDiv;
+	}
+
+	renderDetail (target) {
+		var thisDiv;
+		if (target.divType != "factorySummary") {
+			thisDiv = addDiv(null, 'factoryDetailContainer', target);
 			this.instances.push(thisDiv);
 		}
 		else {
 			thisDiv = target;
 		}
-		
-		thisDiv.innerHTML = "";
-		//thisDiv.setAttribute("data-unitid", this.unitID);
 
-		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
-		let me = this;
-
-		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID;
-		thisDiv.updateFunction = function (x) {me.renderSummary(x)};
 		thisDiv.divType = "factorySummary";
-		
-		return thisDiv;
-	}
-
-	renderDetail (target) {
-		var thisDiv = addDiv(null, 'factoryDetailContainer', target);
 		this.renderSummary(thisDiv);
+
+		let me = this;
+		thisDiv.updateFunction = function (x) {
+			console.log("update detail");
+			me.renderDetail(x)};
 
 		thisDiv.productsDiv = addDiv(null, "factoryProducts", thisDiv);
 		thisDiv.laborDiv = addDiv(null, "factoryLabor", thisDiv);
