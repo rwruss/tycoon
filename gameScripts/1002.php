@@ -1,13 +1,5 @@
 <?php
 
-require_once('./slotFunctions.php');
-require_once('./objectClass.php');
-
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-
-$thisBusiness = loadObject($pGameID, $objFile, 400);
-
 echo '<script>
 businessDiv = useDeskTop.newPane("businessObjects");
 businessDiv.innerHTML = "";
@@ -60,7 +52,6 @@ contractsButton.addEventListener("click", function (e) {
 	});
 	cSearch.innerHTML = "Bid on contracts";
 
-	//scrMod("1071,'.$pGameID.'");
 	loadBuffer("1071,'.$pGameID.'", function (x) {
 		let test = new Int32Array(x);
 		console.log(test);
@@ -84,7 +75,21 @@ bidButton.addEventListener("click", function (e) {
 
 	scrMod("1073," + thisPlayer.playerID);
 	});
-	bidButton.innerHTML = "Company Bids";
+bidButton.innerHTML = "Company Bids";
+	
+invoiceButton = newButton(headSection);
+invoiceButton.addEventListener("click", function (e) {
+	e.stopPropagation();
+	thisDiv = useDeskTop.newPane("companyInvoices");
+	thisDiv.innerHTML = "";
+
+	loadBuffer("1078," + thisPlayer.playerID, function (x) {
+		var invoiceItems = invoiceList(x);
+		for (var i=0; i<invoiceItems.length; i++) {
+			invoiceItems[i].renderFSum(thisDiv);
+		}
+	});
+invoiceButton.innerHTML = "Open Invoices";
 
 sendButton = newButton(headSection);
 sendButton.addEventListener("click", function (e) {
@@ -96,7 +101,4 @@ textBlob("", businessDiv.laborHead, "company labor");
 tmpLabor = companyLabor;
 companyLaborList(tmpLabor, businessDiv.laborSection);
 </script>';
-fclose($slotFile);
-fclose($objFile);
-
 ?>

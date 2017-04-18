@@ -1207,8 +1207,8 @@ class contract {
 class invoice {
 	constructor(dat) {
 		console.log(dat);
-		this.invInfo = new Int32Array(dat.buffer.slice(0,56));
-		this.taxInfo = new Uint16Array(dat.buffer.slice(56, 116));
+		this.invInfo = new Int32Array(dat.buffer.slice(0,80));
+		this.taxInfo = new Uint16Array(dat.buffer.slice(80, 140));
 		this.instances = [];
 		console.log(this);
 	}

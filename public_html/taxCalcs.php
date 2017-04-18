@@ -14,23 +14,29 @@ function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Ty
 	}
 }
 
-function taxAmounts($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile) {
-	$baseCost = $transDat[1]*$transDat[2];
+function taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile) {
+	/*
+	$transDat = [sent quantity, unit price, selling factory ID, sent pollution, sent rights, material cost, labor cost]
+	$sellingFactory = selling factory object
+	$buyingCity = 
+	$sellingCity = 
+	$sellingPlayer = 
+	$slotFile = 
+	*/
 
   	// [0, company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID, city ID, region ID, nation ID]
   	$taxInfo = [0, $sellingFactory->get('owner'), $sellingFactory->get('subType'), $sellingFactory->get('industry'), $transDat[3],
   		$sellingPlayer->get('teamID'), $sellingFactory->get('region_3'), $sellingFactory->get('region_2'), $sellingFactory->get('region_1')];
 
   	// Calculate import/tarrif taxes for the buyer
-  	$importTaxes = array_fill(0,31,0);
   	$importTaxEx = new itemSlot($buyingCity->get('nTax'), $slotFile, 40);
     $importTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
-  	$importTaxes[29] = $importTaxEx->slotData[9];
+  	$taxes[29] = $importTaxEx->slotData[9];
   	calcTaxes($importTaxEx->slotData, $taxInfo, $taxes);
 
 	$taxes = array_fill(0,31,0);
 
-		$cityTaxEx = new itemSlot($sellingCity->get('cTax'), $slotFile, 40);
+	$cityTaxEx = new itemSlot($sellingCity->get('cTax'), $slotFile, 40);
   	$regionTaxEx = new itemSlot($sellingCity->get('rTax'), $slotFile, 40);
   	$nationTaxEx = new itemSlot($sellingCity->get('nTax'), $slotFile, 40);
 
@@ -60,7 +66,7 @@ function taxAmounts($transDat, $sellingFactory, $buyingCity, $sellingCity, $sell
 
   	echo 'Final tax rates:';
   	print_r($taxes);
-
+	/*
   	$taxAmounts = array_fill(1, 30, 0);
   	$taxAmounts[1] = $taxes[1] * ($baseCost-$transDat[14] - $transDat[15])/100; // Income Tax
   	$taxAmounts[3] = $taxes[3] * ($baseCost - $transDat[14])/100; // VAT
@@ -80,7 +86,37 @@ function taxAmounts($transDat, $sellingFactory, $buyingCity, $sellingCity, $sell
   	$taxAmounts[26] = $taxes[26] * $transDat[6]/100; // Rights Tax
   	$taxAmounts[27] = $taxes[27] * $baseCost/100; // Sales Tax
 
-  	$taxAmounts[29] = $importTaxes[29]*$baseCost/100;
+  	$taxAmounts[29] = $taxes[29]*$baseCost/100;
+	*/
+	return $taxes;
+}
+
+function taxCost ($taxRates, $transDat) {
+	/*
+	$transDat = [sent quantity, unit price, selling factory ID, sent pollution, sent rights, material cost, labor cost]
+	*/
+	
+	$baseCost = $transDat[1]*$transDat[2];
+	$taxAmounts = array_fill(1, 30, 0);
+  	$taxAmounts[1] = $taxRates[1] * ($baseCost-$transDat[14] - $transDat[15])/100; // Income Tax
+  	$taxAmounts[3] = $taxRates[3] * ($baseCost - $transDat[14])/100; // VAT
+  	$taxAmounts[5] = $taxRates[5] * $transDat[5]/100; // Pollution Tax
+  	$taxAmounts[6] = $taxRates[6] * $transDat[6]/100; // Rights Tax
+  	$taxAmounts[7] = $taxRates[7] * $baseCost/100; // Sales Tax
+
+  	$taxAmounts[11] = $taxRates[11] * ($baseCost-$transDat[14] - $transDat[15])/100; // Income Tax
+  	$taxAmounts[13] = $taxRates[13] * ($baseCost - $transDat[14])/100; // VAT
+  	$taxAmounts[15] = $taxRates[15] * $transDat[5]/100; // Pollution Tax
+  	$taxAmounts[16] = $taxRates[16] * $transDat[6]/100; // Rights Tax
+  	$taxAmounts[17] = $taxRates[17] * $baseCost/100; // Sales Tax
+
+  	$taxAmounts[21] = $taxRates[21] * ($baseCost-$transDat[14] - $transDat[15])/100; // Income Tax
+  	$taxAmounts[23] = $taxRates[23] * ($baseCost - $transDat[14])/100; // VAT
+  	$taxAmounts[25] = $taxRates[25] * $transDat[5]/100; // Pollution Tax
+  	$taxAmounts[26] = $taxRates[26] * $transDat[6]/100; // Rights Tax
+  	$taxAmounts[27] = $taxRates[27] * $baseCost/100; // Sales Tax
+
+  	$taxAmounts[29] = $taxRates[29]*$baseCost/100;
 
 	return $taxAmounts;
 }
