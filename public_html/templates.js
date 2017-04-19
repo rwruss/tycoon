@@ -1469,6 +1469,7 @@ laborHireList = function(trg, factoryID, laborList) {
 }
 
 laborTypeMenu = function(trg, factoryID) {
+	/*
 	let newMenu = document.createElement("select");
 
 	for (var i=1; i<laborNames.length; i++) {
@@ -1476,7 +1477,8 @@ laborTypeMenu = function(trg, factoryID) {
 		newItem.appendChild(document.createTextNode(laborNames[i]));
 		newItem.value = i;
 		newMenu.appendChild(newItem);
-	}
+	}*/
+	let newMenu = selectMenu(laborNames);
 
 	newMenu.addEventListener("change", function() {
 		let menu = this;
@@ -1489,6 +1491,18 @@ laborTypeMenu = function(trg, factoryID) {
 		});
 	});
 	trg.appendChild(newMenu);
+}
+
+selectMenu = function(items) {
+	let newMenu = document.createElement("select");
+
+	for (var i=1; i<items.length; i++) {
+		let newItem = document.createElement("option");
+		newItem.appendChild(document.createTextNode(items[i]));
+		newItem.value = i;
+		newMenu.appendChild(newItem);
+	}
+	return selectMenu;
 }
 
 arrayToSelect = function(trg, aList) {
@@ -1770,6 +1784,20 @@ invoiceList = function (dat) {
 	tmpA = [];
 	for (var i=0; i<dat.byteLength; i+=140) {
 		tmpA.push(new invoice(dat.slice(i, i+140)));
+	}
+	return tmpA;
+}
+
+getFactoriesByProduct(factoryList, productID) {
+	let tmpA = [];
+	for (var i = 0; i<factoryList.length; i++) {
+		let check = factoryList[i].prod.indexOf(this.productID);
+		console.log("Check factory " + i + "for product " + this.productID + " with a result of " + check);
+		console.log(factoryList[i].prod);
+		if (check > -1) {
+			// show the factories that provide this with an option to send
+			tmpA.push(i)
+		}
 	}
 	return tmpA;
 }

@@ -43,10 +43,10 @@ echo '
 showCity.loadDemands(['.implode(',', array_slice($thisCity->objDat, $thisCity->laborDemandOffset-1, 10000)).'], ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborStoreOffset-1, 10000)).']);
 showCity.renderDetail(cityPane);
 var detailSection = addDiv("", "stdFloatDiv", cityPane);
-cityTabs = new tabMenu(["Overview", "Government", "Labor", "Schools"]);
+cityTabs = new tabMenu(["Overview", "Government", "Labor", "Schools", "Markets"]);
 cityTabs.renderTabs(detailSection);
-cityTabs.renderKids[0].innerHTML = "Overview";
-cityTabs.renderKids[2].innerHTML = "Labor";
+//cityTabs.renderKids[0].innerHTML = "Overview";
+//cityTabs.renderKids[2].innerHTML = "Labor";
 
 cityTabs.tabFunction(0, function() {console.log("i select u")});
 
@@ -66,7 +66,20 @@ showCityLabor(cityTabs.renderKids[2], '.$postVals[1].', ['.implode(',', $laborPo
 showSchools(cityTabs.renderKids[3], '.$postVals[1].',0, ['.implode(',', array_slice($thisCity->objDat, 80, 30)).']);
 let buildSchools = newButton(cityTabs.renderKids[3]);
 buildSchools.innerHTML = "Build new Schools";
-buildSchools.addEventListener("click", function () {scrMod("1053,'.$postVals[1].'")})
+buildSchools.addEventListener("click", function () {scrMod("1053,'.$postVals[1].'")});
+
+cityTabs.renderKids[4].prodBar = addDiv("", "stdFloatDiv", cityTabs.renderKids[4]);
+cityTabs.renderKids[4].factoryBar = addDiv("", "stdFloatDiv", cityTabs.renderKids[4]);
+let productSales = selectMenu(playerProdNames);
+cityTabs.renderKids[4].prodBar.appendChild(productSales);
+
+productSales.addEventListener("change", function () {
+	let tmpList = getFactoriesByProduct(playerFactories, playerProducts[this.value]);
+	for (i=0; i<tmpList.length; i++) {
+		//playerFactories[i].renderSummary(cityTabs.renderKids[4].factoryBar);
+		playerFactories[i].itemBar(cityTabs.renderKids[4], check, this.parentContract.contractID);
+	}
+
 </script>';
 
 // Output demands for products of the city
