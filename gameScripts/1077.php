@@ -7,6 +7,7 @@ PVS
 */
 
 require_once('./objectClass.php');
+require_once('./taxCalcs.php');
 require_once('./slotFunctions.php');
 
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');

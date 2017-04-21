@@ -30,7 +30,6 @@ if ($thisCity->get('cityLaborSlot')>0) {
 // Output parameters of the city (population, wealth, etc)
 echo '<script>
 cityPane = useDeskTop.newPane("cityInfo");
-//var cityPane = useDeskTop.getPane("cityInfo");
 cityPane.innerHTML = "";
 
 textBlob("", cityPane, "City information");
@@ -38,15 +37,13 @@ var showCity = new city([';
 echo $postVals[1].',"City Name", '.implode(',', array_slice($thisCity->objDat, 11, 25)).','.implode(',', array_slice($thisCity->objDat, 50, 40)).','.implode(',', array_slice($thisCity->objDat, 120, 20)).']';
 echo ',[]';
 echo ',[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,1,2,102,500,"Some COmpany"]);';
-//.$postVals[1].', "some citgy", '.implode(',', array_slice($thisCity->objDat, 11, 25)).'], [], []);
+
 echo '
 showCity.loadDemands(['.implode(',', array_slice($thisCity->objDat, $thisCity->laborDemandOffset-1, 10000)).'], ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborStoreOffset-1, 10000)).']);
 showCity.renderDetail(cityPane);
 var detailSection = addDiv("", "stdFloatDiv", cityPane);
 cityTabs = new tabMenu(["Overview", "Government", "Labor", "Schools", "Markets"]);
 cityTabs.renderTabs(detailSection);
-//cityTabs.renderKids[0].innerHTML = "Overview";
-//cityTabs.renderKids[2].innerHTML = "Labor";
 
 cityTabs.tabFunction(0, function() {console.log("i select u")});
 
@@ -77,7 +74,7 @@ productSales.addEventListener("change", function () {
 	let tmpList = getFactoriesByProduct(playerFactories, playerProducts[this.value]);
 	for (i=0; i<tmpList.length; i++) {
 		//playerFactories[i].renderSummary(cityTabs.renderKids[4].factoryBar);
-		playerFactories[i].itemBar(cityTabs.renderKids[4], check, this.parentContract.contractID);
+		playerFactories[i].itemBar(cityTabs.renderKids[4], check, "1079," + playerFactories[i].objID +",'.$postVals[1].'" + playerProducts[this.value]);
 	}
 
 </script>';

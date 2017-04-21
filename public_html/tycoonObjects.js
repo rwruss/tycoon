@@ -115,9 +115,9 @@ class factory extends object {
 		return thisDiv;
 	}
 
-	itemBar(target, prodIndex, contractID) {
+	itemBar(target, prodIndex, sendStr) {
 		var container = addDiv("", "", target);
-		container.sendStr = this.factoryID + "," + prodIndex + "," + contractID;
+		container.sendStr = sendStr;
 
 		container.factoryDiv = this.renderSummary(container);
 		container.prodSection = addDiv("", "", container);
@@ -126,7 +126,7 @@ class factory extends object {
 		container.slide = slideValBar(container, "", 0, this.prodInv[prodIndex]);
 
 		let button = newButton(container, function () {
-			scrMod("1072,"+this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
+			scrMod(this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
 		});
 		button.innerHTML = "send this amount";
 	}
@@ -1181,7 +1181,8 @@ class contract {
 						console.log(playerFactories[i].prod);
 						if (check > -1) {
 							// show the factories that provide this with an option to send
-							playerFactories[i].itemBar(thisDetail.optionArea, check, this.parentContract.contractID);
+							//this.factoryID + "," + prodIndex + "," + contractID;
+							playerFactories[i].itemBar(thisDetail.optionArea, check, "1072," + playerFactories[i].objID + "," + check + "," + this.parentContract.contractID);
 						}
 					}
 				});

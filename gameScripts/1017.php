@@ -10,6 +10,7 @@ PostVals
 
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
+require_once('./taxCalcs.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $cityFile = fopen($gamePath.'/cities.dat', 'r+b');
@@ -75,6 +76,8 @@ if ($thisFactory->get('region1') != $thisCity->get('parentRegion')) {
 	$tarrifAmount = 0;
 	//$cityRegion->adjVal('money', $tarrifAmount);
 }
+
+// Calculate taxes on the sale
 
 echo 'Start/end city demand:'.$startDemand.' / '.$endDemand.'<br>
 Start/End price '.$startPrice.' / '.$endPrice.' FInal average price: '.(($startPrice+$endPrice)/2).' for a profit of '.$profit;

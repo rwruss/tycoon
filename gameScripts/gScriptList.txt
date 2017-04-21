@@ -78,6 +78,7 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Calculate taxes on city sales
 Load and show contract deliveries for a factory
 Load and show outstanding invoices for a factory and company
 Transfer of goods when sent via contract (done with an invoice?)
@@ -165,6 +166,9 @@ http://www.bbc.com/earth/story/20161021-why-there-could-be-many-copies-of-you
 http://www.bbcgoodfood.com/howto/guide/5-mulled-drinks-you-can-make-minutes
 http://cdn.preterhuman.net/texts/math/Data_Structure_And_Algorithms/Algorithms%20and%20Data%20Structures%20-%20Niklaus%20Wirth.pdf
 Collatz Conjecture!
+
+Food:
+https://www.bbcgoodfood.com/recipes/collection/dopamine-diet
 
 Graphics
 https://www.quora.com/Whats-the-coolest-thing-you-can-get-a-computer-to-do-in-10-lines-of-code/answer/Liber-Liu
