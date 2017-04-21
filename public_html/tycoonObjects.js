@@ -169,7 +169,7 @@ class city {
 		this.laws = laws;
 		//this.taxes = taxes;
 		this.taxes = taxes.map(function(x) {
-			console.log(x);
+			//console.log(x);
 			if (isNaN(x)) {
 				if (x.match(/^[0-9]/)) {
 					return parseInt(x,10);

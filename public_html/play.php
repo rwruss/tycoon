@@ -113,7 +113,7 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
-	var factoryList, playerFactories, playerProducts, playerProdNames, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv;
+	var factoryList, playerFactories, playerProducts, playerProdNames, playerProducts, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv;
 	var playerUnits;
 	var moveString = new Array();
 
@@ -504,21 +504,28 @@ echo '
 			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 16)).'])';
 		}
 		echo ');
-		
+
+
 		productArray = new Array();
 		for (var i=0; i<numProducts; i++) {
 			productArray.push(new product({objType:product, objID:(i), objName:objNames[i]}));
 		}
-		
-		var playerProducts = [];
-		for (var i=0; i<playerFactories.legnth; i++) {
-			playerProducts = tmpList.conct(playerFactories[i].prod);
+		console.log(productArray);
+
+		playerProducts = [];
+		for (var i=0; i<playerFactories.length; i++) {
+			console.log(playerFactories[i].prod);
+			playerProducts = playerProducts.concat(playerFactories[i].prod);
 		}
-		
-		var playerProdNames = [];
+
+		console.log("player products");
+		console.log(playerProducts);
+		playerProdNames = [];
 		for (var i=0; i<playerProducts.length; i++) {
+			console.log(i)
 			playerProdNames.push(productArray[i].objName);
 		}
+		console.log(playerProdNames);
 
 		serviceInv = ['.implode(',', $serviceSlot->slotData).'];
 		serviceArray = new Array();

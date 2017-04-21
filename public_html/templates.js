@@ -762,7 +762,7 @@ class deskTop {
 		console.log(x.parentNode);
 
 		delete this.paneList[thisPane.desc];
-		
+
 		//let i = this.paneList.indexOf(thisPane.desc);
 		//console.log("delete index " + i);
 		//this.paneList.splice(i, 1);
@@ -1494,6 +1494,7 @@ laborTypeMenu = function(trg, factoryID) {
 }
 
 selectMenu = function(items) {
+	console.log(items);
 	let newMenu = document.createElement("select");
 
 	for (var i=1; i<items.length; i++) {
@@ -1502,7 +1503,7 @@ selectMenu = function(items) {
 		newItem.value = i;
 		newMenu.appendChild(newItem);
 	}
-	return selectMenu;
+	return newMenu;
 }
 
 arrayToSelect = function(trg, aList) {
@@ -1788,16 +1789,18 @@ invoiceList = function (dat) {
 	return tmpA;
 }
 
-getFactoriesByProduct(factoryList, productID) {
+getFactoriesByProduct = function (factoryList, productID) {
 	let tmpA = [];
 	for (var i = 0; i<factoryList.length; i++) {
-		let check = factoryList[i].prod.indexOf(this.productID);
-		console.log("Check factory " + i + "for product " + this.productID + " with a result of " + check);
+		let check = factoryList[i].prod.indexOf(parseInt(productID));
+		console.log("Check factory " + i + "for product " + productID + " with a result of " + check);
 		console.log(factoryList[i].prod);
+		tmpA.push(check);
+		/*
 		if (check > -1) {
 			// show the factories that provide this with an option to send
 			tmpA.push(i)
-		}
+		}*/
 	}
 	return tmpA;
 }

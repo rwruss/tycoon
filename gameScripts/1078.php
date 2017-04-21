@@ -5,11 +5,15 @@ require_once('./slotFunctions.php');
 
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
 // Load the player
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 
 // Load the invoice List
+if ($thisPlayer->get('openInvoices') == 0) {
+	exit('');
+}
 $invoiceList = new itemSlot($thisPlayer->get('openInvoices'), $slotFile, 40);
 
 $invStr = '';
@@ -23,5 +27,9 @@ for ($i=0; $i<sizeof($invoiceList->slotData); $i++) {
 }
 
 echo $invStr;
+
+fclose($contractFile);
+fclose($objFile);
+fclose($slotFile);
 
 ?>

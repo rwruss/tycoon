@@ -70,15 +70,19 @@ buildSchools.addEventListener("click", function () {scrMod("1053,'.$postVals[1].
 
 cityTabs.renderKids[4].prodBar = addDiv("", "stdFloatDiv", cityTabs.renderKids[4]);
 cityTabs.renderKids[4].factoryBar = addDiv("", "stdFloatDiv", cityTabs.renderKids[4]);
+console.log("make a meu of ");
+console.log(playerProdNames);
 let productSales = selectMenu(playerProdNames);
 cityTabs.renderKids[4].prodBar.appendChild(productSales);
 
 productSales.addEventListener("change", function () {
-	let tmpList = getFactoriesByProduct(playerFactories, playerProducts[this.value]);
+	console.log("load facs that make this (" + this.value + ")");
+	let tmpList = getFactoriesByProduct(playerFactories, this.value);
 	for (i=0; i<tmpList.length; i++) {
 		//playerFactories[i].renderSummary(cityTabs.renderKids[4].factoryBar);
-		playerFactories[i].itemBar(cityTabs.renderKids[4], check, this.parentContract.contractID);
+		if (tmpList[i] >= 0)	playerFactories[i].itemBar(cityTabs.renderKids[4], tmpList[i], 0);
 	}
+});
 
 </script>';
 

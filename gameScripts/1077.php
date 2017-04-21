@@ -12,6 +12,7 @@ require_once('./slotFunctions.php');
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 
+
 // Load the invoice
 fseek($contractFile, $postVals[1]);
 $invoiceDat = fread($contractFile, 116);
