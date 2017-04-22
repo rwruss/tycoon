@@ -12,8 +12,8 @@ require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 require_once('./taxCalcs.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
 // Verify that the factory can sell this product
 $thisFactory = loadObject($postVals[1], $objFile, 1000);

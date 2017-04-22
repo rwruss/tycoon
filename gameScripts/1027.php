@@ -32,7 +32,7 @@ echo '<script>
 cityPane = useDeskTop.newPane("cityInfo");
 cityPane.innerHTML = "";
 
-textBlob("", cityPane, "City information");
+textBlob("", cityPane, "City information (City #'.$postVals[1].')");
 var showCity = new city([';
 echo $postVals[1].',"City Name", '.implode(',', array_slice($thisCity->objDat, 11, 25)).','.implode(',', array_slice($thisCity->objDat, 50, 40)).','.implode(',', array_slice($thisCity->objDat, 120, 20)).']';
 echo ',[]';
@@ -77,8 +77,8 @@ productSales.addEventListener("change", function () {
 	let tmpList = getFactoriesByProduct(playerFactories, this.value);
 	for (i=0; i<tmpList.length; i++) {
 		//playerFactories[i].renderSummary(cityTabs.renderKids[4].factoryBar);
-		playerFactories[i].itemBar(cityTabs.renderKids[4], check, "1079," + playerFactories[i].objID +",'.$postVals[1].'" + playerProducts[this.value]);
-		if (tmpList[i] >= 0)	playerFactories[i].itemBar(cityTabs.renderKids[4], tmpList[i], 0);
+		//playerFactories[i].itemBar(cityTabs.renderKids[4], check, "1079," + playerFactories[i].objID +",'.$postVals[1].'" + playerProducts[this.value]);
+		if (tmpList[i] >= 0)	playerFactories[i].itemBar(cityTabs.renderKids[4], tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
 	}
 });
 

@@ -147,7 +147,7 @@ class business extends object {
 		$this->attrList['openOffers'] = 41;
 		$this->attrList['contractList'] = 43;
 		$this->attrList['openBids'] = 44;
-		$this->attrList['openInvoices'] = 45;		
+		$this->attrList['openInvoices'] = 45;
 
 		for ($i=0; $i<20; $i++) {
 			$this->attrList['service'.$i] = 100+$i;
@@ -401,7 +401,9 @@ class factory extends object {
 		}
 
 		// Update production and production statistics
+		echo 'Check for production updates ('.$this->get('prodStart').') -> ';
 		if ($this->get('prodStart') > 0) {
+			echo ($this->get('prodStart') + $this->get('prodLength')).' vs '.$now;
 			if ($this->get('prodStart') + $this->get('prodLength') <= $now) {
 				// Production is complete
 				echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
