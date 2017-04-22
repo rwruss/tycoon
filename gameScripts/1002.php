@@ -76,7 +76,7 @@ bidButton.addEventListener("click", function (e) {
 	scrMod("1073," + thisPlayer.playerID);
 	});
 bidButton.innerHTML = "Company Bids";
-	
+
 invoiceButton = newButton(headSection);
 invoiceButton.addEventListener("click", function (e) {
 	e.stopPropagation();
@@ -84,11 +84,12 @@ invoiceButton.addEventListener("click", function (e) {
 	thisDiv.innerHTML = "";
 
 	loadBuffer("1078," + thisPlayer.playerID, function (x) {
+		if (x.byteLength == 0) thisDiv.innerHTML = "No current invoices";
 		var invoiceItems = invoiceList(x);
 		for (var i=0; i<invoiceItems.length; i++) {
 			invoiceItems[i].renderFSum(thisDiv);
 		}
-	});
+	})});
 invoiceButton.innerHTML = "Open Invoices";
 
 sendButton = newButton(headSection);

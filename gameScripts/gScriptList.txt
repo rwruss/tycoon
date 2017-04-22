@@ -79,6 +79,7 @@
 
 TO DO:
 Calculate taxes on city sales
+Add to labor list when labor is hired
 Load and show contract deliveries for a factory
 Load and show outstanding invoices for a factory and company
 Transfer of goods when sent via contract (done with an invoice?)
