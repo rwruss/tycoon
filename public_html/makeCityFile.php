@@ -9,16 +9,26 @@ $areaSize = $baseSlots*1000;
 
 $cityFile = fopen('cities.dat', 'wb');
 
-$numProducts = 10000;
-$numLabor = 0;
-$laborStorage = 0;
-$extra = 250;
+$countries = 206;
+$regions = 3444;
 
+$areaHeader = ($countries+$regions+1)*50*4;
+
+$numProducts = 10000;
+$generalItems = 250;
+
+$blockSize = ($numProducts *2 + $generalItems) * 4;
 $now = time();
 
-// size will be (250 + (10000+0)*2 + 0*40) * 4 = 81000;
+/*
+File Size:
+250 general items
+10000 product demand rates
+10000 current demand rates
 
-//$cityArray = array_fill(1, $extra+($numProducts+$numLabor)*2 + $laborStorage*40, 0);
+TOtal: 20250 x 4 = 81000
+*/
+
 $cityArray = array_fill(1, 250, 0);
 $cityArray[5] = 5;
 $cityArray[10] = $now;  // update time
@@ -43,12 +53,6 @@ $cityArray[114] = 100; // school status
 $cityArray[117] = 100; // school status
 $cityArray[120] = 100; // school status
 
-$offset = $numProducts*2 + $numLabor + $extra;
-for ($i=1; $i<=1000; $i++) {
-  //$cityArray[$offset+$i] = 0;
-}
-
-
 $cityData = packArray($cityArray);
 $dataCheck = unpack('i*', $cityData);
 $dataSize = strlen($cityData);
@@ -56,7 +60,7 @@ $dataSize = strlen($cityData);
 echo 'Data block size is '.$dataSize;
 
 for ($i=0; $i<$baseSlots; $i++) {
-  fseek($cityFile, $i*$dataSize);
+  fseek($cityFile, $areaHeader+$i*$blockSize);
   fwrite($cityFile, $cityData);
 }
 

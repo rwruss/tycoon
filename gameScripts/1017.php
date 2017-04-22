@@ -41,43 +41,44 @@ if ($optionCheck) {
 
 if ($qtyCheck) exit ('note enough of this ('.$thisFactory->get('prodInv'.($prodNumber+1)).' < '.$postVals[4].')');
 // Load the city information
-$thisCity = loadCity($postVals[2], $cityFile, 4000);
+$thisCity = loadCityDemands($postVals[2], $cityFile);
 $cityRegion = loadRegion($thisCity->get('parentRegion'), $cityFile);
-
-
 
 // Update city demand
 
 $now = time();
-/*
-$elapsed = $now-$thisCity->get('lastUpdate');
 
-$baseDemand = $thisCity->get('population')*$thisCity->demandRate($i);
-$startDemand = min($elapsed*$thisCity->demandRate($i)/3600+$thisCity->demandLevel($i), 2.0*$baseDemand);
-echo 'Start Demand:('.$now.' - '.$thisCity->get('lastUpdate').') * '.$thisCity->demandRate($i).' / 3600 + ' .$thisCity->demandLevel($i);
-*/
 echo 'Base demand: '.$thisCity->baseDemand($postVals[3]);
 $basePrice = 100;
 $baseDemand = $thisCity->baseDemand($postVals[3]);
 $startDemand = $thisCity->currentDemand($postVals[3], $now);
 $endDemand = max(intval($startDemand - $postVals[4]),0);
 
+/*
 $startPrice = intval(min($startDemand/$baseDemand, 2.0)*$basePrice);
 $endPrice = intval(min($endDemand/$baseDemand, 2.0)*$basePrice);
 $profit = (($startPrice+$endPrice)/2)*$postVals[4];
+*/
 
-// Add sales to factory tax base for it's own region
-$factoryTax = 0;
-$thisFactory->adjVal('totalSales', $profit);
-$thisFactory->adjVal('periodSales', $profit);
-
-if ($thisFactory->get('region1') != $thisCity->get('parentRegion')) {
-	// apply tarrif on sold goods
-	$tarrifAmount = 0;
-	//$cityRegion->adjVal('money', $tarrifAmount);
-}
+$startPrice = $basePrice * ($startDemand/$baseDemand) * ($startDemand/$baseDemand);
+$endPrice = $basePrice * ($endDemand/$baseDemand) * ($endDemand/$baseDemand);
+$usePrice = ($startPrice+$endPrice)/2;
 
 // Calculate taxes on the sale
+//see taxCalcs.php for transaction format
+$transaction = array_fill(0, 25, 0);
+$transaction[1] = $postVals[4];
+$transaction[2] = $usePrice;
+$transaction[3] = $postVals[1]; // selling factory ID
+$transaction[5] = 0; // pollution
+$transaction[6] = 0; // rights
+$transaction[14] = 0;
+$transaction[15] = 0;
+//taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile)
+
+// Add sales to factory tax base for it's own region
+$thisFactory->adjVal('totalSales', $profit);
+$thisFactory->adjVal('periodSales', $profit);
 
 echo 'Start/end city demand:'.$startDemand.' / '.$endDemand.'<br>
 Start/End price '.$startPrice.' / '.$endPrice.' FInal average price: '.(($startPrice+$endPrice)/2).' for a profit of '.$profit;

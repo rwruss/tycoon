@@ -16,6 +16,14 @@ function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Ty
 
 function taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile) {
 	/*
+	TRANS DAT START INDEX IS 1
+	$transDat[1] = $sentQty;
+	$transDat[2] = $contractInfo[16]; // accepted price
+	$transDat[3] = $postVals[1]; // selling factory ID
+	$transDat[5] = $sentPol; // pollution
+	$transDat[6] = $sentRights; // rights
+	$transDat[14] = $materialCost;
+	$transDat[15] = $laborCost;
 	$transDat = [sent quantity, unit price, selling factory ID, sent pollution, sent rights, material cost, labor cost]
 	$sellingFactory = selling factory object
 	$buyingCity = 

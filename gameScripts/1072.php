@@ -70,7 +70,7 @@ $sellingPlayer = loadObject($sellFactory->get('owner'), $objFile, 400);
 
 $transaction = array_fill(0, 25, 0);
 $transaction[1] = $sentQty;
-$transaction[2] = $contractInfo[16];
+$transaction[2] = $contractInfo[16]; // accepted price
 $transaction[3] = $postVals[1]; // selling factory ID
 $transaction[5] = $sentPol; // pollution
 $transaction[6] = $sentRights; // rights

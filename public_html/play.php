@@ -16,10 +16,7 @@ if (!isset($_SESSION["playerId"])) {
 if (!isset($_GET["gameID"])) echo "<script>window.location.replace(./index.php)</script>";
 
 // Read game file to determine player number and status.
-//print_r($_SESSION);
-//echo 'Look for player '.$_SESSION["playerId"].'in game <p>';
 $playerList = unpack("i*", file_get_contents("../games/".$_GET["gameID"]."/players.dat"));
-//print_r($playerList);
 $playerListLoc = array_search($_SESSION["playerId"], $playerList);
 $pGameID = $playerList[$playerListLoc+1]*-1;
 $_SESSION["instance"] = $_GET["gameID"];

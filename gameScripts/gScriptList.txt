@@ -78,6 +78,7 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Rights, Pollution, labor, and material costs for products sold to cities
 Figure out how i decided to store city demands - wtf?
 Calculate taxes on city sales
 Add to labor list when labor is hired

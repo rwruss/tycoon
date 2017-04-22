@@ -478,9 +478,9 @@ class city extends object {
 		// Total of 22250 items
 		$this->dRateOffset = 250;
 		$this->dLevelOffset = 10250;
-		$this->laborDemandOffset = 20250;
-		$this->laborStoreOffset = 21250;
-		$this->itemBlockSize = 105000;
+		//$this->laborDemandOffset = 20250;
+		//$this->laborStoreOffset = 21250;
+		$this->itemBlockSize = 81000;
 
 		$this->attrList['population'] = 12;
 		$this->attrList['affluence'] = 14;
@@ -507,10 +507,11 @@ class city extends object {
 
 	}
 
+	/*
 	function loadDemands() {
 		fseek($this->linkFile, $this->get('fileBaseSize')+$this->id*1000);
 		$this->demandDat = unpack('s*', fread($this->linkFile, 40000));
-	}
+	}*/
 
 	function demandRate($productID) {
 		return $this->objDat[$this->dRateOffset+$productID];
@@ -529,7 +530,6 @@ class city extends object {
 	}
 
 	function save($desc, $val) {
-
 		if (array_key_exists($desc, $this->attrList)) {
 			fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4);
 			fwrite($this->linkFile, pack('i', $val));
@@ -557,6 +557,7 @@ class city extends object {
 		$this->saveBlock($fileOffset, $datStr);
 	}
 
+	/*
 	function availableLabor() {
 		return array_slice($this->objDat, $this->laborStoreOffset, 1000);
 	}
@@ -566,7 +567,7 @@ class city extends object {
 		$newVal = $this->objDat[$loc] + $delta;
 		$this->saveItem($loc, $newVal);
 	}
-
+	*/
 }
 
 class product extends object {
@@ -649,15 +650,24 @@ function loadProduct($id, $file, $size) {
 }
 
 function loadCity($id, $file) {
-	fseek($file, $id*1000);
+	$areaHeader = 730200;
+	fseek($file, $areaHeader+$id*81000);
 	$dat = unpack('i*', fread($file, 1000));
 
 	return new city($id, $dat, $file);
 }
 
+function loadCityDemands($id, $file) {
+	$areaHeader = 730200;
+	fseek($file, $areaHeader+$id*81000);
+	$dat = unpack('i*', fread($file, 81000));
+
+	return new city($id, $dat, $file);
+}
+
 function loadRegion($id, $file) {
-	fseek($file, $id*1000);
-	$dat = unpack('i*', fread($file, 1000));
+	fseek($file, $id*200);
+	$dat = unpack('i*', fread($file, 200));
 
 	return new region($id, $dat, $file);
 }
