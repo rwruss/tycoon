@@ -517,12 +517,13 @@ class city extends object {
 		return $this->objDat[$this->dRateOffset+$productID];
 		}
 
-	function saveDRate($productID, $val) {
-		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4);
-		fwrite($this->linkFile, pack('i', $val));
-		echo 'ID: '.$this->unitID;
-		echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4);
-		$this->objDat[$this->dLevelOffset+$productID] = $val;
+	function saveDLevel($productID, $newLevel) {
+		$areaHeader = 730200;
+		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
+		fwrite($this->linkFile, pack('i', $newLevel));
+		echo 'Town ID: '.$this->unitID.', Product ID: '.$productID.', ';
+		echo 'Save '.$newLevel.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
+		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
 	}
 
 	function demandLevel($productID) {
@@ -531,7 +532,8 @@ class city extends object {
 
 	function save($desc, $val) {
 		if (array_key_exists($desc, $this->attrList)) {
-			fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4);
+			$areaHeader = 730200;
+			fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4 + $areaHeader + $areaHeader);
 			fwrite($this->linkFile, pack('i', $val));
 			echo 'ID: '.$this->unitID;
 			echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4);
@@ -543,6 +545,7 @@ class city extends object {
 
 	function baseDemand($productNumber) {
 		// production per million people per hour x 2 days
+		echo '<br>:'.$this->get('population').' * '.$this->demandRate($productNumber).' *48 /1000000<br>';
 		return ($this->get('population')*$this->demandRate($productNumber)*48/1000000);
 	}
 

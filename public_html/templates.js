@@ -1,3 +1,7 @@
+arrayUnique = function (v, i, s) {
+	return s.indexOf(v) === index;
+}
+
 actionBox = function(trg, prm, maxPoints) {
 	let thisBox = addDiv("", "selectContain", trg);
 	thisBox.unitSpace = addDiv("", "selectContain", thisBox);

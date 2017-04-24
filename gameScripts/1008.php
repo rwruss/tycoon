@@ -12,8 +12,8 @@ $cityLoc = $postVals[2];
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
 
 // Load template data
 fseek($objFile, $factoryType*$templateBlockSize);

@@ -509,7 +509,7 @@ echo '
 		}
 		console.log(productArray);
 
-		playerProducts = [];
+		playerProducts = [0];
 		for (var i=0; i<playerFactories.length; i++) {
 			console.log(playerFactories[i].prod);
 			playerProducts = playerProducts.concat(playerFactories[i].prod);
@@ -520,7 +520,7 @@ echo '
 		playerProdNames = [];
 		for (var i=0; i<playerProducts.length; i++) {
 			console.log(i)
-			playerProdNames.push(productArray[i].objName);
+			playerProdNames.push(productArray[playerProducts[i]].objName);
 		}
 		console.log(playerProdNames);
 

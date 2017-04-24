@@ -175,7 +175,9 @@ class city {
 					return parseInt(x,10);
 				}	else return x;
 			} else return x;
-	})}
+	})
+	console.log(this.taxes);
+	}
 
 	renderSummary(target) {
 		//console.log('draw ' + this.type)

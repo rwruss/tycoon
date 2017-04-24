@@ -73,12 +73,11 @@ let productSales = selectMenu(playerProdNames);
 cityTabs.renderKids[4].prodBar.appendChild(productSales);
 
 productSales.addEventListener("change", function () {
+	cityTabs.renderKids[4].factoryBar.innerHTML = "";
 	console.log("load facs that make this (" + this.value + ")");
 	let tmpList = getFactoriesByProduct(playerFactories, this.value);
 	for (i=0; i<tmpList.length; i++) {
-		//playerFactories[i].renderSummary(cityTabs.renderKids[4].factoryBar);
-		//playerFactories[i].itemBar(cityTabs.renderKids[4], check, "1079," + playerFactories[i].objID +",'.$postVals[1].'" + playerProducts[this.value]);
-		if (tmpList[i] >= 0)	playerFactories[i].itemBar(cityTabs.renderKids[4], tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
+		if (tmpList[i] >= 0)	playerFactories[i].itemBar(cityTabs.renderKids[4].factoryBar, tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
 	}
 });
 

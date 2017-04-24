@@ -78,6 +78,7 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Resolve numbering of cities/regions in 1017, 1027, 1008, etc...
 Rights, Pollution, labor, and material costs for products sold to cities
 Figure out how i decided to store city demands - wtf?
 Calculate taxes on city sales
@@ -107,6 +108,7 @@ Company storylines
 Player information detail (1045)
 Business Deals/Agreements with other companies and conglomerates
 Protect empty order list writing in 1014
+News ticker/scroll bar
 
 VERIFY DONE
 **Worker pool for when they quit/get fired
