@@ -75,8 +75,13 @@ $profit = $totalSale;
 echo 'Sale price is '.$usePrice.' for a total sale value of '.$usePrice.' x '.$postVals[4].' = '.$profit.'<br>';
 
 // Calculate taxes on the sale
-$sellingCity = loadCity($thisFactory->get('region_3'), $cityFile);
+if ($thisFactory->get('region_3') != $postVals[2]) {
+	$sellingCity = loadCity($thisFactory->get('region_3'), $cityFile);
+} else {$sellingCity = $buyingCity;}
 $thisPlayer = loadObject($pGameID, $objFile, 400);
+
+$testCity = $buyingCity;
+$thisFactory->set('region_3', 1);
 
 echo '<p>BUYING CITY ('.$postVals[2].')<p>SELLING CITY ('.$thisFactory->get('region_3').'):';
 print_r($sellingCity->objDat);
@@ -90,8 +95,14 @@ $transaction[5] = 0; // pollution
 $transaction[6] = 0; // rights
 $transaction[14] = 0;
 $transaction[15] = 0;
+
 $taxRates = taxRates($transaction, $thisFactory, $buyingCity, $sellingCity, $thisPlayer, $slotFile);
+echo '<p>Calced tax rates:<br>';
 print_r($taxRates);
+
+$taxAmounts = taxCost($taxRates, $transaction);
+echo '<p>Calced tax amts::<br>';
+print_r($taxAmounts);
 //taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile)
 
 // Add sales to factory tax base for it's own region
