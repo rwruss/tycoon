@@ -228,6 +228,8 @@ class city {
 		containerDiv.taxes.appendChild(taxTable);
 		let total;
 
+		console.log("TAXES");
+		console.log(this.taxes);
 		taxTable.rows[0].cells[1].innerHTML = "C";
 		taxTable.rows[0].cells[2].innerHTML = "R";
 		taxTable.rows[0].cells[3].innerHTML = "N";
@@ -235,44 +237,44 @@ class city {
 
 		taxTable.rows[1].cells[0].innerHTML = "IT";
 		taxTable.rows[1].cells[1].innerHTML = this.taxes[0]/100;
-		taxTable.rows[1].cells[2].innerHTML = this.taxes[1]/100;
-		taxTable.rows[1].cells[3].innerHTML = this.taxes[2]/100;
-		total = this.taxes[0]/100 + this.taxes[1]/100 + this.taxes[2]/100;
+		taxTable.rows[1].cells[2].innerHTML = this.taxes[10]/100;
+		taxTable.rows[1].cells[3].innerHTML = this.taxes[20]/100;
+		total = this.taxes[0]/100 + this.taxes[10]/100 + this.taxes[20]/100;
 		taxTable.rows[1].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[2].cells[0].innerHTML = "PT";
-		taxTable.rows[2].cells[1].innerHTML = this.taxes[3]/100;
-		taxTable.rows[2].cells[2].innerHTML = this.taxes[4]/100;
-		taxTable.rows[2].cells[3].innerHTML = this.taxes[5]/100;
-		total = this.taxes[3]/100 + this.taxes[4]/100 + this.taxes[5]/100;
+		taxTable.rows[2].cells[1].innerHTML = this.taxes[1]/100;
+		taxTable.rows[2].cells[2].innerHTML = this.taxes[11]/100;
+		taxTable.rows[2].cells[3].innerHTML = this.taxes[21]/100;
+		total = this.taxes[3]/100 + this.taxes[11]/100 + this.taxes[21]/100;
 		taxTable.rows[2].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[3].cells[0].innerHTML = "VT";
-		taxTable.rows[3].cells[1].innerHTML = this.taxes[6]/100;
-		taxTable.rows[3].cells[2].innerHTML = this.taxes[7]/100;
-		taxTable.rows[3].cells[3].innerHTML = this.taxes[8]/100;
-		total = this.taxes[6]/100 + this.taxes[7]/100 + this.taxes[8]/100;
+		taxTable.rows[3].cells[1].innerHTML = this.taxes[2]/100;
+		taxTable.rows[3].cells[2].innerHTML = this.taxes[12]/100;
+		taxTable.rows[3].cells[3].innerHTML = this.taxes[22]/100;
+		total = this.taxes[2]/100 + this.taxes[12]/100 + this.taxes[22]/100;
 		taxTable.rows[3].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[4].cells[0].innerHTML = "PI";
-		taxTable.rows[4].cells[1].innerHTML = this.taxes[9]/100;
-		taxTable.rows[4].cells[2].innerHTML = this.taxes[10]/100;
-		taxTable.rows[4].cells[3].innerHTML = this.taxes[11]/100;
-		total = this.taxes[9]/100 + this.taxes[10]/100 + this.taxes[11]/100;
+		taxTable.rows[4].cells[1].innerHTML = this.taxes[3]/100;
+		taxTable.rows[4].cells[2].innerHTML = this.taxes[13]/100;
+		taxTable.rows[4].cells[3].innerHTML = this.taxes[23]/100;
+		total = this.taxes[3]/100 + this.taxes[13]/100 + this.taxes[23]/100;
 		taxTable.rows[4].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[5].cells[0].innerHTML = "PO";
-		taxTable.rows[5].cells[1].innerHTML = this.taxes[12]/100;
-		taxTable.rows[5].cells[2].innerHTML = this.taxes[13]/100;
-		taxTable.rows[5].cells[3].innerHTML = this.taxes[14]/100;
-		total = this.taxes[12]/100 + this.taxes[13]/100 + this.taxes[14]/100;
+		taxTable.rows[5].cells[1].innerHTML = this.taxes[4]/100;
+		taxTable.rows[5].cells[2].innerHTML = this.taxes[14]/100;
+		taxTable.rows[5].cells[3].innerHTML = this.taxes[24]/100;
+		total = this.taxes[4]/100 + this.taxes[14]/100 + this.taxes[24]/100;
 		taxTable.rows[5].cells[4].innerHTML = total.toFixed(2);
 
 		taxTable.rows[6].cells[0].innerHTML = "RT";
-		taxTable.rows[6].cells[1].innerHTML = this.taxes[15]/100;
-		taxTable.rows[6].cells[2].innerHTML = this.taxes[16]/100;
-		taxTable.rows[6].cells[3].innerHTML = this.taxes[17]/100;
-		total = this.taxes[15]/100 + this.taxes[16]/100 + this.taxes[17]/100;
+		taxTable.rows[6].cells[1].innerHTML = this.taxes[5]/100;
+		taxTable.rows[6].cells[2].innerHTML = this.taxes[15]/100;
+		taxTable.rows[6].cells[3].innerHTML = this.taxes[25]/100;
+		total = this.taxes[5]/100 + this.taxes[15]/100 + this.taxes[25]/100;
 		taxTable.rows[6].cells[4].innerHTML = total.toFixed(2);
 
 		containerDiv.taxes.taxEx = addDiv("", "taxEx", containerDiv.taxes);
@@ -298,7 +300,7 @@ class city {
 		infoPane.type_5 = addDiv("", "stdFloatDiv", infoPane);
 		infoPane.type_6 = addDiv("", "stdFloatDiv", infoPane);
 
-		for (var i=18; i<this.taxes.length; i+=5) {
+		for (var i=27; i<this.taxes.length; i+=5) {
 			//console.log("switch " + this.taxes[i]);
 			switch(this.taxes[i]) {
 				case 1:

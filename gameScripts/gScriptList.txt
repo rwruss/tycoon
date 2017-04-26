@@ -78,6 +78,7 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Loading taxes at city info screen (calc amounts and exceptions)
 Resolve numbering of cities/regions in 1017, 1027, 1008, etc...
 Rights, Pollution, labor, and material costs for products sold to cities
 Figure out how i decided to store city demands - wtf?

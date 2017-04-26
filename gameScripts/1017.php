@@ -69,10 +69,10 @@ if ($baseDemand > 0) {
 	echo 'Start Price: '.$startPrice.', Final Price: '.$endPrice.' ('.($startDemand/$baseDemand).')<br>';
 } else $usePrice = 0;
 
-$totalSale = $postVals[4] * $usePrice;
-$profit = $totalSale;
+$grossSale = $postVals[4] * $usePrice;
+$profit = $grossSale;
 
-echo 'Sale price is '.$usePrice.' for a total sale value of '.$usePrice.' x '.$postVals[4].' = '.$profit.'<br>';
+echo 'Sale price is '.$usePrice.' for a total sale value of '.$usePrice.' x '.$postVals[4].' = '.$grossSale.'<br>';
 
 // Calculate taxes on the sale
 if ($thisFactory->get('region_3') != $postVals[2]) {
@@ -105,10 +105,21 @@ echo '<p>Calced tax amts::<br>';
 print_r($taxAmounts);
 //taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile)
 
-// Add sales to factory tax base for it's own region
-$thisFactory->adjVal('totalSales', $profit);
-$thisFactory->adjVal('periodSales', $profit);
+// calculate net sale price on the transaction
+$totalTax = $taxAmounts[1] + $taxAmounts[3] + $taxAmounts[5] + $taxAmounts[6];
+$totalTax += $taxAmounts[11] + $taxAmounts[13] + $taxAmounts[15] + $taxAmounts[16];
+$totalTax += $taxAmounts[21] + $taxAmounts[23] + $taxAmounts[25] + $taxAmounts[26];
+$netSale = $grossSale - $totalTax;
 
+echo '<p>PROFIT CALC:<br>'.$grossSale.' - '.$totalTax.' = '.($grossSale - $totalTax).'<p>';
+
+// Add taxes to selling region
+
+// Add taxes to buying region
+
+// Add sales to factory tax base for it's own region
+$thisFactory->adjVal('totalSales', $netSale);
+$thisFactory->adjVal('periodSales', $netSale);
 
 // record adjusted city demand and update time
 echo '<p>Save new damend rate:';
@@ -120,13 +131,13 @@ $buyingCity->save('lastUpdate', $now);
 // add money to playerFactories
 
 echo '<p>Save player money';
-$thisPlayer->save('money', $thisPlayer->get('money') + $profit);
+$thisPlayer->save('money', $thisPlayer->get('money') + $netSale);
 echo '<br>final money: '.$thisPlayer->get('money');
 
 // remove qunatity from factory
 $thisFactory->adjVal('prodInv'.($prodNumber+1), -$postVals[4]);
-$thisFactory->adjVal('totalSales', $profit);
-$thisFactory->adjVal('periodSales', $profit);
+$thisFactory->adjVal('totalSales', $netSale);
+$thisFactory->adjVal('periodSales', $netSale);
 $thisFactory->saveAll($objFile);
 
 echo 'final qty: '.$thisFactory->get('prodInv'.($prodNumber+1)).'

@@ -36,7 +36,7 @@ textBlob("", cityPane, "City information (City #'.$postVals[1].')");
 var showCity = new city([';
 echo $postVals[1].',"City Name", '.implode(',', array_slice($thisCity->objDat, 11, 25)).','.implode(',', array_slice($thisCity->objDat, 50, 40)).','.implode(',', array_slice($thisCity->objDat, 120, 20)).']';
 echo ',[]';
-echo ',[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,1,2,102,500,"Some COmpany"]);';
+echo ',[1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10]);';
 
 echo '
 showCity.loadDemands(['.implode(',', array_slice($thisCity->objDat, $thisCity->laborDemandOffset-1, 10000)).'], ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborStoreOffset-1, 10000)).']);
