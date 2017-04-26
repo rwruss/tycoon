@@ -78,11 +78,8 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
-Loading taxes at city info screen (calc amounts and exceptions)
-Resolve numbering of cities/regions in 1017, 1027, 1008, etc...
+TIme delay for shipping/selling items to a city
 Rights, Pollution, labor, and material costs for products sold to cities
-Figure out how i decided to store city demands - wtf?
-Calculate taxes on city sales
 Add to labor list when labor is hired
 Load and show contract deliveries for a factory
 Load and show outstanding invoices for a factory and company
@@ -110,12 +107,14 @@ Player information detail (1045)
 Business Deals/Agreements with other companies and conglomerates
 Protect empty order list writing in 1014
 News ticker/scroll bar
+Loading taxes at city info screen (calc amounts and exceptions)
 
 VERIFY DONE
 **Worker pool for when they quit/get fired
 Fix labor type sales at cities (based on schools available)
 Don't allow product switching while production is in progress
 create tax calculation function for use in different scripts
+Calculate taxes on city sales
 
 TO DO ON HOLD
 Fix & expand Sale options/market - sorting and filtering (1013)
@@ -147,6 +146,7 @@ tracking of bids already submitted for contracts
 contracts for certain amounts of items
 Add factories to factory list when construction is started
 update labor list when labor is hired
+Figure out how i decided to store city demands - wtf?
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

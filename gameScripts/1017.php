@@ -113,9 +113,10 @@ $netSale = $grossSale - $totalTax;
 
 echo '<p>PROFIT CALC:<br>'.$grossSale.' - '.$totalTax.' = '.($grossSale - $totalTax).'<p>';
 
-// Add taxes to selling region
-
-// Add taxes to buying region
+// Add taxes to buying and selling region
+$buyTaxAreas = [0,0,$postVals[2]];
+$sellTaxAreas = [$thisFactory->get('region_3'), $thisFactory->get('region_2'), $thisFactory->get('region_1')];
+saveRegionTaxes($sellTaxAreas, $buyTaxAreas, $taxAmounts);
 
 // Add sales to factory tax base for it's own region
 $thisFactory->adjVal('totalSales', $netSale);
