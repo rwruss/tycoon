@@ -117,21 +117,10 @@ function taxCost ($taxRates, $transDat) {
 
 function saveRegionTaxes($sellLocation, $buyLocation, $taxAmounts) {
 	global $gamePath;
-	
-	/*
-	sellLocation[0] =  selling City
-	sellLocation[1] =  selling Region
-	sellLocation[2] =  selling Nation
-	
-	buyLocation[0] =  buying City
-	buyLocation[1] =  buying Region
-	buyLocation[2] =  buying Nation
-	*/
-	
+
 	$sllerTaxDat = '';
-	$sellingRegion = $sellFactory->get('region_2');
-	$sellingNation = $sellFactory->get('region_1');
-	
+	$buyerTaxDat = '';
+
 	// Add the tax to city/region/nation treasuries
 	$taxIncomeFile = fopen($gamePath.'/taxReceipts.txf', 'ab');
 	for ($i=1; $i<10; $i++) {
@@ -141,8 +130,7 @@ function saveRegionTaxes($sellLocation, $buyLocation, $taxAmounts) {
 	}
 
 	// Add the tax to the buying nation for any import Tax
-	$buyerTaxDat = '';
-	$buyingNation = $buyingFactory->get('region_1');
+
 	$buyerTaxDat .= pack('s*', $buyLocation[2], 9, $taxAmounts[29]);
 
 	echo 'Record tax transactions';

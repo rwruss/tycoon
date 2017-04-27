@@ -3,9 +3,9 @@
 /*
 PostVals
 1 - Factory ID
-3 - City ID
-5 - Product ID
-6 - Product Qty
+2 - City ID
+3 - Product ID
+4 - Product Qty
 */
 
 require_once('./slotFunctions.php');
@@ -86,6 +86,24 @@ $thisFactory->set('region_3', 1);
 echo '<p>BUYING CITY ('.$postVals[2].')<p>SELLING CITY ('.$thisFactory->get('region_3').'):';
 print_r($sellingCity->objDat);
 
+// determine the index of the product being sold
+$prodIndex = 0;
+$optionCheck = false;
+$optionList = $thisFactory->productionOptions();
+echo 'look for '.$postVals[3].' in <br>';
+print_r($optionList);
+for ($i=0; $i<5; $i++) {
+	if ($postVals[3] == $optionList[$i]) {
+		$optionCheck = true;
+		$prodIndex = $i;
+		break;
+	}
+}
+
+if (!$optionCheck) exit('Not a valid item to sell');
+$laborCost = round($postVals[4]*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+4]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
+echo '<p>Labor Cost:'.$laborCost.'<br>Material Cost:';
+
 //see taxCalcs.php for transaction format
 $transaction = array_fill(0, 25, 0);
 $transaction[1] = $postVals[4]; // sold qty
@@ -93,8 +111,8 @@ $transaction[2] = $usePrice; // sale price
 $transaction[3] = $postVals[1]; // selling factory ID
 $transaction[5] = 0; // pollution
 $transaction[6] = 0; // rights
-$transaction[14] = 0;
-$transaction[15] = 0;
+$transaction[14] = 0; // material cost
+$transaction[15] = $laborCost; // labor cost
 
 $taxRates = taxRates($transaction, $thisFactory, $buyingCity, $sellingCity, $thisPlayer, $slotFile);
 echo '<p>Calced tax rates:<br>';
