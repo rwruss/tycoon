@@ -39,8 +39,10 @@ if ($optionCheck) {
   }
 } else exit('Not a valid item');
 
-
+// Verify factory has enough inventroy for this sale
 if ($qtyCheck) exit ('note enough of this ('.$thisFactory->get('prodInv'.($prodNumber+1)).' < '.$postVals[4].')');
+$saleQty = $postVals[4];
+
 // Load the city information
 $buyingCity = loadCityDemands($postVals[2], $cityFile);
 //print_R($buyingCity->objDat);
@@ -54,7 +56,7 @@ echo 'Base demand: '.$buyingCity->baseDemand($postVals[3]);
 $basePrice = 100;
 $baseDemand = $buyingCity->baseDemand($postVals[3]);
 $startDemand = $buyingCity->currentDemand($postVals[3], $now);
-$endDemand = max(intval($startDemand + $postVals[4]),0);
+$endDemand = max(intval($startDemand + $saleQty),0);
 
 /*
 $startPrice = intval(min($startDemand/$baseDemand, 2.0)*$basePrice);
@@ -69,10 +71,10 @@ if ($baseDemand > 0) {
 	echo 'Start Price: '.$startPrice.', Final Price: '.$endPrice.' ('.($startDemand/$baseDemand).')<br>';
 } else $usePrice = 0;
 
-$grossSale = $postVals[4] * $usePrice;
+$grossSale = $saleQty * $usePrice;
 $profit = $grossSale;
 
-echo 'Sale price is '.$usePrice.' for a total sale value of '.$usePrice.' x '.$postVals[4].' = '.$grossSale.'<br>';
+echo 'Sale price is '.$usePrice.' for a total sale value of '.$usePrice.' x '.$saleQty.' = '.$grossSale.'<br>';
 
 // Calculate taxes on the sale
 if ($thisFactory->get('region_3') != $postVals[2]) {
@@ -101,7 +103,13 @@ for ($i=0; $i<5; $i++) {
 }
 
 if (!$optionCheck) exit('Not a valid item to sell');
-$laborCost = round($postVals[4]*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+4]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
+
+// calculate transaction costs
+$sentQual = round($saleQty*$sellFactory->objDat[$sellFactory->productStats + $prodIndex*5+0]/$sellFactory->objDat[$sellFactory->prodInv+$prodIndex]);
+$sentPol = round($saleQty*$sellFactory->objDat[$sellFactory->productStats + $prodIndex*5+1]/$sellFactory->objDat[$sellFactory->prodInv+$prodIndex]);
+$sentRights = round($saleQty*$sellFactory->objDat[$sellFactory->productStats + $prodIndex*5+2]/$sellFactory->objDat[$sellFactory->prodInv+$prodIndex]);
+$materialCost = round($saleQty*$sellFactory->objDat[$sellFactory->productStats + $prodIndex*5+3]/$sellFactory->objDat[$sellFactory->prodInv+$prodIndex]);
+$laborCost = round($saleQty*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+4]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
 echo '<p>Labor Cost:'.$laborCost.'<br>Material Cost:';
 
 //see taxCalcs.php for transaction format
@@ -154,7 +162,7 @@ $thisPlayer->save('money', $thisPlayer->get('money') + $netSale);
 echo '<br>final money: '.$thisPlayer->get('money');
 
 // remove qunatity from factory
-$thisFactory->adjVal('prodInv'.($prodNumber+1), -$postVals[4]);
+$thisFactory->adjVal('prodInv'.($prodNumber+1), -$saleQty);
 $thisFactory->adjVal('totalSales', $netSale);
 $thisFactory->adjVal('periodSales', $netSale);
 $thisFactory->saveAll($objFile);
