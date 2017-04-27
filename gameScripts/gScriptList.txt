@@ -78,6 +78,8 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Depreciation of Factory value for taxes
+Material Cost for items with no input
 TIme delay for shipping/selling items to a city
 Rights, Pollution, labor, and material costs for products sold to cities
 Add to labor list when labor is hired
