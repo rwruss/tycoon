@@ -1808,3 +1808,11 @@ getFactoriesByProduct = function (factoryList, productID) {
 	}
 	return tmpA;
 }
+
+calcTaxRates = function (prodDat, baseRates) {
+	for (var i=11; i<baseRates.length; i+=4) {
+		if (prodDat[baseRates[i]] == baseRates[i+2]) {
+			baseRates[baseRates[i+1]] += baseRates[i+3];
+		}
+	}
+}

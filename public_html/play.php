@@ -7,6 +7,7 @@ $numFactories = 8;
 
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
+require_once('./taxCalcs.php');
 
 session_start();
 if (!isset($_SESSION["playerId"])) {
@@ -67,21 +68,29 @@ $factoryList = [];
 if ($thisPlayer->get('ownedObjects') > 0) {
 	$ownedObjects = new itemSlot($thisPlayer->get('ownedObjects'), $slotFile, 40);
 
+$cityFile = fopen($gamePath.'/cities.dat', 'rb');
 	for ($i=1; $i<sizeof($ownedObjects->slotData); $i++) {
 		if ($ownedObjects->slotData[$i] > 0) {
 			//echo 'Object '.$ownedObjects->slotData[$i].'<br>';
 			$thisObject = loadObject($ownedObjects->slotData[$i], $unitFile, 400);
 			if ($thisObject->get('oType') == 3) {
-				$factoryList = array_merge($factoryList, $thisObject->overViewInfo());
+				// calculate selling taxes for this factory
+				$sellingCity = loadCity($thisObject->get('region_3'), $cityFile);
+				$taxRates = taxRates(0, $thisObject, null, $sellingCity, $thisPlayer, $slotFile);
+
+				$factoryList = array_merge($factoryList, $thisObject->overViewInfo(), $taxRates);
+				//$factoryList = array_merge($factoryList, $thisObject->overViewInfo());
 				//array_push($factoryList, $thisObject->get('subType'), $thisObject->get('currentProd'), $thisObject->get('prodRate'), $ownedObjects->slotData[$i]);
 			}
 			else echo 'Cull object type '.$thisObject->get('oType');
 		}
 	}
 }
+fclose($cityFile);
+echo '<p>Factory LIST:';
 //print_r($factoryList);
+echo '<p>';
 // Load company labor
-//echo 'Labor in slot '.$thisPlayer->get('laborSlot');
 $companyLabor = [];
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
 //print_r($laborSlot->slotData);
@@ -496,9 +505,9 @@ echo '
 
 
 		playerFactories = new Array(';
-		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',', array_slice($factoryList, 0, 16)).'])';
-		for ($i=16; $i<sizeof($factoryList); $i+=16) {
-			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 16)).'])';
+		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',', array_slice($factoryList, 0, 47)).'])';
+		for ($i=47; $i<sizeof($factoryList); $i+=47) {
+			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 47)).'])';
 		}
 		echo ');
 

@@ -280,7 +280,7 @@ class factory extends object {
 		$tmpA[11] = $this->get('prodInv3');
 		$tmpA[12] = $this->get('prodInv4');
 		$tmpA[13] = $this->get('prodInv5');
-		$tmpA[14] = $this->nextUpdate;
+		$tmpA[14] = 0; // next update ?
 		$tmpA[15] = $this->get('subType');
 
 		return $tmpA;
@@ -504,6 +504,9 @@ class city extends object {
 		$this->attrList['cLaw'] = 34;
 		$this->attrList['rLaw'] = 35;
 		$this->attrList['nLaw'] = 36;
+
+		$this->attrList['pollutionAdj'] = 37;
+		$this->attrList['rightsAdj'] = 38;
 
 	}
 

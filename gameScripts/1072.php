@@ -74,6 +74,7 @@ $transaction[2] = $contractInfo[16]; // accepted price
 $transaction[3] = $postVals[1]; // selling factory ID
 $transaction[5] = $sentPol; // pollution
 $transaction[6] = $sentRights; // rights
+$transaction[7] = $contractInfo[3]; // product ID
 $transaction[14] = $materialCost;
 $transaction[15] = $laborCost;
 
@@ -107,9 +108,9 @@ if ($contractInfo[23] == 1 || 1) {
 			$sellFactory->objDat[$sellFactory->paidTaxOffset + $i] += $taxAmounts[$i];
 			$sellFactory->objDat[$sellFactory->paidTaxOffset + $i+10] += $taxAmounts[$i+10];
 			$sellFactory->objDat[$sellFactory->paidTaxOffset + $i+20] += $taxAmounts[$i+20];
-		}		
+		}
 
-		// Save taxes due to the selling region/city		
+		// Save taxes due to the selling region/city
 		// Add taxes to buying and selling region
 		$buyTaxAreas = [0,0,$buyingFactory->get('region_1')];
 		$sellTaxAreas = [$thisFactory->get('region_3'), $thisFactory->get('region_2'), $thisFactory->get('region_1')];
@@ -192,7 +193,7 @@ echo '<script>updateFactory(['.implode(',', $sellFactory->overViewInfo()).'])</s
 
 // record the invoice ID in the buying player's unpaid invoice List
 if ($buyingPlayer->get('openInvoices') == 0) {
-	$newSlot = newSlot($slotFile, 40);	
+	$newSlot = newSlot($slotFile, 40);
 	$buyingPlayer->save('openInvoices', $newSlot);
 }
 $invoiceSlot = new itemSlot($buyingPlayer->get('openInvoices'), $slotFile, 40);

@@ -14,6 +14,10 @@ function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Ty
 	}
 }
 
+function factoryTaxRates() {
+
+}
+
 function taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile) {
 	/*
 	TRANS DAT START INDEX IS 1
@@ -22,6 +26,7 @@ function taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellin
 	$transDat[3] = $postVals[1]; // selling factory ID
 	$transDat[5] = $sentPol; // pollution
 	$transDat[6] = $sentRights; // rights
+	$transDat[7] = ; // product ID
 	$transDat[14] = $materialCost;
 	$transDat[15] = $laborCost;
 	$transDat = [sent quantity, unit price, selling factory ID, sent pollution, sent rights, material cost, labor cost]
@@ -33,16 +38,26 @@ function taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellin
 	*/
 
   	// [0, company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID, city ID, region ID, nation ID]
-  	$taxInfo = [0, $sellingFactory->get('owner'), $sellingFactory->get('subType'), $sellingFactory->get('industry'), $transDat[3],
-  		$sellingPlayer->get('teamID'), $sellingFactory->get('region_3'), $sellingFactory->get('region_2'), $sellingFactory->get('region_1')];
-
-  	// Calculate import/tarrif taxes for the buyer
-  	$importTaxEx = new itemSlot($buyingCity->get('nTax'), $slotFile, 40);
-    $importTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
-  	$taxes[29] = $importTaxEx->slotData[9];
-  	calcTaxes($importTaxEx->slotData, $taxInfo, $taxes);
+  	$taxInfo = [0,
+		$sellingFactory->get('owner'),
+		$sellingFactory->get('subType'),
+		$sellingFactory->get('industry'),
+		$transDat[3],
+  	$sellingPlayer->get('teamID'),
+		$transDat[7],
+		$sellingFactory->get('region_3'),
+		$sellingFactory->get('region_2'),
+		$sellingFactory->get('region_1')];
 
 		$taxes = array_fill(0,31,0);
+
+		// Calculate import/tarrif taxes for the buyer
+		if ($buyingCity != null) {
+	  	$importTaxEx = new itemSlot($buyingCity->get('nTax'), $slotFile, 40);
+	    $importTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
+	  	$taxes[29] = $importTaxEx->slotData[9];
+	  	calcTaxes($importTaxEx->slotData, $taxInfo, $taxes);
+		}
 
 		$cityTaxEx = new itemSlot($sellingCity->get('cTax'), $slotFile, 40);
   	$regionTaxEx = new itemSlot($sellingCity->get('rTax'), $slotFile, 40);

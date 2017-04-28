@@ -71,6 +71,8 @@ if ($baseDemand > 0) {
 	echo 'Start Price: '.$startPrice.', Final Price: '.$endPrice.' ('.($startDemand/$baseDemand).')<br>';
 } else $usePrice = 0;
 
+$usePrice *= $buyingCity->get('pollutionAdj')*$buyingCity->get('rightsAdj');
+
 $grossSale = $saleQty * $usePrice;
 $profit = $grossSale;
 
@@ -105,12 +107,12 @@ for ($i=0; $i<5; $i++) {
 if (!$optionCheck) exit('Not a valid item to sell');
 
 // calculate transaction costs
-$sentQual = round($saleQty*$sellFactory->objDat[$sellFactory->productStats + $prodIndex*5+0]/$sellFactory->objDat[$sellFactory->prodInv+$prodIndex]);
-$sentPol = round($saleQty*$sellFactory->objDat[$sellFactory->productStats + $prodIndex*5+1]/$sellFactory->objDat[$sellFactory->prodInv+$prodIndex]);
-$sentRights = round($saleQty*$sellFactory->objDat[$sellFactory->productStats + $prodIndex*5+2]/$sellFactory->objDat[$sellFactory->prodInv+$prodIndex]);
-$materialCost = round($saleQty*$sellFactory->objDat[$sellFactory->productStats + $prodIndex*5+3]/$sellFactory->objDat[$sellFactory->prodInv+$prodIndex]);
+$sentQual = round($saleQty*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+0]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
+$sentPol = round($saleQty*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+1]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
+$sentRights = round($saleQty*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+2]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
+$materialCost = round($saleQty*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+3]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
 $laborCost = round($saleQty*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+4]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
-echo '<p>Labor Cost:'.$laborCost.'<br>Material Cost:';
+echo '<p>Labor Cost:'.$laborCost.'<br>Material Cost:'.$materialCost.'<br>Sent Pol:'.$sentPol.'<br>Sent Rights :'.$sentRights;
 
 //see taxCalcs.php for transaction format
 $transaction = array_fill(0, 25, 0);
@@ -119,6 +121,7 @@ $transaction[2] = $usePrice; // sale price
 $transaction[3] = $postVals[1]; // selling factory ID
 $transaction[5] = 0; // pollution
 $transaction[6] = 0; // rights
+$transaction[7] = $postVals[3]; // product ID
 $transaction[14] = 0; // material cost
 $transaction[15] = $laborCost; // labor cost
 

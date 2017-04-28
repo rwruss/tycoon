@@ -78,6 +78,7 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Show taxes when selling to a city (or a player?)
 Depreciation of Factory value for taxes
 Material Cost for items with no input
 TIme delay for shipping/selling items to a city

@@ -59,6 +59,8 @@ class factory extends object {
 		this.nextUpdate = dat[14];
 		this.currentPrd = dat[1];
 		this.currentRate = dat[2];
+		this.taxes = dat.slice(16,47);
+		this.taxes.push(6,1,2,25)
 	}
 
 	update(dat) {
@@ -116,6 +118,14 @@ class factory extends object {
 	}
 
 	itemBar(target, prodIndex, sendStr) {
+		// estimate taxes
+		console.log(this.taxes);
+		let taxRates = this.taxes;
+		calcTaxRates([0,0,0,0,0,0,this.prod[prodIndex],0,0,0,0,0,0,0,0,0,0], taxRates);
+		console.log(taxRates);
+
+		let totalTax = taxRates.slice(0,30).reduce(function (a, b) {return a+b}, 0);
+		//
 		var container = addDiv("", "", target);
 		container.sendStr = sendStr;
 
@@ -129,6 +139,12 @@ class factory extends object {
 			scrMod(this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
 		});
 		button.innerHTML = "send this amount";
+
+		container.profitBar = addDiv("", "", container);
+		container.profitBar.innerHTML = "Tax rate of " + totalTax/100 + "%";
+
+		container.totalTax = totalTax;
+		container.slide.slide.addEventListener("change", function () {console.log("Tax Rate of " + totalTax)});
 	}
 
 	prodDetail(target, prodIndex) {
