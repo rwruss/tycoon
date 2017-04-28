@@ -493,6 +493,7 @@ class city extends object {
 		$this->attrList['nation'] = 21;
 
 		$this->attrList['fileBaseSize'] = 22;
+		$this->attrList['pGDP'] = 23;
 
 		$this->attrList['factoryList'] = 25;
 		$this->attrList['money'] = 26;
@@ -621,6 +622,8 @@ class product extends object {
 class region extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->attrList['pGDP'] = 23;
 	}
 }
 

@@ -186,7 +186,6 @@ fseek($contractFile, $postVals[3]);
 fwrite($contractFile, $contractDat);
 
 fclose($contractFile);
-fclose($objFile);
 
 // update the sending factory stats in the browser
 echo '<script>updateFactory(['.implode(',', $sellFactory->overViewInfo()).'])</script>';
@@ -198,5 +197,18 @@ if ($buyingPlayer->get('openInvoices') == 0) {
 }
 $invoiceSlot = new itemSlot($buyingPlayer->get('openInvoices'), $slotFile, 40);
 $invoiceSlot->addItem($invoiceID, $slotFile);
+
+// Record the sale in the GDP of the city, region, and nation
+$gdpGain = $sentQty*$contractInfo[16]; // GDP Gain
+$sellingCity->save('pDGP', $sellingCity->get('pGDP')+$gdpGain);
+
+$sellingRegion = loadRegion($thisFactory->get('region_2'), $objFile);
+$sellingRegion->save('pDGP', $sellingRegion->get('pGDP')+$gdpGain);
+
+$sellingNation = loadRegion($thisFactory->get('region_1'), $objFile);
+$sellingNation->save('pDGP', $sellingNation->get('pGDP')+$gdpGain);
+
+fclose($slotFile);
+fclose($objFile);
 
 ?>

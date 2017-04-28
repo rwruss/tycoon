@@ -78,9 +78,12 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Record sales in city GDP for selling city
+Store base taxes in cities and regions (not slots - this will only be for exceptions)
 Show taxes when selling to a city (or a player?)
 Depreciation of Factory value for taxes
 Material Cost for items with no input
+Stock Market
 TIme delay for shipping/selling items to a city
 Rights, Pollution, labor, and material costs for products sold to cities
 Add to labor list when labor is hired

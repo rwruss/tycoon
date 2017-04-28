@@ -70,6 +70,15 @@ if (flock($objFile, LOCK_EX)) {
 	echo 'Load slot '.$thisBusiness->get('ownedObjects');
   $ownedObjects = new itemSlot($thisBusiness->get('ownedObjects'), $slotFile, 40);
   $ownedObjects->addItem($newID, $slotFile);
+  
+  // Add to list of factories at the city
+  $buildCity = loadCity($cityLoc, $objFile);
+  if ($buildCity->get('factoryList') == 0) {
+	  $newSlot = newSlot($slotFile, 40);
+	  $buildCity->save('factoryList', $newSlot);
+  }
+  $cityFactories = new itemSlot($buildCity->get('factoryList'), $slotFile, 40);
+  $cityFactories->addItem($newID, $slotFile);
 
   //$newObj->overViewInfo()
   //echo '<script>playerFactories.push(new factory({subType:('.$factoryType.'-numProducts), objID:'.$newID.', prod:0, rate:0}))</script>';
