@@ -141,7 +141,7 @@ class factory extends object {
 		button.innerHTML = "send this amount";
 
 		container.profitBar = addDiv("", "", container);
-		container.profitBar.innerHTML = "Tax rate of " + totalTax/100 + "%";
+		container.profitBar.innerHTML = "Tax rate of " + totalTax + "%";
 
 		container.totalTax = totalTax;
 		container.slide.slide.addEventListener("change", function () {console.log("Tax Rate of " + totalTax)});

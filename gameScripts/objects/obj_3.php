@@ -69,44 +69,7 @@ for ($i=0; $i<10; $i++) {
 	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 }
 fclose($offerDatFile);
-/*
-// Load factory contracts and invoice orders
-$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
-$contractStr = '';
-$contractItems = [];
-$contractCount = 0;
-for ($i=0; $i<5; $i++) {
-	$contractItems[] = $i;
-	$contractStr .= pack('i', $i);
-	if ($thisObj->objDat[$thisObj->contractsOffset+$i] > 0) {
-		$contractCount++;
-		fseek($contractFile, $thisObj->objDat[$thisObj->contractsOffset+$i]);
-		$contractDat = fread($contractFile, 100);
-		$contractStr .= $contractDat.pack('i', $thisObj->objDat[$thisObj->contractsOffset+$i]);
-		$contractInfo = unpack('i*', $contractDat);
-		$contractItems = array_merge($contractItems, $contractInfo);
-		$contractItems[] = $thisObj->objDat[$thisObj->contractsOffset+$i];
-	}
-	// Load the latest invoices for open contracts
-	if ($contractInfo[22] > 0) {
-		$invoiceNum = $contractInfo[22];
-		$count = 0;
-		$contractIndex = sizeof($contractItems);
-		$contractItems[] = 0; // add a counter for the number of invoices to be sent
-		while ($invoiceNum > 0 && $count < 10) {
-			fseek($contractFile, $invoiceNum);
-			$invoiceDat = fread($contractFile, 112);
-			$invoiceInfo = unpack('i*', $invoiceDat);
-			$contractInfo = array_merge($contractInfo, $invoiceInfo);
-			$invoiceNum = $invoiceDat[11];
-			$count++;
-		}
-		$contractItems[$contractIndex] = $count;
-	}
-	$contractItems[0] = $contractCount;
-}
-fclose($contractFile);
-*/
+
 // Load factory contracts and invoice orders
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $headStr = '';
@@ -151,7 +114,7 @@ $headStr = pack('i', $contractCount).$headStr;
 $contractStr = $headStr.$contractStr;
 fclose($contractFile);
 
-echo 'Invoice size is '.sizeof($invoiceInfo);
+print_r($thisObj->invStats());
 
 echo '<script>
 factoryUpgradeProducts = [];

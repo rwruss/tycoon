@@ -351,6 +351,18 @@ class factory extends object {
 		return $tmp;
 	}
 
+	function invStats() {
+		return array_merge(array_slice($this->objDat, $this->inputCost, 15),
+			array_slice($this->objDat, $this->inputPollution, 15),
+			array_slice($this->objDat, $this->inputRights, 15),
+			array_slice($this->objDat, $this->inputQuality, 15),
+			array_slice($this->objDat, $this->inputPollution, 15));
+	}
+
+	function prodStats() {
+
+	}
+
 	function productionOptions() {
 		return ([$this->tempList['prod1'], $this->tempList['prod2'], $this->tempList['prod3'], $this->tempList['prod4'], $this->tempList['prod5']]);
 	}
@@ -622,7 +634,7 @@ class product extends object {
 class region extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->attrList['pGDP'] = 23;
 	}
 }

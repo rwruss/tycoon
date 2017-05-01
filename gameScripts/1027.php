@@ -79,6 +79,8 @@ productSales.addEventListener("change", function () {
 	for (i=0; i<tmpList.length; i++) {
 		if (tmpList[i] >= 0)	playerFactories[i].itemBar(cityTabs.renderKids[4].factoryBar, tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
 	}
+
+	// load the demand curve for this item for the city
 });
 
 </script>';
