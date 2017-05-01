@@ -403,6 +403,39 @@ class city {
 			demoBar.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*demoP) + ", " + Math.floor(122.5 + 122.5*demoP) + ",0)";
 		}
 	}
+	// [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+	/*
+	4	4	4
+	6	2	7
+	7	1
+	8	
+	9
+	*/
+	priceSearch(price) {
+		let hi = 99;
+		let lo = 0;
+		let index = 50;
+		while (hi - lo > 1) {
+			index = Math.floor((hi+lo)/2);
+			if (this.aDat[index] >= price) {
+				if (this.aDat[index-1] < price) {
+					break;
+					// match found
+				}
+				else hi = index;
+			}
+			else {
+				lo = index;
+			}
+		}
+		
+	// interpolate result
+	let dY = this.aDat[index] - this.aDat[index-1];
+	let dX = price - this.aDat[index-1];
+	
+	let calcPct = dx/dY + index;
+	return [calcPct, this.aDat[index-1], this.aDat];
+	}
 }
 
 class offer {
