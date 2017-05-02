@@ -180,6 +180,7 @@ class city {
 		this.rTax = objDat[14];
 		this.nTax = objDat[15];
 		this.leader = objDat[16];
+		this.population = objDat[13];
 		this.townDemo = new Array(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		this.laws = laws;
@@ -442,6 +443,16 @@ class city {
 
 	let calcPct = dX/dY + index-1;
 	return [calcPct, this.aDat[index-1], this.aDat[index]];
+	}
+	
+	qtyPrice(qty) {
+		// look up pct who can buy
+		let demand = 0.75;
+		let buyPct = Math.max(0, Math.min(100, 100*qty/(this.population*demand)));
+		
+		let basePrice = this.aDat[Math.floor(buyPct)];
+		let slope = this.aDat[buyPct+1];
+		
 	}
 }
 
