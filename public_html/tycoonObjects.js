@@ -183,6 +183,7 @@ class city {
 		this.townDemo = new Array(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		this.laws = laws;
+		this.aDat = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 		//this.taxes = taxes;
 		this.taxes = taxes.map(function(x) {
 			//console.log(x);
@@ -408,15 +409,20 @@ class city {
 	4	4	4
 	6	2	7
 	7	1
-	8	
+	8
 	9
 	*/
 	priceSearch(price) {
-		let hi = 99;
+		console.log(this);
+		console.log(this.aDat)
+		let safety = 0;
+		let hi = this.aDat.length;
 		let lo = 0;
-		let index = 50;
-		while (hi - lo > 1) {
+		let index;
+		while (hi - lo > 1 && safety < 20) {
+
 			index = Math.floor((hi+lo)/2);
+			console.log("chek spot " + index);
 			if (this.aDat[index] >= price) {
 				if (this.aDat[index-1] < price) {
 					break;
@@ -427,14 +433,15 @@ class city {
 			else {
 				lo = index;
 			}
+			safety++;
 		}
-		
+		console.log("found index " + index)
 	// interpolate result
 	let dY = this.aDat[index] - this.aDat[index-1];
 	let dX = price - this.aDat[index-1];
-	
-	let calcPct = dx/dY + index;
-	return [calcPct, this.aDat[index-1], this.aDat];
+
+	let calcPct = dX/dY + index-1;
+	return [calcPct, this.aDat[index-1], this.aDat[index]];
 	}
 }
 

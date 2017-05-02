@@ -81,6 +81,7 @@ productSales.addEventListener("change", function () {
 	}
 
 	// load the demand curve for this item for the city
+	console.log(showCity.priceSearch(5.75));
 });
 
 </script>';
