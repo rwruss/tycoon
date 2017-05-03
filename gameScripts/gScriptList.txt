@@ -78,6 +78,9 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Demographic demand effects
+  - things for rich people and poor people (yachts, cigarettes)
+  - demand by education, etc
 Record sales in city GDP for selling city
 Store base taxes in cities and regions (not slots - this will only be for exceptions)
 Show taxes when selling to a city (or a player?)
