@@ -184,7 +184,8 @@ class city {
 		this.townDemo = new Array(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		this.laws = laws;
-		this.aDat = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+		this.incomeLvls = [0, 25, 25, 23, 10, 6, 3, 3, 2, 2, 1, 0];
+		
 		//this.taxes = taxes;
 		this.taxes = taxes.map(function(x) {
 			//console.log(x);
@@ -405,54 +406,36 @@ class city {
 			demoBar.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*demoP) + ", " + Math.floor(122.5 + 122.5*demoP) + ",0)";
 		}
 	}
-	// [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-	/*
-	4	4	4
-	6	2	7
-	7	1
-	8
-	9
-	*/
-	priceSearch(price) {
-		console.log(this);
-		console.log(this.aDat)
-		let safety = 0;
-		let hi = this.aDat.length;
-		let lo = 0;
-		let index;
-		while (hi - lo > 1 && safety < 20) {
-
-			index = Math.floor((hi+lo)/2);
-			console.log("chek spot " + index);
-			if (this.aDat[index] >= price) {
-				if (this.aDat[index-1] < price) {
-					break;
-					// match found
-				}
-				else hi = index;
-			}
-			else {
-				lo = index;
-			}
-			safety++;
-		}
-		console.log("found index " + index)
-	// interpolate result
-	let dY = this.aDat[index] - this.aDat[index-1];
-	let dX = price - this.aDat[index-1];
-
-	let calcPct = dX/dY + index-1;
-	return [calcPct, this.aDat[index-1], this.aDat[index]];
-	}
 	
-	qtyPrice(qty) {
-		// look up pct who can buy
-		let demand = 0.75;
-		let buyPct = Math.max(0, Math.min(100, 100*qty/(this.population*demand)));
+	demandPrice(qty) {
+		var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
+		var productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
+		var totalSupply = [];
+		var totalDemand = [];
+		var currentSupply;
 		
-		let basePrice = this.aDat[Math.floor(buyPct)];
-		let slope = this.aDat[buyPct+1];
+		let popLvls = [].fill(0,this.incomeLvls.length);
+		for (let i=0; i<this.incomeLvls.length; i++) {
+			this.incomeLvls[i]*this.population;
+			totalDemand = this.incomeLvls[i]*this.population*productDemandLevels[i];
+		}
 		
+		let remSupply = currentSupply;
+		let lastSupply = 0;
+		let lastInterval = 0;
+		let remDemand = 1;
+		for (i=this.incomeLvls.length-1; i>0; i--) {
+			lastSupply = Math.min(remSupply, totalDemand[i]);
+			remSupply -= lastSupply;
+			remDemand = totalDemand[i] - lastSupply;
+			if (remDemand > 0) {
+				lastInterval = i;
+				break;
+			}
+		}
+		
+		// interpolate last interval with remaining supply
+		return nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*remDemand/totalDemand[i];
 	}
 }
 
