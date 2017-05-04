@@ -180,12 +180,13 @@ class city {
 		this.rTax = objDat[14];
 		this.nTax = objDat[15];
 		this.leader = objDat[16];
-		this.population = objDat[13];
+		//this.population = objDat[13];
 		this.townDemo = new Array(10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		this.laws = laws;
 		this.incomeLvls = [0, 25, 25, 23, 10, 6, 3, 3, 2, 2, 1, 0];
-		
+		this.population = 1000000;
+
 		//this.taxes = taxes;
 		this.taxes = taxes.map(function(x) {
 			//console.log(x);
@@ -406,20 +407,24 @@ class city {
 			demoBar.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*demoP) + ", " + Math.floor(122.5 + 122.5*demoP) + ",0)";
 		}
 	}
-	
+
 	demandPrice(qty) {
 		var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 		var productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
 		var totalSupply = [];
 		var totalDemand = [];
-		var currentSupply;
-		
+		var currentSupply = 375000;
+
 		let popLvls = [].fill(0,this.incomeLvls.length);
 		for (let i=0; i<this.incomeLvls.length; i++) {
+			console.log(this.incomeLvls[i] + " * " + this.population + " * " + productDemandLevels[i]);
 			this.incomeLvls[i]*this.population;
-			totalDemand = this.incomeLvls[i]*this.population*productDemandLevels[i];
+			totalDemand[i] = this.incomeLvls[i]*this.population*productDemandLevels[i]/100;
+			//console.log(totalDemand);
 		}
-		
+
+		console.log(totalDemand);
+
 		let remSupply = currentSupply;
 		let lastSupply = 0;
 		let lastInterval = 0;
@@ -428,14 +433,16 @@ class city {
 			lastSupply = Math.min(remSupply, totalDemand[i]);
 			remSupply -= lastSupply;
 			remDemand = totalDemand[i] - lastSupply;
+			console.log(i + ": Rem Dem = " + remDemand + " ->> " + totalDemand[i] + " - " + lastSupply);
 			if (remDemand > 0) {
 				lastInterval = i;
 				break;
 			}
 		}
-		
+
 		// interpolate last interval with remaining supply
-		return nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*remDemand/totalDemand[i];
+		console.log(nationalPayDemos[i+1] + " - (" + nationalPayDemos[i+1] + " - " + nationalPayDemos[i] + " ) * " + remDemand + " / " + totalDemand[i]);
+		return nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i];
 	}
 }
 
