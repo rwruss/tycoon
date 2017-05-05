@@ -423,10 +423,12 @@ class city {
 
 		console.log("add qty ogf " + qty + " for a current supply of " + currentSupply);
 
+		// calculate demand levels based on population, city income levels, and demand levels
 		let popLvls = [].fill(0,this.incomeLvls.length);
 		for (let i=0; i<this.incomeLvls.length; i++) {
 			//console.log(this.incomeLvls[i] + " * " + this.population + " * " + productDemandLevels[i]);
 			this.incomeLvls[i]*this.population;
+
 			totalDemand[i] = this.incomeLvls[i]*this.population*productDemandLevels[i]/100;
 		}
 
@@ -436,6 +438,7 @@ class city {
 		let lastSupply = 0;
 		let lastInterval = 0;
 		let remDemand = 1;
+		// Assign the supply the the different brackets from the top down and see what is left
 		for (i=this.incomeLvls.length-1; i>0; i--) {
 			lastSupply = Math.min(remSupply, totalDemand[i]);
 			remSupply -= lastSupply;
