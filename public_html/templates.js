@@ -18,6 +18,15 @@ actionBox = function(trg, prm, maxPoints) {
 	return thisBox;
 }
 
+newButton = function(trg, action) {
+	button1 = addDiv("button1", "button", trg);
+	button1.addEventListener("click", action);
+
+	button1.innerHTML = "button";
+
+	return button1;
+}
+
 slideBox = function (trg, maxPoints) {
 	let thisBox = addDiv("", "selectContain", trg);
 	thisBox.unitSpace = addDiv("", "selectContain", thisBox);
@@ -870,8 +879,8 @@ slideValBar = function (trg, slideID, low, hi) {
 	var contain = addDiv("", "slideContain", trg);
 	contain.descr = addDiv("", "slideTitle", contain);
 
-	var minVal = addDiv("", "slideMin", contain);
-	minVal.innerHTML = low;
+	contain.minVal = addDiv("", "slideMin", contain);
+	contain.minVal.innerHTML = low;
 
 	contain.slide = document.createElement("input");
 	contain.slide.type="range";
@@ -889,9 +898,52 @@ slideValBar = function (trg, slideID, low, hi) {
 	contain.setVal = addDiv("", "slideVal", contain);
 	contain.setVal.innerHTML = 0;
 
-	minVal.addEventListener("click", function (event) {event.stopPropagation();contain.slide.stepDown(1); contain.setVal.innerHTML = contain.slide.value;});
+	contain.minVal.addEventListener("click", function (event) {
+		event.stopPropagation();contain.slide.stepDown(1);
+		contain.setVal.innerHTML = contain.slide.value;
+		console.log(this.parentNode.slide);
+
+		if (document.createEvent) {
+		    event = document.createEvent("HTMLEvents");
+		    event.initEvent("change", true, true);
+		  } else {
+		    event = document.createEventObject();
+		    event.eventType = "change";
+		  }
+
+		  event.eventName = "change";
+
+		  if (document.createEvent) {
+		    this.parentNode.slide.dispatchEvent(event);
+		  } else {
+		    this.parentNode.slide.fireEvent("on" + event.eventType, event);
+		  }
+
+		//this.parentNode.slide.dispatchEvent("change");
+	});
 	contain.addEventListener("click", function() {event.stopPropagation()});
-	contain.maxVal.addEventListener("click", function (event) {event.stopPropagation();contain.slide.stepUp(1); contain.setVal.innerHTML = contain.slide.value;});
+	contain.maxVal.addEventListener("click", function (event) {
+		event.stopPropagation();
+		contain.slide.stepUp(1);
+		contain.setVal.innerHTML = contain.slide.value;
+
+		if (document.createEvent) {
+		    event = document.createEvent("HTMLEvents");
+		    event.initEvent("change", true, true);
+		  } else {
+		    event = document.createEventObject();
+		    event.eventType = "change";
+		  }
+
+		  event.eventName = "change";
+
+		  if (document.createEvent) {
+		    this.parentNode.slide.dispatchEvent(event);
+		  } else {
+		    this.parentNode.slide.fireEvent("on" + event.eventType, event);
+		  }
+
+	});
 
 	//groupList.push(slide);
 

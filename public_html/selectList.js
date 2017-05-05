@@ -399,16 +399,6 @@ class multiList extends objectList {
 	}
 }
 
-newButton = function(trg, action) {
-	button1 = addDiv("button1", "button", trg);
-	button1.addEventListener("click", action);
-
-	button1.innerHTML = "button";
-
-	return button1;
-}
-
-
 SlclearTarget = function(trg) {
 	//console.log("show object " + this);
 	while (trg.firstChild) {

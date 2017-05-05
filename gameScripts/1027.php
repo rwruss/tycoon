@@ -73,11 +73,26 @@ let productSales = selectMenu(playerProdNames);
 cityTabs.renderKids[4].prodBar.appendChild(productSales);
 
 productSales.addEventListener("change", function () {
+	let thisPrice;
+	let thisTaxes;
+	let thisRev;
 	cityTabs.renderKids[4].factoryBar.innerHTML = "";
 	console.log("load facs that make this (" + this.value + ")");
 	let tmpList = getFactoriesByProduct(playerFactories, this.value);
 	for (i=0; i<tmpList.length; i++) {
-		if (tmpList[i] >= 0)	playerFactories[i].itemBar(cityTabs.renderKids[4].factoryBar, tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
+		if (tmpList[i] >= 0)	{
+			let thisFac = playerFactories[i].itemBar(cityTabs.renderKids[4].factoryBar, tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
+			thisFac.slide.slide.addEventListener("change", function () {
+
+				thisPrice = showCity.demandPrice(this.value);
+				thisRev = this.value*thisPrice;
+				thisTaxes = thisFac.totalTax * this.value*thisPrice/100
+
+				thisFac.priceBar.innerHTML = this.value + " @ " + thisPrice + " = " + (thisRev).toFixed(2);
+				thisFac.taxCost.innerHTML = "Less taxes: " + (thisTaxes).toFixed(2);
+				thisFac.profit.innerHTML = "Net: " + (thisRev - thisTaxes).toFixed(2);
+			});
+		}
 	}
 
 	// load the demand curve for this item for the city

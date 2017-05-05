@@ -78,6 +78,8 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Button style class
+Determine the level where a qty change in product will change the price (check for bounds to eliminate uncessesary updates)
 Demographic demand effects
   - things for rich people and poor people (yachts, cigarettes)
   - demand by education, etc

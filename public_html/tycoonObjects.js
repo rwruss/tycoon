@@ -122,9 +122,9 @@ class factory extends object {
 		console.log(this.taxes);
 		let taxRates = this.taxes;
 		calcTaxRates([0,0,0,0,0,0,this.prod[prodIndex],0,0,0,0,0,0,0,0,0,0], taxRates);
-		console.log(taxRates);
 
-		let totalTax = taxRates.slice(0,30).reduce(function (a, b) {return a+b}, 0);
+
+		let totalTax = taxRates.slice(0,30).reduce(function (a, b) {return a+b}, 0)/10000;
 		//
 		var container = addDiv("", "", target);
 		container.sendStr = sendStr;
@@ -140,11 +140,16 @@ class factory extends object {
 		});
 		button.innerHTML = "send this amount";
 
-		container.profitBar = addDiv("", "", container);
-		container.profitBar.innerHTML = "Tax rate of " + totalTax + "%";
+		container.taxBar = addDiv("", "", container);
+		container.taxBar.innerHTML = "Tax rate of " + totalTax + "%";
+		container.priceBar = addDiv("", "", container);
+		container.taxCost = addDiv("", "", container);
+		container.profit = addDiv("", "", container);
 
 		container.totalTax = totalTax;
-		container.slide.slide.addEventListener("change", function () {console.log("Tax Rate of " + totalTax)});
+		//container.slide.slide.addEventListener("change", function () {console.log("Tax Rate of " + totalTax)});
+
+		return container;
 	}
 
 	prodDetail(target, prodIndex) {
@@ -409,21 +414,23 @@ class city {
 	}
 
 	demandPrice(qty) {
+		console.log("add qty ogf " + qty)
 		var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 		var productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
 		var totalSupply = [];
 		var totalDemand = [];
-		var currentSupply = 375000;
+		var currentSupply = 375000 + parseInt(qty);
+
+		console.log("add qty ogf " + qty + " for a current supply of " + currentSupply);
 
 		let popLvls = [].fill(0,this.incomeLvls.length);
 		for (let i=0; i<this.incomeLvls.length; i++) {
-			console.log(this.incomeLvls[i] + " * " + this.population + " * " + productDemandLevels[i]);
+			//console.log(this.incomeLvls[i] + " * " + this.population + " * " + productDemandLevels[i]);
 			this.incomeLvls[i]*this.population;
 			totalDemand[i] = this.incomeLvls[i]*this.population*productDemandLevels[i]/100;
-			//console.log(totalDemand);
 		}
 
-		console.log(totalDemand);
+		//console.log(totalDemand);
 
 		let remSupply = currentSupply;
 		let lastSupply = 0;
@@ -433,16 +440,17 @@ class city {
 			lastSupply = Math.min(remSupply, totalDemand[i]);
 			remSupply -= lastSupply;
 			remDemand = totalDemand[i] - lastSupply;
-			console.log(i + ": Rem Dem = " + remDemand + " ->> " + totalDemand[i] + " - " + lastSupply);
+			//console.log(i + ": Rem Dem = " + remDemand + " ->> " + totalDemand[i] + " - " + lastSupply);
 			if (remDemand > 0) {
 				lastInterval = i;
 				break;
 			}
 		}
 
+
 		// interpolate last interval with remaining supply
 		console.log(nationalPayDemos[i+1] + " - (" + nationalPayDemos[i+1] + " - " + nationalPayDemos[i] + " ) * " + remDemand + " / " + totalDemand[i]);
-		return nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i];
+		return (nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i]).toFixed(2);
 	}
 }
 
