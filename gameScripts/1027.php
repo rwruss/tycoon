@@ -67,8 +67,8 @@ buildSchools.addEventListener("click", function () {scrMod("1053,'.$postVals[1].
 
 cityTabs.renderKids[4].prodBar = addDiv("", "stdFloatDiv", cityTabs.renderKids[4]);
 cityTabs.renderKids[4].factoryBar = addDiv("", "stdFloatDiv", cityTabs.renderKids[4]);
-console.log("make a meu of ");
-console.log(playerProdNames);
+//console.log("make a meu of ");
+//console.log(playerProdNames);
 let productSales = selectMenu(playerProdNames);
 cityTabs.renderKids[4].prodBar.appendChild(productSales);
 
@@ -98,6 +98,7 @@ productSales.addEventListener("change", function () {
 	// load the demand curve for this item for the city
 	console.log(showCity.demandPrice(100));
 });
+forceEvent(productSales, "change");
 
 </script>';
 

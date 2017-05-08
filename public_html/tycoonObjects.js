@@ -59,7 +59,7 @@ class factory extends object {
 		this.nextUpdate = dat[14];
 		this.currentPrd = dat[1];
 		this.currentRate = dat[2];
-		this.taxes = dat.slice(16,47);
+		this.taxes = dat.slice(16,47) || this.taxes;
 		this.taxes.push(6,1,2,25)
 	}
 
@@ -118,33 +118,57 @@ class factory extends object {
 	}
 
 	itemBar(target, prodIndex, sendStr) {
+		console.log("render item Bar");
+		var container;
+		if (target.instanceType == "itemBar") {
+			container = target;
+		} else {
+			container = addDiv(null, "", target);
+			container.innerHTML = "";
+			container.instanceType = "itemBar";
+			container.factoryDiv = this.renderSummary(container);
+			container.prodSection = addDiv("", "", container);
+
+			container.slide = slideValBar(container, "", 0, this.prodInv[prodIndex]);
+
+			container.taxBar = addDiv("", "", container);
+			container.priceBar = addDiv("", "", container);
+			container.taxCost = addDiv("", "", container);
+			container.profit = addDiv("", "", container);
+
+			let button = newButton(container, function () {
+				scrMod(this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
+			});
+			button.innerHTML = "send this amount";
+		}
+
+		if (target.instanced) {
+			container.instanced = true;
+		} else {
+			this.instances.push(container);
+			container.instanced = true;
+
+			let me = this;
+			container.prodIndex = prodIndex;
+			container.updateFunction = function (x) {
+				console.log("update itemBar");
+				me.itemBar(x, this.prodIndex, this.sendStr)};
+		}
+
+		container.prodSection.innerHTML = "Qty: "+ this.prodInv[prodIndex];
+		container.slide.slide.max = this.prodInv[prodIndex];
+		container.slide.slide.value = 0;
+		container.slide.setVal.innerHTML = 0;
+		container.slide.maxVal.innerHTML = this.prodInv[prodIndex];
+
 		// estimate taxes
 		console.log(this.taxes);
 		let taxRates = this.taxes;
 		calcTaxRates([0,0,0,0,0,0,this.prod[prodIndex],0,0,0,0,0,0,0,0,0,0], taxRates);
 
-
 		let totalTax = taxRates.slice(0,30).reduce(function (a, b) {return a+b}, 0)/10000;
-		//
-		var container = addDiv("", "", target);
-		container.sendStr = sendStr;
-
-		container.factoryDiv = this.renderSummary(container);
-		container.prodSection = addDiv("", "", container);
-		container.prodSection.innerHTML = "Qty: "+ this.prodInv[prodIndex];
-
-		container.slide = slideValBar(container, "", 0, this.prodInv[prodIndex]);
-
-		let button = newButton(container, function () {
-			scrMod(this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
-		});
-		button.innerHTML = "send this amount";
-
-		container.taxBar = addDiv("", "", container);
 		container.taxBar.innerHTML = "Tax rate of " + totalTax + "%";
-		container.priceBar = addDiv("", "", container);
-		container.taxCost = addDiv("", "", container);
-		container.profit = addDiv("", "", container);
+		container.sendStr = sendStr;
 
 		container.totalTax = totalTax;
 		//container.slide.slide.addEventListener("change", function () {console.log("Tax Rate of " + totalTax)});
@@ -174,9 +198,7 @@ setBar = function (id, desc, pct) {
 
 class city {
 	constructor(objDat, laws, taxes) {
-		console.log(objDat);
-		console.log(laws);
-		console.log(taxes);
+
 		this.objID = objDat[0];
 		this.objName = objDat[1];
 		this.details = objDat;
@@ -201,7 +223,7 @@ class city {
 				}	else return x;
 			} else return x;
 	})
-	console.log(this.taxes);
+	//console.log(this.taxes);
 	}
 
 	renderSummary(target) {
@@ -253,8 +275,6 @@ class city {
 		containerDiv.taxes.appendChild(taxTable);
 		let total;
 
-		console.log("TAXES");
-		console.log(this.taxes);
 		taxTable.rows[0].cells[1].innerHTML = "C";
 		taxTable.rows[0].cells[2].innerHTML = "R";
 		taxTable.rows[0].cells[3].innerHTML = "N";
@@ -390,7 +410,7 @@ class city {
 	}
 
 	renderDemos(trg) {
-		console.log(this.townDemo);
+		//console.log(this.townDemo);
 		let r,g,b, townP, ldrP, demoP;
 		for (var i=0; i<this.townDemo.length; i++) {
 			let demoContain = addDiv("", "demogBox", trg);
@@ -414,14 +434,14 @@ class city {
 	}
 
 	demandPrice(qty) {
-		console.log("add qty ogf " + qty)
+		//console.log("add qty ogf " + qty)
 		var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 		var productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
 		var totalSupply = [];
 		var totalDemand = [];
 		var currentSupply = 375000 + parseInt(qty);
 
-		console.log("add qty ogf " + qty + " for a current supply of " + currentSupply);
+		//console.log("add qty ogf " + qty + " for a current supply of " + currentSupply);
 
 		// calculate demand levels based on population, city income levels, and demand levels
 		let popLvls = [].fill(0,this.incomeLvls.length);
@@ -452,7 +472,7 @@ class city {
 
 
 		// interpolate last interval with remaining supply
-		console.log(nationalPayDemos[i+1] + " - (" + nationalPayDemos[i+1] + " - " + nationalPayDemos[i] + " ) * " + remDemand + " / " + totalDemand[i]);
+		//console.log(nationalPayDemos[i+1] + " - (" + nationalPayDemos[i+1] + " - " + nationalPayDemos[i] + " ) * " + remDemand + " / " + totalDemand[i]);
 		return (nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i]).toFixed(2);
 	}
 }

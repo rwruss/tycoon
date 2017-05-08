@@ -516,22 +516,18 @@ echo '
 		for (var i=0; i<numProducts; i++) {
 			productArray.push(new product({objType:product, objID:(i), objName:objNames[i]}));
 		}
-		console.log(productArray);
+		//console.log(productArray);
 
 		playerProducts = [0];
 		for (var i=0; i<playerFactories.length; i++) {
-			console.log(playerFactories[i].prod);
+			//console.log(playerFactories[i].prod);
 			playerProducts = playerProducts.concat(playerFactories[i].prod);
 		}
 
-		console.log("player products");
-		console.log(playerProducts);
 		playerProdNames = [];
 		for (var i=0; i<playerProducts.length; i++) {
-			console.log(i)
 			playerProdNames.push(productArray[playerProducts[i]].objName);
 		}
-		console.log(playerProdNames);
 
 		serviceInv = ['.implode(',', $serviceSlot->slotData).'];
 		serviceArray = new Array();
@@ -548,13 +544,10 @@ echo '
 		}
 
 		factoryList = new Array();
-		console.log(factoryNames);
 		for (var i=0; i<numFactories; i++) {
-			console.log("make factory " + factoryNames[i]);
 			//factoryList.push(new factory({objType:factory, objID:(i+numProducts), objName:factoryNames[i], subType:(i), items:[1,2,3,4,5], prices:[6, 7, 8, 9, 10]}));
 			factoryList.push(new factory([0,0,0,i+numProducts,0,0,0,0,0,0,0,0,0,0,0,i+numProducts]))
 		}
-		console.log(factoryList);
 		defaultBuildings = new uList(factoryList);
 
 		nationList = new Array("Canada", "Mexico", "United States");

@@ -15,7 +15,7 @@ thisDiv = useDeskTop.newPane("hireLabor");
 thisDiv.innerHTML = "";
 cityList = [new city([1, "Round Rock"], [], [])];
 
-console.log(cityList);
+//console.log(cityList);
 for (var i=0; i<cityList.length; i++) {
   let thisCity = cityList[i].renderSummary(thisDiv);
   let cityNum = cityList[i].objID;

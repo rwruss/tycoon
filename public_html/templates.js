@@ -700,8 +700,8 @@ class regPane extends pane {
 		super(desc, desktop);
 		//console.log("set regPane style for " + this.divEl);
 		this.divEl.className = "regPane";
-		console.log(this.divEl);
-		console.log("created pane with parent of " + this.divEl.parentNode)
+		//console.log(this.divEl);
+		//console.log("created pane with parent of " + this.divEl.parentNode)
 		//return this.divEl.childNodes[1];
 	}
 }
@@ -978,23 +978,6 @@ factoryPricing = function (factory, target) {
 	}
 
 	return formList;
-}
-
-updateFactory = function (object) {
-	for (i=0; i<playerFactories.length; i++) {
-		if (playerFactories[i].objID == object.objID) {
-			playerFactories[i].factoryType = object.subType || playerFactories[i].factoryType,
-			playerFactories[i].prod = object.prod || playerFactories[i].prod,
-			playerFactories[i].quality = object.quality || playerFactories[i].quality,
-			playerFactories[i].pollution = object.pol || playerFactories[i].pollution,
-			playerFactories[i].rights = object.rights || playerFactories[i].rights,
-			playerFactories[i].rate = object.rate || playerFactories[i].rate,
-			playerFactories[i].items = object.items || playerFactories[i].items,
-			playerFactories[i].prices = object.prices || playerFactories[i].prices;
-
-			console.log(playerFactories[i])
-		}
-	}
 }
 
 objectClock = function (object, dst, callback = function () {console.log("default functin")}) {
@@ -1550,7 +1533,7 @@ laborTypeMenu = function(trg, factoryID) {
 }
 
 selectMenu = function(items) {
-	console.log(items);
+	//console.log(items);
 	let newMenu = document.createElement("select");
 
 	for (var i=1; i<items.length; i++) {
@@ -1776,11 +1759,12 @@ inProgressList = function (trg) {
 }
 
 updateFactory = function (dat) {
-	let tmp = new factory(dat);
+	console.log("update a factoryS")
+	//let tmp = new factory(dat);
 	let found = true;
 	for (i=0; i<playerFactories.length; i++) {
-		if (playerFactories[i].factoryID == tmp.factoryID) {
-			playerFactories[i] = tmp;
+		if (playerFactories[i].factoryID == dat[3]) {
+			playerFactories[i].update(dat);
 			break;
 		}
 	}
@@ -1867,4 +1851,22 @@ calcTaxRates = function (prodDat, baseRates) {
 			baseRates[baseRates[i+1]] += baseRates[i+3];
 		}
 	}
+}
+
+forceEvent = function (target, type) {
+	if (document.createEvent) {
+			event = document.createEvent("HTMLEvents");
+			event.initEvent(type, true, true);
+		} else {
+			event = document.createEventObject();
+			event.eventType = type;
+		}
+
+		event.eventName = type;
+
+		if (document.createEvent) {
+			target.dispatchEvent(event);
+		} else {
+			target.fireEvent("on" + event.eventType, event);
+		}
 }

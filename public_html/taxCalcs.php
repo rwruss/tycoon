@@ -8,7 +8,7 @@ function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Ty
 	for ($i=11; $i<sizeof($slotData); $i+=4) {
     echo $thisInfo[$slotData[$i]].' vs '.$slotData[$i+2].' --> ';
 		if ($thisInfo[$slotData[$i]] == $slotData[$i+2]) {
-      echo 'adjust tax type '.$slotData[$i+1].' by '.$slotData[$i+3].' ('.$thisInfo[$slotData[$i]].' == '.$slotData[$i+2].')';
+      //echo 'adjust tax type '.$slotData[$i+1].' by '.$slotData[$i+3].' ('.$thisInfo[$slotData[$i]].' == '.$slotData[$i+2].')';
 			$taxList[$slotData[$i+1]] += $slotData[$i+3];
 		}
 	}
@@ -74,7 +74,7 @@ function taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellin
   		$taxes[$i+20] = $nationTaxEx->slotData[$i];
   	}
 
-  	print_r($taxes);
+  	//print_r($taxes);
 
   	$cityLaws = new itemSlot($sellingCity->get('cLaw'), $slotFile, 40);
   	$regionLaws = new itemSlot($sellingCity->get('rLaw'), $slotFile, 40);
@@ -86,8 +86,8 @@ function taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellin
 
   	// calculate taxes on the selling player
 
-  	echo 'Final tax rates:';
-  	print_r($taxes);
+  	//echo 'Final tax rates:';
+  	//print_r($taxes);
 
 		for ($i=0; $i<31; $i++) {
 			$taxes[$i] = max($taxes[$i], 0);

@@ -172,7 +172,10 @@ $thisFactory->saveAll($objFile);
 
 echo 'final qty: '.$thisFactory->get('prodInv'.($prodNumber+1)).'
 <script>
-thisPlayer.money = '.$thisPlayer->get('money').'
+console.log("scr1017");
+updateFactory(['.implode(',', $thisFactory->overViewInfo()).']);
+thisPlayer.money = '.$thisPlayer->get('money').';
+
 </script>';
 
 fclose($objFile);

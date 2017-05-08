@@ -78,14 +78,13 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
-Button style class
+Calc inflection points for demand price changes
 Determine the level where a qty change in product will change the price (check for bounds to eliminate uncessesary updates)
 Demographic demand effects
   - things for rich people and poor people (yachts, cigarettes)
   - demand by education, etc
 Record sales in city GDP for selling city
 Store base taxes in cities and regions (not slots - this will only be for exceptions)
-Show taxes when selling to a city (or a player?)
 Depreciation of Factory value for taxes
 Material Cost for items with no input
 Stock Market
