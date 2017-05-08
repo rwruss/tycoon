@@ -79,7 +79,7 @@
 
 TO DO:
 Calc inflection points for demand price changes
-Determine the level where a qty change in product will change the price (check for bounds to eliminate uncessesary updates)
+ - Determine the level where a qty change in product will change the price (check for bounds to eliminate uncessesary updates)
 Demographic demand effects
   - things for rich people and poor people (yachts, cigarettes)
   - demand by education, etc
@@ -182,6 +182,7 @@ http://www.bbc.com/earth/story/20161021-why-there-could-be-many-copies-of-you
 http://www.bbcgoodfood.com/howto/guide/5-mulled-drinks-you-can-make-minutes
 http://cdn.preterhuman.net/texts/math/Data_Structure_And_Algorithms/Algorithms%20and%20Data%20Structures%20-%20Niklaus%20Wirth.pdf
 Collatz Conjecture!
+http://www.mensfitness.com/training/workout-routines/best-bodyweight-workout-all-time
 
 Food:
 https://www.bbcgoodfood.com/recipes/collection/dopamine-diet

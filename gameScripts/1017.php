@@ -51,18 +51,12 @@ $cityRegion = loadRegion($buyingCity->get('parentRegion'), $cityFile);
 // Update city demand
 
 $now = time();
-
+/*
 echo 'Base demand: '.$buyingCity->baseDemand($postVals[3]);
 $basePrice = 100;
 $baseDemand = $buyingCity->baseDemand($postVals[3]);
 $startDemand = $buyingCity->currentDemand($postVals[3], $now);
 $endDemand = max(intval($startDemand + $saleQty),0);
-
-/*
-$startPrice = intval(min($startDemand/$baseDemand, 2.0)*$basePrice);
-$endPrice = intval(min($endDemand/$baseDemand, 2.0)*$basePrice);
-$profit = (($startPrice+$endPrice)/2)*$postVals[4];
-*/
 
 if ($baseDemand > 0) {
 	$startPrice = $basePrice * (2-$startDemand/$baseDemand) * (2-$startDemand/$baseDemand);
@@ -70,6 +64,17 @@ if ($baseDemand > 0) {
 	$usePrice = ($startPrice+$endPrice)/2;
 	echo 'Start Price: '.$startPrice.', Final Price: '.$endPrice.' ('.($startDemand/$baseDemand).')<br>';
 } else $usePrice = 0;
+*/
+
+$currentSupply = 375000;
+$population = 1000000;
+$demandLevels = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
+$populationDemo = [25, 25, 23, 10, 6, 3, 3, 2, 2, 1];
+$demandLevels = [];
+for ($i=0; $i<10; $i++) {
+	$demandLevels[$i] = $population*$populationDemo[$i]*$demandLevels[$i]/100;
+	
+}
 
 $usePrice *= $buyingCity->get('pollutionAdj')*$buyingCity->get('rightsAdj');
 

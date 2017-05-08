@@ -567,7 +567,7 @@ class city extends object {
 
 	function currentDemand($productNumber, $now) {
 		$elapsed = $now-$this->get('lastUpdate');
-		return(min($elapsed*$this->demandRate($productNumber)/(3600*1000000)+$this->demandLevel($productNumber), 2.0*$this->baseDemand($productNumber)));
+		//return(min($elapsed*$this->demandRate($productNumber)/(3600*1000000)+$this->demandLevel($productNumber), 2.0*$this->baseDemand($productNumber)));
 	}
 
 	function changeLaborItem($spotNumber, $attrArray) {
