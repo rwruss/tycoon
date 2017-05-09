@@ -66,17 +66,27 @@ if ($baseDemand > 0) {
 } else $usePrice = 0;
 */
 
+$usePrice = 0;
+$currentSupply = $buyingCity->supplyLevel($postVals[3]);
 $currentSupply = 375000;
 $population = 1000000;
-$demandLevels = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
-$populationDemo = [25, 25, 23, 10, 6, 3, 3, 2, 2, 1];
-$demandLevels = [];
-for ($i=0; $i<10; $i++) {
-	$demandLevels[$i] = $population*$populationDemo[$i]*$demandLevels[$i]/100;
-	
+$payDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
+$demandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0];
+$populationDemo = [0, 25, 25, 23, 10, 6, 3, 3, 2, 2, 1, 0];
+$demandQty = [];
+for ($i=9; $i>0; $i--) {
+	$demandQty[$i] = $population*$populationDemo[$i]*$demandLevels[$i]/100;
+	if ($currentSupply < $demandQty[$i]) {
+		echo 'Remaining Demand : '.($demandQty[$i] - $currentSupply);
+		$pctSupplied = $currentSupply/$demandQty[$i];
+		$usePrice = round($payDemos[$i+1]-$pctSupplied*($payDemos[$i+1] - $payDemos[$i]), 2);
+		break;
+	}
+	$currentSupply -= $demandQty[$i];
 }
+echo 'Use price is '.$usePrice;
 
-$usePrice *= $buyingCity->get('pollutionAdj')*$buyingCity->get('rightsAdj');
+//$usePrice *= $buyingCity->get('pollutionAdj')*$buyingCity->get('rightsAdj');
 
 $grossSale = $saleQty * $usePrice;
 $profit = $grossSale;
@@ -130,6 +140,9 @@ $transaction[7] = $postVals[3]; // product ID
 $transaction[14] = 0; // material cost
 $transaction[15] = $laborCost; // labor cost
 
+echo '<p>Transaction info:<br>';
+print_r($transaction);
+
 $taxRates = taxRates($transaction, $thisFactory, $buyingCity, $sellingCity, $thisPlayer, $slotFile);
 echo '<p>Calced tax rates:<br>';
 print_r($taxRates);
@@ -156,12 +169,12 @@ saveRegionTaxes($sellTaxAreas, $buyTaxAreas, $taxAmounts);
 $thisFactory->adjVal('totalSales', $netSale);
 $thisFactory->adjVal('periodSales', $netSale);
 
-// record adjusted city demand and update time
-echo '<p>Save new damend rate:';
-$buyingCity->saveDLevel($postVals[3], $endDemand);
+// record adjusted city supply and update time
+//echo '<p>Save new damend rate:';
+$buyingCity->addSupply($postVals[3], $buyingCity->supplyLevel($postVals[3])+$postVals[4]);
 echo '<p>Save Last update:';
 echo '<br>Last update = '.$buyingCity->get('lastUpdate').'. Now is '.$now.'<br>';
-$buyingCity->save('lastUpdate', $now);
+//$buyingCity->save('lastUpdate', $now);
 
 // add money to playerFactories
 

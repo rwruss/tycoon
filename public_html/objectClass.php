@@ -204,25 +204,6 @@ class factory extends object {
 		$this->attrList['prodCost'] = 28;
 		$this->attrList['prodLaborCost'] = 29;
 
-		/*
-		$this->attrList['inputInv1'] = 31;
-		$this->attrList['inputInv2'] = 32;
-		$this->attrList['inputInv3'] = 33;
-		$this->attrList['inputInv4'] = 34;
-		$this->attrList['inputInv5'] = 35;
-		$this->attrList['inputInv6'] = 36;
-		$this->attrList['inputInv7'] = 37;
-		$this->attrList['inputInv8'] = 38;
-		$this->attrList['inputInv9'] = 39;
-		$this->attrList['inputInv10'] = 40;
-		$this->attrList['inputInv11'] = 41;
-		$this->attrList['inputInv12'] = 42;
-		$this->attrList['inputInv13'] = 43;
-		$this->attrList['inputInv14'] = 44;
-		$this->attrList['inputInv15'] = 45;
-		$this->attrList['inputInv16'] = 46;
-		*/
-
 		$this->attrList['prodInv1'] = 47;
 		$this->attrList['prodInv2'] = 48;
 		$this->attrList['prodInv3'] = 49;
@@ -282,6 +263,9 @@ class factory extends object {
 		$tmpA[13] = $this->get('prodInv5');
 		$tmpA[14] = 0; // next update ?
 		$tmpA[15] = $this->get('subType');
+
+		// add product parameters - material costs
+		$tmpA = array_merge($tmpA, array_slice($this->objDat, 239, 25));
 
 		return $tmpA;
 	}
@@ -532,8 +516,17 @@ class city extends object {
 	function demandRate($productID) {
 		return $this->objDat[$this->dRateOffset+$productID];
 		}
-
+		/*
 	function saveDLevel($productID, $newLevel) {
+		$areaHeader = 730200;
+		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
+		fwrite($this->linkFile, pack('i', $newLevel));
+		echo 'Town ID: '.$this->unitID.', Product ID: '.$productID.', ';
+		echo 'Save '.$newLevel.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
+		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
+	}*/
+
+	function addSupply($productID, $newLevel) {
 		$areaHeader = 730200;
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
 		fwrite($this->linkFile, pack('i', $newLevel));
@@ -542,10 +535,14 @@ class city extends object {
 		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
 	}
 
+	function supplyLevel($productID) {
+		return $this->objDat[$this->dLevelOffset+$productID];
+	}
+	/*
 	function demandLevel($productID) {
 		return $this->objDat[$this->dLevelOffset+$productID];
 	}
-
+	*/
 	function save($desc, $val) {
 		if (array_key_exists($desc, $this->attrList)) {
 			$areaHeader = 730200;

@@ -78,6 +78,7 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Show labor and material costs for products at factories
 Calc inflection points for demand price changes
  - Determine the level where a qty change in product will change the price (check for bounds to eliminate uncessesary updates)
 Demographic demand effects

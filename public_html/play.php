@@ -72,7 +72,7 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 	for ($i=1; $i<sizeof($ownedObjects->slotData); $i++) {
 		if ($ownedObjects->slotData[$i] > 0) {
 			//echo 'Object '.$ownedObjects->slotData[$i].'<br>';
-			$thisObject = loadObject($ownedObjects->slotData[$i], $unitFile, 400);
+			$thisObject = loadObject($ownedObjects->slotData[$i], $unitFile, 1600);
 			if ($thisObject->get('oType') == 3) {
 				// calculate selling taxes for this factory
 				$sellingCity = loadCity($thisObject->get('region_3'), $cityFile);
@@ -88,7 +88,7 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 }
 fclose($cityFile);
 echo '<p>Factory LIST:';
-//print_r($factoryList);
+print_r($factoryList);
 echo '<p>';
 // Load company labor
 $companyLabor = [];
@@ -505,9 +505,9 @@ echo '
 
 
 		playerFactories = new Array(';
-		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',', array_slice($factoryList, 0, 47)).'])';
-		for ($i=47; $i<sizeof($factoryList); $i+=47) {
-			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 47)).'])';
+		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',', array_slice($factoryList, 0, 72)).'])';
+		for ($i=72; $i<sizeof($factoryList); $i+=72) {
+			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 72)).'])';
 		}
 		echo ');
 

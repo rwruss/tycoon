@@ -59,8 +59,10 @@ class factory extends object {
 		this.nextUpdate = dat[14];
 		this.currentPrd = dat[1];
 		this.currentRate = dat[2];
-		this.taxes = dat.slice(16,47) || this.taxes;
-		this.taxes.push(6,1,2,25)
+		this.prodDtls = dat.slice(16, 41);
+		this.taxes = dat.slice(41,72) || this.taxes;
+		this.taxes.push(6,1,2,25);
+		console.log(this.prodDtls);
 	}
 
 	update(dat) {
@@ -127,10 +129,13 @@ class factory extends object {
 			container.innerHTML = "";
 			container.instanceType = "itemBar";
 			container.factoryDiv = this.renderSummary(container);
+			container.productDiv = productArray[this.prod[prodIndex]].renderDtls(container, this.prodInv[prodIndex], this.prodDtls[prodIndex*5+4], this.prodDtls[prodIndex*5+3], 0, 0);
 			container.prodSection = addDiv("", "", container);
 
 			container.slide = slideValBar(container, "", 0, this.prodInv[prodIndex]);
 
+			container.mCost = addDiv("", "", container);
+			container.lCost = addDiv("", "", container);
 			container.taxBar = addDiv("", "", container);
 			container.priceBar = addDiv("", "", container);
 			container.taxCost = addDiv("", "", container);
@@ -441,8 +446,6 @@ class city {
 		var totalDemand = [];
 		var currentSupply = 375000 + parseInt(qty);
 
-		//console.log("add qty ogf " + qty + " for a current supply of " + currentSupply);
-
 		// calculate demand levels based on population, city income levels, and demand levels
 		let popLvls = [].fill(0,this.incomeLvls.length);
 		for (let i=0; i<this.incomeLvls.length; i++) {
@@ -453,7 +456,6 @@ class city {
 		}
 
 		//console.log(totalDemand);
-
 		let remSupply = currentSupply;
 		let lastSupply = 0;
 		let lastInterval = 0;
@@ -470,10 +472,8 @@ class city {
 			}
 		}
 
-
 		// interpolate last interval with remaining supply
-		//console.log(nationalPayDemos[i+1] + " - (" + nationalPayDemos[i+1] + " - " + nationalPayDemos[i] + " ) * " + remDemand + " / " + totalDemand[i]);
-		return (nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i]).toFixed(2);
+		return Math.round((nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i])*100)/100;
 	}
 }
 
@@ -593,6 +593,28 @@ class product {
 
 		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
 		thisDiv.qtyDiv.innerHTML = qty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+
+		thisDiv.nameDiv.innerHTML = objNames[this.objID];
+		return thisDiv;
+	}
+
+	renderDtls(target, qty, mCost, lCost, qual, pol) {
+		var thisDiv = addDiv(null, 'productHolder', target);
+		thisDiv.setAttribute("data-unitid", this.unitID);
+
+		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
+		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+
+		addImg("asdf", "productImg", thisDiv); // labor image
+
+		thisDiv.qtyDiv = addDiv("asdf", "productQty", thisDiv);
+		thisDiv.qtyDiv.innerHTML = qty.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+		thisDiv.lCost = addDiv("", "", thisDiv);
+		thisDiv.mCost = addDiv("", "", thisDiv);
+
+		thisDiv.lCost.innerHTML = "L: " + Math.round(100*lCost/qty)/100;
+		thisDiv.mCost.innerHTML = "M: " + Math.round(100*mCost/qty)/100;
 
 		thisDiv.nameDiv.innerHTML = objNames[this.objID];
 		return thisDiv;
