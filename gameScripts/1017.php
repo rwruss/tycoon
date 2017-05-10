@@ -170,9 +170,9 @@ $thisFactory->adjVal('totalSales', $netSale);
 $thisFactory->adjVal('periodSales', $netSale);
 
 // record adjusted city supply and update time
-//echo '<p>Save new damend rate:';
-$buyingCity->addSupply($postVals[3], $buyingCity->supplyLevel($postVals[3])+$postVals[4]);
-echo '<p>Save Last update:';
+echo '<p>Start Supply: '.$buyingCity->supplyLevel($postVals[3]).' Save new damend rate:';
+$buyingCity->setSupply($postVals[3], $buyingCity->supplyLevel($postVals[3])+$postVals[4]);
+echo '<br> end Supply of '.$buyingCity->supplyLevel($postVals[3]).'<p>Save Last update:';
 echo '<br>Last update = '.$buyingCity->get('lastUpdate').'. Now is '.$now.'<br>';
 //$buyingCity->save('lastUpdate', $now);
 

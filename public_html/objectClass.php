@@ -526,7 +526,7 @@ class city extends object {
 		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
 	}*/
 
-	function addSupply($productID, $newLevel) {
+	function setSupply($productID, $newLevel) {
 		$areaHeader = 730200;
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
 		fwrite($this->linkFile, pack('i', $newLevel));
