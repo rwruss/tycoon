@@ -465,12 +465,14 @@ class factory extends object {
 }
 
 class city extends object {
-	private $dRateOffset, $dLevelOffset, $demandDat;
+	private $dRateOffset, $dLevelOffset, $demandDat, $binDat;
 	public $laborStoreOffset, $laborDemandOffset;
 
-	function __construct($id, $dat, $file) {
+	function __construct($id, $dat, $file, $binDat) {
 		parent::__construct($id, $dat, $file);
 
+		$this->binDat = $binDat;
+		
 		// Total of 22250 items
 		$this->dRateOffset = 250;
 		$this->dLevelOffset = 10250;
@@ -512,11 +514,12 @@ class city extends object {
 		fseek($this->linkFile, $this->get('fileBaseSize')+$this->id*1000);
 		$this->demandDat = unpack('s*', fread($this->linkFile, 40000));
 	}*/
-
+	/*
 	function demandRate($productID) {
 		return $this->objDat[$this->dRateOffset+$productID];
 		}
-		/*
+	*/
+	/*
 	function saveDLevel($productID, $newLevel) {
 		$areaHeader = 730200;
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
@@ -543,6 +546,20 @@ class city extends object {
 		return $this->objDat[$this->dLevelOffset+$productID];
 	}
 	*/
+	
+	function iPercentiles() {
+		$pctArray = unpack('s*', substr($this->binDat, 596, 20));
+		$pctArray[0] = 0;
+		$pctArray[11] = 0;
+		return $pctArray;
+	}
+	
+	function prodDemand($prodID, $demandFile) {
+		$objSize = 110000;
+		fseek($demandFile, $this->id*$objSize);
+		$tmpA = unpack('C', )
+	}
+	
 	function save($desc, $val) {
 		if (array_key_exists($desc, $this->attrList)) {
 			$areaHeader = 730200;
@@ -702,7 +719,8 @@ function loadObject($id, $file, $size) {
 	//echo 'Seek to '.($id*$defaultBlockSize);
 
 	fseek($file, $id*$defaultBlockSize);
-	$dat = unpack('i*', fread($file, $size));
+	$binDat = fread($file, $size);
+	$dat = unpack('i*', $binDat);
 	//print_r($dat);
 	switch($dat[4]) {
 		case 1:
@@ -718,7 +736,7 @@ function loadObject($id, $file, $size) {
 		break;
 
 		case 5:
-			return new city($id, $dat, $file);
+			return new city($id, $dat, $file, $binDat);
 		break;
 
 		case 7:
