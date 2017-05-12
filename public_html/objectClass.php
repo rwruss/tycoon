@@ -472,7 +472,7 @@ class city extends object {
 		parent::__construct($id, $dat, $file);
 
 		$this->binDat = $binDat;
-		
+
 		// Total of 22250 items
 		$this->dRateOffset = 250;
 		$this->dLevelOffset = 10250;
@@ -546,20 +546,20 @@ class city extends object {
 		return $this->objDat[$this->dLevelOffset+$productID];
 	}
 	*/
-	
+
 	function iPercentiles() {
 		$pctArray = unpack('s*', substr($this->binDat, 596, 20));
 		$pctArray[0] = 0;
 		$pctArray[11] = 0;
 		return $pctArray;
 	}
-	
+
 	function prodDemand($prodID, $demandFile) {
 		$objSize = 110000;
 		fseek($demandFile, $this->id*$objSize);
-		$tmpA = unpack('C', )
+		$tmpA = unpack('C', fread($demandFile, 100));
 	}
-	
+
 	function save($desc, $val) {
 		if (array_key_exists($desc, $this->attrList)) {
 			$areaHeader = 730200;
@@ -687,9 +687,10 @@ function loadProduct($id, $file, $size) {
 function loadCity($id, $file) {
 	$areaHeader = 730200;
 	fseek($file, $areaHeader+$id*81000);
-	$dat = unpack('i*', fread($file, 1000));
+	$binDat = fread($file, 1000);
+	$dat = unpack('i*', $binDat);
 
-	return new city($id, $dat, $file);
+	return new city($id, $dat, $file, $binDat);
 }
 
 function loadCityDemands($id, $file) {

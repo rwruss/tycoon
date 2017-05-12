@@ -86,7 +86,7 @@ Demographic demand effects
   - things for rich people and poor people (yachts, cigarettes)
   - demand by education, etc
 Record sales in city GDP for selling city
-Store base taxes in cities and regions (not slots - this will only be for exceptions)
+Store base taxes in cities and regions (not slots - this will only be for exceptions) <- don't do this yet - slot lookup may be better
 Depreciation of Factory value for taxes
 Material Cost for items with no input
 Stock Market

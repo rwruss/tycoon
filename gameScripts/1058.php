@@ -60,7 +60,7 @@ if ($postVals[3] > 99) {
 else if ($postVals[3] > 0) {
   // adjust existing labor item
   echo 'Adjust existing labor item';
-  $fLaborOffset = $lOff+$postVals[2]*10;
+  $fLaborOffset = $lOff+($postVals[2]-1)*10;
   $thisFactory->objDat[$fLaborOffset+5] = intval($postVals[4]*100); // current Pay
 }
 else if ($postVals[3] == 0) {
