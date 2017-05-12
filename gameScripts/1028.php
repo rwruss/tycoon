@@ -136,10 +136,19 @@ foreach ($usageList as $spot => $qty) {
 
 // Calculate the labor costs
 $laborCost = 0;
+$qualityPoints = 0;
+$totalQualWeight = 0;
 for ($i=0; $i<7; $i++) {
 	echo 'Labor Cost: '.$thisFactory->objDat[$thisFactory->laborOffset+$i*10+5].' * '.$durations[$postVals[2]].' / 3600 ('.($thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations[$postVals[2]]/3600).')<br>';
 	$laborCost += $thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations[$postVals[2]]/3600;
+	
+	$talentStats = unpack("C*", pack("i", $thisFactory->objDat[$thisFactory->laborOffset+$i*10+9]));
+	$qualityPoints += (1+($talentStats[1]-50)/100) * (1 + ($talentStats[2]-50)/200)*$talentStats[4];
+	$totalQualWeight += $talentStats[4];
 }
+
+// Caluclate the quality adjustment
+$qualityMod = $qualityPoints/$totalQualWeight;
 
 // Start the work
 $overRideDurs = [0, 10, 10, 10, 10];
@@ -149,7 +158,7 @@ $thisFactory->set('prodQty', $production);
 $thisFactory->set('initProdDuration', $overRideDurs[$postVals[2]]);
 $thisFactory->set('prodRights', $productRights);
 $thisFactory->set('prodPollution', $productPollution);
-$thisFactory->set('prodQuality', $productQuality);
+$thisFactory->set('prodQuality', $productQuality*$qualityMod);
 $thisFactory->set('prodCost', $productCost);
 $thisFactory->set('prodLaborCost', $laborCost);
 

@@ -78,6 +78,7 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
+Add rights and pollution points to products based on factories
 Consumption rates at cities
 Show labor and material costs for products at factories
 Calc inflection points for demand price changes
