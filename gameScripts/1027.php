@@ -26,6 +26,8 @@ if ($thisCity->get('cityLaborSlot')>0) {
 
 // load city taxes/exceptions
 
+// load national pay percentiles
+$nationalPay = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 
 // Output parameters of the city (population, wealth, etc)
 echo '<script>
@@ -48,8 +50,8 @@ cityTabs.renderTabs(detailSection);
 cityTabs.tabFunction(0, function() {console.log("i select u")});
 
 showCity.townDemo = ['.(implode(',', array_slice($thisCity->objDat, 50, 20))).'];
-showCity.leaderDemo = ['.(implode(',', array_slice($thisCity->objDat, 70, 20))).'];';
-
+showCity.leaderDemo = ['.(implode(',', array_slice($thisCity->objDat, 70, 20))).'];
+showCity.nationalPay = ['.implode(',' $nationalPay).']';
 
 echo '
 textBlob("", cityTabs.renderKids[1], "Government and demographic information");
@@ -84,9 +86,10 @@ productSales.addEventListener("change", function () {
 			let thisFac = playerFactories[i].itemBar(cityTabs.renderKids[4].factoryBar, tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
 			thisFac.lCost.innerHTML = "Labor Cost: " + playerFactories[i].prodDtls[this.value*5+3];
 			thisFac.mCost.innerHTML = "Material Cost: " + playerFactories[i].prodDtls[this.value*5+4];
+			thisFac.slide.slide.selectedProduct = this.value;
 			thisFac.slide.slide.addEventListener("change", function () {
 
-				thisPrice = showCity.demandPrice(this.value);
+				thisPrice = showCity.demandPrice(this.value, this.selectedProduct);
 				thisRev = this.value*thisPrice;
 				thisTaxes = thisFac.totalTax * this.value*thisPrice/100
 

@@ -218,6 +218,9 @@ class factory extends object {
 		$this->attrList['offer6'] = 236;
 		$this->attrList['offer7'] = 237;
 		$this->attrList['offer8'] = 238;
+		
+		$this->attrList['polPerDay'] = 325;
+		$this->attrList['rtsPerDay'] = 326;
 
 		$inputIndex = 1;
 		$inputInventoryIndex = 61;
@@ -465,13 +468,14 @@ class factory extends object {
 }
 
 class city extends object {
-	private $dRateOffset, $dLevelOffset, $demandDat, $binDat;
+	private $dRateOffset, $dLevelOffset, $demandDat, $binDat, $supplyBlockSize;
 	public $laborStoreOffset, $laborDemandOffset;
 
 	function __construct($id, $dat, $file, $binDat) {
 		parent::__construct($id, $dat, $file);
 
 		$this->binDat = $binDat;
+		$this->supplyBlockSize = 1000000;
 
 		// Total of 22250 items
 		$this->dRateOffset = 250;
@@ -528,7 +532,7 @@ class city extends object {
 		echo 'Save '.$newLevel.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
 		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
 	}*/
-
+	/*
 	function setSupply($productID, $newLevel) {
 		$areaHeader = 730200;
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
@@ -536,10 +540,19 @@ class city extends object {
 		echo 'Town ID: '.$this->unitID.', Product ID: '.$productID.', ';
 		echo 'Save '.$newLevel.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
 		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
+	}*/
+	function setSupply($productID, $newLevel, $supplyFile) {
+		fseek ($supplyFile, $this->id * $this->supplyBlockSize + $productID*100);
+		fwrite($supplyFile, pack('i*', time(), $newLevel));
 	}
-
-	function supplyLevel($productID) {
-		return $this->objDat[$this->dLevelOffset+$productID];
+	
+	function supplyLevel($productID, $supplyFile) {
+		//return $this->objDat[$this->dLevelOffset+$productID];
+		
+		fseek ($supplyFile, $this->id * $this->supplyBlockSize + $productID*100);
+		$supplyDat = unpack('i*', fread($supplyFile, 100));
+		
+		return $supplyDat;
 	}
 	/*
 	function demandLevel($productID) {

@@ -6,7 +6,7 @@ $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
 
 // Load target factory
-$thisFactory = loadObject($postVals[1], $objFile, 1000);
+$thisFactory = loadObject($postVals[1], $objFile, 1600);
 $thisFactory->updateStocks($offerDatFile);
 
 //print_r($thisFactory->objDat);
@@ -149,6 +149,12 @@ for ($i=0; $i<7; $i++) {
 
 // Caluclate the quality adjustment
 $qualityMod = $qualityPoints/$totalQualWeight;
+
+// caluclate the pollution added to the product
+$productPollution += $durations[$postVals[2]]/86400 * $thisFactory->get('polPerDay');
+
+// Calculate the rights added to the product
+$productRights += $durations[$postVals[2]]/86400 * $thisFactory->get('rtsPerDay');
 
 // Start the work
 $overRideDurs = [0, 10, 10, 10, 10];

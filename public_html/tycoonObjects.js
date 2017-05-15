@@ -218,6 +218,7 @@ class city {
 		this.laws = laws;
 		this.incomeLvls = [0, 25, 25, 23, 10, 6, 3, 3, 2, 2, 1, 0];
 		this.population = 1000000;
+		this.loadedProduct = 0;
 
 		//this.taxes = taxes;
 		this.taxes = taxes.map(function(x) {
@@ -437,11 +438,19 @@ class city {
 			demoBar.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*demoP) + ", " + Math.floor(122.5 + 122.5*demoP) + ",0)";
 		}
 	}
+	
+	nationalPay(payInfo) {
+		this.nationalPayDemos = payInfo;
+	}
 
-	demandPrice(qty) {
+	demandPrice(qty, productID) {
 		//console.log("add qty ogf " + qty)
-		var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
-		var productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
+		//var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
+		if (this.loadedProduct != productID) {
+			this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
+		} else {
+			this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
+		}
 		var totalSupply = [];
 		var totalDemand = [];
 		var currentSupply = 375000 + parseInt(qty);
@@ -473,7 +482,7 @@ class city {
 		}
 
 		// interpolate last interval with remaining supply
-		return Math.round((nationalPayDemos[i+1]-(nationalPayDemos[i+1]-nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i])*100)/100;
+		return Math.round((this.nationalPayDemos[i+1]-(this.nationalPayDemos[i+1]-this.nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i])*100)/100;
 	}
 }
 

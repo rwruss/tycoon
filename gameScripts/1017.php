@@ -15,6 +15,7 @@ require_once('./taxCalcs.php');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$supplyFile = fopen($gamePath.'/citySupply.csf'; 'rb')
 
 // Verify that the factory can sell this product
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
@@ -45,29 +46,14 @@ $saleQty = $postVals[4];
 
 // Load the city information
 $buyingCity = loadCityDemands($postVals[2], $cityFile);
-//print_R($buyingCity->objDat);
 $cityRegion = loadRegion($buyingCity->get('parentRegion'), $cityFile);
 
-// Update city demand
-
+// Load and Update city supply
 $now = time();
-/*
-echo 'Base demand: '.$buyingCity->baseDemand($postVals[3]);
-$basePrice = 100;
-$baseDemand = $buyingCity->baseDemand($postVals[3]);
-$startDemand = $buyingCity->currentDemand($postVals[3], $now);
-$endDemand = max(intval($startDemand + $saleQty),0);
-
-if ($baseDemand > 0) {
-	$startPrice = $basePrice * (2-$startDemand/$baseDemand) * (2-$startDemand/$baseDemand);
-	$endPrice = $basePrice * (2-$endDemand/$baseDemand) * (2-$endDemand/$baseDemand);
-	$usePrice = ($startPrice+$endPrice)/2;
-	echo 'Start Price: '.$startPrice.', Final Price: '.$endPrice.' ('.($startDemand/$baseDemand).')<br>';
-} else $usePrice = 0;
-*/
 
 $usePrice = 0;
-$currentSupply = $buyingCity->supplyLevel($postVals[3]);
+$supplyInfo = $buyingCity->supplyLevel($postVals[3], $supplyFile);
+$currentSupply = $supplyInfo[2] - ($now - $supplyInfo[1]) * $supplyInfo[3];
 $currentSupply = 375000;
 $population = 1000000;
 $payDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
@@ -171,8 +157,8 @@ $thisFactory->adjVal('totalSales', $netSale);
 $thisFactory->adjVal('periodSales', $netSale);
 
 // record adjusted city supply and update time
-echo '<p>Start Supply: '.$buyingCity->supplyLevel($postVals[3]).' Save new damend rate:';
-$buyingCity->setSupply($postVals[3], $buyingCity->supplyLevel($postVals[3])+$postVals[4]);
+echo '<p>Start Supply: '.$supplyInfo[2].' Consumption Rate:'.$supplyInfo[3];
+$buyingCity->setSupply($postVals[3], $buyingCity->supplyLevel(max(0, $supplyInfo[2])-$postVals[4]), $supplyFile);
 echo '<br> end Supply of '.$buyingCity->supplyLevel($postVals[3]).'<p>Save Last update:';
 echo '<br>Last update = '.$buyingCity->get('lastUpdate').'. Now is '.$now.'<br>';
 //$buyingCity->save('lastUpdate', $now);
@@ -199,5 +185,6 @@ thisPlayer.money = '.$thisPlayer->get('money').';
 
 fclose($objFile);
 fclose($cityFile);
-
+fclose($supplyFile);
+fclose($slotFile);
 ?>

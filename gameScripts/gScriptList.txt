@@ -78,18 +78,16 @@
 1078 - MENU: Show comapny invoices outstanding
 
 TO DO:
-Add rights and pollution points to products based on factories
-Consumption rates at cities
+Material Cost for items with no input
+Load city data & supply for products in 1027/ class city->demandPrice();
 Show labor and material costs for products at factories
 Calc inflection points for demand price changes
  - Determine the level where a qty change in product will change the price (check for bounds to eliminate uncessesary updates)
 Demographic demand effects
   - things for rich people and poor people (yachts, cigarettes)
   - demand by education, etc
-Record sales in city GDP for selling city
 Store base taxes in cities and regions (not slots - this will only be for exceptions) <- don't do this yet - slot lookup may be better
 Depreciation of Factory value for taxes
-Material Cost for items with no input
 Stock Market
 TIme delay for shipping/selling items to a city
 Rights, Pollution, labor, and material costs for products sold to cities
@@ -128,6 +126,7 @@ Fix labor type sales at cities (based on schools available)
 Don't allow product switching while production is in progress
 create tax calculation function for use in different scripts
 Calculate taxes on city sales
+Consumption rates at cities
 
 TO DO ON HOLD
 Fix & expand Sale options/market - sorting and filtering (1013)
@@ -160,10 +159,15 @@ contracts for certain amounts of items
 Add factories to factory list when construction is started
 update labor list when labor is hired
 Figure out how i decided to store city demands - wtf?
+Add rights and pollution points to products based on factories
+Record sales in city GDP for selling city
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands
 http://www.linuxhowtos.org/C_C++/socket.htm
+
+IB3 IDEAS:
+Group experience - similar to navyfield groups
 
 
 Get a job
