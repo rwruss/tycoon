@@ -448,18 +448,24 @@ class city {
 	demandPrice(qty, productID) {
 		//console.log("add qty ogf " + qty)
 		//var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
+		var currentSupply;
 		if (this.loadedProduct != productID) {
 			console.log("load the demands");
 			console.log("1079," + this.objID + "," + productID);
-			this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
-			loadData("1079," + this.objID + "," + productID, function(x) {console.log(x)});
+			this.productDemandLevels = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			loadData("1079," + this.objID + "," + productID, function(x) {
+				for (var i=1; i<11; i++) {
+					this.productDemandLevels[i] = x[i+3];
+				}
+				currentSupply = x[1];
+				});
 			this.loadedProduct = productID;
 		} else {
 			this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
 		}
 		var totalSupply = [];
 		var totalDemand = [];
-		var currentSupply = 375000 + parseInt(qty);
+		currentSupply = 375000 + parseInt(qty);
 
 		// calculate demand levels based on population, city income levels, and demand levels
 		let popLvls = [].fill(0,this.incomeLvls.length);
