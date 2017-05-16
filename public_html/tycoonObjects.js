@@ -438,16 +438,22 @@ class city {
 			demoBar.style.backgroundColor = "rgb(" + Math.floor(122.5 - 122.5*demoP) + ", " + Math.floor(122.5 + 122.5*demoP) + ",0)";
 		}
 	}
-	
+
 	nationalPay(payInfo) {
+		console.log("set national pay levels")
 		this.nationalPayDemos = payInfo;
+		console.log(this.nationalPayDemos);
 	}
 
 	demandPrice(qty, productID) {
 		//console.log("add qty ogf " + qty)
 		//var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 		if (this.loadedProduct != productID) {
+			console.log("load the demands");
+			console.log("1079," + this.objID + "," + productID);
 			this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
+			loadData("1079," + this.objID + "," + productID, function(x) {console.log(x)});
+			this.loadedProduct = productID;
 		} else {
 			this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
 		}
@@ -461,7 +467,7 @@ class city {
 			//console.log(this.incomeLvls[i] + " * " + this.population + " * " + productDemandLevels[i]);
 			this.incomeLvls[i]*this.population;
 
-			totalDemand[i] = this.incomeLvls[i]*this.population*productDemandLevels[i]/100;
+			totalDemand[i] = this.incomeLvls[i]*this.population*this.productDemandLevels[i]/100;
 		}
 
 		//console.log(totalDemand);

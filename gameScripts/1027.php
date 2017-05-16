@@ -51,7 +51,7 @@ cityTabs.tabFunction(0, function() {console.log("i select u")});
 
 showCity.townDemo = ['.(implode(',', array_slice($thisCity->objDat, 50, 20))).'];
 showCity.leaderDemo = ['.(implode(',', array_slice($thisCity->objDat, 70, 20))).'];
-showCity.nationalPay = ['.implode(',' $nationalPay).']';
+showCity.nationalPay(['.implode(',', $nationalPay).'])';
 
 echo '
 textBlob("", cityTabs.renderKids[1], "Government and demographic information");
@@ -88,7 +88,7 @@ productSales.addEventListener("change", function () {
 			thisFac.mCost.innerHTML = "Material Cost: " + playerFactories[i].prodDtls[this.value*5+4];
 			thisFac.slide.slide.selectedProduct = this.value;
 			thisFac.slide.slide.addEventListener("change", function () {
-
+				console.log("changing to " + this.selectedProduct);
 				thisPrice = showCity.demandPrice(this.value, this.selectedProduct);
 				thisRev = this.value*thisPrice;
 				thisTaxes = thisFac.totalTax * this.value*thisPrice/100
@@ -101,7 +101,7 @@ productSales.addEventListener("change", function () {
 	}
 
 	// load the demand curve for this item for the city
-	console.log(showCity.demandPrice(100));
+	//console.log(showCity.demandPrice(100));
 });
 forceEvent(productSales, "change");
 

@@ -76,8 +76,10 @@
 1076 - PROCESS: Cancel a contract that hasn't been executed
 1077 - PROCESS: Pay an invoice
 1078 - MENU: Show comapny invoices outstanding
+1079 - PROCESS: Load demand info for a product at a city
 
 TO DO:
+Complete script 1079 for loading a product demand curve at a city
 Material Cost for items with no input
 Load city data & supply for products in 1027/ class city->demandPrice();
 Show labor and material costs for products at factories
