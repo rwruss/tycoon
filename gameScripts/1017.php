@@ -130,6 +130,19 @@ $transaction[15] = $laborCost; // labor cost
 echo '<p>Transaction info:<br>';
 print_r($transaction);
 
+// remove qunatity from factory
+$thisFactory->adjVal('prodInv'.($prodNumber+1), -$saleQty);
+$thisFactory->adjVal('totalSales', $netSale);
+$thisFactory->adjVal('periodSales', $netSale);
+$thisFactory->saveAll($objFile);
+
+// Create transaction for the city and assign an anticipated time of arrival
+/*
+// Create an invoice for the city
+// Save the invoice in the city inbound invoice slot
+
+*/
+/*
 $taxRates = taxRates($transaction, $thisFactory, $buyingCity, $sellingCity, $thisPlayer, $slotFile);
 echo '<p>Calced tax rates:<br>';
 print_r($taxRates);
@@ -164,22 +177,16 @@ echo '<br>Last update = '.$buyingCity->get('lastUpdate').'. Now is '.$now.'<br>'
 //$buyingCity->save('lastUpdate', $now);
 
 // add money to playerFactories
-
 echo '<p>Save player money';
 $thisPlayer->save('money', $thisPlayer->get('money') + $netSale);
 echo '<br>final money: '.$thisPlayer->get('money');
 
-// remove qunatity from factory
-$thisFactory->adjVal('prodInv'.($prodNumber+1), -$saleQty);
-$thisFactory->adjVal('totalSales', $netSale);
-$thisFactory->adjVal('periodSales', $netSale);
-$thisFactory->saveAll($objFile);
-
+*/
 echo 'final qty: '.$thisFactory->get('prodInv'.($prodNumber+1)).'
 <script>
 console.log("scr1017");
 updateFactory(['.implode(',', $thisFactory->overViewInfo()).']);
-thisPlayer.money = '.$thisPlayer->get('money').';
+//thisPlayer.money = '.$thisPlayer->get('money').';
 
 </script>';
 

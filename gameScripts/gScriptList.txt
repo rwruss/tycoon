@@ -79,30 +79,28 @@
 1079 - PROCESS: Load demand info for a product at a city
 
 TO DO:
-Complete script 1079 for loading a product demand curve at a city
+PREMIUM CURRENCY
+Adjust sales to cities to have a ship time
+Set cities to laod orders that arrive
+Shipping Speed Increase
 Material Cost for items with no input
-Load city data & supply for products in 1027/ class city->demandPrice();
 Show labor and material costs for products at factories
 Calc inflection points for demand price changes
  - Determine the level where a qty change in product will change the price (check for bounds to eliminate uncessesary updates)
 Demographic demand effects
   - things for rich people and poor people (yachts, cigarettes)
   - demand by education, etc
-Store base taxes in cities and regions (not slots - this will only be for exceptions) <- don't do this yet - slot lookup may be better
 Depreciation of Factory value for taxes
-Stock Market
 TIme delay for shipping/selling items to a city
-Rights, Pollution, labor, and material costs for products sold to cities
-Add to labor list when labor is hired
+Rights, Pollution, labor, and material costs for products sold to cities -> adjustment to demands/pricing
+Add to labor list when labor is hired - which list?
 Load and show contract deliveries for a factory
 Load and show outstanding invoices for a factory and company
-Transfer of goods when sent via contract (done with an invoice?)
 Indicates factories being built in build menu and add to it as new items are started
 Business reputation - adjustments based on orders and sales
 City economies/influence of labor
 cleanup script for expired bids
 *** Fix loading cities demographics
-Adjustmetns to quality, pollution, and rights in this factory during production
 Periodic script to import taxes for each region - taxReceipts.txf
 complete 1038 - speed up factory orders
 **Overview/interactive Map
@@ -120,7 +118,8 @@ Player information detail (1045)
 Business Deals/Agreements with other companies and conglomerates
 Protect empty order list writing in 1014
 News ticker/scroll bar
-Loading taxes at city info screen (calc amounts and exceptions)
+Store base taxes in cities and regions (not slots - this will only be for exceptions) <- don't do this yet - slot lookup may be better
+Stock Market
 
 VERIFY DONE
 **Worker pool for when they quit/get fired
@@ -163,6 +162,11 @@ update labor list when labor is hired
 Figure out how i decided to store city demands - wtf?
 Add rights and pollution points to products based on factories
 Record sales in city GDP for selling city
+Complete script 1079 for loading a product demand curve at a city
+Load city data & supply for products in 1027/ class city->demandPrice();
+Adjustmetns to quality, pollution, and rights in this factory during production
+Loading taxes at city info screen (calc amounts and exceptions)
+Transfer of goods when sent via contract (done with an invoice?)
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

@@ -12,6 +12,7 @@ $prodInfo = unpack('i4/n*', $readDat);
 
 fclose($supplyFile);
 
+// override
 echo '0,0,0,0,314,1,2,3,4,5,6,7,8,9,0';
 
 ?>

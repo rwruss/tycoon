@@ -188,7 +188,99 @@ class factory extends object {
 		container.prodSection = addDiv("", "", container);
 		container.prodSection.innerHTML = "Qty: "+ this.prodInv[prodIndex];
 	}
+	
+	showOrders(trg) {
+		let factoryOrders = new Array();
+		for (var i=0; i<materialOrder.length; i+=18) {
+			factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+18)));
+			//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
+		}
+		
+		showOrders(trg, factoryOrders);
+	}
+	
+	showLabor(trg) {
+		let factoryLabor = new Array();
+		factoryLabor.push(new laborItem({objID:0, pay:0, ability:0, laborType:0}));
+		for (var i=0; i<laborDat.length; i+=10) {
+			factoryLabor.push(new laborItem({objID:(laborDat[i]/10+1), pay:(laborDat[i+5]), ability:(laborDat[i+8]), laborType:laborDat[i]}));
+		}
+		
+		trg.innerHTML = "";
 
+		for (var i=1; i<factoryLabor.length; i++) {
+			let laborItem = factoryLabor[i].renderFire(factoryDiv.laborSection.aassigned, "1059,"+i+","+this.ID);
+			if (factoryLabor[i].laborType > 0) {
+			} else {
+			}
+			let itemNum = i;
+			laborItem.addEventListener("click", function () {scrMod("1023,"+this.ID+","+itemNum)});
+		}
+	}
+	
+	showOutputs(trg) {
+		trg.innerHTML = "";
+		for (var i=0; i<5; i++) {
+			if (this.productStores[i]>0) {
+				//productArray[this.productStores[i]].renderQty(trg, this.productStores[i+5]);
+				productArray[this.prod[i]].renderDtls(container, this.prodInv[i], this.prodDtls[i*5+4], this.prodDtls[i*5+3], 0, 0);
+			}
+		}
+	}
+	
+	showProdRequirements(trg) {
+		trg.innerHTML = "";
+		for (var i=0; i<this.productMaterial.length; i+=2) {
+			materialBox(this.productMaterial[i], this.productMaterial[i+1], trg);
+		}
+	}
+	
+	showReqLabor(trg) {
+		trg.innerHTML = "";
+		for (var i=0; i<this.reqdLabor.length; i++) {
+			if (this.reqdLabor[i]>0) laborArray[this.reqdLabor[i]].renderSimple(trg);
+		}
+	}
+	
+	showInventory(trg) {
+		trg.innerHTML = "";
+		textBlob("", trg, "Current resource stores:");
+		for (var i=0; i<this.inventory.length; i+=2) {
+			//productArray[this.prod[prodIndex]].renderDtls(container, this.prodInv[prodIndex], this.prodDtls[prodIndex*5+4], this.prodDtls[prodIndex*5+3], 0, 0);
+			materialBox(this.inventory[i], this.inventory[i+1], trg);
+		}
+	}
+	
+	showSales(trg) {
+		//console.log("show sales");
+		let oList = [];
+		for (var i=0; i<this.saleDat.length; i+=12) {
+			oList.push(new offer(this.saleDat.slice(i, i+12)));
+		}
+		for (var i=0; i<oList.length; i++) {
+			console.log("show offer " + i);
+			oList[i].renderCancel(trg);
+		}
+	}
+	
+	showContracts(trg) {
+		console.log("fac contracts size is  " + this.contracts.length);
+		let startPos = this.contracts[0]+1;
+		let invCount = 0;
+		for (var i=0; i<this.contracts[0]; i++) {
+			let contractHolder = addDiv("", "facContract", trg);
+			console.log("make con");
+			let thisContract = new contract(new Int32Array(this.contracts.slice(startPos, startPos+27)));
+			console.log(thisContract);
+			thisContract.render(contractHolder);
+
+			let invStart = this.contracts[0]*27+this.contracts[0]+1+invCount*50;
+
+			console.log("invoices from " + invStart + " to " + (invStart + this.contracts[1+i]*50))
+			contractInvoice(this.contracts.slice(invStart, invStart + this.contracts[1+i]*50), contractHolder);
+			invCount += this.contracts[i+1];
+		}
+	}
 }
 
 setBar = function (id, desc, pct) {
@@ -376,12 +468,12 @@ class city {
 			}
 		}
 	}
-
+	/*
 	loadDemands(demandRates, demandLevels) {
 		this.demandRates = demandRates;
 		this.demandLevels = demandLevels;
 	}
-
+	*/
 	demandMenu(target) {
 		target.innerHTML = "";
 		target.sortDiv = addDiv(null, 'stdFloatDiv', target);

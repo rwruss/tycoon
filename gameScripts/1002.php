@@ -13,8 +13,9 @@ businessDiv.laborSection = addDiv("abcd", "stdFloatDiv", businessDiv);
 console.log(playerFactories);
 for (let i=0; i<playerFactories.length; i++) {
 	let thisSummary = playerFactories[i].renderSummary(listSection);
-	let thisFactory = playerFactories[i];
-	thisSummary.addEventListener("click", function () {scrMod("1003,"+thisFactory.objID);})
+	//let thisFactory = playerFactories[i];
+	thisSummary.sendStr = thisFactory.objID + "," + i;
+	thisSummary.addEventListener("click", function () {scrMod("1003,"+this.sendStr);})
 }
 
 contractsButton = newButton(headSection);

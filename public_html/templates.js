@@ -1079,6 +1079,7 @@ function switchGroups(item, group1, group2, emptyItem, group1Limit) {
 	}
 }
 
+/*
 function showInventory(factory, inventory) {
 	//console.log("Shw inv");
 	if (factory == selectedFactory) {
@@ -1088,8 +1089,9 @@ function showInventory(factory, inventory) {
 			materialBox(inventory[i], inventory[i+1], reqBox.stores);
 		}
 	}
-}
+}*/
 
+/*
 function showLabor(factory, factoryLabor) {
 	//console.log(factoryLabor);
 	factoryDiv.laborSection.aassigned.innerHTML = "";
@@ -1104,7 +1106,7 @@ function showLabor(factory, factoryLabor) {
 		let itemNum = i;
 		laborItem.addEventListener("click", function () {scrMod("1023,"+factory+","+itemNum)});
 	}
-}
+}*/
 
 function updateMaterialInv(factory, materialInv) {
 	if (factory == selectedFactory) {
@@ -1184,20 +1186,22 @@ function resourceQuery(msg, products, services, nextFunction) {
 	}
 }
 
+/*
 showProdRequirements = function(trg, productMaterial) {
 	trg.innerHTML = "";
 	for (var i=0; i<productMaterial.length; i+=2) {
 		materialBox(productMaterial[i], productMaterial[i+1], trg);
 	}
-}
+}*/
 
+/*
 showRequiredLabor = function(trg, reqdLabor) {
 	trg.innerHTML = "";
 	for (var i=0; i<reqdLabor.length; i++) {
 		if (reqdLabor[i]>0) laborArray[reqdLabor[i]].renderSimple(trg);
 		//laborBox(reqdLabor[i], trg);
 	}
-}
+}*/
 
 showOrders = function (trg, factoryOrders) {
 	//console.log(factoryOrders.length);
@@ -1210,6 +1214,7 @@ factoryRate = function (trg, rate) {
 	trg.innerHTML = "Rate: " + rate;
 }
 
+/*
 showOutputs = function (trg, productStores) {
 	//console.log(productStores);
 	trg.innerHTML = "";
@@ -1218,7 +1223,7 @@ showOutputs = function (trg, productStores) {
 			productArray[productStores[i]].renderQty(trg, productStores[i+5]);
 		}
 	}
-}
+}*/
 
 msgSummary = function (trg, fromName, fromID, time, subject, msgStatus, s, e) {
 	msgContain = addDiv("", "", trg);
@@ -1262,6 +1267,7 @@ receiveOffers = function(offerDat) {
 		});
 }
 
+/*
 showSales = function(trg, saleDat) {
 	//console.log("show sales");
 	oList = [];
@@ -1272,7 +1278,7 @@ showSales = function(trg, saleDat) {
 		console.log("show offer " + i);
 		oList[i].renderCancel(trg);
 	}
-}
+}*/
 
 class tabMenu {
 	constructor (children = new Array()) {
@@ -1401,13 +1407,14 @@ loadLaborItems = function(laborDat) {
 	return tmpArray;
 }
 
+/*
 loadFactoryLabor = function (laborDat) {
 	factoryLabor = new Array();
 	factoryLabor.push(new laborItem({objID:0, pay:0, ability:0, laborType:0}));
 	for (var i=0; i<laborDat.length; i+=10) {
 		factoryLabor.push(new laborItem({objID:(laborDat[i]/10+1), pay:(laborDat[i+5]), ability:(laborDat[i+8]), laborType:laborDat[i]}));
 	}
-}
+}*/
 
 factoryLaborDetail = function(thisLabor, factoryID, target) {
 	let item = thisLabor.renderSummary(target);
@@ -1771,6 +1778,7 @@ updateFactory = function (dat) {
 	if (!found) playerFactories.push(tmp)
 }
 
+/*
 factoryContracts = function (dat, trg) {
 	console.log("fac contracts size is  " + dat.length);
 	let startPos = dat[0]+1;
@@ -1789,21 +1797,7 @@ factoryContracts = function (dat, trg) {
 		contractInvoice(dat.slice(invStart, invStart + dat[1+i]*50), contractHolder);
 		invCount += dat[i+1];
 	}
-
-	/*
-	for (var i=0; i<dat[0]; i++) {
-		// show the contract
-		contractDat = Int32Array.from(dat.slice(i, i+25);
-		let thisContract = new contract(contractDat.buffer);
-		console.log(thisContract);
-		thisContract.render(trg);
-
-		// show the invoices for this contract
-		for (var j=0; j<dat[i+25]; j++) {
-
-		}
-	}*/
-}
+}*/
 
 contractInvoice = function (dat, trg) {
 	console.log("load invoice size " + dat.length);

@@ -71,7 +71,7 @@ for ($i=0; $i<$numCities; $i++) {
 fclose($cityFile);
 
 $supplyFile = fopen('citySupply.csf', 'wb');
-fseek($supplyFile, 1000000-4);
+fseek($supplyFile, 1040000-4);
 fwrite($supplyFile, pack('i', 0));
 fclose($supplyFile);
 
