@@ -452,17 +452,23 @@ class city {
 		if (this.loadedProduct != productID) {
 			console.log("load the demands");
 			console.log("1079," + this.objID + "," + productID);
-			this.productDemandLevels = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+			this.productDemandLevels = [0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0];
+			let me = this;
 			loadData("1079," + this.objID + "," + productID, function(x) {
+				let rtnVals = x.split(",");
 				for (var i=1; i<11; i++) {
-					this.productDemandLevels[i] = x[i+3];
+					console.log("set " + me.productDemandLevels[i] + " to " + rtnVals[i+3]/100)
+					me.productDemandLevels[i] = rtnVals[i+3]/100;
 				}
 				currentSupply = x[1];
 				});
 			this.loadedProduct = productID;
+			//this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
 		} else {
 			this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
 		}
+		console.log(this.productDemandLevels);
+		console.log(this.nationalPayDemos);
 		var totalSupply = [];
 		var totalDemand = [];
 		currentSupply = 375000 + parseInt(qty);
@@ -493,6 +499,8 @@ class city {
 			}
 		}
 
+		console.log(i);
+		console.log(totalDemand[i]);
 		// interpolate last interval with remaining supply
 		return Math.round((this.nationalPayDemos[i+1]-(this.nationalPayDemos[i+1]-this.nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i])*100)/100;
 	}
