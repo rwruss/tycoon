@@ -22,8 +22,6 @@ $playerListLoc = array_search($_SESSION["playerId"], $playerList);
 $pGameID = $playerList[$playerListLoc+1]*-1;
 $_SESSION["instance"] = $_GET["gameID"];
 
-//echo 'found as player '.$pGameID;
-
 if ($pGameID < 0) {
 	echo "<p><p><p><p>Not alrady in game(".$_SESSION["playerId"].")";
 	//print_r($playerList);
@@ -50,12 +48,12 @@ fclose($paramFile);
 
 $gamePath = "../games/".$gameID;
 $scnPath = "../scenarios/".$_SESSION['game_'.$gameID]['scenario'];
+
 // Read player info
 $defaultBlockSize = 100;
 $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
-//echo 'Load player '.$pGameID;
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
 $_SESSION['game_'.$gameID]['business'] = $thisPlayer->objDat;
 
@@ -87,9 +85,11 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 	}
 }
 fclose($cityFile);
+/*
 echo '<p>Factory LIST:';
 print_r($factoryList);
-echo '<p>';
+echo '<p>';*/
+
 // Load company labor
 $companyLabor = [];
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
@@ -102,6 +102,21 @@ for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
 	$laborCount++;
 }
 //print_r($companyLabor);
+
+// Load pending deliveries to cities
+$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$nextInvoice =  $thisPlayer->get('shipmentLink');
+$shipmentList = [];
+while ($nextInvoice > 0) {
+	fseek($contractFile, $nextInvoice);
+	$invoiceInfo = unpack('i*', fread($contractFile, 80));
+	
+	array_merge($shipmentList, $invoiceInfo);
+	$nextInvoice = $invoiceInfo[11];
+}
+
+fclose($contractFile);
+
 echo '
 <link rel="stylesheet" type="text/css" href="gameStyles.css">
 <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
@@ -119,7 +134,7 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
-	var factoryList, playerFactories, playerProducts, playerProdNames, playerProducts, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv;
+	var factoryList, playerFactories, playerProducts, playerProdNames, playerProducts, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv, shipmentList;
 	var playerUnits;
 	var moveString = new Array();
 
@@ -549,6 +564,8 @@ echo '
 			factoryList.push(new factory([0,0,0,i+numProducts,0,0,0,0,0,0,0,0,0,0,0,i+numProducts]))
 		}
 		defaultBuildings = new uList(factoryList);
+		
+		shipmentList = ['.implode(',', $shipmentList).'];
 
 		nationList = new Array("Canada", "Mexico", "United States");
 

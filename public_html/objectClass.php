@@ -137,17 +137,19 @@ class business extends object {
 		$this->attrList['boost3'] = 22;
 		$this->attrList['boost4'] = 23;
 		$this->attrList['boost5'] = 24;
+		
 		$this->attrList['boost6'] = 25;
 		$this->attrList['boost7'] = 26;
 		$this->attrList['boost8'] = 27;
 		$this->attrList['boost9'] = 28;
 		$this->attrList['boost10'] = 29;
 
-
 		$this->attrList['openOffers'] = 41;
 		$this->attrList['contractList'] = 43;
 		$this->attrList['openBids'] = 44;
 		$this->attrList['openInvoices'] = 45;
+		
+		$this->attrList['shipmentLink'] = 46;
 
 		for ($i=0; $i<20; $i++) {
 			$this->attrList['service'.$i] = 100+$i;
@@ -510,7 +512,6 @@ class city extends object {
 
 		$this->attrList['pollutionAdj'] = 37;
 		$this->attrList['rightsAdj'] = 38;
-
 	}
 
 	/*
@@ -615,6 +616,32 @@ class city extends object {
 	}
 	*/
 }
+
+/*
+class invoice {
+	function __construct($invoiceDat) {
+		// create invoice
+		$now = time();
+		$invoiceInfo = array_fill(1, 20, 0);
+		$invoiceInfo[1] = 1; // status: unpaid
+		$invoiceInfo[2] = $contractInfo[3]; // contract Price
+		$invoiceInfo[3] = $sentQty;
+		$invoiceInfo[4] = $contractInfo[16]; // contract Price
+		$invoiceInfo[5] = $sentQual;
+		$invoiceInfo[6] = $sentPol;
+		$invoiceInfo[7] = $sentRights;
+		$invoiceInfo[8] = $now;
+		$invoiceInfo[9] = 0;
+		$invoiceInfo[11] = $contractInfo[22]; // invoice link
+		$invoiceInfo[12] = $now + 600; // Delivery time
+		$invoiceInfo[13] = $buyerCost;
+		$invoiceInfo[14] = $postVals[3];
+		$invoiceInfo[15] = $materialCost;
+		$invoiceInfo[16] = $laborCost;
+		$invoiceInfo[17] = $postVals[1];
+	}
+}
+*/
 
 class product extends object {
 	public $reqMaterials, $reqLabor;

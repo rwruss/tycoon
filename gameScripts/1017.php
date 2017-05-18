@@ -11,11 +11,13 @@ PostVals
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 require_once('./taxCalcs.php');
+require_once('./invoiceFunctions.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $supplyFile = fopen($gamePath.'/citySupply.csf'; 'rb')
+$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 
 // Verify that the factory can sell this product
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
@@ -136,13 +138,36 @@ $thisFactory->adjVal('totalSales', $netSale);
 $thisFactory->adjVal('periodSales', $netSale);
 $thisFactory->saveAll($objFile);
 
-// Create transaction for the city and assign an anticipated time of arrival
-/*
-// Create an invoice for the city
-// Save the invoice in the city inbound invoice slot
+// Create transaction (invoice) for the city and assign an anticipated time of arrival
+$now = time();
+$invoiceInfo = array_fill(1, 20, 0);
+$invoiceInfo[1] = 3; // status: unsold to city
+$invoiceInfo[2] = $postVals[3]; // Proudct ID
+$invoiceInfo[3] = $postVals[4];
+$invoiceInfo[4] = 0; // contract Price (TBD)
+$invoiceInfo[5] = $sentQual;
+$invoiceInfo[6] = $sentPol;
+$invoiceInfo[7] = $sentRights;
+$invoiceInfo[8] = $now;
+$invoiceInfo[9] = 0;
+$invoiceInfo[11] = $thisPlayer->get('shipmentLink'); // Link to previously linked item
+$invoiceInfo[12] = $now + 600; // Delivery time
+$invoiceInfo[13] = 0; // TBD at time of sale
+$invoiceInfo[14] = 0; // contract ID (NONE)
+$invoiceInfo[15] = $materialCost;
+$invoiceInfo[16] = $laborCost;
+$invoiceInfo[17] = $postVals[1]; // selling factory ID
+$invoiceInfo[18] = $postVals[2]; // target City ID
 
-*/
-/*
+// Save the invoice to teh file
+$newInvoiceID = writeInvoice($invoiceInfo, $taxRates, $contractFile);
+
+// change the player information to link to this invoice first
+$thisPlayer->save('shipmentLink', $newInvoiceID);
+
+// Add the transaction to the companies list of pending invoices
+
+/***** OLD STUFF
 $taxRates = taxRates($transaction, $thisFactory, $buyingCity, $sellingCity, $thisPlayer, $slotFile);
 echo '<p>Calced tax rates:<br>';
 print_r($taxRates);
@@ -194,4 +219,5 @@ fclose($objFile);
 fclose($cityFile);
 fclose($supplyFile);
 fclose($slotFile);
+fclose($contractFile);
 ?>

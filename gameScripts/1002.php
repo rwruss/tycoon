@@ -5,14 +5,15 @@ businessDiv = useDeskTop.newPane("businessObjects");
 businessDiv.innerHTML = "";
 
 var headSection = addDiv("", "stdFloatDiv", businessDiv);
-var listSection = addDiv("", "stdFloatDiv", businessDiv);
+businessDiv.listSection = addDiv("", "stdFloatDiv", businessDiv);
+businessDiv.shipments = addDiv("", "stdFloatDiv", businessDiv);
 businessDiv.laborHead = addDiv("abcd", "stdFloatDiv", businessDiv);
 businessDiv.laborSection = addDiv("abcd", "stdFloatDiv", businessDiv);
 
 
 console.log(playerFactories);
 for (let i=0; i<playerFactories.length; i++) {
-	let thisSummary = playerFactories[i].renderSummary(listSection);
+	let thisSummary = playerFactories[i].renderSummary(businessDiv.listSection);
 	let thisFactory = playerFactories[i];
 	thisSummary.sendStr = thisFactory.objID + "," + i;
 	thisSummary.addEventListener("click", function () {scrMod("1003,"+this.sendStr);})
@@ -102,5 +103,7 @@ textBlob("", businessDiv.laborHead, "company labor");
 
 tmpLabor = companyLabor;
 companyLaborList(tmpLabor, businessDiv.laborSection);
+
+showShipments(companyShipments);
 </script>';
 ?>

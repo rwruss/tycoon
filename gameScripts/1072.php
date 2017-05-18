@@ -12,6 +12,7 @@ PVS
 require_once('./slotFunctions.php');
 require_once('./taxCalcs.php');
 require_once('./objectClass.php');
+require_once('./invoiceFunctions.php');
 
 $contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
@@ -130,7 +131,7 @@ if ($contractInfo[23] == 1 || 1) {
 $now = time();
 $invoiceInfo = array_fill(1, 20, 0);
 $invoiceInfo[1] = 1; // status: unpaid
-$invoiceInfo[2] = $contractInfo[3]; // contract Price
+$invoiceInfo[2] = $contractInfo[3]; // Proudct ID
 $invoiceInfo[3] = $sentQty;
 $invoiceInfo[4] = $contractInfo[16]; // contract Price
 $invoiceInfo[5] = $sentQual;
@@ -144,37 +145,14 @@ $invoiceInfo[13] = $buyerCost;
 $invoiceInfo[14] = $postVals[3];
 $invoiceInfo[15] = $materialCost;
 $invoiceInfo[16] = $laborCost;
-$invoiceInfo[17] = $postVals[1];
+$invoiceInfo[17] = $postVals[1]; // selling factory ID
 
-$invoiceID = 0;
-if (flock($contractFile, LOCK_EX)) {
-	// get a new invoice number
-	fseek($contractFile, 0, SEEK_END);
-	$invoiceID = max(100, ftell($contractFile));
+// Save the invoice to teh file
+$newInvoiceID = writeInvoice($invoiceInfo, $taxRates, $contractFile);
 
-	echo 'Create invoice #'.$invoiceID;
-	$invoiceInfo[10] = $invoiceID;
-
-	$invoiceDat = '';
-	for ($i=1; $i<=20; $i++) {
-		$invoiceDat .= pack('i', $invoiceInfo[$i]);
-	}
-	for ($i=1; $i<=30; $i++) {
-		$invoiceDat .= pack('s', $taxRates[$i]);
-	}
-
-	echo 'Invoice size is '.strlen($invoiceDat);
-
-	fseek($contractFile, $invoiceID);
-	fwrite($contractFile, $invoiceDat);
-
-	// record new invoice pointer in the contract
-	echo 'record invoice at ('.($postVals[3] + 84).')';
-	$contractInfo[22] = $invoiceID;
-	//fseek($contractFile, $postVals[3] + 84);
-	//fwrite($contractFile, pack('i', $invoiceID));
-	flock($contractFile, LOCK_UN);
-}
+// record new invoice pointer in the contract
+echo 'record invoice at ('.($postVals[3] + 84).')';
+$contractInfo[22] = $newInvoiceID;
 
 // save items
 $sellFactory->saveAll();
@@ -196,7 +174,7 @@ if ($buyingPlayer->get('openInvoices') == 0) {
 	$buyingPlayer->save('openInvoices', $newSlot);
 }
 $invoiceSlot = new itemSlot($buyingPlayer->get('openInvoices'), $slotFile, 40);
-$invoiceSlot->addItem($invoiceID, $slotFile);
+$invoiceSlot->addItem($newInvoiceID, $slotFile);
 
 // Record the sale in the GDP of the city, region, and nation
 $gdpGain = $sentQty*$contractInfo[16]; // GDP Gain
