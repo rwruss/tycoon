@@ -188,24 +188,24 @@ class factory extends object {
 		container.prodSection = addDiv("", "", container);
 		container.prodSection.innerHTML = "Qty: "+ this.prodInv[prodIndex];
 	}
-	
+
 	showOrders(trg) {
 		let factoryOrders = new Array();
-		for (var i=0; i<materialOrder.length; i+=18) {
+		for (var i=0; i<this.materialOrder.length; i+=18) {
 			factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+18)));
 			//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 		}
-		
+
 		showOrders(trg, factoryOrders);
 	}
-	
+
 	showLabor(trg) {
 		let factoryLabor = new Array();
 		factoryLabor.push(new laborItem({objID:0, pay:0, ability:0, laborType:0}));
-		for (var i=0; i<laborDat.length; i+=10) {
-			factoryLabor.push(new laborItem({objID:(laborDat[i]/10+1), pay:(laborDat[i+5]), ability:(laborDat[i+8]), laborType:laborDat[i]}));
+		for (var i=0; i<this.labor.length; i+=10) {
+			factoryLabor.push(new laborItem({objID:(this.labor[i]/10+1), pay:(this.labor[i+5]), ability:(this.labor[i+8]), laborType:this.labor[i]}));
 		}
-		
+
 		trg.innerHTML = "";
 
 		for (var i=1; i<factoryLabor.length; i++) {
@@ -217,52 +217,52 @@ class factory extends object {
 			laborItem.addEventListener("click", function () {scrMod("1023,"+this.ID+","+itemNum)});
 		}
 	}
-	
+
 	showOutputs(trg) {
 		trg.innerHTML = "";
 		for (var i=0; i<5; i++) {
 			if (this.productStores[i]>0) {
 				//productArray[this.productStores[i]].renderQty(trg, this.productStores[i+5]);
-				productArray[this.prod[i]].renderDtls(container, this.prodInv[i], this.prodDtls[i*5+4], this.prodDtls[i*5+3], 0, 0);
+				productArray[this.prod[i]].renderDtls(trg, this.prodInv[i], this.prodDtls[i*5+4], this.prodDtls[i*5+3], 0, 0);
 			}
 		}
 	}
-	
+
 	showProdRequirements(trg) {
 		trg.innerHTML = "";
 		for (var i=0; i<this.productMaterial.length; i+=2) {
 			materialBox(this.productMaterial[i], this.productMaterial[i+1], trg);
 		}
 	}
-	
+
 	showReqLabor(trg) {
 		trg.innerHTML = "";
-		for (var i=0; i<this.reqdLabor.length; i++) {
-			if (this.reqdLabor[i]>0) laborArray[this.reqdLabor[i]].renderSimple(trg);
+		for (var i=0; i<this.productLabor.length; i++) {
+			if (this.productLabor[i]>0) laborArray[this.productLabor[i]].renderSimple(trg);
 		}
 	}
-	
+
 	showInventory(trg) {
 		trg.innerHTML = "";
 		textBlob("", trg, "Current resource stores:");
-		for (var i=0; i<this.inventory.length; i+=2) {
+		for (var i=0; i<this.materialInv.length; i+=2) {
 			//productArray[this.prod[prodIndex]].renderDtls(container, this.prodInv[prodIndex], this.prodDtls[prodIndex*5+4], this.prodDtls[prodIndex*5+3], 0, 0);
-			materialBox(this.inventory[i], this.inventory[i+1], trg);
+			materialBox(this.materialInv[i], this.materialInv[i+1], trg);
 		}
 	}
-	
+
 	showSales(trg) {
 		//console.log("show sales");
 		let oList = [];
-		for (var i=0; i<this.saleDat.length; i+=12) {
-			oList.push(new offer(this.saleDat.slice(i, i+12)));
+		for (var i=0; i<this.factorySales.length; i+=12) {
+			oList.push(new offer(this.factorySales.slice(i, i+12)));
 		}
 		for (var i=0; i<oList.length; i++) {
 			console.log("show offer " + i);
 			oList[i].renderCancel(trg);
 		}
 	}
-	
+
 	showContracts(trg) {
 		console.log("fac contracts size is  " + this.contracts.length);
 		let startPos = this.contracts[0]+1;

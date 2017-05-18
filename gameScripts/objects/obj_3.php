@@ -122,7 +122,7 @@ let thisFactory = playerFactories['.$postVals[2].'];
 selectedFactory = '.$postVals[1].';
 factoryDiv = useDeskTop.newPane("factoryInfo");
 factoryDiv.innerHTML = "";
-factorySales = ['.implode(',', $saleDat).'];';
+thisFactory.factorySales = ['.implode(',', $saleDat).'];';
 
 if ($constructDelta > 0) {
 	echo 'var updateArea = addDiv("", "stdFloatDiv", factoryDiv);';
@@ -168,8 +168,8 @@ for (var i=0; i<materialOrder.length; i+=18) {
 thisFactory.labor = ['.implode(',', array_slice($thisObj->objDat, ($thisObj->laborOffset-1), 100)).'];
 
 inventoryItems = [];
-for (i=0; i<materialInv.length; i+=2) {
-	inventoryItems.push(new product({objID:materialInv[i]}));
+for (i=0; i<thisFactory.materialInv.length; i+=2) {
+	inventoryItems.push(new product({objID:thisFactory.materialInv[i]}));
 }
 invList = new uList(inventoryItems);
 
@@ -259,7 +259,7 @@ thisFactory.showReqLabor(factoryDiv.laborSection.required);
 
 reqBox.stores = addDiv("", "stdFloatDiv", factoryDiv);
 //showInventory('.$postVals[1].', materialInv);
-thisFactory.showInventroy(reqBox.stores);
+thisFactory.showInventory(reqBox.stores);
 
 var orderSection = addDiv("", "stdFloatDiv", factoryDiv);
 var orderHead = addDiv("", "stdFloatDiv", orderSection);
