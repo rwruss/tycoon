@@ -110,10 +110,12 @@ $shipmentList = [];
 while ($nextInvoice > 0) {
 	fseek($contractFile, $nextInvoice);
 	$invoiceInfo = unpack('i*', fread($contractFile, 80));
-	
+
 	array_merge($shipmentList, $invoiceInfo);
 	$nextInvoice = $invoiceInfo[11];
 }
+
+$shipmentList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 fclose($contractFile);
 
@@ -564,8 +566,9 @@ echo '
 			factoryList.push(new factory([0,0,0,i+numProducts,0,0,0,0,0,0,0,0,0,0,0,i+numProducts]))
 		}
 		defaultBuildings = new uList(factoryList);
-		
+
 		shipmentList = ['.implode(',', $shipmentList).'];
+		console.log(shipmentList);
 
 		nationList = new Array("Canada", "Mexico", "United States");
 

@@ -137,7 +137,7 @@ class business extends object {
 		$this->attrList['boost3'] = 22;
 		$this->attrList['boost4'] = 23;
 		$this->attrList['boost5'] = 24;
-		
+
 		$this->attrList['boost6'] = 25;
 		$this->attrList['boost7'] = 26;
 		$this->attrList['boost8'] = 27;
@@ -148,7 +148,7 @@ class business extends object {
 		$this->attrList['contractList'] = 43;
 		$this->attrList['openBids'] = 44;
 		$this->attrList['openInvoices'] = 45;
-		
+
 		$this->attrList['shipmentLink'] = 46;
 
 		for ($i=0; $i<20; $i++) {
@@ -220,7 +220,7 @@ class factory extends object {
 		$this->attrList['offer6'] = 236;
 		$this->attrList['offer7'] = 237;
 		$this->attrList['offer8'] = 238;
-		
+
 		$this->attrList['polPerDay'] = 325;
 		$this->attrList['rtsPerDay'] = 326;
 
@@ -546,13 +546,13 @@ class city extends object {
 		fseek ($supplyFile, $this->id * $this->supplyBlockSize + $productID*100);
 		fwrite($supplyFile, pack('i*', time(), $newLevel));
 	}
-	
+
 	function supplyLevel($productID, $supplyFile) {
 		//return $this->objDat[$this->dLevelOffset+$productID];
-		
+
 		fseek ($supplyFile, $this->id * $this->supplyBlockSize + $productID*100);
 		$supplyDat = unpack('i*', fread($supplyFile, 100));
-		
+
 		return $supplyDat;
 	}
 	/*
@@ -736,9 +736,10 @@ function loadCity($id, $file) {
 function loadCityDemands($id, $file) {
 	$areaHeader = 730200;
 	fseek($file, $areaHeader+$id*81000);
-	$dat = unpack('i*', fread($file, 81000));
+	$binDat = fread($file, 81000);
+	$dat = unpack('i*', $binDat);
 
-	return new city($id, $dat, $file);
+	return new city($id, $dat, $file, $binDat);
 }
 
 function loadRegion($id, $file) {

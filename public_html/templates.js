@@ -1225,6 +1225,13 @@ showOutputs = function (trg, productStores) {
 	}
 }*/
 
+showShipments = function (dat, trg) {
+	for (var i=0; i<dat.length; i+=20) {
+		let contain = addDiv("", "", trg);
+		contain.innerHTML = "shipment "+i;
+	}
+}
+
 msgSummary = function (trg, fromName, fromID, time, subject, msgStatus, s, e) {
 	msgContain = addDiv("", "", trg);
 

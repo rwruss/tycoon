@@ -16,7 +16,7 @@ require_once('./invoiceFunctions.php');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$supplyFile = fopen($gamePath.'/citySupply.csf'; 'rb')
+$supplyFile = fopen($gamePath.'/citySupply.csf', 'rb');
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 
 // Verify that the factory can sell this product
@@ -134,8 +134,8 @@ print_r($transaction);
 
 // remove qunatity from factory
 $thisFactory->adjVal('prodInv'.($prodNumber+1), -$saleQty);
-$thisFactory->adjVal('totalSales', $netSale);
-$thisFactory->adjVal('periodSales', $netSale);
+//$thisFactory->adjVal('totalSales', $netSale);
+//$thisFactory->adjVal('periodSales', $netSale);
 $thisFactory->saveAll($objFile);
 
 // Create transaction (invoice) for the city and assign an anticipated time of arrival
@@ -160,7 +160,9 @@ $invoiceInfo[17] = $postVals[1]; // selling factory ID
 $invoiceInfo[18] = $postVals[2]; // target City ID
 
 // Save the invoice to teh file
+$taxRates = array_fill(1, 30, 0);
 $newInvoiceID = writeInvoice($invoiceInfo, $taxRates, $contractFile);
+echo 'Created invoice '.$newInvoiceID;
 
 // change the player information to link to this invoice first
 $thisPlayer->save('shipmentLink', $newInvoiceID);

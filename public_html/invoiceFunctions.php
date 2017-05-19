@@ -25,8 +25,8 @@ function writeInvoice($invoiceInfo, $taxRates, $contractFile) {
 
 		flock($contractFile, LOCK_UN);
 	}
-	
-	return $invoiceID'
+
+	return $invoiceID;
 }
 
 ?>
