@@ -107,15 +107,17 @@ for ($i=1; $i<sizeof($laborSlot->slotData); $i+=10) {
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $nextInvoice =  $thisPlayer->get('shipmentLink');
 $shipmentList = [];
+
 while ($nextInvoice > 0) {
+	echo '<p>Check shipment '.$nextInvoice.'<p>';
 	fseek($contractFile, $nextInvoice);
 	$invoiceInfo = unpack('i*', fread($contractFile, 80));
 
-	array_merge($shipmentList, $invoiceInfo);
+	$shipmentList = array_merge($shipmentList, $invoiceInfo);
 	$nextInvoice = $invoiceInfo[11];
 }
-
-$shipmentList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+print_r($shipmentList);
+//$shipmentList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
 fclose($contractFile);
 

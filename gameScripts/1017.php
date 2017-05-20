@@ -13,11 +13,11 @@ require_once('./objectClass.php');
 require_once('./taxCalcs.php');
 require_once('./invoiceFunctions.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$cityFile = fopen($gamePath.'/cities.dat', 'rb');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$supplyFile = fopen($gamePath.'/citySupply.csf', 'rb');
-$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$supplyFile = fopen($gamePath.'/citySupply.csf', 'r+b');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
 
 // Verify that the factory can sell this product
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
