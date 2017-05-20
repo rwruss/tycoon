@@ -293,6 +293,26 @@ setBar = function (id, desc, pct) {
 	}
 }
 
+class shipment() {
+	constructor(dat) {
+		this.status = dat[0];
+		this.prodID = dat[1];
+		this.qty = dat[2];
+		this.qual = dat[4];
+		this.poll = dat[5];
+		this.rights = dat[6];
+		this.sentTime = dat[7];
+		this.delTime = dat[11];
+		this.matCost = dat[14];
+		this.labCost = dat[15];
+	}
+	
+	renderSummary(trg) {
+		container = renderDtls(trg, this.qty, this.matCost, this.labCost, this.qual, this.poll);
+		container.arriveTime = addDiv("", "", container);
+		container.arriveTime.innerHTML = this.delTime
+}
+
 class city {
 	constructor(objDat, laws, taxes) {
 
