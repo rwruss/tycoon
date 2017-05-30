@@ -4,6 +4,7 @@ $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
 $numProducts = 38;
 $numFactories = 8;
+$supplyBlockSize = 360000;
 
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
@@ -84,7 +85,7 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 		}
 	}
 }
-fclose($cityFile);
+
 /*
 echo '<p>Factory LIST:';
 print_r($factoryList);
@@ -108,17 +109,45 @@ $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 $nextInvoice =  $thisPlayer->get('shipmentLink');
 $shipmentList = [];
 
-while ($nextInvoice > 0) {
-	echo '<p>Check shipment '.$nextInvoice.'<p>';
+$supplyFile = fopen($gamePath.'/citySupply.csf', 'rb');
+$check = 0;
+
+while ($nextInvoice > 0 && $check <5) {
+	//echo '<p>Check shipment '.$nextInvoice.'<p>';
 	fseek($contractFile, $nextInvoice);
 	$invoiceInfo = unpack('i*', fread($contractFile, 80));
 
-	$shipmentList = array_merge($shipmentList, $invoiceInfo);
-	$nextInvoice = $invoiceInfo[11];
-}
-print_r($shipmentList);
-//$shipmentList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+	if ($invoiceInfo[1] < 99) {
+		//print_r($shipmentList);
+		$shipmentList = array_merge($shipmentList, $invoiceInfo);
 
+		// read city demographics and shit
+		$shipToCity = loadCity($invoiceInfo[18], $cityFile);
+		$shipmentList[] = $shipToCity->get('population');
+
+		$nationalPay = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
+		$shipmentList = array_merge($shipmentList, $nationalPay);
+
+		$incomeLvls = [25, 25, 23, 10, 6, 3, 3, 2, 2, 1];
+		$shipmentList = array_merge($shipmentList, $incomeLvls);
+
+		// read city product demand
+		fseek($supplyFile, $invoiceInfo[18]*$supplyBlockSize + $invoiceInfo[2]*40);
+		$supplyDat = fread($supplyFile, 40);
+
+		$demandHead = unpack('i*', substr($supplyDat, 0, 12));
+		$productDemand = unpack('s*', substr($supplyDat, 12, 20));
+
+		$productDemand = [1, 2, 3, 4, 0, 0, 0, 0, 0, 0];
+		$shipmentList = array_merge($shipmentList, $demandHead, $productDemand);
+	}
+	$nextInvoice = $invoiceInfo[11];
+	$check++;
+}
+
+
+fclose($cityFile);
+fclose($supplyFile);
 fclose($contractFile);
 
 echo '
@@ -312,6 +341,25 @@ echo '
 			}
 
 		xmlhttp.send(params);
+	}
+
+	function loadDataPromise(val) {
+		console.log("promise data");
+		params = "val1="+val;
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				console.log(xmlhttp.response);
+				}
+			}
+
+		xmlhttp.send(params);
+
+		return new Promise(resolve => {
+			resolve(77);
+		})
 	}
 
 	function loadBuffer(val, callback) {
@@ -569,8 +617,9 @@ echo '
 		}
 		defaultBuildings = new uList(factoryList);
 
-		shipmentList = ['.implode(',', $shipmentList).'];
-		console.log(shipmentList);
+		shipmentList = [];
+		loadShipments(['.implode(',', $shipmentList).'], shipmentList); // shipmentList
+		console.log(['.implode(',', $shipmentList).']);
 
 		nationList = new Array("Canada", "Mexico", "United States");
 

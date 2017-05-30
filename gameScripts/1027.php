@@ -73,6 +73,11 @@ cityTabs.renderKids[4].factoryBar = addDiv("", "stdFloatDiv", cityTabs.renderKid
 //console.log(playerProdNames);
 let productSales = selectMenu(playerProdNames);
 cityTabs.renderKids[4].prodBar.appendChild(productSales);
+cityTabs.renderKids[4].invDiv = addDiv("", "stdFloatDiv", cityTabs.renderKids[4]);
+cityTabs.renderKids[4].invHead = addDiv("", "stdFloatDiv", cityTabs.renderKids[4].invDiv);
+cityTabs.renderKids[4].invBody = addDiv("", "stdFloatDiv", cityTabs.renderKids[4].invDiv);
+cityTabs.renderKids[4].invHead.innerHTML = "inventory here";
+
 
 productSales.addEventListener("change", function () {
 	let thisPrice;
@@ -88,8 +93,31 @@ productSales.addEventListener("change", function () {
 			thisFac.mCost.innerHTML = "Material Cost: " + playerFactories[i].prodDtls[this.value*5+4];
 			thisFac.slide.slide.selectedProduct = this.value;
 			thisFac.slide.slide.addEventListener("change", function () {
-				console.log("changing to " + this.selectedProduct);
-				thisPrice = showCity.demandPrice(this.value, this.selectedProduct);
+				let thisPrice;
+				//thisPrice = showCity.demandPrice(this.value, this.selectedProduct);
+
+				//console.log(showCity.demandPrice(this.value, this.selectedProduct));
+
+				var getPrice = function (x, y) {
+					return new Promise(resolve => {
+						resolve(showCity.demandPrice(x, y));
+					}, reject => {
+						console.log("rpice failed");
+					});
+				}
+
+				async function dookie (x, y) {
+					let p;
+						p = await getPrice(x, y);
+					return p;
+				}
+
+				console.log("run dookie");
+				dookie(this.value, this.selectedProduct).then(v => {
+					console.log("V has a value of " + v);
+				});
+
+				console.log("changing to " + this.selectedProduct + " @ " + thisPrice);
 				thisRev = this.value*thisPrice;
 				thisTaxes = thisFac.totalTax * this.value*thisPrice/100
 
@@ -101,7 +129,6 @@ productSales.addEventListener("change", function () {
 	}
 
 	// load the demand curve for this item for the city
-	//console.log(showCity.demandPrice(100));
 });
 forceEvent(productSales, "change");
 

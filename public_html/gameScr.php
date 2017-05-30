@@ -5,6 +5,7 @@ $unitBlockSize = 400;
 $jobBlockSize = 200;
 $warBlockSize = 200;
 $factorySize = 1100;
+$supplyBlockSize = 360000;
 
 session_start();
 $gameID = $_GET['gid'];

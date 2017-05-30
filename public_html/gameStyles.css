@@ -19,6 +19,30 @@
 		cursor:pointer;
 }
 
+.hireContain {
+	position:relative;
+	width:100;
+	height:175;
+	border: 1px solid pink;
+	float:left;
+	background:pink;
+	border-radius:10px;
+}
+
+.hireButton {
+	border-collapse: separate;
+	position:absolute;
+	bottom:0;
+	padding: 5px;
+	display:inline-block;
+	text-align: center;
+	border: 2px solid black;
+	color:white;
+	border-radius:10px;
+	background:blue;
+	cursor:pointer;
+}
+
 .listButton {
 	position:relative;
 	padding: 0px;
@@ -664,4 +688,10 @@
 	position:relative;
 	float:left;
 	width:150px;
+}
+
+.shipPrice {
+	position:absolute;
+	left:0;
+	bottom:0;
 }

@@ -34,6 +34,8 @@ for ($i=0; $i<5; $i++) {
 }
 
 // Verify the qunatity sold by the factory
+if ($postVals[4] < 1) exit('no quantity');
+
 $qtyCheck = true;
 if ($optionCheck) {
   if ($thisFactory->get('prodInv'.($prodNumber+1)) >= $postVals[4]) {
@@ -41,6 +43,11 @@ if ($optionCheck) {
     $qtyCheck = false;
   }
 } else exit('Not a valid item');
+
+// verify product number is valids
+if ($postVals[3] < 1) {
+	exit("invalid product");
+} else { echo 'product #'.$postVals[3].' is valud';}
 
 // Verify factory has enough inventroy for this sale
 if ($qtyCheck) exit ('note enough of this ('.$thisFactory->get('prodInv'.($prodNumber+1)).' < '.$postVals[4].')');
@@ -55,13 +62,19 @@ $now = time();
 
 $usePrice = 0;
 $supplyInfo = $buyingCity->supplyLevel($postVals[3], $supplyFile);
+echo '<p>SUPPLY INFO<p>';
+print_R($supplyInfo);
 $currentSupply = $supplyInfo[2] - ($now - $supplyInfo[1]) * $supplyInfo[3];
 $currentSupply = 375000;
 $population = 1000000;
 $payDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 $demandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0];
 //$populationDemo = [0, 25, 25, 23, 10, 6, 3, 3, 2, 2, 1, 0];
+
 $populationDemo = $buyingCity->iPercentiles();
+array_unshift($populationDemo, 0);
+$populationDemo[] =  0;
+
 $demandQty = [];
 for ($i=9; $i>0; $i--) {
 	$demandQty[$i] = $population*$populationDemo[$i]*$demandLevels[$i]/100;

@@ -81,7 +81,8 @@
 
 TO DO:
 PREMIUM CURRENCY
-Adjust sales to cities to have a ship time
+Transport networks to regions to speed up Shipments
+figure out promise getdata
 Set cities to laod orders that arrive
 Shipping Speed Increase
 Material Cost for items with no input
@@ -168,6 +169,7 @@ Load city data & supply for products in 1027/ class city->demandPrice();
 Adjustmetns to quality, pollution, and rights in this factory during production
 Loading taxes at city info screen (calc amounts and exceptions)
 Transfer of goods when sent via contract (done with an invoice?)
+Adjust sales to cities to have a ship time
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

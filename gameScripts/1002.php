@@ -9,7 +9,10 @@ businessDiv.listSection = addDiv("", "stdFloatDiv", businessDiv);
 businessDiv.shipments = addDiv("", "stdFloatDiv", businessDiv);
 businessDiv.laborHead = addDiv("abcd", "stdFloatDiv", businessDiv);
 businessDiv.laborSection = addDiv("abcd", "stdFloatDiv", businessDiv);
+
 businessDiv.shipSection = addDiv("abcd", "stdFloatDiv", businessDiv);
+businessDiv.shipHead = addDiv("abcd", "stdFloatDiv", businessDiv.shipSection);
+businessDiv.shipBody = addDiv("abcd", "stdFloatDiv", businessDiv.shipSection);
 
 console.log(playerFactories);
 for (let i=0; i<playerFactories.length; i++) {
@@ -104,6 +107,7 @@ textBlob("", businessDiv.laborHead, "company labor");
 tmpLabor = companyLabor;
 companyLaborList(tmpLabor, businessDiv.laborSection);
 
-showShipments(shipmentList, businessDiv.shipSection);
+businessDiv.shipHead.innerHTML = "Shipments en Route";
+showShipments(shipmentList, businessDiv.shipBody);
 </script>';
 ?>

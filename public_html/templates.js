@@ -1225,10 +1225,30 @@ showOutputs = function (trg, productStores) {
 	}
 }*/
 
-showShipments = function (dat, trg) {
-	for (var i=0; i<dat.length; i+=20) {
-		let contain = addDiv("", "", trg);
-		contain.innerHTML = "shipment "+i;
+loadShipments = function (dat, list) {
+	for (var i=0; i<dat.length; i+=56) {
+		let thisShipment = new shipment(dat.slice(i, i+56));
+		console.log(thisShipment);
+		list.push(thisShipment);
+
+		//console.log(new shipment(dat.slice(i, i+55)));
+		//console.log(list);
+	}
+	//console.log(dat);
+}
+
+showShipments = function (list, trg) {
+	for (var i=0; i<list.length; i++) {
+		list[i].renderSummary(trg);
+	}
+}
+
+updateShipment = function(dat, list) {
+	for (var i=0; i<list.length; i++) {
+		if (list[i].invoiceNum == dat[9]) {
+			console.log(list[i].invoiceNum + " == " + dat[9]);
+			list[i].update(dat);
+		}
 	}
 }
 
@@ -1871,3 +1891,48 @@ forceEvent = function (target, type) {
 			target.fireEvent("on" + event.eventType, event);
 		}
 }
+
+productPrice = function (qty, productID, nationalPayDemos, productDemand, incomeGroups, currentSupply) {
+		var totalSupply = [];
+		var totalDemand = [];
+		currentSupply = 375000 + parseInt(qty);
+
+		console.log(nationalPayDemos);
+		console.log(productDemand);
+		console.log(incomeGroups);
+
+		// calculate demand levels based on population, city income levels, and demand levels
+		let popLvls = [].fill(0,incomeGroups.length);
+		for (let i=0; i<incomeGroups.length; i++) {
+
+			totalDemand[i] = incomeGroups[i]*productDemand[i]/100;
+		}
+
+		console.log("total demand");
+		console.log(totalDemand);
+
+		let remSupply = currentSupply;
+		let lastSupply = 0;
+		let lastInterval = 1;
+		let remDemand = 1;
+		// Assign the supply the the different brackets from the top down and see what is left
+		for (i=incomeGroups.length-1; i>0; i--) {
+			lastSupply = Math.min(remSupply, totalDemand[i]);
+			//console.log(remSupply + ", " + totalDemand[i]);
+			remSupply -= lastSupply;
+			remDemand = totalDemand[i] - lastSupply;
+
+			//console.log(i + ": Rem Dem = " + remDemand + " ->> " + totalDemand[i] + " - " + lastSupply);
+
+			if (remDemand > 0) {
+				lastInterval = i;
+				break;
+			}
+		}
+
+		let tmpCheck = Math.round((nationalPayDemos[lastInterval+1]-(nationalPayDemos[lastInterval+1]-nationalPayDemos[lastInterval])*(totalDemand[lastInterval]-remDemand)/totalDemand[lastInterval])*100)/100;
+
+		console.log("(" + nationalPayDemos[lastInterval+1] + " - (" + nationalPayDemos[lastInterval+1] + " - " + nationalPayDemos[lastInterval] + " ) * (" + totalDemand[lastInterval] + "-" + remDemand + ")/" + totalDemand[lastInterval] + ")*100");
+		// interpolate last interval with remaining supply
+		return Math.round((nationalPayDemos[lastInterval+1]-(nationalPayDemos[lastInterval+1]-nationalPayDemos[lastInterval])*(totalDemand[lastInterval]-remDemand)/totalDemand[lastInterval])*100)/100;
+	}

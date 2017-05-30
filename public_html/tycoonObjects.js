@@ -293,7 +293,7 @@ setBar = function (id, desc, pct) {
 	}
 }
 
-class shipment() {
+class shipment {
 	constructor(dat) {
 		this.status = dat[0];
 		this.prodID = dat[1];
@@ -302,15 +302,88 @@ class shipment() {
 		this.poll = dat[5];
 		this.rights = dat[6];
 		this.sentTime = dat[7];
+		this.invoiceNum = dat[9];
 		this.delTime = dat[11];
 		this.matCost = dat[14];
 		this.labCost = dat[15];
+		this.trgCity = dat[17];
+		this.cityPop = dat[20];
+		this.price = -1;
+
+		this.nationalDemos = dat.slice(21, 33); // 12 items
+		let tmpGroups = dat.slice(33, 43); // 10 items
+		this.supplyHead = dat.slice(43, 46); // 3 items
+		let tmpDemand = dat.slice(46, 56); // 10 items
+
+		let tmpA = [0];
+		this.incomeGroups = tmpA.concat(tmpGroups);
+		this.incomeGroups.push(0);
+
+
+		this.productDemand = [];
+		this.productDemand[0] = 0;
+
+		console.log("City pop is " + this.cityPop);
+
+		for (let i=0; i<tmpDemand.length; i++) {
+			this.productDemand[i+1] = tmpDemand[i]*this.cityPop;
+		}
+		this.productDemand.push(0);
 	}
-	
+
+	update(dat) {
+		this.status = dat[0];
+		this.prodID = dat[1];
+		this.qty = dat[2];
+		this.qual = dat[4];
+		this.poll = dat[5];
+		this.rights = dat[6];
+		this.sentTime = dat[7];
+		this.invoiceNum = dat[9];
+		this.delTime = dat[11];
+		this.matCost = dat[14];
+		this.labCost = dat[15];
+		this.trgCity = dat[17];
+	}
+
 	renderSummary(trg) {
-		container = renderDtls(trg, this.qty, this.matCost, this.labCost, this.qual, this.poll);
+		let container = productArray[this.prodID].renderDtls(trg, this.qty, this.matCost, this.labCost, this.qual, this.poll);
+		container.shipment = this;
+
 		container.arriveTime = addDiv("", "", container);
-		container.arriveTime.innerHTML = this.delTime
+		container.arriveTime.innerHTML = this.status + "<--> Time:" + this.delTime;
+
+		container.dest = addDiv("", "", container);
+		container.dest.innerHTML = "city " + this.trgCity;
+
+		if (this.price < 0) {
+			this.price = productPrice(this.qty, 0, this.nationalDemos, this.productDemand, this.incomeGroups, 0);
+		}
+
+		container.price = addDiv("", "shipPrice", container);
+		container.price.innerHTML = "$ " + this.price;
+
+		container.addEventListener("click", function (e) {
+			e.stopPropagation();
+			this.shipment.renderMenu()});
+	}
+
+	renderMenu() {
+		let dtlWindow = useDeskTop.newPane("shipmentDetail");
+		dtlWindow.innerHTML = "";
+
+		this.renderSummary(dtlWindow);
+		let now = new Date().getTime()/1000;
+		if (this.delTime <= now) {
+			dtlWindow.sellButton = newButton(dtlWindow);
+			dtlWindow.sellButton.innerHTML = "Sell these goods";
+			dtlWindow.sellButton.sendStr = "1080," + this.invoiceNum;
+			dtlWindow.sellButton.addEventListener("click", function () {scrMod(this.sendStr)});
+		} else {
+			dtlWindow.sellButton = newButton(dtlWindow);
+			dtlWindow.sellButton.innerHTML = this.delTime + " > " + now;
+		}
+	}
 }
 
 class city {
@@ -329,7 +402,7 @@ class city {
 		this.leaderDemo = new Array(-10, -20, -30, -40, -50, -60, -70, -80, -90, -100);
 		this.laws = laws;
 		this.incomeLvls = [0, 25, 25, 23, 10, 6, 3, 3, 2, 2, 1, 0];
-		this.population = 1000000;
+		this.population = objDat[2];
 		this.loadedProduct = 0;
 
 		//this.taxes = taxes;
@@ -374,7 +447,7 @@ class city {
 		containerDiv.affluence = addDiv(null, "", containerDiv.stats);
 		containerDiv.region = addDiv(null, "", containerDiv.stats);
 
-		containerDiv.population.innerHTML = "Pop: " + this.details[13];
+		containerDiv.population.innerHTML = "Pop: " + this.details[2];
 		containerDiv.education.innerHTML = "Education: " + this.details[14];
 		containerDiv.affluence.innerHTML = "Aff: " + this.details[15];
 		containerDiv.region.innerHTML = "Region: " + this.details[20];
@@ -558,63 +631,68 @@ class city {
 	}
 
 	demandPrice(qty, productID) {
-		//console.log("add qty ogf " + qty)
-		//var nationalPayDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 		var currentSupply;
+		console.log("qty " + qty + ", ID: " + productID);
+
 		if (this.loadedProduct != productID) {
-			console.log("load the demands");
-			console.log("1079," + this.objID + "," + productID);
 			this.productDemandLevels = [0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0];
 			let me = this;
+			/*
 			loadData("1079," + this.objID + "," + productID, function(x) {
+
 				let rtnVals = x.split(",");
+				console.log(rtnVals);
 				for (var i=1; i<11; i++) {
-					console.log("set " + me.productDemandLevels[i] + " to " + rtnVals[i+3]/100)
+					//console.log("set " + me.productDemandLevels[i] + " to " + rtnVals[i+3]/100)
 					me.productDemandLevels[i] = rtnVals[i+3]/100;
 				}
+
 				currentSupply = x[1];
+				me.loadedProduct = productID;
+
+				let tmpA = me.productDemandLevels.slice();
+				for (let i=0; i<tmpA.length; i++) {
+					tmpA[i] *= me.population;
+				}
+
+				let funcTest = productPrice(qty, productID, me.nationalPayDemos, tmpA, me.incomeLvls, 0);
+				console.log(funcTest);
+				return funcTest;
 				});
-			this.loadedProduct = productID;
-			//this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
+				*/
+				var assEat = async function(str) {
+					console.log("eat the ass");
+					let x = await loadDataPromise(str);
+					console.log(x);
+					return x;
+				}
+
+
+				let returnVal = assEat("1079," + this.objID + "," + productID).then(v => {
+					console.log(v);
+					return v;
+				});
+				return returnVal;
 		} else {
-			this.productDemandLevels = [0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0];
-		}
-		console.log(this.productDemandLevels);
-		console.log(this.nationalPayDemos);
-		var totalSupply = [];
-		var totalDemand = [];
-		currentSupply = 375000 + parseInt(qty);
+			console.log(this.productDemandLevels);
 
-		// calculate demand levels based on population, city income levels, and demand levels
-		let popLvls = [].fill(0,this.incomeLvls.length);
-		for (let i=0; i<this.incomeLvls.length; i++) {
-			//console.log(this.incomeLvls[i] + " * " + this.population + " * " + productDemandLevels[i]);
-			this.incomeLvls[i]*this.population;
-
-			totalDemand[i] = this.incomeLvls[i]*this.population*this.productDemandLevels[i]/100;
-		}
-
-		//console.log(totalDemand);
-		let remSupply = currentSupply;
-		let lastSupply = 0;
-		let lastInterval = 0;
-		let remDemand = 1;
-		// Assign the supply the the different brackets from the top down and see what is left
-		for (i=this.incomeLvls.length-1; i>0; i--) {
-			lastSupply = Math.min(remSupply, totalDemand[i]);
-			remSupply -= lastSupply;
-			remDemand = totalDemand[i] - lastSupply;
-			//console.log(i + ": Rem Dem = " + remDemand + " ->> " + totalDemand[i] + " - " + lastSupply);
-			if (remDemand > 0) {
-				lastInterval = i;
-				break;
+			let tmpA = this.productDemandLevels.slice();
+			for (let i=0; i<tmpA.length; i++) {
+				tmpA[i] *= this.population;
 			}
-		}
 
-		console.log(i);
-		console.log(totalDemand[i]);
-		// interpolate last interval with remaining supply
-		return Math.round((this.nationalPayDemos[i+1]-(this.nationalPayDemos[i+1]-this.nationalPayDemos[i])*(totalDemand[i]-remDemand)/totalDemand[i])*100)/100;
+			let funcTest = productPrice(qty, productID, this.nationalPayDemos, tmpA, this.incomeLvls, 0);
+			console.log(funcTest);
+			return funcTest;
+
+		}
+		//console.log(this.productDemandLevels);
+		/*
+
+		*/
+		//
+		/*
+		*/
 	}
 }
 
@@ -849,8 +927,10 @@ class labor {
 
 	renderFire(target, sendStr) {
 		let hireContain = this.renderSummary(target);
+		hireContain.className = "hireContain";
 		if (this.laborType > 0) {
 			hireContain.hireButton = newButton(hireContain);
+			hireContain.hireButton.className = "hireButton";
 			hireContain.hireButton.innerHTML = "Fire!";
 			hireContain.hireButton.sendStr = sendStr;
 

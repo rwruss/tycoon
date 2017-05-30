@@ -476,8 +476,10 @@ class city extends object {
 	function __construct($id, $dat, $file, $binDat) {
 		parent::__construct($id, $dat, $file);
 
+		echo 'Bin dat length of '.strlen($binDat);
 		$this->binDat = $binDat;
-		$this->supplyBlockSize = 1000000;
+		$this->supplyBlockSize = 360000;
+		$this->priceBlockSize = 40000;
 
 		// Total of 22250 items
 		$this->dRateOffset = 250;
@@ -514,57 +516,31 @@ class city extends object {
 		$this->attrList['rightsAdj'] = 38;
 	}
 
-	/*
-	function loadDemands() {
-		fseek($this->linkFile, $this->get('fileBaseSize')+$this->id*1000);
-		$this->demandDat = unpack('s*', fread($this->linkFile, 40000));
-	}*/
-	/*
-	function demandRate($productID) {
-		return $this->objDat[$this->dRateOffset+$productID];
-		}
-	*/
-	/*
-	function saveDLevel($productID, $newLevel) {
-		$areaHeader = 730200;
-		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
-		fwrite($this->linkFile, pack('i', $newLevel));
-		echo 'Town ID: '.$this->unitID.', Product ID: '.$productID.', ';
-		echo 'Save '.$newLevel.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
-		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
-	}*/
-	/*
-	function setSupply($productID, $newLevel) {
-		$areaHeader = 730200;
-		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
-		fwrite($this->linkFile, pack('i', $newLevel));
-		echo 'Town ID: '.$this->unitID.', Product ID: '.$productID.', ';
-		echo 'Save '.$newLevel.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
-		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
-	}*/
-	function setSupply($productID, $newLevel, $supplyFile) {
-		fseek ($supplyFile, $this->id * $this->supplyBlockSize + $productID*100);
-		fwrite($supplyFile, pack('i*', time(), $newLevel));
+	function updateSupply($productID, $adjustment, $supplyFile) {
+		fseek($supplyFile, $this->supplyBlockSize*$this->unitID + $this->priceBlockSize + $productID * 32);
+		$supplyInfo = unpack('i*', fread($supplyFile, 12));
+
+		$now = time();
+		$newSupply = $supplyInfo[2]-($now-$supplyInfo[1])*$supplyInfo[3]/3600 + $adjustment; //old supply - elapsed (hrs) * use rate + added supply
+
+		fseek($supplyFile, $this->supplyBlockSize*$this->unitID + $this->priceBlockSize + $productID * 32);
+		fwrite($supplyFile, pack('i*', $now, $newSupply));
 	}
 
 	function supplyLevel($productID, $supplyFile) {
 		//return $this->objDat[$this->dLevelOffset+$productID];
 
-		fseek ($supplyFile, $this->id * $this->supplyBlockSize + $productID*100);
-		$supplyDat = unpack('i*', fread($supplyFile, 100));
+		fseek ($supplyFile, $this->id * $this->supplyBlockSize + $this->priceBlockSize + $productID*32);
+		$supplyDat = unpack('i3h/s10r', fread($supplyFile, 32));
 
 		return $supplyDat;
 	}
-	/*
-	function demandLevel($productID) {
-		return $this->objDat[$this->dLevelOffset+$productID];
-	}
-	*/
 
 	function iPercentiles() {
+		echo 'Load percentiles '.strlen($this->binDat);
 		$pctArray = unpack('s*', substr($this->binDat, 596, 20));
-		$pctArray[0] = 0;
-		$pctArray[11] = 0;
+		//$pctArray[0] = 0;
+		//$pctArray[11] = 0;
 		return $pctArray;
 	}
 
@@ -585,6 +561,33 @@ class city extends object {
 		} else {
 			return false;
 		}
+
+	/*
+	function loadDemands() {
+		fseek($this->linkFile, $this->get('fileBaseSize')+$this->id*1000);
+		$this->demandDat = unpack('s*', fread($this->linkFile, 40000));
+	}*/
+	/*
+	function demandRate($productID) {
+		return $this->objDat[$this->dRateOffset+$productID];
+		}
+	*/
+	/*
+	function saveDLevel($productID, $newLevel) {
+		$areaHeader = 730200;
+		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
+		fwrite($this->linkFile, pack('i', $newLevel));
+		echo 'Town ID: '.$this->unitID.', Product ID: '.$productID.', ';
+		echo 'Save '.$newLevel.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
+		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
+	}*/
+
+
+	/*
+	function demandLevel($productID) {
+		return $this->objDat[$this->dLevelOffset+$productID];
+	}
+	*/
 	}
 
 	function baseDemand($productNumber) {

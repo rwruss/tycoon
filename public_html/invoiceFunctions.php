@@ -29,4 +29,22 @@ function writeInvoice($invoiceInfo, $taxRates, $contractFile) {
 	return $invoiceID;
 }
 
+function calcPrice($demandQty, $payDemos, $currentSupply) {
+	//$demandQty = [];
+	$usePrice = 0;
+	for ($i=9; $i>0; $i--) {
+		//$demandQty[$i] = $population*$populationDemo[$i]*$demandLevels[$i]/100;
+	  echo $currentSupply.' vs '.$demandQty[$i].'<br>';
+		if ($currentSupply < $demandQty[$i]) {
+			echo 'Remaining Demand : '.($demandQty[$i] - $currentSupply).'<p>';
+	    echo $payDemos[$i+1].'- ('.$payDemos[$i+1].' - '.$payDemos[$i].') * ('.$currentSupply.'/'.$demandQty[$i].')';
+			$pctSupplied = $currentSupply/$demandQty[$i];
+			$usePrice = round($payDemos[$i+1]-$pctSupplied*($payDemos[$i+1] - $payDemos[$i]), 2);
+			break;
+		}
+		$currentSupply -= $demandQty[$i];
+	}
+	return $usePrice;
+}
+
 ?>
