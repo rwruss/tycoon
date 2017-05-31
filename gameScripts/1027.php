@@ -115,15 +115,19 @@ productSales.addEventListener("change", function () {
 				console.log("run dookie");
 				dookie(this.value, this.selectedProduct).then(v => {
 					console.log("V has a value of " + v);
+					thisPrice = v;
+					thisRev = this.value*thisPrice;
+					thisFac.priceBar.innerHTML = this.value + " @ " + thisPrice + " = " + (thisRev).toFixed(2);
+
+					thisTaxes = thisFac.totalTax * this.value*thisPrice/100;
+
+					thisFac.taxCost.innerHTML = "Less taxes: " + (thisTaxes).toFixed(2) + "(" + thisFac.totalTax + " x " + this.value + " x " + thisPrice + ")";
+					thisFac.profit.innerHTML = "Net: " + (thisRev - thisTaxes).toFixed(2);
 				});
 
-				console.log("changing to " + this.selectedProduct + " @ " + thisPrice);
-				thisRev = this.value*thisPrice;
-				thisTaxes = thisFac.totalTax * this.value*thisPrice/100
+				//console.log("changing to " + this.selectedProduct + " @ " + thisPrice);
 
-				thisFac.priceBar.innerHTML = this.value + " @ " + thisPrice + " = " + (thisRev).toFixed(2);
-				thisFac.taxCost.innerHTML = "Less taxes: " + (thisTaxes).toFixed(2);
-				thisFac.profit.innerHTML = "Net: " + (thisRev - thisTaxes).toFixed(2);
+
 			});
 		}
 	}

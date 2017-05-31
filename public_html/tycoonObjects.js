@@ -306,6 +306,7 @@ class shipment {
 		this.delTime = dat[11];
 		this.matCost = dat[14];
 		this.labCost = dat[15];
+		this.fromFac = dat[16];
 		this.trgCity = dat[17];
 		this.cityPop = dat[20];
 		this.price = -1;
@@ -343,15 +344,22 @@ class shipment {
 		this.delTime = dat[11];
 		this.matCost = dat[14];
 		this.labCost = dat[15];
+		this.fromFac = dat[16];
 		this.trgCity = dat[17];
 	}
 
 	renderSummary(trg) {
-		let container = productArray[this.prodID].renderDtls(trg, this.qty, this.matCost, this.labCost, this.qual, this.poll);
+		console.log(this);
+
+		let container = addDiv("", "shipContain", trg);
+		productArray[this.prodID].renderDtls(container, this.qty, this.matCost, this.labCost, this.qual, this.poll);
 		container.shipment = this;
 
 		container.arriveTime = addDiv("", "", container);
-		container.arriveTime.innerHTML = this.status + "<--> Time:" + this.delTime;
+		//console.log(this.delTime);
+		let d = new Date(this.delTime*1000);
+		container.arriveTime.innerHTML = this.status + "<--><br> " + d.getDate() + " / " + (d.getMonth()+1) + " / " + d.getFullYear() + "<br>"+
+			d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
 
 		container.dest = addDiv("", "", container);
 		container.dest.innerHTML = "city " + this.trgCity;
@@ -362,6 +370,9 @@ class shipment {
 
 		container.price = addDiv("", "shipPrice", container);
 		container.price.innerHTML = "$ " + this.price;
+
+		container.fromFac = addDiv("", "", container);
+		container.fromFac.innerHTML = "From: " + this.fromFac;
 
 		container.addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -663,8 +674,27 @@ class city {
 				var assEat = async function(str) {
 					console.log("eat the ass");
 					let x = await loadDataPromise(str);
-					console.log(x);
-					return x;
+
+					let rtnVals = x.split(",");
+					console.log(rtnVals);
+					for (var i=1; i<11; i++) {
+						//console.log("set " + me.productDemandLevels[i] + " to " + rtnVals[i+3]/100)
+						me.productDemandLevels[i] = rtnVals[i+3]/100;
+					}
+
+					currentSupply = x[1];
+					me.loadedProduct = productID;
+
+					let tmpA = me.productDemandLevels.slice();
+					for (let i=0; i<tmpA.length; i++) {
+						tmpA[i] *= me.population;
+					}
+
+					let funcTest = productPrice(qty, productID, me.nationalPayDemos, tmpA, me.incomeLvls, 0);
+					console.log(funcTest);
+					return funcTest;
+					//console.log(x);
+					//return x;
 				}
 
 

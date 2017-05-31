@@ -690,8 +690,18 @@
 	width:150px;
 }
 
+
+.shipContain {
+	position:relative;
+	width:100;
+	border: 1px solid green;
+	float:left;
+	background:green;
+	border-radius:10px;
+}
+
 .shipPrice {
-	position:absolute;
+	position:relative;
 	left:0;
 	bottom:0;
 }
