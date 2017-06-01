@@ -249,6 +249,22 @@ class factory extends object {
 		$this->productStores[] = $this->objDat[51];
 	}
 
+	function adjProduct($prodIndex, $sentQual, $sentPol, $sentRights, $materialCost, $laborCost) {
+		
+		$this->objDat[$this->productStats + $prodIndex*5] -= $sentQual;
+		$this->objDat[$this->productStats + $prodIndex*5+1] -= $sentPol;
+		$this->objDat[$this->productStats + $prodIndex*5+2] -= $sentRights;
+		$this->objDat[$this->productStats + $prodIndex*5+3] -= $materialCost;
+		$this->objDat[$this->productStats + $prodIndex*5+4] -= $laborCost;
+		/*
+		echo '<p>adj '.($this->productStats + $prodIndex*5).' from '.$this->objDat[$this->productStats + $prodIndex*5].' by '.$sentQual;
+		echo '<p>adj '.($this->productStats + $prodIndex*5+1).' from '.$this->objDat[$this->productStats + $prodIndex*5].' by '.$sentPol;
+		echo '<p>adj '.($this->productStats + $prodIndex*5+2).' from '.$this->objDat[$this->productStats + $prodIndex*5].' by '.$sentRights;
+		echo '<p>adj '.($this->productStats + $prodIndex*5+3).' from '.$this->objDat[$this->productStats + $prodIndex*5].' by '.$materialCost;
+		echo '<p>adj '.($this->productStats + $prodIndex*5+4).' from '.$this->objDat[$this->productStats + $prodIndex*5].' by '.$laborCost;
+		*/
+	}
+
 	function overViewInfo() {
 		$tmpA = [];
 

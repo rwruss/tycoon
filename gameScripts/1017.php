@@ -64,7 +64,7 @@ $usePrice = 0;
 $supplyInfo = $buyingCity->supplyLevel($postVals[3], $supplyFile);
 echo '<p>SUPPLY INFO<p>';
 print_R($supplyInfo);
-$currentSupply = $supplyInfo[2] - ($now - $supplyInfo[1]) * $supplyInfo[3];
+$currentSupply = $supplyInfo['h2'] - ($now - $supplyInfo['h1']) * $supplyInfo['h3'];
 $currentSupply = 375000;
 $population = 1000000;
 $payDemos = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
@@ -105,7 +105,7 @@ $testCity = $buyingCity;
 $thisFactory->set('region_3', 1);
 
 echo '<p>BUYING CITY ('.$postVals[2].')<p>SELLING CITY ('.$thisFactory->get('region_3').'):';
-print_r($sellingCity->objDat);
+//print_r($sellingCity->objDat);
 
 // determine the index of the product being sold
 $prodIndex = 0;
@@ -131,6 +131,8 @@ $materialCost = round($saleQty*$thisFactory->objDat[$thisFactory->productStats +
 $laborCost = round($saleQty*$thisFactory->objDat[$thisFactory->productStats + $prodIndex*5+4]/$thisFactory->objDat[$thisFactory->prodInv+$prodIndex]);
 echo '<p>Labor Cost:'.$laborCost.'<br>Material Cost:'.$materialCost.'<br>Sent Pol:'.$sentPol.'<br>Sent Rights :'.$sentRights;
 
+// adjust product stats at the factory
+
 //see taxCalcs.php for transaction format
 $transaction = array_fill(0, 25, 0);
 $transaction[1] = $postVals[4]; // sold qty
@@ -147,6 +149,7 @@ print_r($transaction);
 
 // remove qunatity from factory
 $thisFactory->adjVal('prodInv'.($prodNumber+1), -$saleQty);
+$thisFactory->adjProduct($prodIndex, $sentQual, $sentPol, $sentRights, $materialCost, $laborCost);
 //$thisFactory->adjVal('totalSales', $netSale);
 //$thisFactory->adjVal('periodSales', $netSale);
 $thisFactory->saveAll($objFile);
