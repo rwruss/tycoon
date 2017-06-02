@@ -41,7 +41,10 @@ echo ',[]';
 echo ',[1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10]);';
 
 echo '
-//`showCity.loadDemands(['.implode(',', array_slice($thisCity->objDat, $thisCity->laborDemandOffset-1, 10000)).'], ['.implode(',', array_slice($thisCity->objDat, $thisCity->laborStoreOffset-1, 10000)).']);
+showCity.townDemo = ['.(implode(',', array_slice($thisCity->objDat, 50, 20))).'];
+showCity.leaderDemo = ['.(implode(',', array_slice($thisCity->objDat, 70, 20))).'];
+showCity.nationalPay(['.implode(',', $nationalPay).']);
+
 showCity.renderDetail(cityPane);
 var detailSection = addDiv("", "stdFloatDiv", cityPane);
 cityTabs = new tabMenu(["Overview", "Government", "Labor", "Schools", "Markets"]);
@@ -49,11 +52,6 @@ cityTabs.renderTabs(detailSection);
 
 cityTabs.tabFunction(0, function() {console.log("i select u")});
 
-showCity.townDemo = ['.(implode(',', array_slice($thisCity->objDat, 50, 20))).'];
-showCity.leaderDemo = ['.(implode(',', array_slice($thisCity->objDat, 70, 20))).'];
-showCity.nationalPay(['.implode(',', $nationalPay).'])';
-
-echo '
 textBlob("", cityTabs.renderKids[1], "Government and demographic information");
 showCity.renderDemos(cityTabs.renderKids[1]);
 buildParks(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2]);
@@ -86,20 +84,22 @@ productSales.addEventListener("change", function () {
 	cityTabs.renderKids[4].factoryBar.innerHTML = "";
 	console.log("load facs that make this (" + this.value + ")");
 	let tmpList = getFactoriesByProduct(playerFactories, this.value);
+
+	console.log("show price updates");
+	console.log(document.getElementById("cityIncome"));
+	document.getElementById("cityIncome").innerHTML = showCity.nationalPayDemos;
+
 	for (i=0; i<tmpList.length; i++) {
-		if (tmpList[i] >= 0)	{
+		if (tmpList[i] >= 0 && playerFactories[i].prodInv[tmpList[i]] > 0)	{
 			let thisFac = playerFactories[i].itemBar(cityTabs.renderKids[4].factoryBar, tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
 			thisFac.lCost.innerHTML = "Labor Cost: " + playerFactories[i].prodDtls[this.value*5+3];
 			thisFac.mCost.innerHTML = "Material Cost: " + playerFactories[i].prodDtls[this.value*5+4];
 			thisFac.slide.slide.selectedProduct = this.value;
 			thisFac.slide.slide.addEventListener("change", function () {
 				let thisPrice;
-				//thisPrice = showCity.demandPrice(this.value, this.selectedProduct);
-
-				//console.log(showCity.demandPrice(this.value, this.selectedProduct));
-
 				var getPrice = function (x, y) {
 					return new Promise(resolve => {
+
 						resolve(showCity.demandPrice(x, y));
 					}, reject => {
 						console.log("rpice failed");
@@ -123,11 +123,8 @@ productSales.addEventListener("change", function () {
 
 					thisFac.taxCost.innerHTML = "Less taxes: " + (thisTaxes).toFixed(2) + "(" + thisFac.totalTax + " x " + this.value + " x " + thisPrice + ")";
 					thisFac.profit.innerHTML = "Net: " + (thisRev - thisTaxes).toFixed(2);
+
 				});
-
-				//console.log("changing to " + this.selectedProduct + " @ " + thisPrice);
-
-
 			});
 		}
 	}

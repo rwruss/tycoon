@@ -324,8 +324,6 @@ class shipment {
 		this.productDemand = [];
 		this.productDemand[0] = 0;
 
-		console.log("City pop is " + this.cityPop);
-
 		for (let i=0; i<tmpDemand.length; i++) {
 			this.productDemand[i+1] = tmpDemand[i]*this.cityPop;
 		}
@@ -389,7 +387,12 @@ class shipment {
 			dtlWindow.sellButton = newButton(dtlWindow);
 			dtlWindow.sellButton.innerHTML = "Sell these goods";
 			dtlWindow.sellButton.sendStr = "1080," + this.invoiceNum;
-			dtlWindow.sellButton.addEventListener("click", function () {scrMod(this.sendStr)});
+			dtlWindow.sellButton.addEventListener("click", function () {
+				scrMod(this.sendStr);
+				console.log(useDeskTop.getPane("shipmentDetail"));
+				console.log(useDeskTop.getPane("shipmentDetail").parentObj);
+				useDeskTop.getPane("shipmentDetail").parentNode.parentObj.destroyWindow();
+				});
 		} else {
 			dtlWindow.sellButton = newButton(dtlWindow);
 			dtlWindow.sellButton.innerHTML = this.delTime + " > " + now;
@@ -453,6 +456,11 @@ class city {
 		//containerDiv.innerHTML = this.objName;
 
 		containerDiv.stats = addDiv(null, "cdStats", containerDiv);
+		containerDiv.taxes = addDiv(null, "cdTax", containerDiv);
+		containerDiv.income = addDiv("cityIncome", "cdTax", containerDiv);
+
+		containerDiv.income.innerHTML = "city income chart" + this.nationalPayDemos;
+
 		containerDiv.population = addDiv(null, "cdPop", containerDiv.stats);
 		containerDiv.education = addDiv(null, "cdEd", containerDiv.stats);
 		containerDiv.affluence = addDiv(null, "", containerDiv.stats);
@@ -463,7 +471,8 @@ class city {
 		containerDiv.affluence.innerHTML = "Aff: " + this.details[15];
 		containerDiv.region.innerHTML = "Region: " + this.details[20];
 
-		containerDiv.taxes = addDiv(null, "cdTax", containerDiv);
+
+
 		let taxTable = document.createElement("table");
 		taxTable.className = "taxTable";
 		taxTable.cells = new Array();

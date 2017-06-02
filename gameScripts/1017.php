@@ -225,12 +225,35 @@ $thisPlayer->save('money', $thisPlayer->get('money') + $netSale);
 echo '<br>final money: '.$thisPlayer->get('money');
 
 */
-echo 'final qty: '.$thisFactory->get('prodInv'.($prodNumber+1)).'
+$shipmentList = $invoiceInfo;
+
+// read city demographics and shit
+$shipmentList[] = $buyingCity->get('population');
+
+$nationalPay = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
+$shipmentList = array_merge($shipmentList, $nationalPay);
+
+$incomeLvls = [25, 25, 23, 10, 6, 3, 3, 2, 2, 1];
+$shipmentList = array_merge($shipmentList, $incomeLvls);
+
+// read city product demand
+fseek($supplyFile, $invoiceInfo[18]*$supplyBlockSize + $invoiceInfo[2]*40);
+$supplyDat = fread($supplyFile, 40);
+
+$demandHead = unpack('i*', substr($supplyDat, 0, 12));
+$productDemand = unpack('s*', substr($supplyDat, 12, 20));
+
+$productDemand = [1, 2, 3, 4, 0, 0, 0, 0, 0, 0];
+$shipmentList = array_merge($shipmentList, $demandHead, $productDemand);
+
+echo 'final qty: '.$thisFactory->get('prodInv'.($prodNumber+1)).'.<br>
+City population: '.$buyingCity->get('population').'
 <script>
 console.log("scr1017");
 updateFactory(['.implode(',', $thisFactory->overViewInfo()).']);
-//thisPlayer.money = '.$thisPlayer->get('money').';
 
+// add the shipment to the shipment List
+loadShipments(['.implode(',', $shipmentList).'], shipmentList); // shipmentList
 </script>';
 
 fclose($objFile);
