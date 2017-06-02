@@ -77,7 +77,8 @@
 1077 - PROCESS: Pay an invoice
 1078 - MENU: Show comapny invoices outstanding
 1079 - PROCESS: Load demand info for a product at a city
-1080 - empty
+1080 - PROCESS: Sell delivery that is at a city
+1081 - PROCESS: Load transport options for a shipment to a city
 
 TO DO:
 PREMIUM CURRENCY
@@ -88,11 +89,7 @@ Material Cost for items with no input
 Show labor and material costs for products at factories
 Calc inflection points for demand price changes
  - Determine the level where a qty change in product will change the price (check for bounds to eliminate uncessesary updates)
-Demographic demand effects
-  - things for rich people and poor people (yachts, cigarettes)
-  - demand by education, etc
 Depreciation of Factory value for taxes
-TIme delay for shipping/selling items to a city
 Rights, Pollution, labor, and material costs for products sold to cities -> adjustment to demands/pricing
 Add to labor list when labor is hired - which list?
 Load and show contract deliveries for a factory
@@ -170,6 +167,10 @@ Loading taxes at city info screen (calc amounts and exceptions)
 Transfer of goods when sent via contract (done with an invoice?)
 Adjust sales to cities to have a ship time
 figure out promise getdata
+TIme delay for shipping/selling items to a city
+Demographic demand effects
+  - things for rich people and poor people (yachts, cigarettes)
+  - demand by education, etc
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

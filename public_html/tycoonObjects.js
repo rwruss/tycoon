@@ -394,8 +394,14 @@ class shipment {
 				useDeskTop.getPane("shipmentDetail").parentNode.parentObj.destroyWindow();
 				});
 		} else {
-			dtlWindow.sellButton = newButton(dtlWindow);
-			dtlWindow.sellButton.innerHTML = this.delTime + " > " + now;
+			dtlWindow.button1 = newButton(dtlWindow);
+			dtlWindow.button1.innerHTML = "Speed Up Delivery";
+			dtlWindow.button1.sendStr = "1081,"+this.invoiceNum;
+			dtlWindow.button1.addEventListener("click", function  () {
+				let transMenu = addDiv("", "", dtlWindow);
+				transMenu.innerHTML = "Transportation options for this shipment";
+				
+				)
 		}
 	}
 }
