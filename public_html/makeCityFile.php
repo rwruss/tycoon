@@ -75,6 +75,12 @@ fseek($supplyFile, 1040000-4);
 fwrite($supplyFile, pack('i', 0));
 fclose($supplyFile);
 
+$numRoutes = ($numCities-1)*($numCities)/2;
+$routeFile = fopen('routes.rtf', 'wb');
+fseek($routeFile, $numRoutes*40-4);
+fwrite($routeFile, pack('i', 0));
+fclose($routeFile);
+
 function packArray($data, $type='i') {
   $str = '';
   for ($i=1; $i<=sizeof($data); $i++) {

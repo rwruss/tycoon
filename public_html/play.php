@@ -344,9 +344,6 @@ echo '
 	}
 
 	function loadDataPromise(val) {
-		console.log("promise data");
-
-
 		return new Promise(resolve => {
 			params = "val1="+val;
 			var xmlhttp = new XMLHttpRequest();

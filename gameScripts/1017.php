@@ -174,6 +174,7 @@ $invoiceInfo[15] = $materialCost;
 $invoiceInfo[16] = $laborCost;
 $invoiceInfo[17] = $postVals[1]; // selling factory ID
 $invoiceInfo[18] = $postVals[2]; // target City ID
+$invoiceInfo[19] = $thisFactory->get('region_3'); // from City ID
 
 // Save the invoice to teh file
 $taxRates = array_fill(1, 30, 0);

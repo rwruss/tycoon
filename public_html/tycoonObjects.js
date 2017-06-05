@@ -383,7 +383,7 @@ class shipment {
 
 		this.renderSummary(dtlWindow);
 		let now = new Date().getTime()/1000;
-		if (this.delTime <= now) {
+		if (this.delTime <= now-10000000) {
 			dtlWindow.sellButton = newButton(dtlWindow);
 			dtlWindow.sellButton.innerHTML = "Sell these goods";
 			dtlWindow.sellButton.sendStr = "1080," + this.invoiceNum;
@@ -400,8 +400,15 @@ class shipment {
 			dtlWindow.button1.addEventListener("click", function  () {
 				let transMenu = addDiv("", "", dtlWindow);
 				transMenu.innerHTML = "Transportation options for this shipment";
-				
-				)
+				async function tmpFunc(x) {
+					let p;
+					p = await loadDataPromise(x);
+					console.log(p);
+				}
+				tmpFunc(this.sendStr).then(v => {
+					console.log("did something 409" + v)
+				});
+			});
 		}
 	}
 }
