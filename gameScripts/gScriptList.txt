@@ -82,8 +82,9 @@
 
 TO DO:
 PREMIUM CURRENCY
+Verify item states in flock before writing new states
 Transport networks to regions to speed up Shipments
-Set cities to laod orders that arrive
+Set cities to load orders that arrive
 Shipping Speed Increase
 Material Cost for items with no input
 Show labor and material costs for products at factories
