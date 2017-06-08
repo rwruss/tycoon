@@ -2,31 +2,47 @@
 
 $offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 
+if ($this->get('constStatus') > 0) {
+	$projectsFile = fopen($gamePath.'/projects.prj', 'rb');	
+	$thisProject = loadProject($this->get('constStatus'), $projectFile);
+	fclose($projectFile);
+}
+
 $now = time();
 $constructDelta = $thisObj->get('constructCompleteTime') - $now;
 if ($thisObj->get('factoryLevel') == 0) {
 	// Check if construction of the factory is complete
-	if ($constructDelta > 0) {
+	if ($this->get('constStatus') > 0) {
+		$pctComplete = $thisProject->get('currPoints')/$thisProject->get('totalPoints') * 100;
+		$ptsRrm = $thisProject->get('totalPoints') - $thisProject->get('currPoints');
 		echo '<script>
 		selectedFactory = '.$postVals[1].';
 		factoryDiv = useDeskTop.newPane("factoryInfo");
 		factoryDiv.innerHTML = "";
-		textBlob("", factoryDiv, "This facility is still being built.  Would you like to speed it up?;");
-		/*
-		var buildTimeBox = addDiv("", "orderTime", factoryDiv);
-		buildTimeBox.runClock = true;
-		countDownClock('.($thisObj->get('constructCompleteTime')).', buildTimeBox, function () {console.log("finish factory construction")});
-		speedUpButton = newButton(factoryDiv, function () {scrMod("1029,1,'.$postVals[1].'")});
-		speedUpButton.innerHTML = "Speed Up Construction";
-		console.log("done");*/
-		thisUpgrade = new factoryUpgrade('.$postVals[1].', '.($thisObj->get('constructCompleteTime')).');
-		thisUpgrade.render(factoryDiv);
+		textBlob("", factoryDiv, "This facility is still being built.  Construction is '.$pctComplete.'% complete ('.$ptsRrm.' points remaining).");
+		textBlob("", factoryDiv, "You are currently offering '.$this->get('upgradePrice').' for each unit of new construction.  Adjust this price below.");
+		
+		let priceBar = slideValBar(factoryDiv, "", 0, 10000);
+		let priceButton = newButton(factoryDiv);
+		priceButton.innerHTML = "Set new price";
+		priceButton.sendStr = "1082,'.$postVals[1].',";
+		priceButton.addEventListener("click", function () {scrMod(this.sendStr + priceBar.slide.value)});
+		
+		textBlob("", factoryDiv, "Or, use independent construction...");
+		let indLaborBar = slideValBar(factoryDiv, "", 0, '.$ptsRrm.');
+		let indLaborButton = newButton(factoryDiv);
+		indLaborButton.innerHTML = "Use local services ($100/point)";
+		indLaborButton.sendStr = "1083,'.$postVals[1].'";
+		indLaborButton.addEventListener("click", function () {scrMod(this.sendStr + indLaborBar.slide.value)})
+		
+		//thisUpgrade = new factoryUpgrade('.$postVals[1].', '.($thisObj->get('constructCompleteTime')).');
+		//thisUpgrade.render(factoryDiv);
 		</script>';
 		exit();
 	}
 }
 
-if ($constructDelta > 0) {
+if ($thisObj->get('factoryLevel') > 0) {
 	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
 }
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');

@@ -181,7 +181,7 @@ class factory extends object {
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
-		$this->attrList['constructCompleteTime'] = 3;
+		$this->attrList['constPtsRem'] = 3;
 		$this->attrList['upgradeInProgress'] = 8;
 		$this->attrList['region_3'] = 11;
 
@@ -192,6 +192,7 @@ class factory extends object {
 		$this->attrList['prodLength'] = 15;
 		$this->attrList['prodStart'] = 16;
 		$this->attrList['prodQty'] = 17;
+		$this->attrList['upgradePrice'] = 18;
 
 		$this->attrList['currentProd'] = 19; // Product ID that is currently being produced
 		$this->attrList['initProdDuration'] = 20;
@@ -205,6 +206,7 @@ class factory extends object {
 		$this->attrList['prodRights'] = 27;
 		$this->attrList['prodCost'] = 28;
 		$this->attrList['prodLaborCost'] = 29;
+		$this->attrList['contPtsTotal'] = 30;
 
 		$this->attrList['prodInv1'] = 47;
 		$this->attrList['prodInv2'] = 48;
@@ -384,14 +386,15 @@ class factory extends object {
 		$now = time();
 		$saveFactory = false;
 
+		/*
 		// Update facility construction or upgrades as needed
-		$constructDelta = $this->get('constructCompleteTime') - $now;
+		$constructDelta = $this->get('constPtsRem') - $now;
 		if ($constructDelta <= 0 && $this->get('upgradeInProgress') > 0) {
 			$this->set('factoryLevel', $this->get('upgradeInProgress'));
 			$this->set('upgradeInProgress', 0);
 			$saveFactory = true;
-		} else $this->nextUpdate = $this->get('constructCompleteTime');
-
+		} else $this->nextUpdate = $this->get('constPtsRem');
+		*/
 		// Sort material requirements into the storage index for the factory
 		$rscSpots = [];
 		for ($i=0; $i<sizeof($this->resourceStores)/2; $i++) {
@@ -666,6 +669,8 @@ class product extends object {
 	public $reqMaterials, $reqLabor;
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->itemBlockSize = 100;
 
 		$this->attrList['numMaterial'] = 11;
 		$this->attrList['baseRate'] = 11;
@@ -735,6 +740,24 @@ class school {
 	}
 }
 
+class project extends object {
+	function __construct($id, $dat, $file) {
+		parent::__construct($id, $dat, $file);
+		
+		$this->attrList['owner'] = 1;
+		$this->attrList['factoryID'] = 2;
+		$this->attrList['factoryType'] = 3;
+		$this->attrList['totalPoints'] = 4;
+		$this->attrList['currPoints'] = 5;
+		
+		$this->attrList['currPrice'] = 6;
+		$this->attrList['status'] = 6;
+		
+		$this->attrList['nextProj'] = 24;
+		$this->attrList['pvsProj'] = 25;
+	}
+}
+
 
 function loadProduct($id, $file, $size) {
 	fseek($file, $id*1000);
@@ -773,6 +796,13 @@ function loadUser($id, $file) {
 	$dat = unpack('i*', fread($file, 500));
 
 	return new user($id, $dat, $file);
+}
+
+function loadProject($id, $file) {
+	fseek($file, $id);
+	$dat = unpack('i*', fread($file, 100));
+	
+	return new project($id, $dat, $file);
 }
 
 function loadObject($id, $file, $size) {

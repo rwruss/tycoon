@@ -79,9 +79,16 @@
 1079 - PROCESS: Load demand info for a product at a city
 1080 - PROCESS: Sell delivery that is at a city
 1081 - PROCESS: Load transport options for a shipment to a city
+1082 - PROCESS: Set a new price for construction at a factory
 
 TO DO:
-PREMIUM CURRENCY
+PREMIUM CURRENCY - use for premium employees and factory upgrades
+Construction in progress list
+Demand by category instead of by item
+Banks and Loans
+Building Costs
+Building construction contracts and materails
+ECONOMY - Money Supply controls
 Verify item states in flock before writing new states
 Transport networks to regions to speed up Shipments
 Set cities to load orders that arrive
