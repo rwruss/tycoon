@@ -14,6 +14,7 @@ require_once('./objectClass.php');
 
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
+$projectsFile = fopen($gamePath.'/projects.prj', 'r+b');	
 
 // Load template data
 fseek($objFile, $factoryType*$templateBlockSize);
@@ -30,14 +31,34 @@ if ($factoryCost > $thisBusiness->get('money')) {
 // Deduct the cost of the factory
 $thisBusiness->save('money', $thisBusiness->get('money')-$factoryCost);
 
+// Get a new project ID
+$newProjID = 0;
+if (flock($projectFile, LOCK_EX) {
+	
+	fseek($projectFile, SEEK_END);
+	$newProjID = ftell($projectFile);
+	
+	if ($newProjID > 0) {
+		fseek($projectFile, $newProjID+96);
+		fwrite($projectFile, pack('i', 0);
+		fflush($projectFile);
+		flock($projectFile, LOCK_UN);
+	} else {
+		flock($projectFile, LOCK_UN);
+		fclose($projectFile);
+		exit('error 8001-1');
+	}	
+}
+
+
 // Create a new factory object
 if (flock($objFile, LOCK_EX)) {
 	// get new ID
 	fseek($objFile, 0, SEEK_END);
 	$newID = ftell($objFile)/100;
 
-  fseek($objFile, $newID*$defaultBlockSize + 1596);
-  fwrite($objFile, pack('i', 0));
+	fseek($objFile, $newID*$defaultBlockSize + 1596);
+	fwrite($objFile, pack('i', 0));
 
 	echo 'Template type: '.$factoryType.' for new object '.$newID;
 	$newObjDat = array_fill(1, 400, 0);
@@ -47,7 +68,7 @@ if (flock($objFile, LOCK_EX)) {
 	$now = time();
 	$newObj->set('factoryLevel', 0);
 	$newObj->set('factoryStatus', 0);
-	$newObj->set('constructCompleteTime', $now+600);
+	$newObj->set('constStatus', $newProjID);
 	$newObj->set('upgradeInProgress', 1);
 	$newObj->set('currentProd', $templateDat[11]);
 	$newObj->set('oType', 3);
@@ -64,31 +85,35 @@ if (flock($objFile, LOCK_EX)) {
 	print_r($testDat);
 
 	// Add unit to player's list of objects
-  if ($thisBusiness->get('ownedObjects') == 0) {
-    $thisBusiness->save('ownedObjects', newSlot($slotFile));
-  }
+	if ($thisBusiness->get('ownedObjects') == 0) {
+		$thisBusiness->save('ownedObjects', newSlot($slotFile));
+	}
 	echo 'Load slot '.$thisBusiness->get('ownedObjects');
-  $ownedObjects = new itemSlot($thisBusiness->get('ownedObjects'), $slotFile, 40);
-  $ownedObjects->addItem($newID, $slotFile);
+	$ownedObjects = new itemSlot($thisBusiness->get('ownedObjects'), $slotFile, 40);
+	$ownedObjects->addItem($newID, $slotFile);
   
-  // Add to list of factories at the city
-  $buildCity = loadCity($cityLoc, $objFile);
-  if ($buildCity->get('factoryList') == 0) {
-	  $newSlot = newSlot($slotFile, 40);
-	  $buildCity->save('factoryList', $newSlot);
-  }
-  $cityFactories = new itemSlot($buildCity->get('factoryList'), $slotFile, 40);
-  $cityFactories->addItem($newID, $slotFile);
-
-  //$newObj->overViewInfo()
-  //echo '<script>playerFactories.push(new factory({subType:('.$factoryType.'-numProducts), objID:'.$newID.', prod:0, rate:0}))</script>';
-
-	//print_r($ownedObjects->slotData);
+	// Add to list of factories at the city
+	$buildCity = loadCity($cityLoc, $objFile);
+	if ($buildCity->get('factoryList') == 0) {
+		$newSlot = newSlot($slotFile, 40);
+		$buildCity->save('factoryList', $newSlot);
+	}
+	$cityFactories = new itemSlot($buildCity->get('factoryList'), $slotFile, 40);
+	$cityFactories->addItem($newID, $slotFile);
 	flock($objFile, LOCK_UN);
 }
 
+// create a new project object
+$projectDat = array_fill(1, 25, 0);
+$projectDat[1] = $pGameID;
+$projectDat[2] = $newID;
+$projectDat[3] = 100;
+$projectDat[7] = 1;
 
+$thisProject = new project($newProjID, $projectDat, $projectsFile);
+$thisProject->saveAll();
 
+fclose($projectFile);
 fclose($objFile);
 fclose($slotFile);
 

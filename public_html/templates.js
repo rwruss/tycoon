@@ -1936,3 +1936,14 @@ productPrice = function (qty, productID, nationalPayDemos, productDemand, income
 		// interpolate last interval with remaining supply
 		return Math.round((nationalPayDemos[lastInterval+1]-(nationalPayDemos[lastInterval+1]-nationalPayDemos[lastInterval])*(totalDemand[lastInterval]-remDemand)/totalDemand[lastInterval])*100)/100;
 	}
+
+saleWindow = function (prodIndex, saleQty, factoryID) {
+	let salePane = useDeskTop.newPane("saleWindow");
+	salePane.innerHTML = "";
+	
+	// display the factory summary
+	playerFactories[factoryID].renderSummary(salePane);
+	
+	// display the recommended route
+	scrMod(sendStr + "," + saleQty);
+}

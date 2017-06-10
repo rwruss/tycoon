@@ -90,7 +90,7 @@ productSales.addEventListener("change", function () {
 
 	for (i=0; i<tmpList.length; i++) {
 		if (tmpList[i] >= 0 && playerFactories[i].prodInv[tmpList[i]] > 0)	{
-			let thisFac = playerFactories[i].itemBar(cityTabs.renderKids[4].factoryBar, tmpList[i], "1017," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
+			let thisFac = playerFactories[i].itemBar(cityTabs.renderKids[4].factoryBar, tmpList[i], "1084," + playerFactories[i].objID +",'.$postVals[1].'," + this.value);
 			thisFac.lCost.innerHTML = "Labor Cost: " + playerFactories[i].prodDtls[this.value*5+3];
 			thisFac.mCost.innerHTML = "Material Cost: " + playerFactories[i].prodDtls[this.value*5+4];
 			thisFac.slide.slide.selectedProduct = this.value;

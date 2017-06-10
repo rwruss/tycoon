@@ -181,7 +181,7 @@ class factory extends object {
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
-		$this->attrList['constPtsRem'] = 3;
+		$this->attrList['constStatus'] = 3;
 		$this->attrList['upgradeInProgress'] = 8;
 		$this->attrList['region_3'] = 11;
 
@@ -206,7 +206,6 @@ class factory extends object {
 		$this->attrList['prodRights'] = 27;
 		$this->attrList['prodCost'] = 28;
 		$this->attrList['prodLaborCost'] = 29;
-		$this->attrList['contPtsTotal'] = 30;
 
 		$this->attrList['prodInv1'] = 47;
 		$this->attrList['prodInv2'] = 48;
