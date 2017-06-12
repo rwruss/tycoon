@@ -1947,5 +1947,12 @@ saleWindow = function (prodIndex, saleQty, factoryID) {
 	playerFactories[factoryID].renderSummary(salePane);
 
 	// display the recommended route
-	scrMod(sendStr + "," + saleQty);
+	getRoutes(sendStr + "," + saleQty).then(v => {
+		console.log(v);
+	});
+}
+
+getRoutes = async function(val) {
+	let r = await loadDataPromise(val);
+	return r;
 }
