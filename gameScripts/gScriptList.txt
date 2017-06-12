@@ -81,6 +81,7 @@
 1081 - PROCESS: Load transport options for a shipment to a city
 1082 - PROCESS: Set a new price for construction at a factory
 1083 - PROCESS: Add default construction points to a factory
+1084 - PROCESS: Show shipping opotions for sale to city
 
 TO DO:
 PREMIUM CURRENCY - use for premium employees and factory upgrades

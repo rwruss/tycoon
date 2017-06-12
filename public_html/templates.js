@@ -1940,10 +1940,12 @@ productPrice = function (qty, productID, nationalPayDemos, productDemand, income
 saleWindow = function (prodIndex, saleQty, factoryID) {
 	let salePane = useDeskTop.newPane("saleWindow");
 	salePane.innerHTML = "";
-	
+
 	// display the factory summary
+	console.log(playerFactories);
+	console.log(factoryID);
 	playerFactories[factoryID].renderSummary(salePane);
-	
+
 	// display the recommended route
 	scrMod(sendStr + "," + saleQty);
 }
