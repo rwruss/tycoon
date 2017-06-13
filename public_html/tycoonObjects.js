@@ -121,6 +121,7 @@ class factory extends object {
 
 	itemBar(target, prodIndex, sendStr) {
 		console.log("render item Bar");
+		event.stopPropagation();
 		var container;
 		if (target.instanceType == "itemBar") {
 			container = target;
@@ -140,7 +141,7 @@ class factory extends object {
 			container.priceBar = addDiv("", "", container);
 			container.taxCost = addDiv("", "", container);
 			container.profit = addDiv("", "", container);
-			
+
 			let button = newButton(container, function () {
 				saleWindow(prodIndex, this.parentNode.slide.slide.value, this.factoryID, sendStr);
 				//scrMod(this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
@@ -551,8 +552,8 @@ class city {
 
 		containerDiv.taxes.taxEx = addDiv("", "taxEx", containerDiv.taxes);
 		containerDiv.taxes.taxEx.parentObj = this;
-		containerDiv.taxes.taxEx.addEventListener("click", function () {
-			event.stopPropagation();
+		containerDiv.taxes.taxEx.addEventListener("click", function (e) {
+			e.stopPropagation();
 			this.parentObj.taxExes()});
 		containerDiv.taxes.taxEx.innerHTML = "EX";
 
@@ -989,8 +990,8 @@ class labor {
 			hireContain.hireButton.innerHTML = "Fire!";
 			hireContain.hireButton.sendStr = sendStr;
 
-			hireContain.hireButton.addEventListener("click", function () {
-				event.stopPropagation();
+			hireContain.hireButton.addEventListener("click", function (e) {
+				e.stopPropagation();
 				scrMod(sendStr);
 			});
 		}
@@ -1193,13 +1194,13 @@ class factoryOrder {
 		materialBox(this.material, this.qty, containerBox);
 		containerBox.timeBox = addDiv("", "timeFloat", containerBox);
 		var thisObject = this;
-		if (this.material == 0) containerBox.addEventListener("click", function () {
+		if (this.material == 0) containerBox.addEventListener("click", function (e) {
 
 			useDeskTop.newPane("xyzPane");
 			orderPane = useDeskTop.getPane("xyzPane");
 			orderPane.innerHTML = "";
 
-			event.stopPropagation();
+			e.stopPropagation();
 
 			textBlob("", orderPane, "Select which item you want to order");
 			invList.reset();

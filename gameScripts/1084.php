@@ -25,20 +25,23 @@ $sellingFactory = loadObject($postVals[1], $objFile, 1000);
 
 // Get the recommended route node list
 $routeNum = 0;
+echo 'Load route number '.$routeNum.'<p>';
 $routeNodes = new itemSlot($routeNum, $routeFile, 40);
+print_r($routeNodes->slotData);
 
 $totalMinPriceOption = [];
 $totalMinTimeOption = [];
+$legInfo = [];
 for ($r=1; $r<=sizeof($routeNodes->slotData)-1; $r++) {
-	$legInfo = [];
+
 	// Look up the current best route
 	$optionList = new itemSlot($routeNum, $routeFile, 40);
 
 	// Load the best route option for each leg of the route
-	for ($i=1; $i<=sizeof($optionList->slotData; $i++) {
+	for ($i=1; $i<=sizeof($optionList->slotData); $i++) {
 		fseek($routeFile, $optionList->slotData[$i]);
 		$thisOption = new routeOpt(fread($routeFile, 100));
-		
+
 		// Determine which stops are the end of the section in question
 		$ends = [0,0];
 		$endCount = 0;
@@ -47,17 +50,17 @@ for ($r=1; $r<=sizeof($routeNodes->slotData)-1; $r++) {
 			if ($thisOption->stops[$i] == $routeNodes->slotData[$r+1]) $ends[1] = $i;
 			if ($ends[0]*$ends[1] > 0) break;  // both ends have been found
 		}
-		
+
 		// Calculate the total distance for this portion of the route
 		$legDistance = 0;
 		for($s=0; $s<$ends[1] - $ends[0]; $s++) {
 			$legDistance += $thisOption->stopsDist[$ends[0]+$s];
 		}
-		
+
 		// Calc time and cost for this segment
 		$sectionTime = $legDistance/$thisOption->get('speed'); // Total time = section distance / speed
 		$sectionCost = max($thisOption->get('spaceCost')*$prodSpace, $thisOption->get('weightCost')*$prodWeight);
-		
+
 		array_push($legInfo, $routeNodes->slotData[$r], $optionList->slotData[$i], $sectionTime, $sectionCost, $thisOption->get('owner')); // route num, option #, time, cost, owner
 	}
 }
@@ -65,6 +68,6 @@ for ($r=1; $r<=sizeof($routeNodes->slotData)-1; $r++) {
 fclose($objFile);
 fclose($routeFile);
 
-echo $legInfo;
+echo implode(',', $legInfo);
 
 ?>

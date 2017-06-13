@@ -1937,14 +1937,16 @@ productPrice = function (qty, productID, nationalPayDemos, productDemand, income
 		return Math.round((nationalPayDemos[lastInterval+1]-(nationalPayDemos[lastInterval+1]-nationalPayDemos[lastInterval])*(totalDemand[lastInterval]-remDemand)/totalDemand[lastInterval])*100)/100;
 	}
 
-saleWindow = function (prodIndex, saleQty, factoryID) {
+saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	let salePane = useDeskTop.newPane("saleWindow");
 	salePane.innerHTML = "";
 
 	// display the factory summary
 	console.log(playerFactories);
 	console.log(factoryID);
-	playerFactories[factoryID].renderSummary(salePane);
+	for (var i=0; i<playerFactories.length; i++) {
+		if (playerFactories[i].factoryID == factoryID) playerFactories[i].renderSummary(salePane);
+	}
 
 	// display the recommended route
 	getRoutes(sendStr + "," + saleQty).then(v => {
