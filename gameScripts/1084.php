@@ -14,7 +14,7 @@ require_once('./transportClass.php');
 require_once('./slotFunctions.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
-$routeFile = fopen('routes.rtf', 'rb');
+$routeFile = fopen($gamePath.'/routes.rtf', 'rb');
 
 // Get product information
 $prodSpace = 1;
@@ -22,7 +22,21 @@ $prodWeight = 1;
 
 // Load the selling factory to get the origin location
 $sellingFactory = loadObject($postVals[1], $objFile, 1000);
+$routeNum = calcRouteNum($sellingFactory->get('region_3'), $postVals[2]);
 
+// Load the rotue information
+fseek($routeFile, $routeNum*4);
+$routeHead = unpack('i*', fread($routeFile, 8));
+fseek($routeFile, $routeHead[1]);
+$routeDat = fread($routeFile, $routeHead[2]);
+$routeInfo = unpack('i*', $routeDat);
+
+$modeChanges = [];
+for ($i=5; $i<sizeof($routeInfo); $i+=3) {
+	if ($routeInfo[$i] != $routeInfo[$i-3]) $modeChanges[] = 
+}
+
+/*
 // Get the recommended route node list
 $routeNum = 0;
 echo 'Load route number '.$routeNum.'.  Factory '.$postVals[1].'(city '.$sellingFactory->get('region_3').') to city '.$postVals[2].'<p>';
@@ -74,10 +88,18 @@ for ($r=1; $r<=sizeof($routeList)-1; $r++) {
 		array_push($legInfo, $routeList[$r], $optionList->slotData[$i], $sectionTime, $sectionCost, $thisOption->get('owner')); // route num, option #, time, cost, owner
 	}
 }
-
+*/
 fclose($objFile);
 fclose($routeFile);
 
 echo implode(',', $legInfo);
+
+function calcRouteNum($city1, $city2) {
+	$loCity = min($city1, $city2);
+	$hiCity = max($city1, $city2);
+	
+	$routeNum = ($loCity-1)*($loCity)/2 + $hiCity - $loCity;
+	return $routeNum;
+}
 
 ?>
