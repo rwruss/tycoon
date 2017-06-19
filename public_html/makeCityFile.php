@@ -111,8 +111,8 @@ $cityCount = 1;
 fgets($connectListFile);
 while (($line = fgets($connectListFile)) !== false) {
 	$lineItems = explode(',', $line);
-  echo 'Check '.(sizeof($lineItems)-1).' items<P>';
-  $cityNodes = [];
+	echo 'Check '.(sizeof($lineItems)-1).' items<P>';
+	$cityNodes = [];
 	for ($i=3; $i<sizeof($lineItems)-1; $i++) {
     if ($lineItems[$i] == '') break;
     echo $i.': Compare city '.$lineItems[0].' to '.$lineItems[$i].'<br>';

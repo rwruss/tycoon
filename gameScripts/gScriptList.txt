@@ -84,8 +84,6 @@
 1084 - PROCESS: Show shipping opotions for sale to city
 
 
-
-
 TO DO:
 $useDistance not working in makeCityFile line 196
 PREMIUM CURRENCY - use for premium employees and factory upgrades

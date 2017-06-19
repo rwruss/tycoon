@@ -15,6 +15,7 @@ require_once('./slotFunctions.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $routeFile = fopen($gamePath.'/routes.rtf', 'rb');
+$transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
 
 // Get product information
 $prodSpace = 1;
@@ -31,9 +32,18 @@ fseek($routeFile, $routeHead[1]);
 $routeDat = fread($routeFile, $routeHead[2]);
 $routeInfo = unpack('i*', $routeDat);
 
-$modeChanges = [];
+$modeChanges = [$routeInfo[2]];
 for ($i=5; $i<sizeof($routeInfo); $i+=3) {
-	if ($routeInfo[$i] != $routeInfo[$i-3]) $modeChanges[] = 
+	if ($routeInfo[$i] != $routeInfo[$i-3]) {
+		$modeChanges[] = $i-3;
+		$modeChanges[] = $i;
+	}
+}
+for ($i=0; $i<sizeof($modeChanges); $i+=2) {
+	echo 'One mode from '.$modeChanges[$i].' to '.$modeChanges[$i+1].'<br>';
+	
+	// Look up available transport for each segment of the route
+	fseek($transportFile, calcRouteNum($modeChanges[$i], $modeChanges[$i+1])*4);
 }
 
 /*
@@ -91,6 +101,7 @@ for ($r=1; $r<=sizeof($routeList)-1; $r++) {
 */
 fclose($objFile);
 fclose($routeFile);
+fclose($transportFile);
 
 echo implode(',', $legInfo);
 
