@@ -83,7 +83,11 @@
 1083 - PROCESS: Add default construction points to a factory
 1084 - PROCESS: Show shipping opotions for sale to city
 
+
+
+
 TO DO:
+$useDistance not working in makeCityFile line 196
 PREMIUM CURRENCY - use for premium employees and factory upgrades
 Construction in progress list
 Demand by category instead of by item

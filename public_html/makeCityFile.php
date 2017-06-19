@@ -83,7 +83,7 @@ $cityList = [];
 
 $connectListFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/routes.csv', 'rb');
 $line = fgets($connectListFile);
-$lineInfo = exlode(',', $line);
+$lineInfo = explode(',', $line);
 $transportMode = $line[3];
 // Assign city numbers to the list and store in an array, store the self distances in another array
 $cityCount = 1;
@@ -97,93 +97,126 @@ while (($line = fgets($connectListFile)) !== false) {
 	$landOrSea[$lineItems[0]] = $lineItems[2];
 	$cityCount++;
 }
-
+print_r($cityList);
 // Determine the route connections for each city and record
 $connectDatFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/connections.cxf', 'wb');
 fseek($connectListFile, 0);
 
 $useDistance = 0;
 $numRoutes = $cityCount*($cityCount+1)/2;
-$routeDistances = array_fill(0, $numRotues, 0);
-$routeTypes = array_fill(0, $numRotues, 0);
-
+$routeDistances = array_fill(0, $numRoutes, 0);
+$routeTypes = array_fill(0, $numRoutes, 0);
+$nodeList = [];
+$cityCount = 1;
+fgets($connectListFile);
 while (($line = fgets($connectListFile)) !== false) {
 	$lineItems = explode(',', $line);
-	
-	for ($i=3; $i<sizeof($lineItems); $i++) {
-		if ($cityList[$lineItems[0]] < $cityList[$lineItems[$i])
-		$thisRoute = calcRouteNum($cityList[$lineItems[0]], $cityList[$lineItems[$i]]);
-	
-		$useDistance = intval(($selfDist[$lineItems[0]] + $selfDist[$lineItems[$i]])/2);
-		$routeDistances[$thisRoute] = $useDistance;		
-		$routeTypes[$thisRoute] = max($landOrSea[$lineItems[0]], $landOrSea[$lineItems[$i]]);
+  echo 'Check '.(sizeof($lineItems)-1).' items<P>';
+  $cityNodes = [];
+	for ($i=3; $i<sizeof($lineItems)-1; $i++) {
+    if ($lineItems[$i] == '') break;
+    echo $i.': Compare city '.$lineItems[0].' to '.$lineItems[$i].'<br>';
+    $cityNodes[] = $cityList[$lineItems[$i]];
+		if ($cityList[$lineItems[0]] < $cityList[$lineItems[$i]]) {
+  		$thisRoute = calcRouteNum($cityList[$lineItems[0]], $cityList[$lineItems[$i]]);
+
+  		$useDistance = intval(($selfDist[$lineItems[0]] + $selfDist[$lineItems[$i]])/2);
+  		$routeDistances[$thisRoute] = $useDistance;
+  		$routeTypes[$thisRoute] = max($landOrSea[$lineItems[0]], $landOrSea[$lineItems[$i]]);
+      echo '    Route: '.$thisRoute.' distance is '.$useDistance.'<br>';
+    }
 	}
+  $nodeList[$cityCount] = $cityNodes;
+  $cityCount++;
 }
-$cityCount = 5;
-$routeFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/rotues.rtf', 'wb')
+
+echo '<p>Calculated distances:<p>';
+print_r($routeDistances);
+echo '<p>';
+
+//$cityCount = 5;
+$routeFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/rotues.rtf', 'wb');
 $nodeCost = array_fill(0, $cityCount+1, 999999);
 $pvsNode = array_fill(0, $cityCount+1, 0);
 $listStartIndex = 0;
+
+print_r($nodeList);
+
 for ($city = 1; $city <= $cityCount; $city++) {
-	
+  echo '<p>Check '.$cityNames[$city].' ('.$city.') Connections<br>';
 	// Run a* on the rotue connections
-	$nodeCost = array_fill(0, $cityCount+1, 999999);
-	$pvsNode = array_fill(0, $cityCount+1, 0);
-	
+	$nodeCost = array_fill(0, 100+1, 999999);
+	$pvsNode = array_fill(0, 100+1, 0);
+
 	$checkList = [$city];
-	while (sizeof($checkList) > 0) {
+  $count = 0;
+  $nodeCost[$city] = 0;
+	while (sizeof($checkList) > 0 && $count < 25) {
 		$pvsCity = array_shift($checkList);
-		for ($dstCity = 1; $dstCity <= $cityCount; $dstCity++) {
-			$routeNum = calcRouteNum($city, $dstCity);
-			$checkDist = $nodeCost[$pvsCity]+$useDistance[$routeNum]
-			if ($nodeCost[$dstCity] > $checkDist && $useDiatance[$routeNum] > 0) { // this route is shorter than the previous found route
+    echo '<br>Check nodes at '.$cityNames[$pvsCity].'<br>';
+    print_r($nodeList[$pvsCity]);
+		for ($i = 0; $i < sizeof($nodeList[$pvsCity]); $i++) {
+      $dstCity = $nodeList[$pvsCity][$i];
+
+			$routeNum = calcRouteNum($pvsCity, $dstCity);
+			$checkDist = $nodeCost[$pvsCity]+$routeDistances[$routeNum];
+      echo '<br>Dst City '.$cityNames[$dstCity].' ('.$dstCity.') has a node cost of '.$nodeCost[$dstCity].' and a check dist of '.$checkDist.'.  R: '.$routeNum.' ->('.$nodeCost[$pvsCity].' + '.$routeDistances[$routeNum].') - ';
+			if ($nodeCost[$dstCity] > $checkDist && $routeDistances[$routeNum] > 0) { // this route is shorter than the previous found route
 				$nodeCost[$dstCity] = $checkDist; // set the cost to get to this node to the new cost
 				$pvsNode[$dstCity] = $pvsCity; // record the new better previous node
 				$checkList[] = $dstCity; // add this node to the list of items to be rechecked
+        echo 'Make '.$pvsCity.' predecessor for '.$dstCity;
 			}
 		}
+    $count++;
 	}
-	
+
 	// Output the results for each city
-	$nodeList = [];
+	$pathList = [];
 	$routeTypeList = [];
 	for ($trgCity=$city; $trgCity>0; $trgCity--) {
 		$writeArray = [];
-		$nodeList = [];
+		$pathList = [];
 		$routeTypeList = [];
-		echo '<p>Final destination is '.$cityNames[$trgCity].'<br>';
-		$pvsCity = $trgCity;
+    $pvsCity = $trgCity;
 		$lastCity = $city;
+		echo '<p>180 '.$cityNames[$city].' to '.$cityNames[$trgCity].' ('.$pvsCity.'/'.$city.')<br>';
+
 		while ($pvsCity != $city) {
+      if ($pvsCity == 0) {
+        echo '--> NO CONNECTION<br>';
+        break;
+      }
 			$routeNum = calcRouteNum($city, $dstCity);
-			$nodeList[] = $pvsCity;
-			$routeNum = alcRouteNum($lastCity, $pvsCity);
+			$pathList[] = $pvsCity;
+			$routeNum = calcRouteNum($lastCity, $pvsCity);
 			$routeType = $routeTypes[$routeNum];
 			$routeTypeList[] = $routeType;
-			
-			echo '--> '.$cityNames[$pvsCity].' T:'.$routeType.', D:'.$useDistance[$routeNum].'<br>';
-			
+
+			echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$useDistance[$routeNum].'<br>';
+
 			array_push($writeArray, $pvsCity, $routeType, $useDistance[$routeNum]); // next city, route type (sea/land), leg distance
-			
+
 			$lastCity = $pvsCity;
 			$pvsCity = $pvsNode[$pvsCity];
 		}
-		
+    /*
 	// Store the results of each route for the city
 	$routeNum = calcRouteNum($city, $trgCity);
 	fseek($routeFile, $numRoutes*8+$listStartIndex);
 	$writeLength = fwrite($routeFile, packArray($writeArray));
 	fseek($routeFile, $routeNum*8);
 	fwrite($routeFile, pack('i*', $numRoutes*8+$listStartIndex, $writeLength));
-	$listStartIndex += $writeLength;
-	}	
+	$listStartIndex += $writeLength;*/
+  }
 }
 fclose($routeFile);
 
 // Save the route distance information
+/*
 fseek($routeDistFile, $numRoutes*$transportMode*4);
 fwrite($routeDistFile, packArray($routeDistances));
-
+*/
 function packArray($data, $type='i') {
   $str = '';
   for ($i=1; $i<=sizeof($data); $i++) {
@@ -195,7 +228,7 @@ function packArray($data, $type='i') {
 function calcRouteNum($city1, $city2) {
 	$loCity = min($city1, $city2);
 	$hiCity = max($city1, $city2);
-	
+
 	$routeNum = ($loCity-1)*($loCity)/2 + $hiCity - $loCity;
 	return $routeNum;
 }
