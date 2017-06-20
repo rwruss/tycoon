@@ -112,19 +112,22 @@ fgets($connectListFile);
 while (($line = fgets($connectListFile)) !== false) {
 	$lineItems = explode(',', $line);
 	echo 'Check '.(sizeof($lineItems)-1).' items<P>';
+  print_r($lineItems);
+  echo '<p>';
 	$cityNodes = [];
-	for ($i=3; $i<sizeof($lineItems)-1; $i++) {
-    if ($lineItems[$i] == '') break;
-    echo $i.': Compare city '.$lineItems[0].' to '.$lineItems[$i].'<br>';
-    $cityNodes[] = $cityList[$lineItems[$i]];
-		if ($cityList[$lineItems[0]] < $cityList[$lineItems[$i]]) {
-  		$thisRoute = calcRouteNum($cityList[$lineItems[0]], $cityList[$lineItems[$i]]);
+	for ($i=3; $i<sizeof($lineItems); $i++) {
+    $trgCity = trim($lineItems[$i]);
+    if ($trgCity == '') break;
+    echo $i.': Compare city '.$lineItems[0].' to '.$trgCity.'<br>';
+    $cityNodes[] = $cityList[$trgCity];
+		//if ($cityList[$lineItems[0]] < $cityList[$lineItems[$i]]) {
+  		$thisRoute = calcRouteNum($cityList[$lineItems[0]], $cityList[$trgCity]);
 
-  		$useDistance = intval(($selfDist[$lineItems[0]] + $selfDist[$lineItems[$i]])/2);
+  		$useDistance = intval(($selfDist[$lineItems[0]] + $selfDist[$trgCity])/2);
   		$routeDistances[$thisRoute] = $useDistance;
-  		$routeTypes[$thisRoute] = max($landOrSea[$lineItems[0]], $landOrSea[$lineItems[$i]]);
+  		$routeTypes[$thisRoute] = max($landOrSea[$lineItems[0]], $landOrSea[$trgCity]);
       echo '    Route: '.$thisRoute.' distance is '.$useDistance.'<br>';
-    }
+    //}
 	}
   $nodeList[$cityCount] = $cityNodes;
   $cityCount++;
@@ -193,9 +196,9 @@ for ($city = 1; $city <= $cityCount; $city++) {
 			$routeType = $routeTypes[$routeNum];
 			$routeTypeList[] = $routeType;
 
-			echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$useDistance[$routeNum].'<br>';
+			echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
 
-			array_push($writeArray, $pvsCity, $routeType, $useDistance[$routeNum]); // next city, route type (sea/land), leg distance
+			array_push($writeArray, $pvsCity, $routeType, $routeDistances[$routeNum]); // next city, route type (sea/land), leg distance
 
 			$lastCity = $pvsCity;
 			$pvsCity = $pvsNode[$pvsCity];
