@@ -138,14 +138,14 @@ print_r($routeDistances);
 echo '<p>';
 
 //$cityCount = 5;
-$routeFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/rotues.rtf', 'wb');
+$routeFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/routes.rtf', 'wb');
 $nodeCost = array_fill(0, $cityCount+1, 999999);
 $pvsNode = array_fill(0, $cityCount+1, 0);
 $listStartIndex = 0;
 
 print_r($nodeList);
 
-for ($city = 1; $city <= $cityCount; $city++) {
+for ($city = 1; $city < $cityCount; $city++) {
   echo '<p>Check '.$cityNames[$city].' ('.$city.') Connections<br>';
 	// Run a* on the rotue connections
 	$nodeCost = array_fill(0, 100+1, 999999);
@@ -203,27 +203,28 @@ for ($city = 1; $city <= $cityCount; $city++) {
 			$lastCity = $pvsCity;
 			$pvsCity = $pvsNode[$pvsCity];
 		}
-    /*
+
 	// Store the results of each route for the city
 	$routeNum = calcRouteNum($city, $trgCity);
 	fseek($routeFile, $numRoutes*8+$listStartIndex);
 	$writeLength = fwrite($routeFile, packArray($writeArray));
 	fseek($routeFile, $routeNum*8);
+  echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.', '.$writeLength.'<p>';
 	fwrite($routeFile, pack('i*', $numRoutes*8+$listStartIndex, $writeLength));
-	$listStartIndex += $writeLength;*/
+	$listStartIndex += $writeLength;
   }
 }
 fclose($routeFile);
 
-// Save the route distance information
-/*
-fseek($routeDistFile, $numRoutes*$transportMode*4);
-fwrite($routeDistFile, packArray($routeDistances));
-*/
+
 function packArray($data, $type='i') {
   $str = '';
+  /*
   for ($i=1; $i<=sizeof($data); $i++) {
     $str = $str.pack($type, $data[$i]);
+  }*/
+  foreach ($data as $value) {
+    $str .= pack($type, $value);
   }
   return $str;
 }
@@ -232,7 +233,7 @@ function calcRouteNum($city1, $city2) {
 	$loCity = min($city1, $city2);
 	$hiCity = max($city1, $city2);
 
-	$routeNum = ($loCity-1)*($loCity)/2 + $hiCity - $loCity;
+	$routeNum = ($hiCity-1)*($hiCity)/2 + $hiCity - $loCity;
 	return $routeNum;
 }
 
