@@ -29,23 +29,32 @@ echo 'Factory at '.$sellingFactory->get('region_3').' to city '.$postVals[2].' i
 // Load the rotue information
 fseek($routeFile, $routeNum*4);
 $routeHead = unpack('i*', fread($routeFile, 8));
+print_r($routeHead);
 fseek($routeFile, $routeHead[1]);
 $routeDat = fread($routeFile, $routeHead[2]);
 $routeInfo = unpack('i*', $routeDat);
+print_r($routeInfo);
 
-$modeChanges = [$routeInfo[2]];
-for ($i=5; $i<sizeof($routeInfo); $i+=3) {
-	if ($routeInfo[$i] != $routeInfo[$i-3]) {
-		$modeChanges[] = $i-3;
-		$modeChanges[] = $i;
+if (sizeof($routeInfo) > 5) {
+	$modeChanges = [$routeInfo[2]];
+	for ($i=5; $i<sizeof($routeInfo); $i+=3) {
+		if ($routeInfo[$i] != $routeInfo[$i-3]) {
+			$modeChanges[] = $i-3;
+			$modeChanges[] = $i;
+		}
 	}
+} else {
+	$modeChanges = [$routeInfo[1], $routeInfo[1]];
 }
+
 for ($i=0; $i<sizeof($modeChanges); $i+=2) {
 	echo 'One mode from '.$modeChanges[$i].' to '.$modeChanges[$i+1].'<br>';
 
 	// Look up available transport for each segment of the route
 	fseek($transportFile, calcRouteNum($modeChanges[$i], $modeChanges[$i+1])*4);
 }
+
+$legInfo = [];
 
 /*
 // Get the recommended route node list

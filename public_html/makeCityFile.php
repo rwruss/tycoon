@@ -115,6 +115,11 @@ while (($line = fgets($connectListFile)) !== false) {
   print_r($lineItems);
   echo '<p>';
 	$cityNodes = [];
+
+  // record the node internal distance
+  $thisRoute = calcRouteNum($cityList[$lineItems[0]], $cityList[$lineItems[0]]);
+  $routeDistances[$thisRoute] = $selfDist[$lineItems[0]];
+
 	for ($i=3; $i<sizeof($lineItems); $i++) {
     $trgCity = trim($lineItems[$i]);
     if ($trgCity == '') break;
@@ -184,32 +189,41 @@ for ($city = 1; $city < $cityCount; $city++) {
     $pvsCity = $trgCity;
 		$lastCity = $city;
 		echo '<p>180 '.$cityNames[$city].' to '.$cityNames[$trgCity].' ('.$pvsCity.'/'.$city.')<br>';
+    if ($cityNames[$city] == $cityNames[$trgCity]) {
+      $routeNum = calcRouteNum($city, $pvsNode[$city]);
+      array_push($writeArray, $pvsCity, $routeTypes[$routeNum], $routeDistances[$routeNum]);
+    } else {
+  		while ($pvsCity != $city) {
+        if ($pvsCity == 0) {
+          echo '--> NO CONNECTION<br>';
+          break;
+        }
+  			$routeNum = calcRouteNum($city, $dstCity);
+  			$pathList[] = $pvsCity;
+  			$routeNum = calcRouteNum($lastCity, $pvsCity);
+  			$routeType = $routeTypes[$routeNum];
+  			$routeTypeList[] = $routeType;
 
-		while ($pvsCity != $city) {
-      if ($pvsCity == 0) {
-        echo '--> NO CONNECTION<br>';
-        break;
-      }
-			$routeNum = calcRouteNum($city, $dstCity);
-			$pathList[] = $pvsCity;
-			$routeNum = calcRouteNum($lastCity, $pvsCity);
-			$routeType = $routeTypes[$routeNum];
-			$routeTypeList[] = $routeType;
+  			echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
 
-			echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
+  			array_push($writeArray, $pvsCity, $routeType, $routeDistances[$routeNum]); // next city, route type (sea/land), leg distance
 
-			array_push($writeArray, $pvsCity, $routeType, $routeDistances[$routeNum]); // next city, route type (sea/land), leg distance
+  			$lastCity = $pvsCity;
+  			$pvsCity = $pvsNode[$pvsCity];
+  		}
 
-			$lastCity = $pvsCity;
-			$pvsCity = $pvsNode[$pvsCity];
-		}
-
+    if (sizeof($writeArray)>0) {
+      echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
+      $routeNum = calcRouteNum($city, $pvsNode[$city]);
+      array_push($writeArray, $pvsCity, $routeType, $routeDistances[$routeNum]);
+    }
+  }
 	// Store the results of each route for the city
 	$routeNum = calcRouteNum($city, $trgCity);
 	fseek($routeFile, $numRoutes*8+$listStartIndex);
 	$writeLength = fwrite($routeFile, packArray($writeArray));
 	fseek($routeFile, $routeNum*8);
-  echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.', '.$writeLength.'<p>';
+  echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.' (+ '.($numRoutes*8).'), '.$writeLength.'<p>';
 	fwrite($routeFile, pack('i*', $numRoutes*8+$listStartIndex, $writeLength));
 	$listStartIndex += $writeLength;
   }
