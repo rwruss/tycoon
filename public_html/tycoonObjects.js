@@ -142,7 +142,8 @@ class factory extends object {
 			container.taxCost = addDiv("", "", container);
 			container.profit = addDiv("", "", container);
 
-			let button = newButton(container, function () {
+			let button = newButton(container, function (e) {
+				e.stopPropagation();
 				saleWindow(prodIndex, this.parentNode.slide.slide.value, this.factoryID, sendStr);
 				//scrMod(this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
 			});
