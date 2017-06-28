@@ -24,16 +24,16 @@ $prodWeight = 1;
 // Load the selling factory to get the origin location
 $sellingFactory = loadObject($postVals[1], $objFile, 1000);
 $routeNum = calcRouteNum($sellingFactory->get('region_3'), $postVals[2]);
-echo 'Factory at '.$sellingFactory->get('region_3').' to city '.$postVals[2].' is route '.$routeNum;
+//echo 'Factory at '.$sellingFactory->get('region_3').' to city '.$postVals[2].' is route '.$routeNum;
 
 // Load the rotue information
 fseek($routeFile, $routeNum*4);
 $routeHead = unpack('i*', fread($routeFile, 8));
-print_r($routeHead);
+//print_r($routeHead);
 fseek($routeFile, $routeHead[1]);
 $routeDat = fread($routeFile, $routeHead[2]);
 $routeInfo = unpack('i*', $routeDat);
-print_r($routeInfo);
+//print_r($routeInfo);
 
 if (sizeof($routeInfo) > 5) {
 	$modeChanges = [$routeInfo[2]];

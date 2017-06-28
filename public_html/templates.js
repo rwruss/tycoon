@@ -1951,6 +1951,11 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	// display the recommended route
 	getRoutes(sendStr + "," + saleQty).then(v => {
 		console.log(v);
+		routeDat = v.split(",");
+		for (var i=0; i<routeDat.length; i+=6) {
+			let thisOpt = addDiv("", "transOpt", salePane);
+			thisOpt.innerHTML = i + "->" + routeDat[0];
+		}
 	});
 }
 
