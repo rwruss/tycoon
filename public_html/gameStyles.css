@@ -705,3 +705,9 @@
 	left:0;
 	bottom:0;
 }
+
+.transOpt {
+	position:relative;
+	width:98%;
+	border: 2px solid green;
+}

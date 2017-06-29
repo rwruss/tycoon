@@ -51,7 +51,10 @@ if (sizeof($routeInfo) > 5) {
 $legInfo = []; // leg, company, time, cost, vehicle, capacity
 for ($i=0; $i<sizeof($modeChanges); $i+=2) {
 	//echo 'One mode from '.$modeChanges[$i].' to '.$modeChanges[$i+1].'<br>';
-	array_push($legInfo, 1, 1, 2, 3, 4, 5);
+
+	// Insert default option for this leg
+	array_push($legInfo, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9); // routeID, owner, mode, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
+
 	// Look up available transport for each segment of the route
 	$legRoutes = new itemSlot(calcRouteNum($modeChanges[$i], $modeChanges[$i+1]), $transportFile, 40);
 	for ($i=1; $i<=sizeof($legRoutes->slotData); $i++) {

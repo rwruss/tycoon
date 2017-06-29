@@ -1940,21 +1940,23 @@ productPrice = function (qty, productID, nationalPayDemos, productDemand, income
 saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	let salePane = useDeskTop.newPane("saleWindow");
 	salePane.innerHTML = "";
+	salePane.head = addDiv("", "stdFloatDiv", salePane);
+	salePane.opts = addDiv("", "stdFloatDiv", salePane);
 
 	// display the factory summary
 	console.log(playerFactories);
 	console.log(factoryID);
 	for (var i=0; i<playerFactories.length; i++) {
-		if (playerFactories[i].factoryID == factoryID) playerFactories[i].renderSummary(salePane);
+		if (playerFactories[i].factoryID == factoryID) playerFactories[i].renderSummary(salePane.head);
 	}
 
 	// display the recommended route
 	getRoutes(sendStr + "," + saleQty).then(v => {
 		console.log(v);
 		routeDat = v.split(",");
-		for (var i=0; i<routeDat.length; i+=6) {
-			let thisOpt = addDiv("", "transOpt", salePane);
-			thisOpt.innerHTML = i + "->" + routeDat[0];
+		for (var i=0; i<routeDat.length; i+=10) {
+			let thisOpt = addDiv("", "transOpt", salePane.opts);
+			thisOpt.innerHTML = "Item # " + i + "-> company" + routeDat[0];
 		}
 	});
 }
