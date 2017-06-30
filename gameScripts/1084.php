@@ -28,7 +28,7 @@ $routeNum = calcRouteNum($sellingFactory->get('region_3'), $postVals[2]);
 
 // Load the rotue information
 fseek($routeFile, $routeNum*4);
-$routeHead = unpack('i*', fread($routeFile, 8));
+$routeHead = unpack('i*', fread($routeFile, 12));
 //print_r($routeHead);
 fseek($routeFile, $routeHead[1]);
 $routeDat = fread($routeFile, $routeHead[2]);
@@ -52,11 +52,16 @@ $legInfo = []; // leg, company, time, cost, vehicle, capacity
 for ($i=0; $i<sizeof($modeChanges); $i+=2) {
 	//echo 'One mode from '.$modeChanges[$i].' to '.$modeChanges[$i+1].'<br>';
 
-	// Insert default option for this leg
-	array_push($legInfo, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9); // routeID, owner, mode, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
+	//get the information for each leg
+	$legRoute = calcRouteNum($modeChanges[$i], $modeChanges[$i+1]);
+	fseek($routeFile, $legRoute*4);
+	$legHead = unpack('i*', fread($routeFile, 12));
+
+	// Insert spot for default option for this leg
+	array_push($legInfo, 0,0,0,0,$legHead[3],1,0,0,0,0,0,0); // optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
 
 	// Look up available transport for each segment of the route
-	$legRoutes = new itemSlot(calcRouteNum($modeChanges[$i], $modeChanges[$i+1]), $transportFile, 40);
+	$legRoutes = new itemSlot($legRoute, $transportFile, 40);
 	for ($i=1; $i<=sizeof($legRoutes->slotData); $i++) {
 		// Load the route data
 		fseek($transportFile, $legRoutes->slotData[$i]);

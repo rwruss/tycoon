@@ -188,10 +188,12 @@ for ($city = 1; $city < $cityCount; $city++) {
 		$routeTypeList = [];
     $pvsCity = $trgCity;
 		$lastCity = $city;
+    $totalDistance = 0;
 		echo '<p>180 '.$cityNames[$city].' to '.$cityNames[$trgCity].' ('.$pvsCity.'/'.$city.')<br>';
     if ($cityNames[$city] == $cityNames[$trgCity]) {
       $routeNum = calcRouteNum($city, $pvsNode[$city]);
       array_push($writeArray, $pvsCity, $routeTypes[$routeNum], $routeDistances[$routeNum]);
+      $totalDistance += $routeDistances[$routeNum];
     } else {
   		while ($pvsCity != $city) {
         if ($pvsCity == 0) {
@@ -207,7 +209,7 @@ for ($city = 1; $city < $cityCount; $city++) {
   			echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
 
   			array_push($writeArray, $pvsCity, $routeType, $routeDistances[$routeNum]); // next city, route type (sea/land), leg distance
-
+        $totalDistance += $routeDistances[$routeNum];
   			$lastCity = $pvsCity;
   			$pvsCity = $pvsNode[$pvsCity];
   		}
@@ -216,15 +218,16 @@ for ($city = 1; $city < $cityCount; $city++) {
       echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
       $routeNum = calcRouteNum($city, $pvsNode[$city]);
       array_push($writeArray, $pvsCity, $routeType, $routeDistances[$routeNum]);
+      $totalDistance += $routeDistances[$routeNum];
     }
   }
 	// Store the results of each route for the city
 	$routeNum = calcRouteNum($city, $trgCity);
-	fseek($routeFile, $numRoutes*8+$listStartIndex);
+	fseek($routeFile, $numRoutes*12+$listStartIndex);
 	$writeLength = fwrite($routeFile, packArray($writeArray));
 	fseek($routeFile, $routeNum*8);
-  echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.' (+ '.($numRoutes*8).'), '.$writeLength.'<p>';
-	fwrite($routeFile, pack('i*', $numRoutes*8+$listStartIndex, $writeLength));
+  echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.' (+ '.($numRoutes*12).'), '.$writeLength.'<p>';
+	fwrite($routeFile, pack('i*', $numRoutes*12+$listStartIndex, $writeLength, $totalDistance));
 	$listStartIndex += $writeLength;
   }
 }

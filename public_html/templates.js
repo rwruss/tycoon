@@ -1954,9 +1954,11 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	getRoutes(sendStr + "," + saleQty).then(v => {
 		console.log(v);
 		routeDat = v.split(",");
-		for (var i=0; i<routeDat.length; i+=10) {
+		for (var i=0; i<routeDat.length; i+=12) {
+			// optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
 			let thisOpt = addDiv("", "transOpt", salePane.opts);
-			thisOpt.innerHTML = "Item # " + i + "-> company" + routeDat[0];
+			let time = routeDat[4]/routeDat[5];
+			thisOpt.innerHTML = "Item # " + i + "-> company" + routeDat[0] + ", time: " + time;
 		}
 	});
 }
