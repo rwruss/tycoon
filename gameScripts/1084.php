@@ -58,7 +58,7 @@ for ($i=0; $i<sizeof($modeChanges); $i+=2) {
 	$legHead = unpack('i*', fread($routeFile, 12));
 
 	// Insert spot for default option for this leg
-	array_push($legInfo, 0,0,0,0,$legHead[3],1,0,0,0,0,0,0); // optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
+	array_push($legInfo, $i, 0,0,0,0,$legHead[3],1,0,0,0,0,0,0); // optionID, legNum, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
 
 	// Look up available transport for each segment of the route
 	$legRoutes = new itemSlot($legRoute, $transportFile, 40);

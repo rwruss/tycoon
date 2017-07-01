@@ -167,6 +167,8 @@ echo '
 <script type="text/javascript">
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
+	var routeOptionList = new Array();
+	var selectedRouteList = new Array();
 	var factoryList, playerFactories, playerProducts, playerProdNames, playerProducts, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv, shipmentList;
 	var playerUnits;
 	var moveString = new Array();

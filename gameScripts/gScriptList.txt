@@ -82,6 +82,7 @@
 1082 - PROCESS: Set a new price for construction at a factory
 1083 - PROCESS: Add default construction points to a factory
 1084 - PROCESS: Show shipping opotions for sale to city
+1085 - PROCESS: Receive shipping and sale order for a city/factory
 
 
 TO DO:

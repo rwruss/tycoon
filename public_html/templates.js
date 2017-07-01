@@ -1941,6 +1941,7 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	let salePane = useDeskTop.newPane("saleWindow");
 	salePane.innerHTML = "";
 	salePane.head = addDiv("", "stdFloatDiv", salePane);
+	salePane.legSelections = addDiv("", "stdFloatDiv", salePane);
 	salePane.opts = addDiv("", "stdFloatDiv", salePane);
 
 	// display the factory summary
@@ -1949,16 +1950,27 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	for (var i=0; i<playerFactories.length; i++) {
 		if (playerFactories[i].factoryID == factoryID) playerFactories[i].renderSummary(salePane.head);
 	}
+	
+	let sendButton = newButton(salePane.head);
+	sendButton.innerHTML = "Place Order";
+	sendButton.addEventListener("click", function () {
+		let sendStr = "1085," + selectedRouteList.join(",");
+		scrMod(sendStr);
+	});
 
 	// display the recommended route
 	getRoutes(sendStr + "," + saleQty).then(v => {
 		console.log(v);
 		routeDat = v.split(",");
-		for (var i=0; i<routeDat.length; i+=12) {
+		routeOptionList = [];
+		for (var i=0; i<routeDat.length; i+=13) {
 			// optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
-			let thisOpt = addDiv("", "transOpt", salePane.opts);
-			let time = routeDat[4]/routeDat[5];
-			thisOpt.innerHTML = "Item # " + i + "-> company" + routeDat[0] + ", time: " + time;
+			routeOptionList.push(new legRoute(routeDat.slice(i, i+13)));
+			let routeOption = routeOptionList[i].renderOption(salePane.opts);
+			routeOption.addEventListener("click", function () {
+				selectedRouteList[this.parent.legNum*2] = this.parent.optionID;
+				selectedRouteList[this.parent.legNum*2+1] = this.parent.arraySpot;
+			});
 		}
 	});
 }

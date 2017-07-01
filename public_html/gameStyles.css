@@ -706,8 +706,14 @@
 	bottom:0;
 }
 
-.transOpt {
+.routeOpt {
 	position:relative;
 	width:98%;
 	border: 2px solid green;
+}
+
+.routeTime {
+	position:relative;
+	right:0;
+	border: 1px solid green;
 }

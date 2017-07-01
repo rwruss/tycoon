@@ -1693,3 +1693,35 @@ class bid {
 		});
 	}
 }
+
+class legRoute {
+	constructor (dat, arraySpot = 0) {
+		// optionID, legNum, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
+		this.optionID = dat[0];
+		this.legNum = dat[1];
+		this.routeID = dat[2];
+		this.owner = dat[3];
+		this.mode = dat[4];
+		this.dist = dat[5];
+		this.speed = dat[6];
+		this.costVol = dat[7];
+		this.costWt = dat[8];
+		this.capVol = dat[9];
+		this.capWt = dat[10];
+		this.stat = dat[11];
+		this.vehicle = dat[12];
+		this.arraySpot = arraySpot;
+	}
+	
+	renderOption (trg) {
+		let thisOpt = addDiv("", "routeOpt", salePane.opts);
+		let time = routeDat[4]/routeDat[5];
+		let hrs = time%3600;
+		let min = (time-hrs*3600)%60;
+		let timeStr;
+		if (hrs > 0) timeStr = hrs + ' hr : ' + min + ' min'; 
+		thisOpt.innerHTML = "Item # " + i + "-> company" + routeDat[0] + ", time: " + timeStr;
+		
+		thisOpt.parent = this;
+	}
+}
