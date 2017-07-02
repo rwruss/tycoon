@@ -23,29 +23,12 @@ $prodWeight = 1;
 
 // Load the selling factory to get the origin location
 $sellingFactory = loadObject($postVals[1], $objFile, 1000);
-$routeNum = calcRouteNum($sellingFactory->get('region_3'), $postVals[2]);
+$pathNum = calcRouteNum($sellingFactory->get('region_3'), $postVals[2]);
 //echo 'Factory at '.$sellingFactory->get('region_3').' to city '.$postVals[2].' is route '.$routeNum;
 
 // Load the rotue information
-fseek($routeFile, $routeNum*4);
-$routeHead = unpack('i*', fread($routeFile, 12));
-//print_r($routeHead);
-fseek($routeFile, $routeHead[1]);
-$routeDat = fread($routeFile, $routeHead[2]);
-$routeInfo = unpack('i*', $routeDat);
-//print_r($routeInfo);
-
-if (sizeof($routeInfo) > 5) {
-	$modeChanges = [$routeInfo[2]];
-	for ($i=5; $i<sizeof($routeInfo); $i+=3) {
-		if ($routeInfo[$i] != $routeInfo[$i-3]) {
-			$modeChanges[] = $i-3;
-			$modeChanges[] = $i;
-		}
-	}
-} else {
-	$modeChanges = [$routeInfo[1], $routeInfo[1]];
-}
+$pathInfo = loadRoutePath($routeFile, $pathNum);
+$modeChages = routeLegs($pathInfo);
 
 //insert the default option
 $legInfo = []; // leg, company, time, cost, vehicle, capacity
@@ -80,13 +63,5 @@ fclose($routeFile);
 fclose($transportFile);
 
 echo implode(',', $legInfo);
-
-function calcRouteNum($city1, $city2) {
-	$loCity = min($city1, $city2);
-	$hiCity = max($city1, $city2);
-
-	$routeNum = ($hiCity-1)*($hiCity)/2 + $hiCity - $loCity;
-	return $routeNum;
-}
 
 ?>

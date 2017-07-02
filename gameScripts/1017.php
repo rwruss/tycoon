@@ -6,12 +6,19 @@ PostVals
 2 - City ID
 3 - Product ID
 4 - Product Qty
+5+ - route leg sections
 */
+
+// Move postVals values to accoutn for extra pointer
+for ($i=1; $i<sizeof($postVals); $i++) {
+	$postVals[$i-1] = $postVals[$i];
+}
 
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 require_once('./taxCalcs.php');
 require_once('./invoiceFunctions.php');
+require_once('./transportClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
 $cityFile = fopen($gamePath.'/cities.dat', 'r+b');
@@ -154,6 +161,30 @@ $thisFactory->adjProduct($prodIndex, $sentQual, $sentPol, $sentRights, $material
 //$thisFactory->adjVal('periodSales', $netSale);
 $thisFactory->saveAll($objFile);
 
+// Determine the shipping time
+$routeFile = fopen($gamePath.'/routes.rtf', 'rb');
+$transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
+
+$shipmentWeight = 100;
+
+/// Load the route information
+$pathNum = calcRouteNum($thisFactory->get('region_3'), $postVals[2]);
+$pathInfo = loadRoutePath($routeFile, $pathNum);
+
+$legCosts = [];
+$modeChages = routeLegs($routeInfo);
+for ($i=5; $i<sizeof($postVals); $i++) {
+	$legRoute = loadRoute($postVals[$i], $transportFile);
+	$legRoute->legInfo($modeChanges[$i], $modeChanges[$i+);
+	$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
+}
+
+// credit the shipping cost to the shipping company and deduct from the shipper
+
+
+fclose($transportFile);
+fclose($routeFile);
+
 // Create transaction (invoice) for the city and assign an anticipated time of arrival
 $now = time();
 $invoiceInfo = array_fill(1, 20, 0);
@@ -176,7 +207,7 @@ $invoiceInfo[17] = $postVals[1]; // selling factory ID
 $invoiceInfo[18] = $postVals[2]; // target City ID
 $invoiceInfo[19] = $thisFactory->get('region_3'); // from City ID
 
-// Save the invoice to teh file
+// Save the invoice to teh (teh! lol) file
 $taxRates = array_fill(1, 30, 0);
 $newInvoiceID = writeInvoice($invoiceInfo, $taxRates, $contractFile);
 echo 'Created invoice '.$newInvoiceID;
@@ -185,47 +216,6 @@ echo 'Created invoice '.$newInvoiceID;
 $thisPlayer->save('shipmentLink', $newInvoiceID);
 
 // Add the transaction to the companies list of pending invoices
-
-/***** OLD STUFF
-$taxRates = taxRates($transaction, $thisFactory, $buyingCity, $sellingCity, $thisPlayer, $slotFile);
-echo '<p>Calced tax rates:<br>';
-print_r($taxRates);
-
-$taxAmounts = taxCost($taxRates, $transaction);
-echo '<p>Calced tax amts::<br>';
-print_r($taxAmounts);
-//taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile)
-
-// calculate net sale price on the transaction
-$totalTax = $taxAmounts[1] + $taxAmounts[3] + $taxAmounts[5] + $taxAmounts[6];
-$totalTax += $taxAmounts[11] + $taxAmounts[13] + $taxAmounts[15] + $taxAmounts[16];
-$totalTax += $taxAmounts[21] + $taxAmounts[23] + $taxAmounts[25] + $taxAmounts[26];
-$netSale = $grossSale - $totalTax;
-
-echo '<p>PROFIT CALC:<br>'.$grossSale.' - '.$totalTax.' = '.($grossSale - $totalTax).'<p>';
-
-// Add taxes to buying and selling region
-$buyTaxAreas = [0,0,$postVals[2]];
-$sellTaxAreas = [$thisFactory->get('region_3'), $thisFactory->get('region_2'), $thisFactory->get('region_1')];
-saveRegionTaxes($sellTaxAreas, $buyTaxAreas, $taxAmounts);
-
-// Add sales to factory tax base for it's own region
-$thisFactory->adjVal('totalSales', $netSale);
-$thisFactory->adjVal('periodSales', $netSale);
-
-// record adjusted city supply and update time
-echo '<p>Start Supply: '.$supplyInfo[2].' Consumption Rate:'.$supplyInfo[3];
-$buyingCity->setSupply($postVals[3], $buyingCity->supplyLevel(max(0, $supplyInfo[2])-$postVals[4]), $supplyFile);
-echo '<br> end Supply of '.$buyingCity->supplyLevel($postVals[3]).'<p>Save Last update:';
-echo '<br>Last update = '.$buyingCity->get('lastUpdate').'. Now is '.$now.'<br>';
-//$buyingCity->save('lastUpdate', $now);
-
-// add money to playerFactories
-echo '<p>Save player money';
-$thisPlayer->save('money', $thisPlayer->get('money') + $netSale);
-echo '<br>final money: '.$thisPlayer->get('money');
-
-*/
 $shipmentList = $invoiceInfo;
 
 // read city demographics and shit

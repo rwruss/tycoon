@@ -1953,10 +1953,12 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	
 	let sendButton = newButton(salePane.head);
 	sendButton.innerHTML = "Place Order";
+	sendButton.sendStr = sendStr;
 	sendButton.addEventListener("click", function () {
-		let sendStr = "1085," + selectedRouteList.join(",");
-		scrMod(sendStr);
+		let nuSendStr = "1017," + this.sendStr + "," + selectedRouteList.join(",");
+		scrMod(nuSendStr);
 	});
+	
 
 	// display the recommended route
 	getRoutes(sendStr + "," + saleQty).then(v => {
