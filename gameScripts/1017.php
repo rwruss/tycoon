@@ -20,11 +20,11 @@ require_once('./taxCalcs.php');
 require_once('./invoiceFunctions.php');
 require_once('./transportClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$supplyFile = fopen($gamePath.'/citySupply.csf', 'r+b');
-$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$supplyFile = fopen($gamePath.'/citySupply.csf', 'rb');
+$contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
 
 // Verify that the factory can sell this product
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
@@ -172,11 +172,16 @@ $pathNum = calcRouteNum($thisFactory->get('region_3'), $postVals[2]);
 $pathInfo = loadRoutePath($routeFile, $pathNum);
 
 $legCosts = [];
-$modeChages = routeLegs($routeInfo);
-for ($i=5; $i<sizeof($postVals); $i++) {
-	$legRoute = loadRoute($postVals[$i], $transportFile);
-	$legRoute->legInfo($modeChanges[$i], $modeChanges[$i+);
-	$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
+$modeChages = routeLegs($pathInfo);
+for ($i=5; $i<sizeof($postVals); $i+=2) {
+	if ($postVals[$i] > 0 ) {
+		$legRoute = loadRoute($postVals[$i], $transportFile);
+		$legRoute->legInfo($modeChanges[$i], $modeChanges[$i+1]);
+		$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
+	} else
+	{
+		echo '<p>Default transport option is selected<br>';
+	}
 }
 
 // credit the shipping cost to the shipping company and deduct from the shipper

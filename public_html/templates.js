@@ -1950,15 +1950,15 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	for (var i=0; i<playerFactories.length; i++) {
 		if (playerFactories[i].factoryID == factoryID) playerFactories[i].renderSummary(salePane.head);
 	}
-	
+
 	let sendButton = newButton(salePane.head);
 	sendButton.innerHTML = "Place Order";
 	sendButton.sendStr = sendStr;
 	sendButton.addEventListener("click", function () {
-		let nuSendStr = "1017," + this.sendStr + "," + selectedRouteList.join(",");
+		let nuSendStr = "1017," + this.sendStr + "," + saleQty + "," + selectedRouteList.join(",");
 		scrMod(nuSendStr);
 	});
-	
+
 
 	// display the recommended route
 	getRoutes(sendStr + "," + saleQty).then(v => {
@@ -1967,11 +1967,15 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 		routeOptionList = [];
 		for (var i=0; i<routeDat.length; i+=13) {
 			// optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
+			console.log("route #" + i);
 			routeOptionList.push(new legRoute(routeDat.slice(i, i+13)));
+			selectedRouteList[routeOptionList[i].legNum*2] = 0;
+			selectedRouteList[routeOptionList[i]*2+1] = this.parent.arraySpot;
 			let routeOption = routeOptionList[i].renderOption(salePane.opts);
 			routeOption.addEventListener("click", function () {
 				selectedRouteList[this.parent.legNum*2] = this.parent.optionID;
 				selectedRouteList[this.parent.legNum*2+1] = this.parent.arraySpot;
+				console.log(selectedRouteList);
 			});
 		}
 	});
@@ -1980,4 +1984,9 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 getRoutes = async function(val) {
 	let r = await loadDataPromise(val);
 	return r;
+}
+
+setArrayInts = function (a) {
+	result = a.map(function (x) {return parseInt(x)})
+	return result;
 }

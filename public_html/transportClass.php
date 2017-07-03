@@ -32,15 +32,15 @@ class routeObj {
 			return false;
 		}
 	}
-	
+
 	function legInfo ($start, $end) {
 		// look for the fastest way on this route for the two ends of the leg
 		$stops = array_slice(array_filter($this->stops), 0, 10);
 		$stopList = array_merge($stops, $stops);
-		
+
 		$dists = array_slice(array_filter($this->stopsDist), 10, 10);
 		$distList = array_merge($dists, $dists);
-		
+
 		$endPoints = [-1,-1];
 		for ($i=0; $i<10; $i++) {
 			if ($stopList[$i] == $start) $endPoints[0] = $i;
@@ -49,13 +49,13 @@ class routeObj {
 				break;
 			}
 		}
-		
+
 		$totalDistance = 0;
-		for ($i=$endPoints[0]; $i<=$endPoints[1], $i++) {
+		for ($i=$endPoints[0]; $i<=$endPoints[1]; $i++) {
 			$totalDistance += $distList[$i];
 		}
-		
-		$legInfo = array_fill[0, 10, 0];
+
+		$legInfo = array_fill(0, 10, 0);
 		$legInfo[0] = $totalDistance;
 	}
 }
@@ -65,7 +65,7 @@ function loadRoute ($routeNum, $routeFile) {
 	$routeHead = unpack('i*', fread($routeFile, 12));
 	fseek($routeFile, $routeHead[1]);
 	$routeDat = fread($routeFile, $routeHead[2]);
-	
+
 	return new routeObj($routeNum, $routeDat);
 }
 
@@ -91,7 +91,7 @@ function routeLegs($routeInfo) {
 	} else {
 		$modeChanges = [$routeInfo[1], $routeInfo[1]];
 	}
-	
+
 	return $modeChanges;
 }
 
@@ -99,8 +99,8 @@ function loadRoutePath($routeFile, $routeNum) {
 	fseek($routeFile, $routeNum*4);
 	$routeHead = unpack('i*', fread($routeFile, 12));
 	fseek($routeFile, $routeHead[1]);
-	$routeDat = fread($routeFile, $routeHead[2]);	
-	
+	$routeDat = fread($routeFile, $routeHead[2]);
+
 	return unpack('i*', $routeDat);
 }
 

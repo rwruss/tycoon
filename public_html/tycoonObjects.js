@@ -144,7 +144,8 @@ class factory extends object {
 
 			let button = newButton(container, function (e) {
 				e.stopPropagation();
-				saleWindow(prodIndex, this.parentNode.slide.slide.value, this.factoryID, sendStr);
+				console.log(this.sendStr);
+				saleWindow(prodIndex, this.parentNode.slide.slide.value, this.factoryID, this.sendStr);
 				//scrMod(this.parentNode.sendStr + "," + this.parentNode.slide.slide.value);
 			});
 			button.factoryID = this.factoryID;
@@ -1696,6 +1697,7 @@ class bid {
 
 class legRoute {
 	constructor (dat, arraySpot = 0) {
+		dat = setArrayInts(dat);
 		// optionID, legNum, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
 		this.optionID = dat[0];
 		this.legNum = dat[1];
@@ -1712,16 +1714,19 @@ class legRoute {
 		this.vehicle = dat[12];
 		this.arraySpot = arraySpot;
 	}
-	
+
 	renderOption (trg) {
-		let thisOpt = addDiv("", "routeOpt", salePane.opts);
-		let time = routeDat[4]/routeDat[5];
-		let hrs = time%3600;
+		let thisOpt = addDiv("", "routeOpt", trg);
+		let time = this.dist/this.speed;
+		let hrs = parseInt(time/3600);
 		let min = (time-hrs*3600)%60;
 		let timeStr;
-		if (hrs > 0) timeStr = hrs + ' hr : ' + min + ' min'; 
-		thisOpt.innerHTML = "Item # " + i + "-> company" + routeDat[0] + ", time: " + timeStr;
-		
+		if (hrs > 0) timeStr = hrs + ' hr : ' + min + ' min';
+		else timeStr = min + ' min';
+		thisOpt.innerHTML = "Item # " + this.optionID + "-> company" + this.owner + ", time: " + timeStr;
+
 		thisOpt.parent = this;
+
+		return thisOpt;
 	}
 }

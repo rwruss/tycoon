@@ -28,7 +28,7 @@ $pathNum = calcRouteNum($sellingFactory->get('region_3'), $postVals[2]);
 
 // Load the rotue information
 $pathInfo = loadRoutePath($routeFile, $pathNum);
-$modeChages = routeLegs($pathInfo);
+$modeChanges = routeLegs($pathInfo);
 
 //insert the default option
 $legInfo = []; // leg, company, time, cost, vehicle, capacity
