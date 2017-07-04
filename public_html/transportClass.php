@@ -57,6 +57,8 @@ class routeObj {
 
 		$legInfo = array_fill(0, 10, 0);
 		$legInfo[0] = $totalDistance;
+		
+		return $legInfo;
 	}
 }
 

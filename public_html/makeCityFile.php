@@ -225,8 +225,10 @@ for ($city = 1; $city < $cityCount; $city++) {
 	$routeNum = calcRouteNum($city, $trgCity);
 	fseek($routeFile, $numRoutes*12+$listStartIndex);
 	$writeLength = fwrite($routeFile, packArray($writeArray));
-	fseek($routeFile, $routeNum*8);
-  echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.' (+ '.($numRoutes*12).'), '.$writeLength.'<p>';
+	
+	// Go back and record the head information for the route
+	fseek($routeFile, $routeNum*12);
+	echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.' (+ '.($numRoutes*12).'), '.$writeLength.'<p>';
 	fwrite($routeFile, pack('i*', $numRoutes*12+$listStartIndex, $writeLength, $totalDistance));
 	$listStartIndex += $writeLength;
   }
@@ -236,10 +238,6 @@ fclose($routeFile);
 
 function packArray($data, $type='i') {
   $str = '';
-  /*
-  for ($i=1; $i<=sizeof($data); $i++) {
-    $str = $str.pack($type, $data[$i]);
-  }*/
   foreach ($data as $value) {
     $str .= pack($type, $value);
   }

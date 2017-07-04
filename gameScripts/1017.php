@@ -176,12 +176,14 @@ $legCosts = [];
 $modeChages = routeLegs($pathInfo);
 for ($i=5; $i<sizeof($postVals); $i+=2) {
 	if ($postVals[$i] > 0 ) {
+		$legInfo = $legRoute->legInfo($modeChanges[$i], $modeChanges[$i+1]);
 		$legRoute = loadRoute($postVals[$i], $transportFile);
-		$legRoute->legInfo($modeChanges[$i], $modeChanges[$i+1]);
+		$legTimes[] = $legInfo[0]/$legRoute->get('speed');
 		$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
-	} else
-	{
-		echo '<p>Default transport option is selected for route '.$pathNum.'<br>';
+	} else {
+		echo '<p>Default transport option is selected for leg '.$pathNum.'<br>';
+		$legTimes[] = $pathInfo[3];
+		$legCosts[] = $pathInfo[3];
 		print_r($pathHead);
 	}
 }
