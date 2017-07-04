@@ -169,6 +169,7 @@ $shipmentWeight = 100;
 
 /// Load the route information
 $pathNum = calcRouteNum($thisFactory->get('region_3'), $postVals[2]);
+$pathHead = loadPathHead($routeFile, $pathNum);
 $pathInfo = loadRoutePath($routeFile, $pathNum);
 
 $legCosts = [];
@@ -180,7 +181,8 @@ for ($i=5; $i<sizeof($postVals); $i+=2) {
 		$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
 	} else
 	{
-		echo '<p>Default transport option is selected<br>';
+		echo '<p>Default transport option is selected for route '.$pathNum.'<br>';
+		print_r($pathHead);
 	}
 }
 

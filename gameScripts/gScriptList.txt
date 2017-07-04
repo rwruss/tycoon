@@ -86,6 +86,7 @@
 
 
 TO DO:
+verify total distance in each path calculatoin
 $useDistance not working in makeCityFile line 196
 PREMIUM CURRENCY - use for premium employees and factory upgrades
 Construction in progress list

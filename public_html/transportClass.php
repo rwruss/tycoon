@@ -95,11 +95,18 @@ function routeLegs($routeInfo) {
 	return $modeChanges;
 }
 
-function loadRoutePath($routeFile, $routeNum) {
+function loadPathHead($routeFile, $routeNum) {
 	fseek($routeFile, $routeNum*4);
 	$routeHead = unpack('i*', fread($routeFile, 12));
-	fseek($routeFile, $routeHead[1]);
-	$routeDat = fread($routeFile, $routeHead[2]);
+
+	return $routeHead;
+}
+
+function loadRoutePath($routeFile, $routeNum) {
+	$pathHead = loadPathHead($routeFile, $routeNum);
+
+	fseek($routeFile, $pathHead[1]);
+	$routeDat = fread($routeFile, $pathHead[2]);
 
 	return unpack('i*', $routeDat);
 }
