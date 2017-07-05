@@ -102,6 +102,8 @@ print_r($cityList);
 $connectDatFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/connections.cxf', 'wb');
 fseek($connectListFile, 0);
 
+
+
 $useDistance = 0;
 $numRoutes = $cityCount*($cityCount+1)/2;
 $routeDistances = array_fill(0, $numRoutes, 0);
@@ -109,6 +111,9 @@ $routeTypes = array_fill(0, $numRoutes, 0);
 $nodeList = [];
 $cityCount = 1;
 fgets($connectListFile);
+
+echo '<p>NUMBER OF ROTUES: '.$numRoutes.'<p>';
+
 while (($line = fgets($connectListFile)) !== false) {
 	$lineItems = explode(',', $line);
 	echo 'Check '.(sizeof($lineItems)-1).' items<P>';
@@ -119,6 +124,7 @@ while (($line = fgets($connectListFile)) !== false) {
   // record the node internal distance
   $thisRoute = calcRouteNum($cityList[$lineItems[0]], $cityList[$lineItems[0]]);
   $routeDistances[$thisRoute] = $selfDist[$lineItems[0]];
+  echo '<p>Internal Distance for '.$cityList[$lineItems[0]].', route '.$thisRoute.' is '.$routeDistances[$thisRoute].'<br>';
 
 	for ($i=3; $i<sizeof($lineItems); $i++) {
     $trgCity = trim($lineItems[$i]);
@@ -191,9 +197,11 @@ for ($city = 1; $city < $cityCount; $city++) {
     $totalDistance = 0;
 		echo '<p>180 '.$cityNames[$city].' to '.$cityNames[$trgCity].' ('.$pvsCity.'/'.$city.')<br>';
     if ($cityNames[$city] == $cityNames[$trgCity]) {
-      $routeNum = calcRouteNum($city, $pvsNode[$city]);
+      if ($pvsNode[$city] == 0) $routeNum = calcRouteNum($city, $city);
+      else $routeNum = calcRouteNum($city, $pvsNode[$city]);
       array_push($writeArray, $pvsCity, $routeTypes[$routeNum], $routeDistances[$routeNum]);
       $totalDistance += $routeDistances[$routeNum];
+      echo 'Total Distance: '.$totalDistance.' for Route '.$routeNum.' ('.$city.' to '.$pvsNode[$city].')<br>';
     } else {
   		while ($pvsCity != $city) {
         if ($pvsCity == 0) {
@@ -225,7 +233,7 @@ for ($city = 1; $city < $cityCount; $city++) {
 	$routeNum = calcRouteNum($city, $trgCity);
 	fseek($routeFile, $numRoutes*12+$listStartIndex);
 	$writeLength = fwrite($routeFile, packArray($writeArray));
-	
+
 	// Go back and record the head information for the route
 	fseek($routeFile, $routeNum*12);
 	echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.' (+ '.($numRoutes*12).'), '.$writeLength.'<p>';

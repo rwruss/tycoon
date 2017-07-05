@@ -27,8 +27,8 @@ class object {
 				//console.log(checkDiv);
 				if (checkDiv.tagName == "BODY") {
 					this.instances[i].updateFunction(this.instances[i]);
-					console.log(this.instances[i]);
-					console.log(this.instances[i].updateFunction);
+					//console.log(this.instances[i]);
+					//console.log(this.instances[i].updateFunction);
 					break;
 				}
 				checkDiv = tmp;
@@ -1717,13 +1717,22 @@ class legRoute {
 
 	renderOption (trg) {
 		let thisOpt = addDiv("", "routeOpt", trg);
+		thisOpt.dtl = addDiv("", "", thisOpt);
+		thisOpt.cost = addDiv("", "", thisOpt);
+		thisOpt.time = addDiv("", "", thisOpt);
+
+		if (this.owner == 0) thisOpt.dtl.innerHTML = "Item # " + this.optionID + "-> DEFAULT OPTION";
+		else thisOpt.dtl.innerHTML = "Item # " + this.optionID + "-> company" + this.owner;
+		thisOpt.cost.innerHTML = "Cost: " + this.costWt;
+
 		let time = this.dist/this.speed;
 		let hrs = parseInt(time/3600);
-		let min = (time-hrs*3600)%60;
+		let min = Math.floor((time-hrs*3600)/60);
+		let sec = time%60;
 		let timeStr;
-		if (hrs > 0) timeStr = hrs + ' hr : ' + min + ' min';
-		else timeStr = min + ' min';
-		thisOpt.innerHTML = "Item # " + this.optionID + "-> company" + this.owner + ", time: " + timeStr;
+		if (hrs > 0) timeStr = hrs + ' hr : ' + min + ' min : ' + sec + " sec";
+		else timeStr = min + ' min : ' + sec + " sec";
+		thisOpt.time.innerHTML =  timeStr;
 
 		thisOpt.parent = this;
 
