@@ -62,7 +62,7 @@ class factory extends object {
 		this.prodDtls = dat.slice(16, 41);
 		this.taxes = dat.slice(41,72) || this.taxes;
 		this.taxes.push(6,1,2,25);
-		console.log(this.prodDtls);
+		//console.log(this.prodDtls);
 	}
 
 	update(dat) {
@@ -1718,12 +1718,15 @@ class legRoute {
 	renderOption (trg) {
 		let thisOpt = addDiv("", "routeOpt", trg);
 		thisOpt.dtl = addDiv("", "", thisOpt);
+		thisOpt.dist = addDiv("", "", thisOpt);
 		thisOpt.cost = addDiv("", "", thisOpt);
 		thisOpt.time = addDiv("", "", thisOpt);
 
 		if (this.owner == 0) thisOpt.dtl.innerHTML = "Item # " + this.optionID + "-> DEFAULT OPTION";
 		else thisOpt.dtl.innerHTML = "Item # " + this.optionID + "-> company" + this.owner;
 		thisOpt.cost.innerHTML = "Cost: " + this.costWt;
+
+		thisOpt.dist.innerHTML = "Distance: " + this.dist;
 
 		let time = this.dist/this.speed;
 		let hrs = parseInt(time/3600);

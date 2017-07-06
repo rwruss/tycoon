@@ -1942,7 +1942,10 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	salePane.innerHTML = "";
 	salePane.head = addDiv("", "stdFloatDiv", salePane);
 	salePane.legSelections = addDiv("", "stdFloatDiv", salePane);
+	salePane.legSelections.leg0 = addDiv("", "stdFloatDiv", salePane.legSelections);
 	salePane.opts = addDiv("", "stdFloatDiv", salePane);
+
+	salePane.legSelections.leg0.innerHTML = "leg 0";
 
 	// display the factory summary
 	console.log(playerFactories);
@@ -1962,19 +1965,21 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 
 	// display the recommended route
 	getRoutes(sendStr + "," + saleQty).then(v => {
-		console.log(v);
+		//console.log(v);
 		routeDat = v.split(",");
 		routeOptionList = [];
 		for (var i=0; i<routeDat.length; i+=13) {
 			// optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
-			console.log("route #" + i);
 			routeOptionList.push(new legRoute(routeDat.slice(i, i+13)));
 			selectedRouteList[routeOptionList[i].legNum*2] = 0;
-			selectedRouteList[routeOptionList[i]*2+1] = this.parent.arraySpot;
+			selectedRouteList[routeOptionList[i].legNum*2+1] = 0;
 			let routeOption = routeOptionList[i].renderOption(salePane.opts);
+			console.log(selectedRouteList);
 			routeOption.addEventListener("click", function () {
-				selectedRouteList[this.parent.legNum*2] = this.parent.optionID;
-				selectedRouteList[this.parent.legNum*2+1] = this.parent.arraySpot;
+				console.log(selectedRouteList);
+				selectedRouteList[this.parent.legNum*2] = this.parent.optionID; // route ID
+				selectedRouteList[this.parent.legNum*2+1] = this.parent.arraySpot; // spot in array
+				useDeskTop.getPane("saleWindow").legSelections.leg0.appendChild(this);
 				console.log(selectedRouteList);
 			});
 		}
