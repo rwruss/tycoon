@@ -9,11 +9,13 @@ PostVals
 5+ - route leg sections
 */
 
+print_r($postVals);
+
 // Move postVals values to accoutn for extra pointer
 for ($i=1; $i<sizeof($postVals); $i++) {
 	$postVals[$i-1] = $postVals[$i];
 }
-
+array_pop($postVals);
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 require_once('./taxCalcs.php');
@@ -173,23 +175,43 @@ $pathHead = loadPathHead($routeFile, $pathNum);
 $pathInfo = loadRoutePath($routeFile, $pathNum);
 
 $legCosts = [];
-$modeChages = routeLegs($pathInfo);
+$legTimes = [];
+$legOwners = [];
+$modeChanges = routeLegs($pathInfo);
+print_r($postVals);
+$modeChangeNum = 0;
 for ($i=5; $i<sizeof($postVals); $i+=2) {
 	if ($postVals[$i] > 0 ) {
-		$legInfo = $legRoute->legInfo($modeChanges[$i], $modeChanges[$i+1]);
 		$legRoute = loadRoute($postVals[$i], $transportFile);
+		$legInfo = $legRoute->legInfo($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
 		$legTimes[] = $legInfo[0]/$legRoute->get('speed');
 		$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
+		$legOwners[] = $legRoute->get('owner');
 	} else {
+		$pathNum = calcRouteNum($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
+		fseek($routeFile, $pathNum*12);
+		$pathHead = unpack('i*', fread($routeFile, 12));
 		echo '<p>Default transport option is selected for leg '.$pathNum.'<br>';
-		$legTimes[] = $pathInfo[3];
-		$legCosts[] = $pathInfo[3];
+		$legTimes[] = $pathHead[3];
+		$legCosts[] = $pathHead[3];
+		$legOwners[] = 0;
 		print_r($pathHead);
 	}
+	$modeChangeNum += 2;
 }
 
-// credit the shipping cost to the shipping company and deduct from the shipper
+$totalCost = array_sum($legCosts);
+$totalTime = array_sum($letTimes);
+echo 'Total shipping time = '.array_sum($legTimes).'<br>Total Shipping Cost = '.array_sum($legCosts).'<p>';
 
+// deduct the shipping cost from the selling player
+$thisPlayer->save('money', $transportingPlayer->get('money') + $totalCost[$i]);
+
+// credit the shipping cost to the shipping company and deduct from the shipper
+for ($i=0; $i<sizeof($legOwners); $i++) {
+	$transportingPlayer = loadObject($pGameID, $objFile, 400);
+	$transportingPlayer->save('money', $transportingPlayer->get('money') + $legCosts[$i]);
+}
 
 fclose($transportFile);
 fclose($routeFile);
@@ -207,7 +229,7 @@ $invoiceInfo[7] = $sentRights;
 $invoiceInfo[8] = $now;
 $invoiceInfo[9] = 0;
 $invoiceInfo[11] = $thisPlayer->get('shipmentLink'); // Link to previously linked item
-$invoiceInfo[12] = $now + 600; // Delivery time
+$invoiceInfo[12] = $now + $totalTime; // Delivery time
 $invoiceInfo[13] = 0; // TBD at time of sale
 $invoiceInfo[14] = 0; // contract ID (NONE)
 $invoiceInfo[15] = $materialCost;

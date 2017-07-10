@@ -62,7 +62,7 @@ class factory extends object {
 		this.prodDtls = dat.slice(16, 41);
 		this.taxes = dat.slice(41,72) || this.taxes;
 		this.taxes.push(6,1,2,25);
-		//console.log(this.prodDtls);
+		console.log(this.prodDtls);
 	}
 
 	update(dat) {

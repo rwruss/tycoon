@@ -16,7 +16,7 @@ useDeskTop.newPane("citySale");
 thisDiv = useDeskTop.getPane("citySale");
 thisDiv.innerHTML = "";
 
-cityList = [new city([1, "Round Rock"])];
+//cityList = [new city([1, "Round Rock"])];
 
 var productArea = addDiv("productArea", "standardContain", thisDiv);
 textBlob("", productArea, "Sell to which city?");

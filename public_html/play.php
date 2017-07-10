@@ -188,6 +188,11 @@ echo '
 	var businessDiv;
 	var nationList;
 
+	var cityList = new Array(new city([1, "Austin"], [], []),
+		new city([2, "Birmingham"], [], []),
+		new city([3, "Anchorage"], [], [])
+	);
+
 	var unitBox;
 	var rY = 0.0;
 	var rotShift = [0,0];

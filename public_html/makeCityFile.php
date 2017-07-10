@@ -99,10 +99,8 @@ while (($line = fgets($connectListFile)) !== false) {
 }
 print_r($cityList);
 // Determine the route connections for each city and record
-$connectDatFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/connections.cxf', 'wb');
+//$connectDatFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/connections.cxf', 'wb');
 fseek($connectListFile, 0);
-
-
 
 $useDistance = 0;
 $numRoutes = $cityCount*($cityCount+1)/2;
@@ -124,6 +122,7 @@ while (($line = fgets($connectListFile)) !== false) {
   // record the node internal distance
   $thisRoute = calcRouteNum($cityList[$lineItems[0]], $cityList[$lineItems[0]]);
   $routeDistances[$thisRoute] = $selfDist[$lineItems[0]];
+  $routeTypes[$thisRoute] = $landOrSea[$lineItems[0]];
   echo '<p>Internal Distance for '.$cityList[$lineItems[0]].', route '.$thisRoute.' is '.$routeDistances[$thisRoute].'<br>';
 
 	for ($i=3; $i<sizeof($lineItems); $i++) {
@@ -165,7 +164,7 @@ for ($city = 1; $city < $cityCount; $city++) {
 	$checkList = [$city];
   $count = 0;
   $nodeCost[$city] = 0;
-	while (sizeof($checkList) > 0 && $count < 25) {
+	while (sizeof($checkList) > 0 && $count < 50) {
 		$pvsCity = array_shift($checkList);
     echo '<br>Check nodes at '.$cityNames[$pvsCity].'<br>';
     print_r($nodeList[$pvsCity]);
@@ -205,16 +204,15 @@ for ($city = 1; $city < $cityCount; $city++) {
     } else {
   		while ($pvsCity != $city) {
         if ($pvsCity == 0) {
-          echo '--> NO CONNECTION<br>';
+          echo $cityNames[$pvsCity].'--> NO CONNECTION<br>';
           break;
         }
-  			$routeNum = calcRouteNum($city, $dstCity);
   			$pathList[] = $pvsCity;
-  			$routeNum = calcRouteNum($lastCity, $pvsCity);
+  			$routeNum = calcRouteNum($pvsNode[$pvsCity], $pvsCity);
   			$routeType = $routeTypes[$routeNum];
   			$routeTypeList[] = $routeType;
 
-  			echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
+  			echo '--> '.$cityNames[$pvsCity].' from '.$cityNames[$lastCity].' R:'.$routeNum.' ('.$pvsNode[$pvsCity].'/'.$pvsCity.') T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
 
   			array_push($writeArray, $pvsCity, $routeType, $routeDistances[$routeNum]); // next city, route type (sea/land), leg distance
         $totalDistance += $routeDistances[$routeNum];
@@ -223,7 +221,7 @@ for ($city = 1; $city < $cityCount; $city++) {
   		}
 
     if (sizeof($writeArray)>0) {
-      echo '--> '.$cityNames[$pvsCity].' R:'.$routeNum.' T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
+      echo '--> '.$cityNames[$pvsCity].' from '.$cityNames[$lastCity].' R:'.$routeNum.' ('.$pvsNode[$pvsCity].'/'.$pvsCity.') T:'.$routeType.', D:'.$routeDistances[$routeNum].'<br>';
       $routeNum = calcRouteNum($city, $pvsNode[$city]);
       array_push($writeArray, $pvsCity, $routeType, $routeDistances[$routeNum]);
       $totalDistance += $routeDistances[$routeNum];
@@ -236,12 +234,18 @@ for ($city = 1; $city < $cityCount; $city++) {
 
 	// Go back and record the head information for the route
 	fseek($routeFile, $routeNum*12);
-	echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.' (+ '.($numRoutes*12).'), '.$writeLength.'<p>';
+	echo '212: Head for route '.$routeNum.' -> '.$listStartIndex.' (+ '.($numRoutes*12).') = '.($numRoutes*12+$listStartIndex).', '.$writeLength.'<p>';
 	fwrite($routeFile, pack('i*', $numRoutes*12+$listStartIndex, $writeLength, $totalDistance));
 	$listStartIndex += $writeLength;
   }
 }
 fclose($routeFile);
+
+// Create the transport option file and fill with empty slots
+$transportOptFile = fopen('c:/websites/tycoon/scenarios/'.$scenario.'/transOpts.tof', 'wb');
+fseek($transportOptFile, $numRoutes*40+36);
+fwrite($transportOptFile, pack('i', 0));
+fclose($transportOptFile);
 
 
 function packArray($data, $type='i') {

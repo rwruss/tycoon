@@ -12,7 +12,7 @@ echo '<script>
 useDeskTop.newPane("hireLabor");
 thisDiv = useDeskTop.getPane("hireLabor");
 thisDiv.innerHTML = "";
-cityList = [new city([1,"Round Rock"])];
+//cityList = [new city([1,"Round Rock"])];
 
 var citySelect = new uList(cityList);
 cityBox1 = citySelect.SLsingleButton(thisDiv);

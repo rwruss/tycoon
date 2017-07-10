@@ -57,7 +57,7 @@ class routeObj {
 
 		$legInfo = array_fill(0, 10, 0);
 		$legInfo[0] = $totalDistance;
-		
+
 		return $legInfo;
 	}
 }
@@ -85,8 +85,8 @@ function routeLegs($routeInfo) {
 		$modeChanges = [$routeInfo[1]]; // starting node id
 		for ($i=5; $i<sizeof($routeInfo); $i+=3) {
 			if ($routeInfo[$i] != $routeInfo[$i-3]) { // compare the route types of this leg and the pvs leg
-				$modeChanges[] = $i-4; // the end node ID for the previous mode
-				$modeChanges[] = $i-1; // make this node ID the start for the next mode
+				$modeChanges[] = $routeInfo[$i-4]; // the end node ID for the previous mode
+				$modeChanges[] = $routeInfo[$i-1]; // make this node ID the start for the next mode
 			}
 		}
 		$modeChanges[] = $routeInfo[sizeof($routeInfo)-2]; // record the final node ID
@@ -98,7 +98,7 @@ function routeLegs($routeInfo) {
 }
 
 function loadPathHead($routeFile, $routeNum) {
-	fseek($routeFile, $routeNum*4);
+	fseek($routeFile, $routeNum*12);
 	$routeHead = unpack('i*', fread($routeFile, 12));
 
 	return $routeHead;
@@ -106,6 +106,7 @@ function loadPathHead($routeFile, $routeNum) {
 
 function loadRoutePath($routeFile, $routeNum) {
 	$pathHead = loadPathHead($routeFile, $routeNum);
+	//print_r();
 
 	fseek($routeFile, $pathHead[1]);
 	$routeDat = fread($routeFile, $pathHead[2]);

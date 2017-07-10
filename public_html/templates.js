@@ -1941,11 +1941,14 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	let salePane = useDeskTop.newPane("saleWindow");
 	salePane.innerHTML = "";
 	salePane.head = addDiv("", "stdFloatDiv", salePane);
-	salePane.legSelections = addDiv("", "stdFloatDiv", salePane);
-	salePane.legSelections.leg0 = addDiv("", "stdFloatDiv", salePane.legSelections);
+	salePane.legArea = addDiv("", "stdFloatDiv", salePane);
+	salePane.legItems = [];
+	salePane.legItems[0] = addDiv("", "stdFloatDiv", salePane.legArea);
+	salePane.legItems[1] = addDiv("", "stdFloatDiv", salePane.legArea);
 	salePane.opts = addDiv("", "stdFloatDiv", salePane);
 
-	salePane.legSelections.leg0.innerHTML = "leg 0";
+	salePane.legItems[0].innerHTML = "leg 0";
+	salePane.legItems[1].innerHTML = "leg 1";
 
 	// display the factory summary
 	console.log(playerFactories);
@@ -1968,18 +1971,20 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 		//console.log(v);
 		routeDat = v.split(",");
 		routeOptionList = [];
-		for (var i=0; i<routeDat.length; i+=13) {
+		for (var i=0; i*13<routeDat.length; i++) {
 			// optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
-			routeOptionList.push(new legRoute(routeDat.slice(i, i+13)));
-			selectedRouteList[routeOptionList[i].legNum*2] = 0;
-			selectedRouteList[routeOptionList[i].legNum*2+1] = 0;
+			console.log(routeDat.slice(i*13, i*13+13));
+			routeOptionList.push(new legRoute(routeDat.slice(i*13, i*13+13), i));
+			selectedRouteList[i*2] = 0;
+			selectedRouteList[i*2+1] = 0;
+			console.log(routeOptionList);
 			let routeOption = routeOptionList[i].renderOption(salePane.opts);
-			console.log(selectedRouteList);
+			//console.log(selectedRouteList);
 			routeOption.addEventListener("click", function () {
-				console.log(selectedRouteList);
+				console.log("adjust leg " + this.parent.legNum);
 				selectedRouteList[this.parent.legNum*2] = this.parent.optionID; // route ID
 				selectedRouteList[this.parent.legNum*2+1] = this.parent.arraySpot; // spot in array
-				useDeskTop.getPane("saleWindow").legSelections.leg0.appendChild(this);
+				useDeskTop.getPane("saleWindow").legItems[this.parent.legNum].appendChild(this);
 				console.log(selectedRouteList);
 			});
 		}
