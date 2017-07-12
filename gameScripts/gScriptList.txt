@@ -83,9 +83,11 @@
 1083 - PROCESS: Add default construction points to a factory
 1084 - PROCESS: Show shipping opotions for sale to city
 1085 - PROCESS: Receive shipping and sale order for a city/factory
+1086 - NOT USED
 
 
 TO DO:
+Show correct shipment information for a company in 1002
 verify total distance in each path calculatoin
 $useDistance not working in makeCityFile line 196
 PREMIUM CURRENCY - use for premium employees and factory upgrades

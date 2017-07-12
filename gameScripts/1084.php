@@ -13,9 +13,9 @@ require_once('./objectClass.php');
 require_once('./transportClass.php');
 require_once('./slotFunctions.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$routeFile = fopen($gamePath.'/routes.rtf', 'rb');
-$transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$routeFile = fopen($gamePath.'/routes.rtf', 'r+b');
+$transportFile = fopen($gamePath.'/transOpts.tof', 'r+b');
 
 // Get product information
 $prodSpace = 1;

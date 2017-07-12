@@ -15,7 +15,7 @@ if ($thisPlayer->get('openInvoices') == 0) {
 	exit('');
 }
 $invoiceList = new itemSlot($thisPlayer->get('openInvoices'), $slotFile, 40);
-
+print_r($invoiceList->slotData);
 $invStr = '';
 // Output the invoices
 for ($i=0; $i<sizeof($invoiceList->slotData); $i++) {

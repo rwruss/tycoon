@@ -1943,12 +1943,13 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	salePane.head = addDiv("", "stdFloatDiv", salePane);
 	salePane.legArea = addDiv("", "stdFloatDiv", salePane);
 	salePane.legItems = [];
-	salePane.legItems[0] = addDiv("", "stdFloatDiv", salePane.legArea);
-	salePane.legItems[1] = addDiv("", "stdFloatDiv", salePane.legArea);
+	//salePane.legItems[0] = addDiv("", "stdFloatDiv", salePane.legArea);
+	//salePane.legItems[1] = addDiv("", "stdFloatDiv", salePane.legArea);
 	salePane.opts = addDiv("", "stdFloatDiv", salePane);
+	salePane.opts.innerHTML = "route options";
 
-	salePane.legItems[0].innerHTML = "leg 0";
-	salePane.legItems[1].innerHTML = "leg 1";
+	//salePane.legItems[0].innerHTML = "leg 0";
+	//salePane.legItems[1].innerHTML = "leg 1";
 
 	// display the factory summary
 	console.log(playerFactories);
@@ -1978,6 +1979,13 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 			selectedRouteList[i*2] = 0;
 			selectedRouteList[i*2+1] = 0;
 			console.log(routeOptionList);
+
+			// Verify a container for this item
+			if (!(routeOptionList[i].legNum in salePane.legItems)) {
+				salePane.legItems[routeOptionList[i].legNum] = addDiv("", "stdFloatDiv", salePane.legArea);
+				salePane.legItems[routeOptionList[i].legNum].innerHTML = "Leg " + routeOptionList[i].legNum;
+			}
+
 			let routeOption = routeOptionList[i].renderOption(salePane.opts);
 			//console.log(selectedRouteList);
 			routeOption.addEventListener("click", function () {

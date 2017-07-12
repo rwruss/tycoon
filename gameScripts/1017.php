@@ -201,16 +201,18 @@ for ($i=5; $i<sizeof($postVals); $i+=2) {
 }
 
 $totalCost = array_sum($legCosts);
-$totalTime = array_sum($letTimes);
+$totalTime = array_sum($legTimes);
 echo 'Total shipping time = '.array_sum($legTimes).'<br>Total Shipping Cost = '.array_sum($legCosts).'<p>';
 
 // deduct the shipping cost from the selling player
-$thisPlayer->save('money', $transportingPlayer->get('money') + $totalCost[$i]);
+$thisPlayer->save('money', $thisPlayer->get('money') - $totalCost[$i]);
 
 // credit the shipping cost to the shipping company and deduct from the shipper
 for ($i=0; $i<sizeof($legOwners); $i++) {
-	$transportingPlayer = loadObject($pGameID, $objFile, 400);
-	$transportingPlayer->save('money', $transportingPlayer->get('money') + $legCosts[$i]);
+	if ($legOwners[$i] > 0) {
+		$transportingPlayer = loadObject($legOwners[$i], $objFile, 400);
+		$transportingPlayer->save('money', $transportingPlayer->get('money') + $legCosts[$i]);
+	}
 }
 
 fclose($transportFile);
