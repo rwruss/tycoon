@@ -1962,7 +1962,7 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	sendButton.innerHTML = "Place Order";
 	sendButton.sendStr = sendStr;
 	sendButton.addEventListener("click", function () {
-		let nuSendStr = "1017," + this.sendStr + "," + saleQty + "," + selectedRouteList.join(",");
+		let nuSendStr = "1017," + this.sendStr + "," + selectedRouteList.join(",");
 		scrMod(nuSendStr);
 	});
 

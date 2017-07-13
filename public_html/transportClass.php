@@ -106,7 +106,7 @@ function loadPathHead($routeFile, $routeNum) {
 
 function loadRoutePath($routeFile, $routeNum) {
 	$pathHead = loadPathHead($routeFile, $routeNum);
-	//print_r();
+	//print_r($pathHead);
 
 	fseek($routeFile, $pathHead[1]);
 	$routeDat = fread($routeFile, $pathHead[2]);

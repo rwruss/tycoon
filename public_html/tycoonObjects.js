@@ -361,8 +361,9 @@ class shipment {
 
 		container.arriveTime = addDiv("", "", container);
 		//console.log(this.delTime);
+		var currTime = new Date().getTime() / 1000
 		let d = new Date(this.delTime*1000);
-		container.arriveTime.innerHTML = this.status + "<--><br> " + d.getDate() + " / " + (d.getMonth()+1) + " / " + d.getFullYear() + "<br>"+
+		container.arriveTime.innerHTML = "C:" + currTime + " / " + this.delTime + "<br>" + this.status + "<--><br> " + d.getDate() + " / " + (d.getMonth()+1) + " / " + d.getFullYear() + "<br>"+
 			d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
 
 		container.dest = addDiv("", "", container);
@@ -1698,6 +1699,8 @@ class bid {
 class legRoute {
 	constructor (dat, arraySpot = 0) {
 		dat = setArrayInts(dat);
+		console.log(dat);
+		console.log("array spot is " + arraySpot);
 		// optionID, legNum, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
 		this.optionID = dat[0];
 		this.legNum = dat[1];
