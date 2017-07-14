@@ -363,7 +363,7 @@ class shipment {
 		//console.log(this.delTime);
 		var currTime = new Date().getTime() / 1000
 		let d = new Date(this.delTime*1000);
-		container.arriveTime.innerHTML = "C:" + currTime + " / " + this.delTime + "<br>" + this.status + "<--><br> " + d.getDate() + " / " + (d.getMonth()+1) + " / " + d.getFullYear() + "<br>"+
+		container.arriveTime.innerHTML = "C:" + currTime + " / " + this.delTime + "<br>Status: " + this.status + "<br> " + d.getDate() + " / " + (d.getMonth()+1) + " / " + d.getFullYear() + "<br>"+
 			d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
 
 		container.dest = addDiv("", "", container);
@@ -390,7 +390,7 @@ class shipment {
 
 		this.renderSummary(dtlWindow);
 		let now = new Date().getTime()/1000;
-		if (this.delTime <= now-10000000) {
+		if (this.delTime <= now) {
 			dtlWindow.sellButton = newButton(dtlWindow);
 			dtlWindow.sellButton.innerHTML = "Sell these goods";
 			dtlWindow.sellButton.sendStr = "1080," + this.invoiceNum;
@@ -402,7 +402,7 @@ class shipment {
 				});
 		} else {
 			dtlWindow.button1 = newButton(dtlWindow);
-			dtlWindow.button1.innerHTML = "Speed Up Delivery";
+			dtlWindow.button1.innerHTML = "Speed Up Delivery " + (this.delTime - now) + " seconds left";
 			dtlWindow.button1.sendStr = "1081,"+this.invoiceNum;
 			dtlWindow.button1.addEventListener("click", function  () {
 				let transMenu = addDiv("", "", dtlWindow);
