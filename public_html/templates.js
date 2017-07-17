@@ -679,7 +679,7 @@ class pane {
 		this.divEl.parentNode.removeChild(this.divEl);
 
 		this.deskHolder.removePane(this);
-		delete this;
+		//delete this;
 	}
 
 	toTop() {
@@ -708,16 +708,39 @@ class regPane extends pane {
 
 class deskTop {
 	constructor () {
-		this.paneList = {};
+		this.paneList = [];
 		//console.log("make list " + this.paneList);
 		//console.log("List keys " + Object.keys(this.paneList))
 		this.id = "a desktop";
 	}
 
 	newPane (desc, type="") {
-		//console.log("start list " + Object.keys(this.paneList))
+		console.log("start list " + Object.keys(this.paneList));
+		var newPaneSpot;
+		newPaneSpot = this.paneList.length;
+		for (let i=0; i<this.paneList.length; i++) {
+			if (this.paneList[i].desc == desc) {
+				console.log(this.paneList);
+				console.log("already made: " + this.constructor.name + " -> " + Object.keys(this.paneList));
+				newPaneSpot = i;
+				break;
+			}
+		}
+		console.log(newPaneSpot);
+		if (type == "menu") {
+			var mkPane = new menu(desc, this);
+			this.paneList[newPaneSpot] = mkPane;
+			console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
+		} else {
+			var mkPane = new regPane(desc, this);
+			//console.log(mkPane);
+			this.paneList[newPaneSpot] = mkPane;
+			console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
+		}
+		/*
 		if (this.paneList[desc]) {
-			//console.log("already made: " + this.constructor.name + " -> " + Object.keys(this.paneList));
+			console.log(this.paneList);
+			console.log("already made: " + this.constructor.name + " -> " + Object.keys(this.paneList));
 		} else {
 			if (type == "menu") {
 				var mkPane = new menu(desc, this);
@@ -730,51 +753,72 @@ class deskTop {
 				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			}
 			//console.log("created " + desc);
-		}
-		this.paneToTop(this.paneList[desc]);
-		return this.paneList[desc].divEl.childNodes[1];
+		}*/
+		console.log("Set item " + this.paneList.length + " to top");
+		this.paneToTop(this.paneList[this.paneList.length-1]);
+		return this.paneList[this.paneList.length-1].divEl.childNodes[1];
 	}
 
-	arrangePanes() {
-		var count = 1;
+	arrangePanes(desc, currZ) {
+		for (var i=0; i<this.paneList.length; i++ ) {
+			if (this.paneList[i].desc == desc) {
+				this.paneList[i].divEl.style.zIndex = this.paneList.length;
+			} else {
+				if (this.paneList[i].divEl.style.zIndex > currZ)	this.paneList[i].divEl.style.zIndex -= 1;
+			}
+		}
+		/*
+				var count = 1;
 		for (var item in this.paneList) {
 			//console.log("arrange " + item + " = " + count);
 			this.paneList[item].divEl.style.zIndex = count;
 			count++;
-		}
+		}*/
 	}
 
 	getPane(desc) {
+		for (let i=0; i<this.paneList.length; i++) {
+			if (this.paneList[i].desc == desc) {
+				this.paneToTop(this.paneList[i]);
+				return this.paneList[i].divEl.childNodes[1];
+			}
+		}
+		/*
 		if (this.paneList[desc]) {
-			//console.log("dound " + desc);
 			this.paneToTop(this.paneList[desc]);
 			return this.paneList[desc].divEl.childNodes[1];
 		} else {
-			//console.log(desc + " does not ex");
-		}
+		}*/
 	}
 
 	paneToTop(thisPane) {
-		if (this.paneList[this.paneList.length-1] != thisPane.desc) {
+		console.log(thisPane.desc);
+		if (this.paneList[this.paneList.length-1].desc != thisPane.desc) {
 			//console.log("move " + thisPane.desc + " to the top");
-			delete this.paneList[thisPane.desc];
-			this.paneList[thisPane.desc] = thisPane;
-			this.arrangePanes();
+			//delete this.paneList[thisPane.desc];
+			//this.paneList[thisPane.desc] = thisPane;
+			this.arrangePanes(thisPane.desc, thisPane.divEl.style.zIndex);
 		}
 	}
 
 	removePane (thisPane) {
-		//console.log("Base array " + Object.keys(this.paneList));
-		//console.log("remove from " + this.constructor.name + " looking for " + thisPane.desc);
-		//this.paneList.splice(thisPane.desc, 1);
-		//console.log(this.paneList[thisPane.desc]);
-		//console.log(this.paneList[thisPane.desc].parentNode);
-		//this.paneList[thisPane.desc].parentNode.removeChild(this.paneList[thisPane.desc]);
-		let x = this.paneList[thisPane.desc].divEl;
-		console.log(x);
-		console.log(x.parentNode);
+		console.log(this.paneList);
+		console.log(Object.keys(this.paneList));
 
-		delete this.paneList[thisPane.desc];
+		console.log(thisPane.desc + " --> " + this.paneList.length);
+		for (let i=0; i<this.paneList.length; i++) {
+			console.log("check item " + i);
+			if (this.paneList[i].desc == thisPane.desc) {
+				this.paneList.splice(i, 1);
+				console.log("delete spot " + i);
+			} else {
+				console.log(this.paneList[i].desc + " != " +  thisPane.desc)
+			}
+		}
+		//delete this.paneList[thisPane.desc];
+
+		console.log(this.paneList);
+		console.log(Object.keys(this.paneList));
 
 		//let i = this.paneList.indexOf(thisPane.desc);
 		//console.log("delete index " + i);
@@ -1246,7 +1290,7 @@ showShipments = function (list, trg) {
 updateShipment = function(dat, list) {
 	for (var i=0; i<list.length; i++) {
 		if (list[i].invoiceNum == dat[9]) {
-			console.log(list[i].invoiceNum + " == " + dat[9]);
+			console.log(list[i]);
 			list[i].update(dat);
 		}
 	}
@@ -1960,7 +2004,7 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 
 	let sendButton = newButton(salePane.head);
 	sendButton.innerHTML = "Place Order";
-	sendButton.sendStr = sendStr;
+	sendButton.sendStr = sendStr + "," + saleQty;
 	sendButton.addEventListener("click", function () {
 		let nuSendStr = "1017," + this.sendStr + "," + selectedRouteList.join(",");
 		scrMod(nuSendStr);

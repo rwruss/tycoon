@@ -87,8 +87,7 @@
 
 
 TO DO:
-Show correct shipment information for a company in 1002
-verify total distance in each path calculatoin
+Adjust demand to 32 bytes per product in makecityFile & 1079
 $useDistance not working in makeCityFile line 196
 PREMIUM CURRENCY - use for premium employees and factory upgrades
 Construction in progress list
@@ -187,6 +186,8 @@ TIme delay for shipping/selling items to a city
 Demographic demand effects
   - things for rich people and poor people (yachts, cigarettes)
   - demand by education, etc
+Show correct shipment information for a company in 1002
+verify total distance in each path calculatoin
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

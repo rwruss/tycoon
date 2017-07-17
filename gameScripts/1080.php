@@ -65,7 +65,7 @@ for ($i=0; $i<sizeof($populationDemo); $i++) {
 
 $usePrice = calcPrice($demandQty, $payDemos, $currentSupply);
 print_r($demandQty);
-echo 'Function price is '.calcPrice($demandQty, $payDemos, $currentSupply);
+echo 'Function price is '.$usePrice;
 
 //$usePrice *= $buyingCity->get('pollutionAdj')*$buyingCity->get('rightsAdj');
 
@@ -84,8 +84,8 @@ $useTaxRates = taxRates($transInfo, $sellingFactory, $buyingCity, $sellingCity, 
 $taxCost = taxCost($useTaxRates, $transInfo);
 
 // transfer funds
-$grossSale = $invoiceInfo[3] * $usePrice;
-$taxTotal = intval(array_sum($taxCost));
+$grossSale = $invoiceInfo[3] * $usePrice*100;
+$taxTotal = intval(array_sum($taxCost))*100;
 $profit = $grossSale - $taxTotal;
 echo 'Sale price is '.$usePrice.' for a total sale value of '.$usePrice.' x '.$invoiceInfo[3].' = '.$grossSale.'<br>
 Tax Cost is '.$taxTotal.' for a final profit of '.$profit;

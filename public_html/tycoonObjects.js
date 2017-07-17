@@ -76,10 +76,11 @@ class factory extends object {
 		if (target.divType != "factorySummary") {
 			thisDiv = addDiv(null, 'udHolder', target);
 			this.instances.push(thisDiv);
+			let me = this;
 			thisDiv.updateFunction = function (x) {
 				console.log("update summary");
 				me.renderSummary(x)};
-			let me = this;
+
 		}
 		else {
 			thisDiv = target;
@@ -120,7 +121,6 @@ class factory extends object {
 	}
 
 	itemBar(target, prodIndex, sendStr) {
-		console.log("render item Bar");
 		event.stopPropagation();
 		var container;
 		if (target.instanceType == "itemBar") {
@@ -317,10 +317,14 @@ class shipment {
 		this.cityPop = dat[20];
 		this.price = -1;
 
-		this.nationalDemos = dat.slice(21, 33); // 12 items
-		let tmpGroups = dat.slice(33, 43); // 10 items
-		this.supplyHead = dat.slice(43, 46); // 3 items
-		let tmpDemand = dat.slice(46, 56); // 10 items
+		this.instances = [];
+
+		this.nationalDemos = dat.slice(21, 33); // 12 items national pay demographics
+		let tmpGroups = dat.slice(33, 43); // 10 items product demand by decile
+		this.supplyHead = dat.slice(43, 46); // 3 items supply head ???
+		let tmpDemand = dat.slice(46, 56); // 10 items income groups levels
+		console.log(dat);
+		console.log(tmpDemand);
 
 		let tmpA = [0];
 		this.incomeGroups = tmpA.concat(tmpGroups);
@@ -350,12 +354,32 @@ class shipment {
 		this.labCost = dat[15];
 		this.fromFac = dat[16];
 		this.trgCity = dat[17];
+
+		for (var i=0; i<this.instances.length; i++) {
+			console.log(this.instances[i])
+			this.instances[i].updateFunction(this.instances[i]);
+		}
 	}
 
 	renderSummary(trg) {
+		let container;
+		console.log(trg.divType)
+		if (trg.divType == "summary") {
+			container = trg;
+			container.innerHTML = "";
+			if (this.status == 99) {
+				container.parentNode.removeChild(container);
+				return;
+			}
+		} else {
+			if (this.status == 99) return;
+			container = addDiv("", "shipContain", trg);
+			this.instances.push(container);
+		}
 		console.log(this);
 
-		let container = addDiv("", "shipContain", trg);
+		container.divType = "summary";
+
 		productArray[this.prodID].renderDtls(container, this.qty, this.matCost, this.labCost, this.qual, this.poll);
 		container.shipment = this;
 
@@ -369,12 +393,14 @@ class shipment {
 		container.dest = addDiv("", "", container);
 		container.dest.innerHTML = "city " + this.trgCity;
 
+		console.log("This price is " + this.price);
 		if (this.price < 0) {
 			this.price = productPrice(this.qty, 0, this.nationalDemos, this.productDemand, this.incomeGroups, 0);
 		}
+		console.log("This price is " + this.price);
 
 		container.price = addDiv("", "shipPrice", container);
-		container.price.innerHTML = "$ " + this.price;
+		container.price.innerHTML = "$ " + this.price.toFixed(2);
 
 		container.fromFac = addDiv("", "", container);
 		container.fromFac.innerHTML = "From: " + this.fromFac;
@@ -382,6 +408,12 @@ class shipment {
 		container.addEventListener("click", function (e) {
 			e.stopPropagation();
 			this.shipment.renderMenu()});
+
+		container.instanceType = "summary";
+		container.parentItem = this;
+		container.updateFunction = function () {
+			this.parentItem.renderSummary(this);
+		}
 	}
 
 	renderMenu() {
@@ -397,7 +429,7 @@ class shipment {
 			dtlWindow.sellButton.addEventListener("click", function () {
 				scrMod(this.sendStr);
 				console.log(useDeskTop.getPane("shipmentDetail"));
-				console.log(useDeskTop.getPane("shipmentDetail").parentObj);
+				console.log(useDeskTop.getPane("shipmentDetail").parentNode.parentObj);
 				useDeskTop.getPane("shipmentDetail").parentNode.parentObj.destroyWindow();
 				});
 		} else {
@@ -677,29 +709,7 @@ class city {
 		if (this.loadedProduct != productID) {
 			this.productDemandLevels = [0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0];
 			let me = this;
-			/*
-			loadData("1079," + this.objID + "," + productID, function(x) {
 
-				let rtnVals = x.split(",");
-				console.log(rtnVals);
-				for (var i=1; i<11; i++) {
-					//console.log("set " + me.productDemandLevels[i] + " to " + rtnVals[i+3]/100)
-					me.productDemandLevels[i] = rtnVals[i+3]/100;
-				}
-
-				currentSupply = x[1];
-				me.loadedProduct = productID;
-
-				let tmpA = me.productDemandLevels.slice();
-				for (let i=0; i<tmpA.length; i++) {
-					tmpA[i] *= me.population;
-				}
-
-				let funcTest = productPrice(qty, productID, me.nationalPayDemos, tmpA, me.incomeLvls, 0);
-				console.log(funcTest);
-				return funcTest;
-				});
-				*/
 				var assEat = async function(str) {
 					console.log("eat the ass");
 					let x = await loadDataPromise(str);
@@ -731,6 +741,7 @@ class city {
 					console.log(v);
 					return v;
 				});
+				console.log("return " + returnVal);
 				return returnVal;
 		} else {
 			console.log(this.productDemandLevels);

@@ -72,8 +72,11 @@ for ($i=0; $i<$numCities; $i++) {
 
 fclose($cityFile);
 
+
+$supplySize = $numCities * $numProducts * 32;
+
 $supplyFile = fopen('citySupply.csf', 'wb');
-fseek($supplyFile, 1040000-4);
+fseek($supplyFile, $supplySize-4);
 fwrite($supplyFile, pack('i', 0));
 fclose($supplyFile);
 

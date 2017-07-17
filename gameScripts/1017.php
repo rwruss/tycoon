@@ -260,6 +260,10 @@ $shipmentList = array_merge($shipmentList, $nationalPay);
 $incomeLvls = [25, 25, 23, 10, 6, 3, 3, 2, 2, 1];
 $shipmentList = array_merge($shipmentList, $incomeLvls);
 
+$shipmentList[] = 999;
+$shipmentList[] = 999;
+$shipmentList[] = 999;
+
 // read city product demand
 fseek($supplyFile, $invoiceInfo[18]*$supplyBlockSize + $invoiceInfo[2]*40);
 $supplyDat = fread($supplyFile, 40);
