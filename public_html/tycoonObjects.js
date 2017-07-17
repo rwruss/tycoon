@@ -1,20 +1,4 @@
 class object {
-	/*
-	constructor(options) {
-		this.type = options.objType || 'unknown',
-		this.unitName = options.objName || 'unnamed',
-		this.status = options.status || 0,
-		this.objID = options.objID;
-	}
-
-	update(object) {
-		this.status = object.status || this.status,
-		this.str = object.strength || this.str,
-		this.subType = object.subType || this.subType,
-		this.unitName = object.unitName || this.unitName,
-		this.tNum = object.tNum || this.tNum;
-		console.log("update unit " + this);
-	}*/
 	renderUpdate() {
 		console.log("updating... " + this.instances.length + " items");
 		//console.log(this.instances);
@@ -386,8 +370,12 @@ class shipment {
 		container.arriveTime = addDiv("", "", container);
 		//console.log(this.delTime);
 		var currTime = new Date().getTime() / 1000
+		let shipStatus = ["unknown", "Not Paid", "Paid", "In transit", "Delivered"];
 		let d = new Date(this.delTime*1000);
-		container.arriveTime.innerHTML = "C:" + currTime + " / " + this.delTime + "<br>Status: " + this.status + "<br> " + d.getDate() + " / " + (d.getMonth()+1) + " / " + d.getFullYear() + "<br>"+
+		
+		if (d <= currTime && this.status == 3) this.status = 4;
+		
+		container.arriveTime.innerHTML = "<br>Status: " + shipStatus[this.status] + "<br> " + d.getDate() + " / " + (d.getMonth()+1) + " / " + d.getFullYear() + "<br>"+
 			d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
 
 		container.dest = addDiv("", "", container);

@@ -221,7 +221,7 @@ fclose($routeFile);
 // Create transaction (invoice) for the city and assign an anticipated time of arrival
 $now = time();
 $invoiceInfo = array_fill(1, 20, 0);
-$invoiceInfo[1] = 3; // status: unsold to city
+$invoiceInfo[1] = 3; // status: in transit
 $invoiceInfo[2] = $postVals[3]; // Proudct ID
 $invoiceInfo[3] = $postVals[4]; // Qty
 $invoiceInfo[4] = 0; // contract Price (TBD)

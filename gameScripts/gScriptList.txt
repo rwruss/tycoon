@@ -87,6 +87,7 @@
 
 
 TO DO:
+Premium boosts from premium management
 Adjust demand to 32 bytes per product in makecityFile & 1079
 $useDistance not working in makeCityFile line 196
 PREMIUM CURRENCY - use for premium employees and factory upgrades
