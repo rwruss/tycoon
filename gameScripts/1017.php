@@ -260,16 +260,23 @@ $shipmentList = array_merge($shipmentList, $nationalPay);
 $incomeLvls = [25, 25, 23, 10, 6, 3, 3, 2, 2, 1];
 $shipmentList = array_merge($shipmentList, $incomeLvls);
 
-$shipmentList[] = 999;
-$shipmentList[] = 999;
-$shipmentList[] = 999;
+//$shipmentList[] = 999;
+//$shipmentList[] = 999;
+//$shipmentList[] = 999;
 
 // read city product demand
+echo 'Seek to '.($invoiceInfo[18]*$supplyBlockSize + $invoiceInfo[2]*40).'<br>';
 fseek($supplyFile, $invoiceInfo[18]*$supplyBlockSize + $invoiceInfo[2]*40);
 $supplyDat = fread($supplyFile, 40);
 
 $demandHead = unpack('i*', substr($supplyDat, 0, 12));
 $productDemand = unpack('s*', substr($supplyDat, 12, 20));
+
+echo '<p>DEMAND HEAD:<br>';
+print_r($demandHead);
+
+echo '<p>Product Demand:<br>';
+print_r($productDemand);
 
 $productDemand = [1, 2, 3, 4, 0, 0, 0, 0, 0, 0];
 $shipmentList = array_merge($shipmentList, $demandHead, $productDemand);

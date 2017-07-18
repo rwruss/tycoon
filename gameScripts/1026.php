@@ -10,12 +10,7 @@ $thisBusiness = loadObject($pGameID, $objFile, 400);
 
 echo '<script>
 thisDiv = useDeskTop.newPane("hireLabor");
-//useDeskTop.getPane("hireLabor");
-//useDeskTop.paneToTop(thisDiv.parentNode.parentObj);
 thisDiv.innerHTML = "";
-//cityList = [new city([1, "Round Rock"], [], [])];
-
-//console.log(cityList);
 for (var i=0; i<cityList.length; i++) {
   let thisCity = cityList[i].renderSummary(thisDiv);
   let cityNum = cityList[i].objID;

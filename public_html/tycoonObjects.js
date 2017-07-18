@@ -369,12 +369,12 @@ class shipment {
 
 		container.arriveTime = addDiv("", "", container);
 		//console.log(this.delTime);
-		var currTime = new Date().getTime() / 1000
+		var currTime = new Date().getTime();
 		let shipStatus = ["unknown", "Not Paid", "Paid", "In transit", "Delivered"];
 		let d = new Date(this.delTime*1000);
-		
-		if (d <= currTime && this.status == 3) this.status = 4;
-		
+
+		if (this.delTime*1000 <= currTime && this.status == 3) this.status = 4;
+
 		container.arriveTime.innerHTML = "<br>Status: " + shipStatus[this.status] + "<br> " + d.getDate() + " / " + (d.getMonth()+1) + " / " + d.getFullYear() + "<br>"+
 			d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
 
@@ -407,11 +407,13 @@ class shipment {
 	renderMenu() {
 		let dtlWindow = useDeskTop.newPane("shipmentDetail");
 		dtlWindow.innerHTML = "";
+		dtlWindow.shipment = addDiv("", "stdContain", dtlWindow);
+		dtlWindow.factory = addDiv("", "stdContain", dtlWindow);
 
-		this.renderSummary(dtlWindow);
+		this.renderSummary(dtlWindow.shipment);
 		let now = new Date().getTime()/1000;
 		if (this.delTime <= now) {
-			dtlWindow.sellButton = newButton(dtlWindow);
+			dtlWindow.sellButton = newButton(dtlWindow.shipment);
 			dtlWindow.sellButton.innerHTML = "Sell these goods";
 			dtlWindow.sellButton.sendStr = "1080," + this.invoiceNum;
 			dtlWindow.sellButton.addEventListener("click", function () {
@@ -421,7 +423,7 @@ class shipment {
 				useDeskTop.getPane("shipmentDetail").parentNode.parentObj.destroyWindow();
 				});
 		} else {
-			dtlWindow.button1 = newButton(dtlWindow);
+			dtlWindow.button1 = newButton(dtlWindow.shipment);
 			dtlWindow.button1.innerHTML = "Speed Up Delivery " + (this.delTime - now) + " seconds left";
 			dtlWindow.button1.sendStr = "1081,"+this.invoiceNum;
 			dtlWindow.button1.addEventListener("click", function  () {
@@ -436,6 +438,12 @@ class shipment {
 					console.log("did something 409" + v)
 				});
 			});
+		}
+
+	for (var i=0; i<playerFactories.length; i++) {
+		if (playerFactories[i].objID == this.fromFac) {
+			playerFactories[i].renderSummary(dtlWindow.factory);
+			}
 		}
 	}
 }
