@@ -300,6 +300,7 @@ class shipment {
 		this.trgCity = dat[17];
 		this.cityPop = dat[20];
 		this.price = -1;
+		this.taxRates = [];
 
 		this.instances = [];
 
@@ -405,6 +406,13 @@ class shipment {
 	}
 
 	renderMenu() {
+		if (this.taxRates.length == 0) {
+			// get the tax rates
+			getASync("1086,"+this.invoiceNum).then(v => {
+			this.taxRates = v.split(",");
+			});
+		}
+		
 		let dtlWindow = useDeskTop.newPane("shipmentDetail");
 		dtlWindow.innerHTML = "";
 		dtlWindow.shipment = addDiv("", "stdContain", dtlWindow);

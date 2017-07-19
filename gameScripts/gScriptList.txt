@@ -83,10 +83,11 @@
 1083 - PROCESS: Add default construction points to a factory
 1084 - PROCESS: Show shipping opotions for sale to city
 1085 - PROCESS: Receive shipping and sale order for a city/factory
-1086 - NOT USED
+1086 - PROCESS: Get tax rates for a shipment
 
 
 TO DO:
+Show each tax category rate when selling a shipment that has arrived at a city
 Verify citysupplyfile size and spots fopen($gamePath.'/citySupply.csf', 'rb');
 Premium boosts from premium management
 Adjust demand to 32 bytes per product in makecityFile & 1079

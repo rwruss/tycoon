@@ -2059,6 +2059,11 @@ getRoutes = async function(val) {
 	return r;
 }
 
+getASync = async function (val) {
+	let r = await loadDataPromise(val);
+	return r;
+}
+
 setArrayInts = function (a) {
 	result = a.map(function (x) {return parseInt(x)})
 	return result;
