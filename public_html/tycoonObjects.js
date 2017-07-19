@@ -45,7 +45,7 @@ class factory extends object {
 		this.currentRate = dat[2];
 		this.prodDtls = dat.slice(16, 41);
 		this.taxes = dat.slice(41,72) || this.taxes;
-		this.taxes.push(6,1,2,25);
+		this.taxes.push(6,1,2,25);  // test sting
 		console.log(this.prodDtls);
 	}
 
