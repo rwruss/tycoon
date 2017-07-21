@@ -76,7 +76,7 @@
 1076 - PROCESS: Cancel a contract that hasn't been executed
 1077 - PROCESS: Pay an invoice
 1078 - MENU: Show comapny invoices outstanding
-1079 - PROCESS: Load demand info for a product at a city
+1079 - PROCESS: Load demand info for a product at a city by decile
 1080 - PROCESS: Sell delivery that is at a city
 1081 - PROCESS: Load transport options for a shipment to a city
 1082 - PROCESS: Set a new price for construction at a factory
@@ -84,9 +84,10 @@
 1084 - PROCESS: Show shipping opotions for sale to city
 1085 - PROCESS: Receive shipping and sale order for a city/factory
 1086 - PROCESS: Get tax rates for a shipment
-
+1087 - PROCESS: Load city pay and demand information for a shipment pricing
 
 TO DO:
+Turn on city/national pay in 1027 and 1087 for real pay amounts at cities
 Show each tax category rate when selling a shipment that has arrived at a city
 Verify citysupplyfile size and spots fopen($gamePath.'/citySupply.csf', 'rb');
 Premium boosts from premium management

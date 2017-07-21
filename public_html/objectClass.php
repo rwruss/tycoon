@@ -251,7 +251,7 @@ class factory extends object {
 	}
 
 	function adjProduct($prodIndex, $sentQual, $sentPol, $sentRights, $materialCost, $laborCost) {
-		
+
 		$this->objDat[$this->productStats + $prodIndex*5] -= $sentQual;
 		$this->objDat[$this->productStats + $prodIndex*5+1] -= $sentPol;
 		$this->objDat[$this->productStats + $prodIndex*5+2] -= $sentRights;
@@ -494,7 +494,7 @@ class city extends object {
 	function __construct($id, $dat, $file, $binDat) {
 		parent::__construct($id, $dat, $file);
 
-		echo 'Bin dat length of '.strlen($binDat);
+		//echo 'Bin dat length of '.strlen($binDat);
 		$this->binDat = $binDat;
 		$this->supplyBlockSize = 360000;
 		$this->priceBlockSize = 40000;
@@ -668,7 +668,7 @@ class product extends object {
 	public $reqMaterials, $reqLabor;
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->itemBlockSize = 100;
 
 		$this->attrList['numMaterial'] = 11;
@@ -742,16 +742,16 @@ class school {
 class project extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->attrList['owner'] = 1;
 		$this->attrList['factoryID'] = 2;
 		$this->attrList['factoryType'] = 3;
 		$this->attrList['totalPoints'] = 4;
 		$this->attrList['currPoints'] = 5;
-		
+
 		$this->attrList['currPrice'] = 6;
 		$this->attrList['status'] = 6;
-		
+
 		$this->attrList['nextProj'] = 24;
 		$this->attrList['pvsProj'] = 25;
 	}
@@ -800,7 +800,7 @@ function loadUser($id, $file) {
 function loadProject($id, $file) {
 	fseek($file, $id);
 	$dat = unpack('i*', fread($file, 100));
-	
+
 	return new project($id, $dat, $file);
 }
 

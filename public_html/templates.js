@@ -1977,7 +1977,7 @@ productPrice = function (qty, productID, nationalPayDemos, productDemand, income
 			remSupply -= lastSupply;
 			remDemand = totalDemand[i] - lastSupply;
 
-			//console.log(i + ": Rem Dem = " + remDemand + " ->> " + totalDemand[i] + " - " + lastSupply);
+			console.log(i + ": Rem Dem = " + remDemand + " ->> " + totalDemand[i] + " - " + lastSupply + " / Rem Supply: " + remSupply);
 
 			if (remDemand > 0) {
 				lastInterval = i;
@@ -2070,6 +2070,8 @@ setArrayInts = function (a) {
 }
 
 taxTable = function (rates, trg) {
+	rates = setArrayInts(rates);
+	console.log(rates);
 	let taxTable = document.createElement("table");
 	taxTable.className = "taxTable";
 	taxTable.cells = new Array();
@@ -2089,44 +2091,44 @@ taxTable = function (rates, trg) {
 	taxTable.rows[0].cells[4].innerHTML = "T";
 
 	taxTable.rows[1].cells[0].innerHTML = "IT";
-	taxTable.rows[1].cells[1].innerHTML = this.taxes[0]/100;
-	taxTable.rows[1].cells[2].innerHTML = this.taxes[10]/100;
-	taxTable.rows[1].cells[3].innerHTML = this.taxes[20]/100;
-	total = this.taxes[0]/100 + this.taxes[10]/100 + this.taxes[20]/100;
+	taxTable.rows[1].cells[1].innerHTML = (rates[0]/100).toFixed(2);
+	taxTable.rows[1].cells[2].innerHTML = rates[10]/100;
+	taxTable.rows[1].cells[3].innerHTML = rates[20]/100;
+	total = rates[0]/100 + rates[10]/100 + rates[20]/100;
 	taxTable.rows[1].cells[4].innerHTML = total.toFixed(2);
 
 	taxTable.rows[2].cells[0].innerHTML = "PT";
-	taxTable.rows[2].cells[1].innerHTML = this.taxes[1]/100;
-	taxTable.rows[2].cells[2].innerHTML = this.taxes[11]/100;
-	taxTable.rows[2].cells[3].innerHTML = this.taxes[21]/100;
-	total = this.taxes[3]/100 + this.taxes[11]/100 + this.taxes[21]/100;
+	taxTable.rows[2].cells[1].innerHTML = rates[1]/100;
+	taxTable.rows[2].cells[2].innerHTML = rates[11]/100;
+	taxTable.rows[2].cells[3].innerHTML = rates[21]/100;
+	total = rates[3]/100 + rates[11]/100 + rates[21]/100;
 	taxTable.rows[2].cells[4].innerHTML = total.toFixed(2);
 
 	taxTable.rows[3].cells[0].innerHTML = "VT";
-	taxTable.rows[3].cells[1].innerHTML = this.taxes[2]/100;
-	taxTable.rows[3].cells[2].innerHTML = this.taxes[12]/100;
-	taxTable.rows[3].cells[3].innerHTML = this.taxes[22]/100;
-	total = this.taxes[2]/100 + this.taxes[12]/100 + this.taxes[22]/100;
+	taxTable.rows[3].cells[1].innerHTML = rates[2]/100;
+	taxTable.rows[3].cells[2].innerHTML = rates[12]/100;
+	taxTable.rows[3].cells[3].innerHTML = rates[22]/100;
+	total = rates[2]/100 + rates[12]/100 + rates[22]/100;
 	taxTable.rows[3].cells[4].innerHTML = total.toFixed(2);
 
 	taxTable.rows[4].cells[0].innerHTML = "PI";
-	taxTable.rows[4].cells[1].innerHTML = this.taxes[3]/100;
-	taxTable.rows[4].cells[2].innerHTML = this.taxes[13]/100;
-	taxTable.rows[4].cells[3].innerHTML = this.taxes[23]/100;
-	total = this.taxes[3]/100 + this.taxes[13]/100 + this.taxes[23]/100;
+	taxTable.rows[4].cells[1].innerHTML = rates[3]/100;
+	taxTable.rows[4].cells[2].innerHTML = rates[13]/100;
+	taxTable.rows[4].cells[3].innerHTML = rates[23]/100;
+	total = rates[3]/100 + rates[13]/100 + rates[23]/100;
 	taxTable.rows[4].cells[4].innerHTML = total.toFixed(2);
 
 	taxTable.rows[5].cells[0].innerHTML = "PO";
-	taxTable.rows[5].cells[1].innerHTML = this.taxes[4]/100;
-	taxTable.rows[5].cells[2].innerHTML = this.taxes[14]/100;
-	taxTable.rows[5].cells[3].innerHTML = this.taxes[24]/100;
-	total = this.taxes[4]/100 + this.taxes[14]/100 + this.taxes[24]/100;
+	taxTable.rows[5].cells[1].innerHTML = rates[4]/100;
+	taxTable.rows[5].cells[2].innerHTML = rates[14]/100;
+	taxTable.rows[5].cells[3].innerHTML = rates[24]/100;
+	total = rates[4]/100 + rates[14]/100 + rates[24]/100;
 	taxTable.rows[5].cells[4].innerHTML = total.toFixed(2);
 
 	taxTable.rows[6].cells[0].innerHTML = "RT";
-	taxTable.rows[6].cells[1].innerHTML = this.taxes[5]/100;
-	taxTable.rows[6].cells[2].innerHTML = this.taxes[15]/100;
-	taxTable.rows[6].cells[3].innerHTML = this.taxes[25]/100;
-	total = this.taxes[5]/100 + this.taxes[15]/100 + this.taxes[25]/100;
+	taxTable.rows[6].cells[1].innerHTML = rates[5]/100;
+	taxTable.rows[6].cells[2].innerHTML = rates[15]/100;
+	taxTable.rows[6].cells[3].innerHTML = rates[25]/100;
+	total = rates[5]/100 + rates[15]/100 + rates[25]/100;
 	taxTable.rows[6].cells[4].innerHTML = total.toFixed(2);
 }

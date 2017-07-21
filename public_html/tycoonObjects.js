@@ -301,6 +301,7 @@ class shipment {
 		this.cityPop = dat[20];
 		this.price = -1;
 		this.taxRates = [];
+		this.demands = [];
 
 		this.instances = [];
 
@@ -406,20 +407,43 @@ class shipment {
 	}
 
 	renderMenu() {
-		if (this.taxRates.length == 0) {
-			// get the tax rates
-			getASync("1086,"+this.invoiceNum).then(v => {
-			this.taxRates = v.split(",");
-			});
-		}
-		
 		let dtlWindow = useDeskTop.newPane("shipmentDetail");
 		dtlWindow.innerHTML = "";
 		dtlWindow.shipment = addDiv("", "stdContain", dtlWindow);
 		dtlWindow.factory = addDiv("", "stdContain", dtlWindow);
 		dtlWindow.taxes = addDiv("", "stdContain", dtlWindow);
-		
-		taxTable(this.taxRates, dtlWindow.taxes);
+
+		if (this.taxRates.length == 0) {
+			// get the tax rates
+			getASync("1086,"+this.invoiceNum).then(v => {
+			this.taxRates = v.split(",");
+			taxTable(this.taxRates, dtlWindow.taxes);
+			});
+		}
+		if (this.demands.length == 0) {
+			let returnVal = getASync("1087," + this.trgCity + "," + this.prodID).then(v => {
+				let tmpA = v.split(",");
+				this.demands = tmpA.slice(0, 12);
+				this.cityIncome = tmpA.slice(12, 24);
+				this.nationalIncome = tmpA.slice(24,36);
+				this.population = tmpA.slice(36);
+				console.log(v);
+				console.log(this.demands);
+				console.log(this.cityIncome);
+				console.log(this.nationalIncome);
+				console.log(this.population);
+
+				tmpA = this.demands;
+				for (let i=0; i<tmpA.length; i++) {
+					tmpA[i] *= this.population;
+				}
+
+				let funcTest = productPrice(this.qty, this.prodID, this.nationalIncome, tmpA, this.cityIncome, 0); //qty, productID, me.nationalPayDemos, tmpA, me.incomeLvls, 0
+				console.log(funcTest);
+				return v;
+			});
+		}
+
 
 		this.renderSummary(dtlWindow.shipment);
 		let now = new Date().getTime()/1000;
@@ -703,13 +727,6 @@ class city {
 			return funcTest;
 
 		}
-		//console.log(this.productDemandLevels);
-		/*
-
-		*/
-		//
-		/*
-		*/
 	}
 }
 

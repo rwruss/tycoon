@@ -6,7 +6,7 @@ general script for calculating taxes on transactions between two factories
 
 function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID]
 	for ($i=11; $i<sizeof($slotData); $i+=4) {
-    echo $thisInfo[$slotData[$i]].' vs '.$slotData[$i+2].' --> ';
+    //echo "taxCalcs.php (9): "$thisInfo[$slotData[$i]].' vs '.$slotData[$i+2].' --> ';
 		if ($thisInfo[$slotData[$i]] == $slotData[$i+2]) {
       //echo 'adjust tax type '.$slotData[$i+1].' by '.$slotData[$i+3].' ('.$thisInfo[$slotData[$i]].' == '.$slotData[$i+2].')';
 			$taxList[$slotData[$i+1]] += $slotData[$i+3];

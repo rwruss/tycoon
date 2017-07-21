@@ -31,7 +31,7 @@ $sellingPlayer = loadObject($pGameID, $objFile, 400);
 // calculate the taxes
 $transInfo = array_fill(0, 20, 0);
 $transInfo[1] = $invoiceInfo[3];
-$transInfo[2] = $usePrice;
+$transInfo[2] = 0;
 $transInfo[3] = $invoiceInfo[17];
 $transInfo[5] = $invoiceInfo[6];
 $transInfo[6] = $invoiceInfo[7];
