@@ -32,9 +32,13 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $thisCity = loadCity($postVals[1], $cityFile);
 $nationalPay = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 $cityPay = [0, 25, 25, 23, 10, 6, 3, 3, 2, 2, 1, 0];
+
+$cityRegion = loadRegion($buyingCity->get('parentRegion'), $cityFile);
+$cityNation = loadRegion($buyingCity->get('nation'), $cityFile);
+//$nationalPay = $cityNation->regionPay();
 fclose($cityFile);
 
 // override
-echo '0,314,1,2,3,4,5,6,7,8,9,0,'.implode(',', $cityPay).','.implode(',', $nationalPay).',10000';
+echo '0,314,1,2,3,4,5,6,7,8,9,0,'.implode(',', $cityPay).','.implode(',', $nationalPay).','.$thisCity->get('population');
 
 ?>

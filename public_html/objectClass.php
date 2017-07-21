@@ -712,7 +712,14 @@ class region extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
-		$this->attrList['pGDP'] = 23;
+		$this->attrList['money'] = 11;
+		$this->attrList['pGDP'] = 12;
+		$this->attrList['regionTaxSlot'] = 13;
+		$this->attrList['nationTaxSlot'] = 14;
+	}
+	
+	function regionPay() {
+		return array_slice($this->objDat[10, 12]);
 	}
 }
 

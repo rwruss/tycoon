@@ -6,10 +6,10 @@ general script for calculating taxes on transactions between two factories
 
 function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID]
 	for ($i=11; $i<sizeof($slotData); $i+=4) {
-    //echo "taxCalcs.php (9): "$thisInfo[$slotData[$i]].' vs '.$slotData[$i+2].' --> ';
-		if ($thisInfo[$slotData[$i]] == $slotData[$i+2]) {
-      //echo 'adjust tax type '.$slotData[$i+1].' by '.$slotData[$i+3].' ('.$thisInfo[$slotData[$i]].' == '.$slotData[$i+2].')';
-			$taxList[$slotData[$i+1]] += $slotData[$i+3];
+		//echo "taxCalcs.php (9): "$thisInfo[$slotData[$i]].' vs '.$slotData[$i+2].' --> ';
+		if ($thisInfo[$slotData[$i]] == $slotData[$i+2]) { // Check to see if the exemption item matches the item in question
+			//echo 'adjust tax type '.$slotData[$i+1].' by '.$slotData[$i+3].' ('.$thisInfo[$slotData[$i]].' == '.$slotData[$i+2].')';
+			$taxList[$slotData[$i+1]] += $slotData[$i+3]; // adjust the appropriate tax by the adjustment rate
 		}
 	}
 }
@@ -39,27 +39,27 @@ function taxRates($transDat, $sellingFactory, $buyingCity, $sellingCity, $sellin
 
   	// [0, company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID, city ID, region ID, nation ID]
   	$taxInfo = [0,
-		$sellingFactory->get('owner'),
-		$sellingFactory->get('subType'),
-		$sellingFactory->get('industry'),
-		$transDat[3],
+	$sellingFactory->get('owner'),
+	$sellingFactory->get('subType'),
+	$sellingFactory->get('industry'),
+	$transDat[3],
   	$sellingPlayer->get('teamID'),
-		$transDat[7],
-		$sellingFactory->get('region_3'),
-		$sellingFactory->get('region_2'),
-		$sellingFactory->get('region_1')];
+	$transDat[7],
+	$sellingFactory->get('region_3'),
+	$sellingFactory->get('region_2'),
+	$sellingFactory->get('region_1')];
 
-		$taxes = array_fill(0,31,0);
+	$taxes = array_fill(0,31,0);
 
-		// Calculate import/tarrif taxes for the buyer
-		if ($buyingCity != null) {
-	  	$importTaxEx = new itemSlot($buyingCity->get('nTax'), $slotFile, 40);
-	    $importTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
-	  	$taxes[29] = $importTaxEx->slotData[9];
-	  	calcTaxes($importTaxEx->slotData, $taxInfo, $taxes);
-		}
+	// Calculate import/tarrif taxes for the buyer
+	if ($buyingCity != null) {
+		$importTaxEx = new itemSlot($buyingCity->get('nTax'), $slotFile, 40);
+		$importTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
+		$taxes[29] = $importTaxEx->slotData[9];
+		calcTaxes($importTaxEx->slotData, $taxInfo, $taxes);
+	}
 
-		$cityTaxEx = new itemSlot($sellingCity->get('cTax'), $slotFile, 40);
+	$cityTaxEx = new itemSlot($sellingCity->get('cTax'), $slotFile, 40);
   	$regionTaxEx = new itemSlot($sellingCity->get('rTax'), $slotFile, 40);
   	$nationTaxEx = new itemSlot($sellingCity->get('nTax'), $slotFile, 40);
 
