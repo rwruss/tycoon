@@ -321,7 +321,7 @@ class shipment {
 		this.productDemand[0] = 0;
 
 		for (let i=0; i<tmpDemand.length; i++) {
-			this.productDemand[i+1] = tmpDemand[i]*this.cityPop;
+			this.productDemand[i+1] = tmpDemand[i]*this.cityPop/100;
 		}
 		this.productDemand.push(0);
 	}
@@ -435,7 +435,7 @@ class shipment {
 
 				tmpA = this.demands;
 				for (let i=0; i<tmpA.length; i++) {
-					tmpA[i] *= this.population;
+					tmpA[i] *= this.population/100;
 				}
 
 				let funcTest = productPrice(this.qty, this.prodID, this.nationalIncome, tmpA, this.cityIncome, 0); //qty, productID, me.nationalPayDemos, tmpA, me.incomeLvls, 0
@@ -695,6 +695,7 @@ class city {
 					currentSupply = x[1];
 					me.loadedProduct = productID;
 
+					console.log("Population:" + me.population);
 					let tmpA = me.productDemandLevels.slice();
 					for (let i=0; i<tmpA.length; i++) {
 						tmpA[i] *= me.population;

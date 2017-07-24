@@ -717,9 +717,9 @@ class region extends object {
 		$this->attrList['regionTaxSlot'] = 13;
 		$this->attrList['nationTaxSlot'] = 14;
 	}
-	
+
 	function regionPay() {
-		return array_slice($this->objDat[10, 12]);
+		return array_slice($this->objDat(10, 12));
 	}
 }
 

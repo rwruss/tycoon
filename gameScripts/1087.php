@@ -33,8 +33,8 @@ $thisCity = loadCity($postVals[1], $cityFile);
 $nationalPay = [0, 1, 1.25, 1.75, 3, 8, 12, 27, 80, 523, 1024, 2768];
 $cityPay = [0, 25, 25, 23, 10, 6, 3, 3, 2, 2, 1, 0];
 
-$cityRegion = loadRegion($buyingCity->get('parentRegion'), $cityFile);
-$cityNation = loadRegion($buyingCity->get('nation'), $cityFile);
+$cityRegion = loadRegion($thisCity->get('parentRegion'), $cityFile);
+$cityNation = loadRegion($thisCity->get('nation'), $cityFile);
 //$nationalPay = $cityNation->regionPay();
 fclose($cityFile);
 
