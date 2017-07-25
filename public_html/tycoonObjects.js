@@ -1065,9 +1065,12 @@ class gamePlayer {
 		this.playerID = data[0];
 		this.moneyCash = data[1] || 0;
 		this.moneyGold = data[2] || 0;
+		this.transport = data[3] || 0;
 		this.money = this.moneyCash;
 		this.gold = this.moneyGold;
 		this.boosts = new Array();
+		this.transOptions = new Array();
+		this.transRoutes = new Array();
 	}
 
 	set money (x) {

@@ -104,6 +104,12 @@ sendButton.addEventListener("click", function (e) {
 sendButton.innerHTML = "Build a new facility";
 textBlob("", businessDiv.laborHead, "company labor");
 
+transButton = newButton(headSection);
+transButton.addEventListener("click", function (e) {
+	e.stopPropagation();
+	transportMenu();});
+transButton.innerHTML = "Transport Options";
+
 tmpLabor = companyLabor;
 companyLaborList(tmpLabor, businessDiv.laborSection);
 

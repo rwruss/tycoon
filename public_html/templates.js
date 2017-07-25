@@ -765,7 +765,7 @@ class deskTop {
 	}
 
 	arrangePanes(desc, currZ) {
-		console.log(desc + " currZ " + currZ);
+		//console.log(desc + " currZ " + currZ);
 		for (var i=0; i<this.paneList.length; i++ ) {
 			if (this.paneList[i].desc == desc) {
 				this.paneList[i].divEl.style.zIndex = this.paneList.length;
@@ -802,7 +802,7 @@ class deskTop {
 	}
 
 	paneToTop(thisPane) {
-		console.log(thisPane.desc);
+		//console.log(thisPane.desc);
 		if (this.paneList[this.paneList.length-1].desc != thisPane.desc) {
 			//console.log("move " + thisPane.desc + " to the top");
 			//delete this.paneList[thisPane.desc];
@@ -1664,6 +1664,95 @@ factoryBuildMenu = function () {
 	thisDiv.buildingInProgress.innerHTML = "In Progress";
 
 	locationSelect(thisDiv.locationBar, nationList, 1);
+}
+
+transportMenu = function () {
+	console.log("transportMenu");
+	thisDiv = useDeskTop.newPane("adsfasfdsf");
+	thisDiv.headSection = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.options = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.content = addDiv("", "stdFloatDiv", thisDiv);
+	//thisDiv = useDeskTop.getPane("adsfasfdsf");
+	if (thisPlayer.transport == 0) {
+		thisDiv.headSection.innerHTML = "In your company there is problem.  That problem is transport.";
+	} else {
+		thisDiv.headSection.innerHTML = "You have transport.";
+	}
+
+	let rightsButton = newButton(thisDiv.options);
+	rightsButton.addEventListener("click", function (e) {
+		e.stopPropagation();
+		let thisDiv = this.parentNode.parentNode;
+		console.log(thisDiv);
+		thisDiv.content.innerHTML = "where you can transport stuff";
+
+		// Load access rights list
+		if (thisPlayer.transOptions.length == 0) {
+			async function tmpFunc(x) {
+				let p;
+				p = await loadDataPromise("1088");
+				console.log(p);
+				return p;
+			}
+			tmpFunc("1088").then(v => {
+				transList = v.split(",");
+				thisPlayer.transOptions = setArrayInts(transList);
+				console.log(thisPlayer.transOptions);
+				routeAccess(thisPlayer.transOptions, thisDiv.content);
+			});
+		}
+	});
+	rightsButton.innerHTML = "Manage Access Rights";
+
+	let routesButton = newButton(thisDiv.options);
+	routesButton.addEventListener("click", function (e) {
+		e.stopPropagation();
+		let thisDiv = this.parentNode.parentNode;
+		console.log(thisDiv);
+		thisDiv.content.innerHTML = "how you can transport stuff";
+
+		// Load access rights list
+		async function tmpFunc(x) {
+			let p;
+			p = await loadDataPromise("1089");
+			console.log(p);
+			return p;
+		}
+		tmpFunc("1089").then(v => {
+			transList = v.split(",");
+			playerRoutes(setArrayInts(transList), thisDiv.content);
+		});
+	});
+	routesButton.innerHTML = "Manage Routes";
+}
+
+routeAccess = function(data, trg) {
+	console.log(data);
+	// area ID, modes, expiry
+	let now = new Date().getTime() / 1000;
+	for (let i=0; i<data.length; i+=3) {
+		console.log(i);
+		let thisItem = addDiv("", "", trg);
+		if (data[i+2] == 0)	{
+			thisItem.innerHTML = "Area " + areaID + " currently unrestricted";
+		} else {
+			if (data[i+2] > now) {
+				let expire = new Date(data[i+2]*1000)
+				thisItem.innerHTML = "Area " + data[i] + " expires " + expire.getHours() + ":" + expire.getMinutes() + " on " + expire.getDate() + "/" + (expire.getMonth()+1) + "/" + (expire.getYear()+1900);
+			} else {
+				thisItem.innerHTML = "Area " + data[i] + " access is expired";
+				let renewButton = newButton(thisItem);
+				renewButton.addEventListener("click", function (e) {
+					e.stopPropagation();
+					console.log("renew access");
+				})
+			}
+		}
+	}
+}
+
+playerRoutes = function (data, trg) {
+	trg.innerHTML = data;
 }
 
 factoryHireMenu = function(trg, factoryID) {

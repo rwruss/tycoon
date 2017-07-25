@@ -85,8 +85,12 @@
 1085 - PROCESS: Receive shipping and sale order for a city/factory
 1086 - PROCESS: Get tax rates for a shipment
 1087 - PROCESS: Load city pay and demand information for a shipment pricing
+1088 - PROCESS: Load the places that a company has transport access in
+1089 - PROCESS: Load the current transport vehicles and options that the player has
 
 TO DO:
+Transport company
+Create transport options
 Turn on city/national pay in 1027 and 1087 for real pay amounts at cities
 Show each tax category rate when selling a shipment that has arrived at a city
 Verify citysupplyfile size and spots fopen($gamePath.'/citySupply.csf', 'rb');

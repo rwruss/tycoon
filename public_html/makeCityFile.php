@@ -250,6 +250,12 @@ fseek($transportOptFile, $numRoutes*40+36);
 fwrite($transportOptFile, pack('i', 0));
 fclose($transportOptFile);
 
+// create the transportRights file
+$transportFile = fopen('transRights.trf', 'wb');
+fseek($transportFile, 36);
+fwrite($transportFile, pack('i', 0));
+fclose($transportFile);
+
 
 function packArray($data, $type='i') {
   $str = '';

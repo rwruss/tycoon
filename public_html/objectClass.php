@@ -150,6 +150,8 @@ class business extends object {
 		$this->attrList['openInvoices'] = 45;
 
 		$this->attrList['shipmentLink'] = 46;
+		$this->attrList['transportOptions'] = 47;
+		$this->attrList['transportAccess'] = 48;
 
 		for ($i=0; $i<20; $i++) {
 			$this->attrList['service'.$i] = 100+$i;
