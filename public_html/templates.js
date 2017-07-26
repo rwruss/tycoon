@@ -1758,6 +1758,8 @@ playerRoutes = function (data, trg) {
 
 		routeContain.innerHTML = i +": route " + data[i];
 		routeContain.route = addDiv("","", routeContain);
+		routeContain.vehicle = addDiv("","", routeContain);
+		
 		let s = 14;
 		let count = 0;
 		let str = "";
@@ -1765,12 +1767,14 @@ playerRoutes = function (data, trg) {
 		routeContain.route.innerHTML = "No Route";
 		while (data[i+s] > 0 && count <10) {
 			console.log(data[i+s]);
-			str = str + data[i+s] + " -> ";
+			//str = str + data[i+s] + " -> ";
+			str = str + cityList[i+s].objName + " -> ";
 			s++;
 			totDist += data[i+s+10];
 			count++;
 		}
 		routeContain.route.innerHTML = str + " DIST: " + totDist;
+		routeContain.vehicle.innerHTML = "vehicle " + data[8] + " @ speed " + data[2];
 	}
 }
 
@@ -2131,7 +2135,7 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 
 
 	// display the recommended route
-	getRoutes(sendStr + "," + saleQty).then(v => {
+	getASync(sendStr + "," + saleQty).then(v => {
 		//console.log(v);
 		routeDat = v.split(",");
 		routeOptionList = [];
@@ -2160,11 +2164,6 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 			});
 		}
 	});
-}
-
-getRoutes = async function(val) {
-	let r = await loadDataPromise(val);
-	return r;
 }
 
 getASync = async function (val) {
