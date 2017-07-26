@@ -1753,6 +1753,25 @@ routeAccess = function(data, trg) {
 
 playerRoutes = function (data, trg) {
 	trg.innerHTML = data;
+	for (let i=0; i<data.length; i+=34) {
+		let routeContain = addDiv("", "", trg);
+
+		routeContain.innerHTML = i +": route " + data[i];
+		routeContain.route = addDiv("","", routeContain);
+		let s = 14;
+		let count = 0;
+		let str = "";
+		let totDist = 0;
+		routeContain.route.innerHTML = "No Route";
+		while (data[i+s] > 0 && count <10) {
+			console.log(data[i+s]);
+			str = str + data[i+s] + " -> ";
+			s++;
+			totDist += data[i+s+10];
+			count++;
+		}
+		routeContain.route.innerHTML = str + " DIST: " + totDist;
+	}
 }
 
 factoryHireMenu = function(trg, factoryID) {
