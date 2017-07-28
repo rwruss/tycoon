@@ -487,6 +487,7 @@ class city {
 	constructor(objDat, laws, taxes) {
 
 		this.objID = objDat[0];
+		this.objType = 5;
 		this.objName = objDat[1];
 		this.details = objDat;
 		this.demandRates = "";

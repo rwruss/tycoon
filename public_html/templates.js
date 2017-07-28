@@ -1785,8 +1785,23 @@ playerRoutes = function (data, trg) {
 	}
 }
 
-routeChangeMenu = function (data) {
+routeChangeMenu = function (data, trg) {
 	console.log("route Change");
+	trg.changeMenu = addDiv("", "", trg);
+	
+	// Generate list of cities
+	let itemNumbers = new Array();
+	let itemList = new Array();
+	for (let i=0; i<cityList.length; i++) {
+		if (cityList[i].objType == 5) {
+			itemList.push(cityList[i].objName);
+			itemNumbers.push(cityList[i].objID);
+		}
+	}
+	trg.changeMenu.select = customeSelectMenu(trg.changeMenu, itemList, itemNumbers);
+	
+	// select starting node
+	//customSelectMenu = function (trg, itemList, itemNumbers) {
 }
 
 factoryHireMenu = function(trg, factoryID) {
@@ -1857,7 +1872,29 @@ buildOptionList = function(trg, detailTrg, bldgList) {
 	});
 }
 
+customSelectMenu = function (trg, itemList, itemNumbers) {
+	let newMenu = document.createElement("select");
+	
+	let newItem = document.createElement("option");
+	newItem.appendChild(document.createTextNode("- Select an Option -"));
+	newItem.value = null
+	newItem.disabled = true;
+	newItem.selected = true;
+	newMenu.appendChild(newItem);
+	
+	for (var i=0; i<itemList.length; i++) {
+		let newItem = document.createElement("option");
+		newItem.appendChild(document.createTextNode(itemList[i]));
+		newItem.value = itemNumbers[i];
+		newMenu.appendChild(newItem);
+	}
+
+	trg.appendChild(newMenu);
+	return newMenu;
+}
+
 listSelectMenu = function (trg, itemList, startCount = 0) {
+	/*
 	let newMenu = document.createElement("select");
 
 	let newItem = document.createElement("option");
@@ -1875,6 +1912,14 @@ listSelectMenu = function (trg, itemList, startCount = 0) {
 	}
 
 	trg.appendChild(newMenu);
+	return newMenu;*/
+	let startVal = parseInt(startCount);
+	let itemNumbers = new Array();
+	for (let i=0; i<itemList.length; i++) {
+		itemNumbers.push(i+startVal);
+	}
+	
+	let newMenu = customSelectMenu(trg, itemList, itemNumbers);
 	return newMenu;
 }
 
