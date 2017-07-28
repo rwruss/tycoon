@@ -1776,7 +1776,17 @@ playerRoutes = function (data, trg) {
 		}
 		routeContain.route.innerHTML = str + " DIST: " + totDist;
 		routeContain.vehicle.innerHTML = "vehicle " + data[8] + " @ speed " + data[2];
+		let changeRoute = newButton(routeContain);
+		changeRoute.addEventListener("click", function (e) {
+			e.stopPropagation();
+			routeChangeMenu(data);
+		})
+		changeRoute.innerHTML = "change Route";
 	}
+}
+
+routeChangeMenu = function (data) {
+	console.log("route Change");
 }
 
 factoryHireMenu = function(trg, factoryID) {
