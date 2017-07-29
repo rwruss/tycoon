@@ -1788,20 +1788,61 @@ playerRoutes = function (data, trg) {
 routeChangeMenu = function (data, trg) {
 	console.log("route Change");
 	trg.changeMenu = addDiv("", "", trg);
+	trg.changeMenu.nodes = addDIv("", "", trg.changeMenu);
+	trg.changeMenu.nodes.maxList = 9;
+	trg.changeMenu.nodes.nodeList = new Array();
+	trg.changeMenu.nodes.subLocs = [0,0,125,0,250,0,375,0,500,0,0,125,125,125,250,125,375,125];
 	
-	// Generate list of cities
-	let itemNumbers = new Array();
-	let itemList = new Array();
-	for (let i=0; i<cityList.length; i++) {
-		if (cityList[i].objType == 5) {
-			itemList.push(cityList[i].objName);
-			itemNumbers.push(cityList[i].objID);
+	trg.changeMenu.options = addDIv("", "", trg.changeMenu);
+	
+	let saveRoute = newButton(trg.changeMenu);
+	saveRoute.sendStr = "1090,"+data[0] + ",";
+	saveRoute.addEventListener("click", function (e) {
+		e.stopPropagation();
+		let stopsList = new Array();
+		for (let i=0; i<this.parentNode.nodes.nodeList.length; i++) {
+			stopsList.push(this.parentNode.nodes.nodeList[i].listVal);
 		}
-	}
-	trg.changeMenu.select = customeSelectMenu(trg.changeMenu, itemList, itemNumbers);
+		scrMod(this.sendStr + stopsList.join(",");
+	})
 	
-	// select starting node
-	//customSelectMenu = function (trg, itemList, itemNumbers) {
+	for (let i=0; i<cityList.length; i++) {
+		let someCity = cityList[i].renderSummary(trg.changeMenu.options);
+		someCity.listVal = cityList[i].objID;
+		someCity.addEventListener("click", function () {
+			addToRouteList(trg.changeMenu.nodes);
+		});
+	}
+}
+
+addToRouteList = function (trg, sendID) {
+	if (trg.maxList < trg.nodeList.length) {
+		let newNode = this.cloneNode(true);		
+		newNode.listSpot = nodeList.length;
+		newNode.parentList = trg;
+
+		newNode.addEventListener("click", function () {
+			removeFromRouteList();
+			)
+		trg.appendChild(newNode);
+		
+		trg.nodeList.push(newNode);
+		}
+		
+	renderRouteList(trg);
+}
+
+removeFromRouteList = function () {
+	this.parentList.nodeList.splice(this.listSpot);
+	renderRouteList(this.parentList);
+}
+
+renderRouteList = function () {
+	for (let i=0; i<trg.nodeList.length; i++) {
+		trg.nodeList[i].style.left = trg.subLocs[i*2];
+		trg.nodeList[i].style.top = trg.subLocs[i*2+1];
+		trg.nodeList[i].listSpot = i;
+	}
 }
 
 factoryHireMenu = function(trg, factoryID) {

@@ -8,9 +8,6 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 
-// load areas where no routes are required
-$openAreas = new itemSlot(0, $transportFile, 40, TRUE);
-
 // Load areas where this player has rights
 $playerRoutes = [1,1,2,3,4,5,6,7,8,9,10,11,12,0,0,1,2,3,0,0,0,0,0,0,0,100,150,200,0,0,0,0,0,0,0];
 if ($thisPlayer->get('transportOptions') > 0) {

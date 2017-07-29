@@ -84,9 +84,10 @@
 1084 - PROCESS: Show shipping opotions for sale to city
 1085 - PROCESS: Receive shipping and sale order for a city/factory
 1086 - PROCESS: Get tax rates for a shipment
-1087 - PROCESS: Load city pay and demand information for a shipment pricing
+1087 - PROCESS: Load city pay and demand information for a shipment/sale pricing
 1088 - PROCESS: Load the places that a company has transport access in
 1089 - PROCESS: Load the current transport vehicles and options that the player has
+1090 - PROCESS: Save changes to a route
 
 TO DO:
 Transport company
