@@ -1779,7 +1779,7 @@ playerRoutes = function (data, trg) {
 		let changeRoute = newButton(routeContain);
 		changeRoute.addEventListener("click", function (e) {
 			e.stopPropagation();
-			routeChangeMenu(data);
+			routeChangeMenu(data, this.parentNode);
 		})
 		changeRoute.innerHTML = "change Route";
 	}
@@ -1787,14 +1787,17 @@ playerRoutes = function (data, trg) {
 
 routeChangeMenu = function (data, trg) {
 	console.log("route Change");
-	trg.changeMenu = addDiv("", "", trg);
-	trg.changeMenu.nodes = addDIv("", "", trg.changeMenu);
+	trg.changeMenu = addDiv("", "stdFloatDiv", trg);
+
+	trg.changeMenu.nodes = addDiv("", "stdFloatDiv", trg.changeMenu);
 	trg.changeMenu.nodes.maxList = 9;
 	trg.changeMenu.nodes.nodeList = new Array();
 	trg.changeMenu.nodes.subLocs = [0,0,125,0,250,0,375,0,500,0,0,125,125,125,250,125,375,125];
-	
-	trg.changeMenu.options = addDIv("", "", trg.changeMenu);
-	
+	trg.changeMenu.options = addDiv("", "stdFloatDiv", trg.changeMenu);
+
+	trg.changeMenu.nodes.innerHTML = "selected items:";
+	trg.changeMenu.options.innerHTML = "Options:";
+
 	let saveRoute = newButton(trg.changeMenu);
 	saveRoute.sendStr = "1090,"+data[0] + ",";
 	saveRoute.addEventListener("click", function (e) {
@@ -1803,42 +1806,54 @@ routeChangeMenu = function (data, trg) {
 		for (let i=0; i<this.parentNode.nodes.nodeList.length; i++) {
 			stopsList.push(this.parentNode.nodes.nodeList[i].listVal);
 		}
-		scrMod(this.sendStr + stopsList.join(",");
+		console.log(this.parentNode.nodes.nodeList);
+		console.log(stopsList);
+		scrMod(this.sendStr + stopsList.join(","));
 	})
-	
+	saveRoute.innerHTML = "Save Route";
+
 	for (let i=0; i<cityList.length; i++) {
 		let someCity = cityList[i].renderSummary(trg.changeMenu.options);
 		someCity.listVal = cityList[i].objID;
 		someCity.addEventListener("click", function () {
-			addToRouteList(trg.changeMenu.nodes);
+			console.log(this.listVal);
+			addToRouteList(trg.changeMenu.nodes, this);
 		});
 	}
 }
 
-addToRouteList = function (trg, sendID) {
-	if (trg.maxList < trg.nodeList.length) {
-		let newNode = this.cloneNode(true);		
-		newNode.listSpot = nodeList.length;
+addToRouteList = function (trg, item) {
+	if (trg.nodeList.length < trg.maxList) {
+		console.log(item.listVal);
+		let newNode = item.cloneNode(true);
+		newNode.listVal = item.listVal;
+		newNode.listSpot = trg.nodeList.length;
 		newNode.parentList = trg;
+		console.log(newNode.listVal);
 
 		newNode.addEventListener("click", function () {
-			removeFromRouteList();
-			)
+			removeFromRouteList(this);
+		})
 		trg.appendChild(newNode);
-		
+
 		trg.nodeList.push(newNode);
+		renderRouteList(trg);
 		}
-		
-	renderRouteList(trg);
 }
 
-removeFromRouteList = function () {
-	this.parentList.nodeList.splice(this.listSpot);
-	renderRouteList(this.parentList);
+removeFromRouteList = function (item) {
+	console.log(item);
+	console.log(item.parentList.nodeList.length);
+	item.parentList.nodeList.splice(item.listSpot, 1);
+	item.parentNode.removeChild(item);
+	renderRouteList(item.parentList);
 }
 
-renderRouteList = function () {
+renderRouteList = function (trg) {
+	console.log("render list");
 	for (let i=0; i<trg.nodeList.length; i++) {
+		console.log("item : " + i);;
+		//trg.nodeList[i].style.position = "absolute";
 		trg.nodeList[i].style.left = trg.subLocs[i*2];
 		trg.nodeList[i].style.top = trg.subLocs[i*2+1];
 		trg.nodeList[i].listSpot = i;
@@ -1915,14 +1930,14 @@ buildOptionList = function(trg, detailTrg, bldgList) {
 
 customSelectMenu = function (trg, itemList, itemNumbers) {
 	let newMenu = document.createElement("select");
-	
+
 	let newItem = document.createElement("option");
 	newItem.appendChild(document.createTextNode("- Select an Option -"));
 	newItem.value = null
 	newItem.disabled = true;
 	newItem.selected = true;
 	newMenu.appendChild(newItem);
-	
+
 	for (var i=0; i<itemList.length; i++) {
 		let newItem = document.createElement("option");
 		newItem.appendChild(document.createTextNode(itemList[i]));
@@ -1959,7 +1974,7 @@ listSelectMenu = function (trg, itemList, startCount = 0) {
 	for (let i=0; i<itemList.length; i++) {
 		itemNumbers.push(i+startVal);
 	}
-	
+
 	let newMenu = customSelectMenu(trg, itemList, itemNumbers);
 	return newMenu;
 }

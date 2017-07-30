@@ -518,7 +518,7 @@ class city {
 	renderSummary(target) {
 		//console.log('draw ' + this.type)
 		var thisDiv = addDiv(null, 'udHolder', target);
-		thisDiv.setAttribute("data-unitid", this.unitID);
+		//thisDiv.setAttribute("data-unitid", this.unitID);
 
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
 		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
