@@ -114,4 +114,12 @@ function loadRoutePath($routeFile, $routeNum) {
 	return unpack('i*', $routeDat);
 }
 
+function packArray($data, $type='i') {
+  $str = '';
+  foreach ($data as $value) {
+    $str .= pack($type, $value);
+  }
+  return $str;
+}
+
 ?>

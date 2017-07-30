@@ -54,9 +54,9 @@ for ($i=0; $i<sizeof($modeChanges)/2; $i++) {
 	for ($j=1; $j<=sizeof($legRoutes->slotData); $j++) {
 		// Load the route data
 		fseek($transportFile, $legRoutes->slotData[$j]);
-		$routeDat = fread($transportFile, 100);
-		$routeInfo = unpack('i*', substr($routeDat, 0, 40));
-		$routeStops = unpack('s*', substr($routeDat, 56, 40));
+		$routeDat = fread($transportFile, 120);
+		$routeInfo = unpack('i*', substr($routeDat, 0, 56));
+		$routeStops = unpack('s*', substr($routeDat, 56));
 
 		// Determine total travel time
 		$routeDist = array_sum(array_slice($routeStops, 11));
