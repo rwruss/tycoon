@@ -74,6 +74,13 @@ for ($i=1; $i<$numRoutes; $i++) {
 	}
 }
 
+fseek($transportFile, $postVals[0]*120);
+$oldDat = fread($transPortFile, 120);
+
+$oldHead = unpack('i*', substr($oldDat, 0, 56));
+
+$routeHead = $oldHead;
+/*
 $routeHead[0] = $pGameID; // owner
 $routeHead[1] = 0; // type/mode
 $routeHead[2] = $pGameID; // speed
@@ -83,34 +90,42 @@ $routeHead[5] = $pGameID; // capactiy - volume
 $routeHead[6] = $pGameID; // capacity - weight
 $routeHead[7] = $pGameID; // status
 $routeHead[8] = $pGameID; // runs/day
-$routeHead[9] = $pGameID; // Lifetime Cost
-$routeHead[10] = $pGameID; // Lifetime Earning
-$routeHead[11] = $pGameID; // Period Cost
-$routeHead[12] = $pGameID; // Period Earnings
-$routeHead[13] = $pGameID; // Vehicle
+$routeHead[9] = 0; // Lifetime Cost
+$routeHead[10] = 0; // Lifetime Earning
+$routeHead[11] = 0; // Period Cost
+$routeHead[12] = 0; // Period Earnings
+$routeHead[13] = $pGameID; // Vehicle*/
 
-fseek($transportFile, $postVals[0]*120);
-$oldDat = fread($transPortFile, 120);
 
-fwrite($transportFile, packArray($routeHead, 'i'));
-fwrite($transportFile, packArray($routeHead, 's'));
-
-// Determine which route options need to be delete
+// Determine which route options need to be delete and check if the route has changed
+$routeChange = false;
 $oldRoutes = unpack('s*', substr($oldDat, 56, 20);
 for ($i=1; $i<11; $i++) {
 	if (!in_array($oldRoutes[$i], $routeList)) {
 		$legRoutes = new itemSlot($oldRoutes[$i], $transportFile, 40);
-		$legRoutes->deleteByValue($routeHead[0], $transportFile);
+		$legRoutes->deleteByValue($routeHead[1], $transportFile);
 	}
+	
+	if ($oldRoutes[$i] != $postVals[$i]) $routeChange = true;
 }
 
 // Make sure that this route is noted in each of the routes for transport options
 for ($i=0; $i<sizeof($routeList); $i++) {
 	if (!in_array($routeList[$i], $oldRoutes)) {
 		$legRoutes = new itemSlot($routeList[$i], $transportFile, 40);
-		$legRoutes->addItem($routeHead[0], $transportFile);
+		$legRoutes->addItem($routeHead[1], $transportFile);
 	}
 }
+
+if ($routeChange) {
+	$routeHead[9] = 0;
+	$routeHead[10] = 0;
+	$routeHead[11] = 0;
+	$routeHead[12] = 0;
+}
+
+fwrite($transportFile, packArray($routeHead, 'i'));
+fwrite($transportFile, packArray($routeBody, 's'));
 
 fclose($routeFile);
 fclose($cityFile);

@@ -1812,6 +1812,7 @@ routeChangeMenu = function (data, trg) {
 	})
 	saveRoute.innerHTML = "Save Route";
 
+	let tmpArray = new Array();
 	for (let i=0; i<cityList.length; i++) {
 		let someCity = cityList[i].renderSummary(trg.changeMenu.options);
 		someCity.listVal = cityList[i].objID;
@@ -1819,6 +1820,14 @@ routeChangeMenu = function (data, trg) {
 			console.log(this.listVal);
 			addToRouteList(trg.changeMenu.nodes, this);
 		});
+		tmpArray[i] = someCity;
+	}
+	
+	// show existing route
+	for (let i=14; i<24; i++) {
+		if (data[i] > 0) {
+			forceEvent = function (tmpArray[data[i]], "click");
+		}
 	}
 }
 
