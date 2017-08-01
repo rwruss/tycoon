@@ -15,7 +15,7 @@ require_once('./transportClass.php');
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
-$routeFile = fopen($gamePath.'/routes.rtf', 'r+b');
+$routeFile = fopen($gamePath.'/routes.rtf', 'rb');
 
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 
@@ -56,21 +56,21 @@ $routeBody = array_fill(1,40,0);
 for ($i=1; $i<$numRoutes; $i++) {
 	$pathRoute = calcRouteNum($postVals[$i], $postVals[$i+1]);
 	$routeList[] = $pathRoute;
-	
+
 	fseek($routeFile, $pathRoute*12);
 	$pathHead = unpack('i*', fread($routeFile, 12));
-	
+
 	$routeBody[$i] = $postVals[$i];
 	$routeBody[$i+1] = $postVals[$i+1];
 	$routeBody[$i+10] = $pathHead[3];
-	
+
 	// Get a list of the cities on the route and make sure they are all the same transport type
 	fseek($routeFile, $pathHead[1])
 	$pathDat = unpack('i*', fread($routeFile, $pathHead[2]));
 	$routeType = $pathDat[2];
 	for ($j=5; $j<sizeof($pathDat); $j+=5) {
 		if ($pathDat[$j] != $routeType) {
-			exit('Type fail at node '.$i);			
+			exit('Type fail at node '.$i);
 	}
 }
 
@@ -105,7 +105,7 @@ for ($i=1; $i<11; $i++) {
 		$legRoutes = new itemSlot($oldRoutes[$i], $transportFile, 40);
 		$legRoutes->deleteByValue($routeHead[1], $transportFile);
 	}
-	
+
 	if ($oldRoutes[$i] != $postVals[$i]) $routeChange = true;
 }
 

@@ -1760,16 +1760,17 @@ playerRoutes = function (data, trg) {
 		routeContain.route = addDiv("","", routeContain);
 		routeContain.vehicle = addDiv("","", routeContain);
 
-		let s = 14;
+		let s = 15;
 		let count = 0;
 		let str = "";
 		let totDist = 0;
 		routeContain.route.innerHTML = "No Route";
 		console.log(cityList);
 		while (data[i+s] > 0 && count <10) {
-			console.log(data[i+s]);
+			console.log(i + " + " + s);
+			console.log(data[i+s]-1);
 			//str = str + data[i+s] + " -> ";
-			str = str + cityList[data[i+s-1]].objName + " -> ";
+			str = str + cityList[data[i+s]-1].objName + " -> ";
 			s++;
 			totDist += data[i+s+10];
 			count++;
@@ -1822,11 +1823,11 @@ routeChangeMenu = function (data, trg) {
 		});
 		tmpArray[i] = someCity;
 	}
-	
+
 	// show existing route
-	for (let i=14; i<24; i++) {
+	for (let i=15; i<24; i++) {
 		if (data[i] > 0) {
-			forceEvent = function (tmpArray[data[i]], "click");
+			forceEvent(tmpArray[data[i]-1], "click");
 		}
 	}
 }
