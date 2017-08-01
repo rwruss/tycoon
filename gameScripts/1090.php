@@ -5,7 +5,8 @@
 /*
 PVS
 0: Route ID
-1-9: Stops
+1-2; vol cost and weight cost
+3-12: Stops
 */
 
 require_once('./objectClass.php');
@@ -32,8 +33,8 @@ $openAreas = [0,1,2,3,4,5,6,7,8,9];
 // Load the cities and check each region for travel rights
 $failedCheck = false;
 $failedList = [];
-$numCities = sizeof($postVals);
-for ($i=1; $i<$numCities; $i++) {
+$maxIndex = sizeof($postVals)-1;
+for ($i=3; $i<$maxIndex; $i++) {
   $checkCity = loadCity($postVals[$i], $cityFile);
   echo 'City '.$postVals[$i].' is in region '.$checkCity->get('nation');
   if (!in_array($checkCity->get('nation'), $openAreas)) {
@@ -48,21 +49,21 @@ if ($failedCheck) {
 }
 
 // Adjust the route
-$numRoutes = $numCities -1;
+$maxIndex--; // adjust the index to be one less than the number of stops for the number of routes
 $routeList = [];
 
 // get information about each leg of the route and check trans modes
 $routeBody = array_fill(1,40,0);
-for ($i=1; $i<$numRoutes; $i++) {
+for ($i=3; $i<$maxIndex; $i++) {
 	$pathRoute = calcRouteNum($postVals[$i], $postVals[$i+1]);
 	$routeList[] = $pathRoute;
 
 	fseek($routeFile, $pathRoute*12);
 	$pathHead = unpack('i*', fread($routeFile, 12));
 
-	$routeBody[$i] = $postVals[$i];
-	$routeBody[$i+1] = $postVals[$i+1];
-	$routeBody[$i+10] = $pathHead[3];
+	$routeBody[$i-2] = $postVals[$i];
+	$routeBody[$i-2+1] = $postVals[$i+1];
+	$routeBody[$i-2+10] = $pathHead[3];
 
 	// Get a list of the cities on the route and make sure they are all the same transport type
 	fseek($routeFile, $pathHead[1])
@@ -80,6 +81,9 @@ $oldDat = fread($transPortFile, 120);
 $oldHead = unpack('i*', substr($oldDat, 0, 56));
 
 $routeHead = $oldHead;
+$routeHead[3] = $postVals[2]*100;
+$routeHead[4] = $postVals[3]*100;
+
 /*
 $routeHead[0] = $pGameID; // owner
 $routeHead[1] = 0; // type/mode

@@ -1753,7 +1753,7 @@ routeAccess = function(data, trg) {
 
 playerRoutes = function (data, trg) {
 	trg.innerHTML = data;
-	for (let i=0; i<data.length; i+=34) {
+	for (let i=0; i<data.length; i+=55) {
 		let routeContain = addDiv("", "", trg);
 
 		routeContain.innerHTML = i +": route " + data[i];
@@ -1778,9 +1778,10 @@ playerRoutes = function (data, trg) {
 		routeContain.route.innerHTML = str + " DIST: " + totDist;
 		routeContain.vehicle.innerHTML = "vehicle " + data[8] + " @ speed " + data[2];
 		let changeRoute = newButton(routeContain);
+		changeRoute.data = data.slice(i*55, i*55+55);
 		changeRoute.addEventListener("click", function (e) {
 			e.stopPropagation();
-			routeChangeMenu(data, this.parentNode);
+			routeChangeMenu(this.data, this.parentNode);
 		})
 		changeRoute.innerHTML = "change Route";
 	}
@@ -1789,6 +1790,13 @@ playerRoutes = function (data, trg) {
 routeChangeMenu = function (data, trg) {
 	console.log("route Change");
 	trg.changeMenu = addDiv("", "stdFloatDiv", trg);
+	
+	trg.changeMenu.pricing = addDiv("", "stdFloatDiv", trg);
+	trg.changeMenu.pricing.volPrice = slideValBar(quanBox, "", 0, 10000);
+	trg.changeMenu.pricing.volPrice.value = data[4];
+	
+	trg.changeMenu.pricing.wtPrice = slideValBar(quanBox, "", 0, 10000);
+	trg.changeMenu.pricing.wtPrice.value = data[5];
 
 	trg.changeMenu.nodes = addDiv("", "stdFloatDiv", trg.changeMenu);
 	trg.changeMenu.nodes.maxList = 9;
@@ -1804,6 +1812,8 @@ routeChangeMenu = function (data, trg) {
 	saveRoute.addEventListener("click", function (e) {
 		e.stopPropagation();
 		let stopsList = new Array();
+		stopsList[0] = this.parentNode.pricing.volprice.slide.value;
+		stopsList[1] = this.parentNode.pricing.wtPrice.slide.value;
 		for (let i=0; i<this.parentNode.nodes.nodeList.length; i++) {
 			stopsList.push(this.parentNode.nodes.nodeList[i].listVal);
 		}
