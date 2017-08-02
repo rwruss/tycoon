@@ -1,3 +1,58 @@
+scrMod = function (val) {
+		params = "val1="+val;
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				document.getElementById("scrBox").innerHTML = xmlhttp.response;
+				ncode_div("scrBox");
+				}
+			}
+
+		xmlhttp.send(params);
+		}
+
+loadDat = function (val, callback) {
+		console.log("loadting data");
+		params = "val1="+val;
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				console.log(xmlhttp.response);
+				callback(xmlhttp.response);
+				}
+			}
+
+		xmlhttp.send(params);
+	}
+
+loadDataPromise = function (val) {
+		return new Promise(resolve => {
+			params = "val1="+val;
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					console.log(xmlhttp.response);
+					resolve(xmlhttp.response);
+					}
+				}
+
+			xmlhttp.send(params);
+		})
+	}
+	
+setupPromise = async function (val) {
+	let p;
+	p = await loadDataPromise(val);
+	return p;
+}
+
 arrayUnique = function (v, i, s) {
 	return s.indexOf(v) === index;
 }
@@ -1731,6 +1786,13 @@ transportMenu = function () {
 		e.stopPropagation();
 		let thisDiv = this.parentNode.parentNode;
 		thisDiv.content.innerHTML = "Select which vehicle to purchase";
+		
+		// load list of vehicles for sale
+		setupPromise("1092").then(v => {
+			vehicleList = v.split(",");
+			showVehicles(vehicleList);
+		})
+		
 
 		for (let i=0; i<10; i++)  {
 			let someVehicle = addDiv("", "stdFloatDiv", thisDiv.content);

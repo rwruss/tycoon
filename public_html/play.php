@@ -318,54 +318,7 @@ echo '
 		xmlhttp.send(params);
 	}
 
-	function scrMod(val) {
-		params = "val1="+val;
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
-		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				document.getElementById("scrBox").innerHTML = xmlhttp.response;
-				ncode_div("scrBox");
-				}
-			}
-
-		xmlhttp.send(params);
-		}
-
-	function loadData(val, callback) {
-		console.log("loadting data");
-		params = "val1="+val;
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
-		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-				console.log(xmlhttp.response);
-				callback(xmlhttp.response);
-				}
-			}
-
-		xmlhttp.send(params);
-	}
-
-	function loadDataPromise(val) {
-		return new Promise(resolve => {
-			params = "val1="+val;
-			var xmlhttp = new XMLHttpRequest();
-			xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
-			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					console.log(xmlhttp.response);
-					resolve(xmlhttp.response);
-					}
-				}
-
-			xmlhttp.send(params);
-		})
-	}
+	
 
 	function loadBuffer(val, callback) {
 		console.log("loadting data");

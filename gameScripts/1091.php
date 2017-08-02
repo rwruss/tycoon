@@ -43,7 +43,7 @@ echo 'Created route '.$routeID;
 // add to the list of players transport items
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 
-// Load areas where this player has rights
+// Check for existing slot or create one
 if ($thisPlayer->get('transportOptions') == 0) {
   $newSlot = newSlot($transportFile, 40);
   $thisPlayer->save('transportOptions', $newSlot);
