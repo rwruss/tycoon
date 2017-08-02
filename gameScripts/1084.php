@@ -13,9 +13,9 @@ require_once('./objectClass.php');
 require_once('./transportClass.php');
 require_once('./slotFunctions.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$routeFile = fopen($gamePath.'/routes.rtf', 'r+b');
-$transportFile = fopen($gamePath.'/transOpts.tof', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$routeFile = fopen($gamePath.'/routes.rtf', 'rb');
+$transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
 
 // Get product information
 $prodSpace = 1;
@@ -54,7 +54,7 @@ for ($i=0; $i<sizeof($modeChanges)/2; $i++) {
 	for ($j=1; $j<=sizeof($legRoutes->slotData); $j++) {
 		// Load the route data
 		fseek($transportFile, $legRoutes->slotData[$j]);
-		$routeDat = fread($transportFile, 120);
+		$routeDat = fread($transportFile, 140);
 		$routeInfo = unpack('i*', substr($routeDat, 0, 56));
 		$routeStops = unpack('s*', substr($routeDat, 56));
 

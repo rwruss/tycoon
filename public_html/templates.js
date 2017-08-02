@@ -1711,7 +1711,7 @@ transportMenu = function () {
 		console.log(thisDiv);
 		thisDiv.content.innerHTML = "how you can transport stuff";
 
-		// Load access rights list
+		// Load player routes list
 		async function tmpFunc(x) {
 			let p;
 			p = await loadDataPromise("1089");
@@ -1724,6 +1724,24 @@ transportMenu = function () {
 		});
 	});
 	routesButton.innerHTML = "Manage Routes";
+
+	let createRouteButton = newButton(thisDiv.options);
+	createRouteButton.innerHTML = "Create a new Route";
+	createRouteButton.addEventListener("click", function (e) {
+		e.stopPropagation();
+		let thisDiv = this.parentNode.parentNode;
+		thisDiv.content.innerHTML = "Select which vehicle to purchase";
+
+		for (let i=0; i<10; i++)  {
+			let someVehicle = addDiv("", "stdFloatDiv", thisDiv.content);
+			someVehicle.innerHTML = "V-"+i;
+			someVehicle.sendStr = "1091,"+i;
+			someVehicle.addEventListener("click", function (e) {
+				e.stopPropagation();
+				scrMod(this.sendStr);
+			});
+		}
+	})
 }
 
 routeAccess = function(data, trg) {
@@ -1790,12 +1808,13 @@ playerRoutes = function (data, trg) {
 routeChangeMenu = function (data, trg) {
 	console.log("route Change");
 	trg.changeMenu = addDiv("", "stdFloatDiv", trg);
-	
-	trg.changeMenu.pricing = addDiv("", "stdFloatDiv", trg);
-	trg.changeMenu.pricing.volPrice = slideValBar(quanBox, "", 0, 10000);
+
+	trg.changeMenu.pricing = addDiv("", "stdFloatDiv", trg.changeMenu);
+	trg.changeMenu.pricing.volPrice = slideValBar(trg.changeMenu.pricing, "", 0, 10000);
+	console.log(trg.changeMenu.pricing.volPrice)
 	trg.changeMenu.pricing.volPrice.value = data[4];
-	
-	trg.changeMenu.pricing.wtPrice = slideValBar(quanBox, "", 0, 10000);
+
+	trg.changeMenu.pricing.wtPrice = slideValBar(trg.changeMenu.pricing, "", 0, 10000);
 	trg.changeMenu.pricing.wtPrice.value = data[5];
 
 	trg.changeMenu.nodes = addDiv("", "stdFloatDiv", trg.changeMenu);
@@ -1812,7 +1831,8 @@ routeChangeMenu = function (data, trg) {
 	saveRoute.addEventListener("click", function (e) {
 		e.stopPropagation();
 		let stopsList = new Array();
-		stopsList[0] = this.parentNode.pricing.volprice.slide.value;
+		console.log(this.parentNode.pricing.volPrice.slide.value);
+		stopsList[0] = this.parentNode.pricing.volPrice.slide.value;
 		stopsList[1] = this.parentNode.pricing.wtPrice.slide.value;
 		for (let i=0; i<this.parentNode.nodes.nodeList.length; i++) {
 			stopsList.push(this.parentNode.nodes.nodeList[i].listVal);

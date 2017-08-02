@@ -8,6 +8,7 @@ PVS
 1-2; vol cost and weight cost
 3-12: Stops
 */
+print_r($postVals);
 
 require_once('./objectClass.php');
 require_once('./slotFunctions.php');
@@ -54,33 +55,39 @@ $routeList = [];
 
 // get information about each leg of the route and check trans modes
 $routeBody = array_fill(1,40,0);
-for ($i=3; $i<$maxIndex; $i++) {
+for ($i=4; $i<$maxIndex; $i++) {
 	$pathRoute = calcRouteNum($postVals[$i], $postVals[$i+1]);
 	$routeList[] = $pathRoute;
 
+  echo 'Seek to path '.$pathRoute.'<br>';
 	fseek($routeFile, $pathRoute*12);
 	$pathHead = unpack('i*', fread($routeFile, 12));
+
+  print_r($pathHead);
 
 	$routeBody[$i-2] = $postVals[$i];
 	$routeBody[$i-2+1] = $postVals[$i+1];
 	$routeBody[$i-2+10] = $pathHead[3];
 
 	// Get a list of the cities on the route and make sure they are all the same transport type
-	fseek($routeFile, $pathHead[1])
+	fseek($routeFile, $pathHead[1]);
 	$pathDat = unpack('i*', fread($routeFile, $pathHead[2]));
 	$routeType = $pathDat[2];
 	for ($j=5; $j<sizeof($pathDat); $j+=5) {
 		if ($pathDat[$j] != $routeType) {
 			exit('Type fail at node '.$i);
+    }
 	}
 }
 
-fseek($transportFile, $postVals[0]*120);
-$oldDat = fread($transPortFile, 120);
+fseek($transportFile, $postVals[0]*140);
+$oldDat = fread($transportFile, 140);
 
 $oldHead = unpack('i*', substr($oldDat, 0, 56));
 
 $routeHead = $oldHead;
+echo 'RouteHead:';
+print_r($routeHead);
 $routeHead[3] = $postVals[2]*100;
 $routeHead[4] = $postVals[3]*100;
 
@@ -103,7 +110,8 @@ $routeHead[13] = $pGameID; // Vehicle*/
 
 // Determine which route options need to be delete and check if the route has changed
 $routeChange = false;
-$oldRoutes = unpack('s*', substr($oldDat, 56, 20);
+$oldRoutes = unpack('s*', substr($oldDat, 56, 20));
+$oldRoutes = array_fill(1,10,0);
 for ($i=1; $i<11; $i++) {
 	if (!in_array($oldRoutes[$i], $routeList)) {
 		$legRoutes = new itemSlot($oldRoutes[$i], $transportFile, 40);
@@ -127,6 +135,11 @@ if ($routeChange) {
 	$routeHead[11] = 0;
 	$routeHead[12] = 0;
 }
+
+echo 'route head:';
+print_r($routeHead);
+echo '<p>route body:';
+print_r($routeBody);
 
 fwrite($transportFile, packArray($routeHead, 'i'));
 fwrite($transportFile, packArray($routeBody, 's'));
