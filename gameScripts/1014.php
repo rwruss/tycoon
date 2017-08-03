@@ -1,5 +1,14 @@
 <?php
 
+/*
+PVS
+1: Selling Factory
+2:
+3: Product ID to Sell
+4: Qunatity of proudct to sell
+5: Unit price for sale
+*/
+
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 

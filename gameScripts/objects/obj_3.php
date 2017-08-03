@@ -164,15 +164,6 @@ thisFactory.materialOrder = ['.implode(',', $materialOrders).'];
 thisFactory.inProduction = ['.$thisObj->get('prodLength').', '.$thisObj->get('prodStart').', '.$thisObj->get('prodQty').'];
 thisFactory.contracts = ['.implode(',', array_merge(unpack('i*', $contractStr), $invoiceSend)).'];
 
-//factoryUpgradeProducts = [];
-//factoryUpgradeServices = [];
-//productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).']
-//productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
-//productLabor = ['.implode(',', $productInfo->reqLabor).'];
-//materialInv = ['.implode(',', $thisObj->resourceInv()).'];
-//materialOrder = ['.implode(',', $materialOrders).'];
-//inProduction = ['.$thisObj->get('prodLength').', '.$thisObj->get('prodStart').', '.$thisObj->get('prodQty').'];
-
 /*
 factoryOrders = new Array();
 for (var i=0; i<materialOrder.length; i+=18) {

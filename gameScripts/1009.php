@@ -46,7 +46,6 @@ if ($optionCheck && $spotCheck !== false) {
 	$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 	$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 
-	// Search for new items to produce
 	echo 'Read offer slot '.$productID;
 	$offerList = new itemSlot($productID, $offerListFile, 1000);
 	print_R($offerList->slotData);

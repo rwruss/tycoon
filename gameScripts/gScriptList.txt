@@ -89,6 +89,7 @@
 1089 - PROCESS: Load the current transport vehicles and options that the player has
 1090 - PROCESS: Save changes to a route
 1091 - PROCESS: Purchase of a vehicle and create a transport rotue
+1092 - PROCESS: Show purchase options for a selected vehicle type
 
 TO DO:
 Transport company
@@ -212,6 +213,7 @@ http://loudprogrammer.net/interview-with-rob-percival-how-to-land-your-first-jun
 https://www.topcoder.com/
 http://sagecode.net/certification/web-dev/
 https://www.newitjobs.com/
+https://workfromhome.sharedesk.com/webinar-alerts/
 
 Companies list
 Malauzai

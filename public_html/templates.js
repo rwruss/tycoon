@@ -1797,7 +1797,7 @@ transportMenu = function () {
 }
 
 showVehicles = function(data, trg) {
-	for (var i=0; i<data.length; i+=25) {
+	for (var i=0; i<data.length; i+=16) {
 		let thisVehicle = addDiv("", "", thisDiv.content);
 		thisVehicle.innerHTML = "V# " + i;
 
