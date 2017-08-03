@@ -165,6 +165,7 @@ echo '
 </script>
 
 <script type="text/javascript">
+	var gameID = '.$_GET['gameID'].';
 	var companyLabor = new Array();
 	var factoryLabor  = new Array();
 	var routeOptionList = new Array();
@@ -318,7 +319,7 @@ echo '
 		xmlhttp.send(params);
 	}
 
-	
+
 
 	function loadBuffer(val, callback) {
 		console.log("loadting data");

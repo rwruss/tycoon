@@ -1,7 +1,7 @@
 scrMod = function (val) {
 		params = "val1="+val;
 		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+		xmlhttp.open("POST", "gameScr.php?gid="+gameID, true);
 		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
 		xmlhttp.onreadystatechange = function() {
@@ -18,7 +18,7 @@ loadDat = function (val, callback) {
 		console.log("loadting data");
 		params = "val1="+val;
 		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+		xmlhttp.open("POST", "gameScr.php?gid="+gameID, true);
 		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -34,7 +34,7 @@ loadDataPromise = function (val) {
 		return new Promise(resolve => {
 			params = "val1="+val;
 			var xmlhttp = new XMLHttpRequest();
-			xmlhttp.open("POST", "gameScr.php?gid='.$_GET['gameID'].'", true);
+			xmlhttp.open("POST", "gameScr.php?gid="+gameID, true);
 			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -46,7 +46,7 @@ loadDataPromise = function (val) {
 			xmlhttp.send(params);
 		})
 	}
-	
+
 setupPromise = async function (val) {
 	let p;
 	p = await loadDataPromise(val);
@@ -1786,24 +1786,26 @@ transportMenu = function () {
 		e.stopPropagation();
 		let thisDiv = this.parentNode.parentNode;
 		thisDiv.content.innerHTML = "Select which vehicle to purchase";
-		
+		thisDiv.content.sales = addDiv("", "", thisDiv.content);
+
 		// load list of vehicles for sale
 		setupPromise("1092").then(v => {
 			vehicleList = v.split(",");
-			showVehicles(vehicleList);
+			showVehicles(vehicleList, thisDiv.content.sales);
 		})
-		
-
-		for (let i=0; i<10; i++)  {
-			let someVehicle = addDiv("", "stdFloatDiv", thisDiv.content);
-			someVehicle.innerHTML = "V-"+i;
-			someVehicle.sendStr = "1091,"+i;
-			someVehicle.addEventListener("click", function (e) {
-				e.stopPropagation();
-				scrMod(this.sendStr);
-			});
-		}
 	})
+}
+
+showVehicles = function(data, trg) {
+	for (var i=0; i<data.length; i+=25) {
+		let thisVehicle = addDiv("", "", thisDiv.content);
+		thisVehicle.innerHTML = "V# " + i;
+
+		thisVehicle.sendStr = "1091,"+i;
+		thisVehicle.addEventListener("click", function () {
+			scrMod(this.sendStr);
+		})
+		}
 }
 
 routeAccess = function(data, trg) {
