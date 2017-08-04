@@ -12,9 +12,10 @@ $cityLoc = $postVals[2];
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$projectsFile = fopen($gamePath.'/projects.prj', 'r+b');	
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$projectFile = fopen($gamePath.'/projects.prj', 'r+b');
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
 
 // Load template data
 fseek($objFile, $factoryType*$templateBlockSize);
@@ -33,21 +34,21 @@ $thisBusiness->save('money', $thisBusiness->get('money')-$factoryCost);
 
 // Get a new project ID
 $newProjID = 0;
-if (flock($projectFile, LOCK_EX) {
-	
-	fseek($projectFile, SEEK_END);
-	$newProjID = ftell($projectFile);
-	
+if (flock($projectFile, LOCK_EX)) {
+
+	fseek($projectFile, 0, SEEK_END);
+	$newProjID = max(ceil(ftell($projectFile)/100),1);
+	echo '<p>NEW PROJECT ID IS '.$newProjID.'<p>';
 	if ($newProjID > 0) {
-		fseek($projectFile, $newProjID+96);
-		fwrite($projectFile, pack('i', 0);
+		fseek($projectFile, $newProjID*100+96);
+		fwrite($projectFile, pack('i', 0));
 		fflush($projectFile);
 		flock($projectFile, LOCK_UN);
 	} else {
 		flock($projectFile, LOCK_UN);
 		fclose($projectFile);
 		exit('error 8001-1');
-	}	
+	}
 }
 
 
@@ -91,10 +92,12 @@ if (flock($objFile, LOCK_EX)) {
 	echo 'Load slot '.$thisBusiness->get('ownedObjects');
 	$ownedObjects = new itemSlot($thisBusiness->get('ownedObjects'), $slotFile, 40);
 	$ownedObjects->addItem($newID, $slotFile);
-  
+
 	// Add to list of factories at the city
-	$buildCity = loadCity($cityLoc, $objFile);
+	echo '<p>LOAD AND SAVE THE CITY:<br>';
+	$buildCity = loadCity($cityLoc, $cityFile);
 	if ($buildCity->get('factoryList') == 0) {
+		echo 'New factory slot for the city'.
 		$newSlot = newSlot($slotFile, 40);
 		$buildCity->save('factoryList', $newSlot);
 	}
@@ -105,13 +108,23 @@ if (flock($objFile, LOCK_EX)) {
 
 // create a new project object
 $projectDat = array_fill(1, 25, 0);
-$projectDat[1] = $pGameID;
-$projectDat[2] = $newID;
-$projectDat[3] = 100;
-$projectDat[7] = 1;
+$projectDat[1] = $pGameID; // owner
+$projectDat[2] = $newID; // factory ID
+$projectDat[3] = 100; // factory type
+$projectDat[4] = 100; //Points required
+$projectDat[5] = 0; // points applied
+$projectDat[6] = 0; // current price
+$projectDat[7] = 1; // status
 
-$thisProject = new project($newProjID, $projectDat, $projectsFile);
+echo '<p>Project Data for project '.$newProjID.'<p>';
+print_r($projectDat);
+
+$thisProject = new project($newProjID, $projectDat, $projectFile);
+print_r($thisProject->objDat);
 $thisProject->saveAll();
+
+$testProject = loadProject($newProjID, $projectFile);
+print_r($testProject->objDat);
 
 fclose($projectFile);
 fclose($objFile);

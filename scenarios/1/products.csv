@@ -37,3 +37,7 @@ Concrete,Rock,Checmicals,None,None,None,None,None,None,None,None,5,1,0,0,0,0,0,0
 Rock,Heavy Machinery,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Plant Manager,Operator,Operator,Operator,None,None,None,None,None,None,16,28,28,28,0,0,0,0,0,0,100,Item,x
 Chemicals,Oil,Rare Elements,None,None,None,None,None,None,None,None,1,1,0,0,0,0,0,0,0,0,Plant Manager,Chemist,Chemist,Chemist,None,None,None,None,None,None,16,28,28,28,0,0,0,0,0,0,100,Item,x
 Heavy Machinery,Steel,None,None,None,None,None,None,None,None,None,1,0,0,0,0,0,0,0,0,0,Plant Manager,Factory Worker,Factory Worker,None,None,None,None,None,None,None,20,40,40,0,0,0,0,0,0,0,100,Item,x
+Cars,Steel,Oil,None,None,None,None,None,None,None,None,1,1,0,0,0,0,0,0,0,0,Plant Manager,Factory Worker,Factory Worker,None,None,None,None,None,None,None,16,28,28,28,0,0,0,0,0,0,100,Item,x
+SUV,Steel,Oil,None,None,None,None,None,None,None,None,2,1,0,0,0,0,0,0,0,0,Plant Manager,Factory Worker,Factory Worker,None,None,None,None,None,None,None,16,28,28,28,0,0,0,0,0,0,100,Item,x
+Small Truck,Steel,Oil,None,None,None,None,None,None,None,None,3,2,0,0,0,0,0,0,0,0,Plant Manager,Factory Worker,Factory Worker,None,None,None,None,None,None,None,20,40,40,0,0,0,0,0,0,0,100,Item,x
+Large Truck,Steel,Oil,None,None,None,None,None,None,None,None,5,2,0,0,0,0,0,0,0,0,Plant Manager,Factory Worker,Factory Worker,None,None,None,None,None,None,None,20,40,40,0,0,0,0,0,0,0,100,Transport,x

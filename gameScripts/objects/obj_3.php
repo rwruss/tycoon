@@ -4,10 +4,11 @@ $offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 
 if ($thisObj->get('constStatus') > 0) {
 	$projectsFile = fopen($gamePath.'/projects.prj', 'rb');
-	$thisProject = loadProject($thisObj->get('constStatus'), $projectFile);
-	fclose($projectFile);
+	echo 'Load project '.$thisObj->get('constStatus');
+	$thisProject = loadProject($thisObj->get('constStatus'), $projectsFile);
+	fclose($projectsFile);
 }
-
+print_r($thisProject->objDat);
 $now = time();
 $constructDelta = $thisObj->get('constructCompleteTime') - $now;
 if ($thisObj->get('factoryLevel') == 0) {
@@ -32,7 +33,7 @@ if ($thisObj->get('factoryLevel') == 0) {
 		let indLaborBar = slideValBar(factoryDiv, "", 0, '.$ptsRrm.');
 		let indLaborButton = newButton(factoryDiv);
 		indLaborButton.innerHTML = "Use local services ($100/point)";
-		indLaborButton.sendStr = "1083,'.$postVals[1].'";
+		indLaborButton.sendStr = "1083,'.$thisObj->get('constStatus').',";
 		indLaborButton.addEventListener("click", function () {scrMod(this.sendStr + indLaborBar.slide.value)})
 
 		//thisUpgrade = new factoryUpgrade('.$postVals[1].', '.($thisObj->get('constructCompleteTime')).');
