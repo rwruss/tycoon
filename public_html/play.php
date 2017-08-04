@@ -2,8 +2,8 @@
 
 $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
-$numProducts = 38;
-$numFactories = 8;
+$numProducts = 42;
+$numFactories = 9;
 $supplyBlockSize = 360000;
 
 require_once('./slotFunctions.php');

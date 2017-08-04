@@ -14,7 +14,7 @@ scrMod = function (val) {
 		xmlhttp.send(params);
 		}
 
-loadDat = function (val, callback) {
+loadData = function (val, callback) {
 		console.log("loadting data");
 		params = "val1="+val;
 		var xmlhttp = new XMLHttpRequest();
@@ -2160,18 +2160,18 @@ contractBids = function (bidDat, trg) {
 		thisBid.renderDecision(trg);
 	}
 }
-
+var inProgressFactories = [];
 addFactory = function (dat) {
-	for (var i=0; i<dat.length; i+=16) {
-		playerFactories.push(new factory(dat.slice(i, i+16)));
-		inPorgressFactories.push(new factory(dat.slice(i, i+16)));
+	for (var i=0; i<dat.length; i+=41) {
+		playerFactories.push(new factory(dat.slice(i, i+41)));
+		inProgressFactories.push(new factory(dat.slice(i, i+41)));
 	}
 }
 
 inProgressList = function (trg) {
 	trg.innerHTML = "";
 	for (var i=0; i<inProgressFactories.length; i++) {
-		inPorgressFactories.render(trg);
+		inProgressFactories[i].render(trg);
 	}
 }
 

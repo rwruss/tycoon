@@ -84,7 +84,7 @@ class object {
 		}
 		fseek($file, $this->unitID*$this->itemBlockSize);
 		$saveLen = fwrite($file, $packStr);
-		echo "SAVED ".$saveLen." at location ".($this->unitID*$this->itemBlockSize);
+		echo "SAVED ".$saveLen." at location ".($this->unitID*$this->itemBlockSize).' with a block size of '.$this->itemBlockSize;
 	}
 }
 
@@ -116,7 +116,8 @@ class user extends object {
 		$this->attrList['boost18'] = 69;
 		$this->attrList['boost19'] = 70;
 
-		$this->itemBlockSize = 500;
+		$this->itemBlockSize = 500;  // not sure if this needs to be anything other than 100
+		$this->itemBlockSize = 100;
 	}
 }
 
@@ -506,7 +507,8 @@ class city extends object {
 		$this->dLevelOffset = 10250;
 		//$this->laborDemandOffset = 20250;
 		//$this->laborStoreOffset = 21250;
-		$this->itemBlockSize = 81000;
+		$this->itemBlockSize = 81000; // not sure why this would need to be other than 100
+		$this->itemBlockSize = 100;
 
 		$this->attrList['population'] = 12;
 		$this->attrList['affluence'] = 14;
@@ -576,7 +578,7 @@ class city extends object {
 			fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4 + $areaHeader + $areaHeader);
 			fwrite($this->linkFile, pack('i', $val));
 			echo 'ID: '.$this->unitID;
-			echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4);
+			echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $this->attrList[$desc]*4-4 + $areaHeader + $areaHeader);
 			$this->objDat[$this->attrList[$desc]] = $val;
 		} else {
 			return false;
@@ -807,7 +809,7 @@ function loadUser($id, $file) {
 }
 
 function loadProject($id, $file) {
-	fseek($file, $id);
+	fseek($file, $id*100);
 	$dat = unpack('i*', fread($file, 100));
 
 	return new project($id, $dat, $file);
@@ -844,7 +846,7 @@ function loadObject($id, $file, $size) {
 
 		default:
 			print_r($dat);
-			exit('error '.$dat[4].' OCH');
+			exit('error '.$dat[4].' OCH 847');
 		break;
 	}
 
