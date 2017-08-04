@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1501859200 source:e:\websites\tycoon\simengine\phpserver\tycoonengine.cpp
+	<iostream>
+	<string>
+	<vector>
+	<fstream>
+	<windows.h>
+	<winsock2.h>
+	<stdio.h>
+	<ws2tcpip.h>
+	<iphlpapi.h>
+
