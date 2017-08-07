@@ -214,7 +214,16 @@ startButton2.innerHTML = "Work for - 2 hour";
 startButton3 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',3")});
 startButton3.innerHTML = "Work for - 4 hour";
 
+/*
 startButton4 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',4")});
+startButton4.innerHTML = "Work for - 8 hour";
+*/
+
+startButton4 = newButton(headSection, function () {
+	setupPromise("1028,'.$postVals[1].'").then(v => {
+		let result = v.split(",");
+	})
+});
 startButton4.innerHTML = "Work for - 8 hour";
 
 prodContain = addDiv("", "orderContain", headSection);

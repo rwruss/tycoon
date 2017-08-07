@@ -24,43 +24,8 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 	exit("error 8201-2");
 }
 
-// Verify that the correct labor is assigned to start this task
-//fseek($thisFactory->linkFile, $thisFactory->get('currentProd')*1000);
-//$productInfo = unpack('i*', fread($thisFactory->linkFile, 200));
-
 $thisProduct = loadProduct($postVals[2], $objFile, 400);
-//$productionRate = $thisFactory->get('prodRate');
-//$productionRate = $thisFactory->setProdRate($postVals[3], $thisProduct, $laborEqFile);
-/*
-$laborFail = false;
-$neededLabor = [];
-$productionRate = 0;
-$productionItems = 0;
 
-for ($i=0; $i<7; $i++) {
-	if ($productInfo[38+$i] != $thisFactory->objDat[$thisFactory->laborOffset+10*$i+1]) {
-		$laborFail = true;
-		$neededLabor[] = $productInfo[38+$i];
-	}
-	if ($productInfo[38+$i] > 0) {
-		$workTime = max(1,$thisFactory->objDat[$thisFactory->laborOffset+10*$i+1]);
-		$laborLevel = log($workTime, 2.0)+1;
-		$productionRate += 0.5+$laborLevel;
-		$productionItems++;
-	}
-}
-
-if ($laborFail) {
-	echo 'You need to assign the following labor types:';
-	foreach($neededLabor as $val) {
-		echo 'Type:'.$val;
-	}
-	exit();
-}
-
-// Caluclate the production rate
-$totalRate = $productionRate/$productionItems;
-*/
 // Calculate the amount of product to be produced
 $durations = [0, 3600, 7200, 14400, 28800];
 $production = intval($thisFactory->get('prodRate')*$durations[$postVals[2]]/360000); // 3600 seconds x 100 for decimal factor in production rate
@@ -176,6 +141,7 @@ if ($thisFactory->get('currentProd') > 0) {
 
 $currentProduction = ', {setVal:'.$thisFactory->get('currentProd').'}';
 
+/*
 echo 'Make '.$production.' in '.$durations[$postVals[2]].' ('.$overRideDurs[$postVals[2]].') Seconds.
 <script>
 
@@ -185,6 +151,15 @@ fProductionBox = fProduction.render(prodContain);
 factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
 updateMaterialInv('.$postVals[1].', ['.implode(',', $thisFactory->resourceInv()).']);
 </script>';
+*/
+
+$returnArray = [];
+$returnArray[0] = $postVals[1];  // This factory ID
+$returnArray[1] = ($thisFactory->get('prodLength') + $thisFactory->get('prodStart'));  // Completion Time
+$returnArray[2] = $thisFactory->get('currentProd'); // Product ID
+$returnArray[3] = $production;  // Qty to be produced
+
+echo implode(',', array_merge($returnArray, $thisFactory->resourceInv()));
 
 fclose($offerDatFile);
 fclose($objFile);
