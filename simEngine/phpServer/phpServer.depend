@@ -10,3 +10,15 @@
 	<ws2tcpip.h>
 	<iphlpapi.h>
 
+1501910980 source:c:\websites\tycoon\simengine\phpserver\tycoonengine.cpp
+	<iostream>
+	<string>
+	<vector>
+	<fstream>
+	<windows.h>
+	<winsock2.h>
+	<stdio.h>
+	<stdlib.h>
+	<iphlpapi.h>
+	<ws2tcpip.h>
+

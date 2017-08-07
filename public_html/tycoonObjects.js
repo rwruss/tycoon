@@ -180,13 +180,14 @@ class factory extends object {
 	}
 
 	showOrders(trg) {
-		let factoryOrders = new Array();
+		trg.innerHTML = "";
+		this.factoryOrders = new Array();
 		for (var i=0; i<this.materialOrder.length; i+=18) {
-			factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+18)));
+			this.factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+18)));
 			//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 		}
 
-		showOrders(trg, factoryOrders);
+		showOrders(trg, this.factoryOrders);
 	}
 
 	showLabor(trg) {
@@ -199,17 +200,20 @@ class factory extends object {
 		trg.innerHTML = "";
 
 		for (var i=1; i<factoryLabor.length; i++) {
-			let laborItem = factoryLabor[i].renderFire(factoryDiv.laborSection.aassigned, "1059,"+i+","+this.ID);
+			let laborItem = factoryLabor[i].renderFire(factoryDiv.laborSection.aassigned, "1059,"+i+","+this.objID);
 			if (factoryLabor[i].laborType > 0) {
-			} else {
-			}
-			let itemNum = i;
-			laborItem.addEventListener("click", function () {scrMod("1023,"+this.ID+","+itemNum)});
+				} else {
+				}
+			//let itemNum = i;
+			laborItem.sendStr = "1023,"+this.objID+","+i
+			laborItem.addEventListener("click", function () {scrMod(this.sendStr)});
 		}
 	}
 
 	showOutputs(trg) {
-		trg.innerHTML = "";
+		//trg.innerHTML = "";
+		console.log(this.productStores);
+		console.log(this.prodDtls);
 		for (var i=0; i<5; i++) {
 			if (this.productStores[i]>0) {
 				//productArray[this.productStores[i]].renderQty(trg, this.productStores[i+5]);
@@ -868,8 +872,12 @@ class product {
 		thisDiv.lCost = addDiv("", "", thisDiv);
 		thisDiv.mCost = addDiv("", "", thisDiv);
 
-		thisDiv.lCost.innerHTML = "L: " + Math.round(100*lCost/qty)/100;
-		thisDiv.mCost.innerHTML = "M: " + Math.round(100*mCost/qty)/100;
+		// MAKE CASE FOR QTY == 0
+
+		qty == 0 ? function () {lCost = 0; mCost = 0} : function ()  {lCost /= qty; mCost /= qty};
+		//qty == 0 ? {lCost = 0}, lCost = lCost/qty;
+		thisDiv.lCost.innerHTML = "L: " + Math.round(100*lCost)/100;
+		thisDiv.mCost.innerHTML = "M: " + Math.round(100*mCost)/100;
 
 		thisDiv.nameDiv.innerHTML = objNames[this.objID];
 		return thisDiv;

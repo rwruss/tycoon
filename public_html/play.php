@@ -3,7 +3,7 @@
 $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
 $numProducts = 42;
-$numFactories = 9;
+$numFactories = 10;
 $supplyBlockSize = 360000;
 
 require_once('./slotFunctions.php');
@@ -173,6 +173,7 @@ echo '
 	var factoryList, playerFactories, playerProducts, playerProdNames, playerProducts, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv, shipmentList;
 	var playerUnits;
 	var moveString = new Array();
+	var selFactory;
 
 	var taxTypes = ["None", "city income tax", "city property tax", "city VAT", "city personal income tax", "city polltion tax", "city rights tax",
 		"regional income tax", "regional property tax", "regional VAT", "regional personal income tax", "regional polltion tax", "regional rights tax",

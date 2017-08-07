@@ -11,12 +11,14 @@ PostVals
 
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
+require_once('./invoiceFunctions.php');
+require_once('./taxCalcs.php');
 
-$offerListFile = fopen($gamePath.'/saleOffers.slt', 'rb');
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
 
 $buyingPlayer = loadObject($pGameID, $objFile, 400);
 $buyingFactory = loadObject($postVals[1], $objFile, 1600);
@@ -71,79 +73,25 @@ if ($postVals[2] == 0) {
       exit('offer no longer available');
     }
     $baseCost = $offerDat[1]*$offerDat[2];
-/*
-  	// Load information about buying and selling players, factories, and cities
-  	$sellingFactory = loadObject($offerDat[3], $objFile, 1600);
-  	$sellingCity = loadCity($sellingFactory->get('region_3'), $cityFile);
-  	$buyingCity = loadCity($buyingFactory->get('region_3'), $cityFile);
 
-  	$sellingPlayer = loadObject($sellingFactory->get('owner'), $objFile, 400);
+  $transaction = array_fill(0, 25, 0);
+  $transaction[1] = $offerDat[1];
+  $transaction[2] = $offerDat[2]; // accepted price
+  $transaction[3] = $offerDat[3]; // selling factory ID
+  $transaction[5] = $offerDat[5]; // pollution
+  $transaction[6] = $offerDat[6]; // rights
+  $transaction[7] = $offerDat[11]; // product ID
+  $transaction[14] = $offerDat[14];
+  $transaction[15] = $offerDat[15];
 
-  	// [0, company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID, city ID, region ID, nation ID]
-  	$taxInfo = [0, $sellingFactory->get('owner'), $sellingFactory->get('subType'), $sellingFactory->get('industry'), $offerDat[3],
-  		$sellingPlayer->get('teamID'), $sellingFactory->get('region_3'), $sellingFactory->get('region_2'), $sellingFactory->get('region_1')];
+  $sellingFactory = loadObject($offerDat[3], $objFile, 1600);
+  $sellingCity = loadCity($sellingFactory->get('region_3'), $cityFile);
+  $buyingCity = loadCity($buyingFactory->get('region_3'), $cityFile);
+  $sellingPlayer = loadObject($sellingFactory->get('owner'), $objFile, 400);
 
-  	// Calculate import/tarrif taxes for the buyer
-  	$importTaxes = array_fill(0,31,0);
-  	$importTaxEx = new itemSlot($buyingCity->get('nTax'), $slotFile, 40);
-    $importTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
-  	$importTaxes[29] = $importTaxEx->slotData[9];
-  	calcTaxes($importTaxEx->slotData, $taxInfo, $taxes);
+  $taxRates = taxRates ($transaction, $sellingFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile); //($materialCost, $laborCost, $sellFactory, $buyingCity, $sellingCity, $sellingPlayer, $slotFile) {
+  $taxAmounts = taxCost($taxRates, $transaction);
 
-  	// calculate taxes on the selling player
-  	$materialCost = $offerDat[14];
-  	$laborCost = $offerDat[15];
-
-  	$cityTaxEx = new itemSlot($sellingCity->get('cTax'), $slotFile, 40);
-  	$regionTaxEx = new itemSlot($sellingCity->get('rTax'), $slotFile, 40);
-  	$nationTaxEx = new itemSlot($sellingCity->get('nTax'), $slotFile, 40);
-
-  	// override taxes for testing
-  	$cityTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10,1,1,460,-10];
-  	$regionTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
-  	$nationTaxEx->slotData = [0,1,2,3,4,5,6,7,8,9,10];
-
-  	for ($i=1; $i<11; $i++) {
-  		$taxes[$i] = $cityTaxEx->slotData[$i];
-  		$taxes[$i+10] = $regionTaxEx->slotData[$i];
-  		$taxes[$i+20] = $nationTaxEx->slotData[$i];
-  	}
-
-  	echo 'Tax infor for player ('.$pGameID.')';
-  	print_r($taxInfo);
-
-  	$cityLaws = new itemSlot($sellingCity->get('cLaw'), $slotFile, 40);
-  	$regionLaws = new itemSlot($sellingCity->get('rLaw'), $slotFile, 40);
-  	$nationLaws = new itemSlot($sellingCity->get('nLaw'), $slotFile, 40);
-
-  	calcTaxes($cityTaxEx->slotData, $taxInfo, $taxes);
-  	calcTaxes($regionTaxEx->slotData, $taxInfo, $taxes);
-  	calcTaxes($nationTaxEx->slotData, $taxInfo, $taxes);
-
-  	echo 'Final tax rates:';
-  	print_r($taxes);
-
-  	$taxAmounts = array_fill(1, 30, 0);
-  	$taxAmounts[1] = $taxes[1]* ($baseCost-$materialCost - $laborCost)/10000; // Income Tax
-  	$taxAmounts[3] = $taxes[3] * ($baseCost - $materialCost)/10000; // VAT
-  	$taxAmounts[5] = $taxes[5]*$offerDat[5]/10000; // Pollution Tax
-  	$taxAmounts[6] = $taxes[6]*$offerDat[6]/10000; // Rights Tax
-  	$taxAmounts[7] = $taxes[7] * $baseCost/10000; // Sales Tax
-
-  	$taxAmounts[11] = $taxes[11]* ($baseCost-$materialCost - $laborCost)/10000; // Income Tax
-  	$taxAmounts[13] = $taxes[13] * ($baseCost - $materialCost)/10000; // VAT
-  	$taxAmounts[15] = $taxes[15]*$offerDat[5]/10000; // Pollution Tax
-  	$taxAmounts[16] = $taxes[16]*$offerDat[6]/10000; // Rights Tax
-  	$taxAmounts[17] = $taxes[17] * $baseCost/10000; // Sales Tax
-
-  	$taxAmounts[21] = $taxes[21]* ($baseCost-$materialCost - $laborCost)/10000; // Income Tax
-  	$taxAmounts[23] = $taxes[23] * ($baseCost - $materialCost)/10000; // VAT
-  	$taxAmounts[25] = $taxes[25]*$offerDat[5]/10000; // Pollution Tax
-  	$taxAmounts[26] = $taxes[26]*$offerDat[6]/10000; // Rights Tax
-  	$taxAmounts[27] = $taxes[27] * $baseCost/10000; // Sales Tax
-
-  	$taxAmounts[29] = $importTaxes[29]*$baseCost/10000;
-*/
   	$totalTax = array_sum($taxAmounts);
   	$sellerTax = $totalTax - $taxAmounts[7]-$taxAmounts[17]-$taxAmounts[27]-$taxAmounts[29];
   	$buyerTax = $taxAmounts[7]+$taxAmounts[17]+$taxAmounts[27]+$taxAmounts[29];
@@ -240,34 +188,24 @@ for ($i=0; $i<10; $i++) {
 		$offerDat = unpack('i*', fread($offerDatFile, 64));
 		array_push($materialOrders, $postVals[1], $i); //time, id, qty
     $materialOrders = array_merge($materialOrders, $offerDat);
-	}
+	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 }
 print_r($materialOrders);
 echo '<script>
-materialOrder = ['.implode(',', $materialOrders).'];
-//businessDiv.orderItems.innerHTML = "";
+selFactory.materialOrder = ['.implode(',', $materialOrders).'];
+selFactory.showOrders(factoryDiv.orderItems);
 
-/*
-factoryOrders = new Array();
-for (var i=0; i<materialOrder.length; i+=3) {
-	factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
-}
-for (i=0; i<factoryOrders.length; i++) {
-	factoryOrders[i].render(businessDiv.orderItems);
-}
-*/
-factoryOrders['.($orderNumber).'].updateOrder();
 thisDiv = useDeskTop.getPane("factoryInfo");
 thisPlayer.money = '.$buyingPlayer->get('money').'
 </script>';
 
-
+fclose($offerListFile);
 fclose($cityFile);
 fclose($offerDatFile);
 fclose($objFile);
 fclose($slotFile);
 
-
+/*
 function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Type, Industry, Factory ID, Cong ID, Product ID]
 	for ($i=11; $i<sizeof($slotData); $i+=4) {
     echo $thisInfo[$slotData[$i]].' vs '.$slotData[$i+2].' --> ';
@@ -277,5 +215,5 @@ function calcTaxes($slotData, $thisInfo, &$taxList) { // [company ID, Factory Ty
 		}
 	}
 }
-
+*/
 ?>

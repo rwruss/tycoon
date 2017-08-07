@@ -416,7 +416,7 @@ class factory extends object {
 					$this->objDat[$this->inputRights + $rscSpots[$orderDat[11]]] += $orderDat[6]; // adjust the inventory rights
 					$this->objDat[$this->inputQuality + $rscSpots[$orderDat[11]]] += $orderDat[4]; // adjust the inventory quality
 
-					$thisFactory->objDat[$thisFactory->orderListStart+$i] = 0; // delete the reference to the order
+					$this->objDat[$this->orderListStart+$i] = 0; // delete the reference to the order
 					$saveFactory = true;
 				} else $this->nextUpdate = min($this->nextUpdate, $orderDat[13]);
 			}

@@ -1313,10 +1313,10 @@ showRequiredLabor = function(trg, reqdLabor) {
 	}
 }*/
 
-showOrders = function (trg, factoryOrders) {
+showOrders = function (trg, orderInfo) {
 	//console.log(factoryOrders.length);
-	for (i=0; i<factoryOrders.length; i++) {
-		factoryOrders[i].render(trg);
+	for (i=0; i<orderInfo.length; i++) {
+		orderInfo[i].render(trg);
 	}
 }
 
