@@ -157,6 +157,7 @@ echo '
 <script type="text/javascript" src="templates.js"></script>
 <script type="text/javascript" src="selectList.js"></script>
 <script type="text/javascript" src="tycoonObjects.js"></script>
+<script type="text/javascript" src="gl.js"></script>
 
 <script id="shader-fs" type="x-shader/x-fragment">
 </script>
@@ -343,7 +344,7 @@ echo '
 		xmlhttp.send(params);
 	}
 
-
+	/*
 	function makeBox(bName, val, h, w, x, y) {
 		console.log(arguments);
 		e = window.event || arguments[0];
@@ -354,7 +355,7 @@ echo '
 	function closeBox() {
 		this.parentNode.remove();
 	}
-
+	
 	function killBox(trg) {
 		console.log(trg + " name is " + trg.nodeName)
 		if (trg.nodeName == "DIV") {
@@ -375,7 +376,7 @@ echo '
 		console.log("destroying " + testNode.parentNode.parentObj.nodeType + "  via " + testNode);
 		testNode.parentNode.parentObj.destroyWindow();
 	}
-
+	*/
 	function getData(rTrg, prm, tTrg) {
 		var tot_length = 0;
 		params = "val1="+prm.join();
@@ -502,12 +503,13 @@ echo '
 		else  document.getElementById("diagBox").style.width = 0;
 	}
 
+	/*
 	function sendValue(src, dst) {
 		//alert("source has a value of " + document.getElementById(src).value);
 		dst = dst + ","+document.getElementById(src).value;
 		alert(dst);
 		makeBox("someBox", dst, 500, 500, 200, 50);
-	}
+	}*/
 
 	function getDescription(trg, info, src) {
 		info = info  + ","+document.getElementById(src).value;
