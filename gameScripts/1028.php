@@ -1,5 +1,7 @@
 <?php
 
+if (sizeof($postVals) != 3) exit('error 8201-0');
+
 require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
@@ -29,7 +31,7 @@ $thisProduct = loadProduct($postVals[2], $objFile, 400);
 // Calculate the amount of product to be produced
 $durations = [0, 3600, 7200, 14400, 28800];
 $production = intval($thisFactory->get('prodRate')*$durations[$postVals[2]]/360000); // 3600 seconds x 100 for decimal factor in production rate
-echo 'Prod rate is '.$thisFactory->get('prodRate');
+//echo 'Prod rate is '.$thisFactory->get('prodRate');
 if ($thisFactory->get('prodRate') <= 0) exit('Can\'t product anything right now');
 // <-- Verify that there are enough required resources
 // load production requirements
@@ -46,15 +48,15 @@ $rscFail = [];
 $usageList=[];
 for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
 	if ($productInfo[$i+18] > 0) {
-		echo 'Look for resource '.$productInfo[$i+18];
-		for ($j=0; $j<sizeof($thisFactory->resourceStores); $j+=2) {  // j is the index of the storage location at the factory
-			if ($thisFactory->resourceStores[$j] == $productInfo[$i+18]) {
-				echo 'Resources spot '.$j.' (type '.$thisFactory->resourceStores[$j].') which has a stock of '.$thisFactory->resourceStores[$j+1].' has a usage rate of '.$productInfo[$i+28].' Need '.($production*$productInfo[$i+28]).'<br>';
-				if ($production*$productInfo[$i+28] <= $thisFactory->resourceStores[$j+1]) {
-					echo $production*$productInfo[$i+28].' <= '.$thisFactory->resourceStores[$j+1];
+		//echo 'Look for resource '.$productInfo[$i+18];
+		for ($j=0; $j<$limit = 16; $j++) {  // j is the index of the storage location at the factory
+			if ($thisFactory->resourceStores[$j*2] == $productInfo[$i+18]) {
+				//echo 'Resources spot '.$j.' (type '.$thisFactory->resourceStores[$j*2].') which has a stock of '.$thisFactory->resourceStores[$j*2+1].' has a usage rate of '.$productInfo[$i+28].' Need '.($production*$productInfo[$i+28]).'<br>';
+				if ($production*$productInfo[$i+28] <= $thisFactory->resourceStores[$j*2+1]) {
+					//echo $production*$productInfo[$i+28].' <= '.$thisFactory->resourceStores[$j*2+1];
 					$usageList[$j] = $production*$productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
 				} else {
-					$rscFail[$j] = $production*$productInfo[$i+28] - $thisFactory->resourceStores[$j+1];
+					$rscFail[$j*2] = $production*$productInfo[$i+28] - $thisFactory->resourceStores[$j*2+1];
 				}
 				break;
 			}
@@ -65,7 +67,7 @@ for ($i=0; $i<10; $i++) { // i is the index of the resource required by the prod
 if (sizeof($rscFail) > 0) {
 	foreach ($rscFail as $rscID=>$rscQty) {
 		print_R($rscFail);
-		echo 'Need '.$rscQty.' of resource type '.$thisFactory->resourceStores[$rscID];
+		//echo 'Need '.$rscQty.' of resource type '.$thisFactory->resourceStores[$rscID];
 		}
 	exit();
 }
@@ -77,12 +79,12 @@ $productQuality = 0;
 $productPollution = 0;
 $productRights = 0;
 
-foreach ($usageList as $spot => $qty) {
-	// calc amounts for each input trait
-	$inputCost = $thisFactory->objDat[$thisFactory->inputCost+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputOffset+$spot]; //total costs * amount being made/amount in inventory
-	$inputQuality = $thisFactory->objDat[$thisFactory->inputQuality+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputQuality+$spot];
-	$inputPollution = $thisFactory->objDat[$thisFactory->inputPollution+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputPollution+$spot];
-	$inputRights = $thisFactory->objDat[$thisFactory->inputRights+$spot]*$qty/$thisFactory->objDat[$thisFactory->inputRights+$spot];
+foreach ($usageList as $spot => $qtyUsed) {
+	// calc amounts for each input trait.  Total points for each trait * qty / total amount in storage
+	$inputCost = $thisFactory->objDat[$thisFactory->inputCost+$spot]*$qtyUsed/max(1, $thisFactory->objDat[31+$spot]); //total costs * amount being made/amount in inventory
+	$inputQuality = $thisFactory->objDat[$thisFactory->inputQuality+$spot]*$qtyUsed/max(1,$thisFactory->objDat[31+$spot]);
+	$inputPollution = $thisFactory->objDat[$thisFactory->inputPollution+$spot]*$qtyUsed/max(1, $thisFactory->objDat[31+$spot]);
+	$inputRights = $thisFactory->objDat[$thisFactory->inputRights+$spot]*$qtyUsed/max(1, $thisFactory->objDat[31+$spot]);
 
 	// adjust total amounts for the factory
 	$thisFactory->objDat[$thisFactory->inputCost+$spot] -= $inputCost;
@@ -90,7 +92,7 @@ foreach ($usageList as $spot => $qty) {
 	$thisFactory->objDat[$thisFactory->inputPollution+$spot] -= $inputPollution;
 	$thisFactory->objDat[$thisFactory->inputRights+$spot] -= $inputRights;
 
-	$thisFactory->objDat[$thisFactory->inputOffset+$spot] -= $qty;
+	$thisFactory->objDat[$thisFactory->inputOffset+$spot] -= $qtyUsed;
 
 	// adjsut trait amounts for the product
 	$productCost += $inputCost;
@@ -102,11 +104,11 @@ foreach ($usageList as $spot => $qty) {
 // Calculate the labor costs
 $laborCost = 0;
 $qualityPoints = 0;
-$totalQualWeight = 0;
+$totalQualWeight = 1;
 for ($i=0; $i<7; $i++) {
-	echo 'Labor Cost: '.$thisFactory->objDat[$thisFactory->laborOffset+$i*10+5].' * '.$durations[$postVals[2]].' / 3600 ('.($thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations[$postVals[2]]/3600).')<br>';
+	//echo 'Labor Cost: '.$thisFactory->objDat[$thisFactory->laborOffset+$i*10+5].' * '.$durations[$postVals[2]].' / 3600 ('.($thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations[$postVals[2]]/3600).')<br>';
 	$laborCost += $thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations[$postVals[2]]/3600;
-	
+
 	$talentStats = unpack("C*", pack("i", $thisFactory->objDat[$thisFactory->laborOffset+$i*10+9]));
 	$qualityPoints += (1+($talentStats[1]-50)/100) * (1 + ($talentStats[2]-50)/200)*$talentStats[4];
 	$totalQualWeight += $talentStats[4];

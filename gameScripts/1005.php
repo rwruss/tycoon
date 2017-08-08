@@ -1,10 +1,17 @@
 <?php
 
+/*
+PVS
+1 - factory ID
+2 - JUNK
+3 - index spot for new item to be produced
+*/
+
 require_once('./objectClass.php');
 
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'rb'); // r+b
+$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb'); // rb
 
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
@@ -19,6 +26,8 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 	exit("error 5001-2");
 }
 
+
+if ($postVals[3] < 1) exit ('error 5001-1');
 // Verify that the production item is valid for this factory
 $optionCheck = false;
 $optionList = $thisFactory->productionOptions();

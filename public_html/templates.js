@@ -770,7 +770,7 @@ class deskTop {
 	}
 
 	newPane (desc, type="") {
-		console.log("start list " + Object.keys(this.paneList));
+		//console.log("start list " + Object.keys(this.paneList));
 		var newPaneSpot;
 		newPaneSpot = this.paneList.length;
 		let foundPane = false;
@@ -784,7 +784,7 @@ class deskTop {
 			}
 
 		}
-		console.log(newPaneSpot);
+		//console.log(newPaneSpot);
 		if (!foundPane) {
 			if (type == "menu") {
 				var newPane = new menu(desc, this);
@@ -793,7 +793,7 @@ class deskTop {
 			} else {
 				var newPane = new regPane(desc, this);
 				this.paneList[newPaneSpot] = newPane;
-				console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
+				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
 			}
 		}
 
@@ -814,7 +814,7 @@ class deskTop {
 			}
 			//console.log("created " + desc);
 		}*/
-		console.log("Set item " + newPaneSpot + " to top");
+		//console.log("Set item " + newPaneSpot + " to top");
 		this.paneToTop(this.paneList[newPaneSpot]);
 		return this.paneList[newPaneSpot].divEl.childNodes[1];
 	}
@@ -826,7 +826,7 @@ class deskTop {
 				this.paneList[i].divEl.style.zIndex = this.paneList.length;
 			} else {
 				if (this.paneList[i].divEl.style.zIndex > currZ)	{
-					console.log(this.paneList[i].divEl.style.zIndex);
+					//console.log(this.paneList[i].divEl.style.zIndex);
 					this.paneList[i].divEl.style.zIndex = parseInt(this.paneList[i].divEl.style.zIndex) - 1;
 				}
 			}
@@ -841,7 +841,7 @@ class deskTop {
 	}
 
 	getPane(desc) {
-		console.log(" Set " + desc + " to top");
+		//console.log(" Set " + desc + " to top");
 		for (let i=0; i<this.paneList.length; i++) {
 			if (this.paneList[i].desc == desc) {
 				this.paneToTop(this.paneList[i]);
@@ -868,23 +868,23 @@ class deskTop {
 	}
 
 	removePane (thisPane) {
-		console.log(this.paneList);
-		console.log(Object.keys(this.paneList));
+		//console.log(this.paneList);
+		//console.log(Object.keys(this.paneList));
 
-		console.log(thisPane.desc + " --> " + this.paneList.length);
+		//console.log(thisPane.desc + " --> " + this.paneList.length);
 		for (let i=0; i<this.paneList.length; i++) {
-			console.log("check item " + i);
+			//console.log("check item " + i);
 			if (this.paneList[i].desc == thisPane.desc) {
 				this.paneList.splice(i, 1);
-				console.log("delete spot " + i);
+				//console.log("delete spot " + i);
 			} else {
-				console.log(this.paneList[i].desc + " != " +  thisPane.desc)
+				//console.log(this.paneList[i].desc + " != " +  thisPane.desc)
 			}
 		}
 		//delete this.paneList[thisPane.desc];
 
-		console.log(this.paneList);
-		console.log(Object.keys(this.paneList));
+		//console.log(this.paneList);
+		//console.log(Object.keys(this.paneList));
 
 		//let i = this.paneList.indexOf(thisPane.desc);
 		//console.log("delete index " + i);

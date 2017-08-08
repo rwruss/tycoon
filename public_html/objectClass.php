@@ -41,7 +41,7 @@ class object {
 		if (array_key_exists($desc, $this->attrList)) {
 			//echo 'Found '.$desc.' use spot '.$this->attrList[$desc].'.  Type: '.gettype ($this->objDat);
 			$this->objDat[$this->attrList[$desc]] = $val;
-			echo 'Set '.$desc.' ('.$this->attrList[$desc].') to '.$val;
+			//echo 'Set '.$desc.' ('.$this->attrList[$desc].') to '.$val;
 		}
 	}
 
@@ -84,7 +84,7 @@ class object {
 		}
 		fseek($file, $this->unitID*$this->itemBlockSize);
 		$saveLen = fwrite($file, $packStr);
-		echo "SAVED ".$saveLen." at location ".($this->unitID*$this->itemBlockSize).' with a block size of '.$this->itemBlockSize;
+		//echo "SAVED ".$saveLen." at location ".($this->unitID*$this->itemBlockSize).' with a block size of '.$this->itemBlockSize;
 	}
 }
 
@@ -354,7 +354,7 @@ class factory extends object {
 	function resourceInv() {
 		//print_r(array_slice($this->templateDat, 15, 20));
 		$tmp = [];
-		for ($i=0; $i<20; $i++) {
+		for ($i=0; $i<16; $i++) {
 			if ($this->templateDat[16+$i] > 0) array_push($tmp, $this->templateDat[16+$i], $this->objDat[31+$i]);
 		}
 		return $tmp;
@@ -423,12 +423,12 @@ class factory extends object {
 		}
 
 		// Update production and production statistics
-		echo 'Check for production updates ('.$this->get('prodStart').') -> ';
+		//echo 'Check for production updates ('.$this->get('prodStart').') -> ';
 		if ($this->get('prodStart') > 0) {
 			echo ($this->get('prodStart') + $this->get('prodLength')).' vs '.$now;
 			if ($this->get('prodStart') + $this->get('prodLength') <= $now) {
 				// Production is complete
-				echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
+				//echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
 
 				//Find product index
 				for ($i=0; $i<5; $i++){
@@ -451,7 +451,7 @@ class factory extends object {
 				for ($i=0; $i<7; $i++) {
 					//$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
 					$this->objDat[$this->laborOffset+$i*10+8] += intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000);
-					echo 'Add '.intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000).' to exp. ->> '.$this->get('initProdDuration').' * '.$this->objDat[$this->eqRateOffset+$i];
+					//echo 'Add '.intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000).' to exp. ->> '.$this->get('initProdDuration').' * '.$this->objDat[$this->eqRateOffset+$i];
 				}
 
 				$saveFactory = true;
