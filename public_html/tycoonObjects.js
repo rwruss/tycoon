@@ -183,6 +183,7 @@ class factory extends object {
 		trg.innerHTML = "";
 		this.factoryOrders = new Array();
 		for (var i=0; i<this.materialOrder.length; i+=18) {
+			console.log(this.materialOrder.slice(i, i+18));
 			this.factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+18)));
 			//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 		}
@@ -220,6 +221,11 @@ class factory extends object {
 				productArray[this.prod[i]].renderDtls(trg, this.productStores[5+i], this.prodDtls[i*5+4], this.prodDtls[i*5+3], 0, 0);
 			}
 		}
+	}
+
+	setProdRate(rate, trg) {
+		this.currentRate = rate;
+		trg.innerHTML = "Rate: " + this.currentRate + "<br>Lifetime Earnings: $TBD<br>Period Earnings: $TBD";
 	}
 
 	showProdRequirements(trg) {

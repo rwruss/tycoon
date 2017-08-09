@@ -7,9 +7,9 @@ gl.useProgram(bufferProgram);
 gl.bindFramebuffer(gl.FRAMEBUFFER, mapFrameBuffer);
 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-class shader () {
+class shader  {
 	constructor (src) {
-		
+
 	}
 }
 
@@ -25,7 +25,7 @@ canvasInit = function () {
 	new_canvas.width = parseInt(new_canvas.style.width);
 	new_canvas.height = parseInt(new_canvas.style.height);
 	}
-	
+
 findPos = function (obj) {
 	var curleft = curtop = 0;
 	if (obj.offsetParent) {
@@ -48,7 +48,7 @@ handleClick = function (event)	{
 	gl.readPixels(cpos[0], cpos[1], 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelValues);
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 	}
-	
+
 initShaders = function () {
 	var fragShader = getShader(gl, "buffer-fs");
 	var vertShader = getShader(gl, "buffer-vs");
@@ -75,7 +75,7 @@ initShaders = function () {
 	bufferProgram.scaleUniform = gl.getUniformLocation(bufferProgram, "uMapScale");
 	bufferProgram.offsetUniform = gl.getUniformLocation(bufferProgram, "uMapOffset");
 }
-	
+
 initTextureFramebuffer = function (trg, trgTex, width, height) {
 	gl.bindFramebuffer(gl.FRAMEBUFFER, trg);
 

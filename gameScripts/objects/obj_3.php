@@ -80,11 +80,14 @@ for ($i=0; $i<10; $i++) {
 	if ($thisObj->objDat[$thisObj->orderListStart+$i] > 0) {
 		fseek($offerDatFile, $thisObj->objDat[$thisObj->orderListStart+$i]);
 		$offerDat = unpack('i*', fread($offerDatFile, 64));
-		array_push($materialOrders, $postVals[1], $i, $offerDat); //id, qty, time
-		$materialOrders = array_merge($materialOrders, $offerDat);
+		array_push($materialOrders, $postVals[1], $i); //id, qty, time
+		//$materialOrders = array_merge($materialOrders, $offerDat);
+		$materialOrders = $materialOrders + $offerDat;
 	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 }
 fclose($offerDatFile);
+
+print_r($materialOrders);
 
 // Load factory contracts and invoice orders
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
@@ -182,7 +185,7 @@ for ($i=2; $i<6; $i++) {
 }
 echo ']);*/
 let tmpProdItems = [];
-tmpProdItems.push(new factoryProduction(0,10,10,10,0));
+tmpProdItems.push(new factoryProduction(0,0,0,0,0));
 //tmpProdItems.push(new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').',6));
 for (let i=0; i<5; i++) {
 	if (selFactory.productStores[i] > 0) {
@@ -190,12 +193,13 @@ for (let i=0; i<5; i++) {
 		else tmpProdItems.push(new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').',i+1));
 	}
 }
+console.log(tmpProdItems)
 prodList = new uList(tmpProdItems);
-headSection = addDiv("", "stdFloatDiv", factoryDiv);
-headSection.style.height = 250;
-headSection.rate = textBlob("", headSection, "Rate: '.($thisObj->get('prodRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
+factoryDiv.headSection = addDiv("", "stdFloatDiv", factoryDiv);
+factoryDiv.headSection.style.height = 250;
+factoryDiv.headSection.rate = textBlob("", factoryDiv.headSection, "Rate: '.($thisObj->get('prodRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
-contractsButton = newButton(headSection, function () {
+contractsButton = newButton(factoryDiv.headSection, function () {
 	event.stopPropagation();
 	thisDiv = useDeskTop.newPane("factoryContracts");
 	thisDiv.innerHTML = "CONTRACT INFO";
@@ -211,24 +215,24 @@ contractsButton = newButton(headSection, function () {
 		}})})
 contractsButton.innerHTML = "Contracts";
 
-sellButton = newButton(headSection, function () {scrMod("1043,'.$postVals[1].'")});
+sellButton = newButton(factoryDiv.headSection, function () {scrMod("1043,'.$postVals[1].'")});
 sellButton.innerHTML = "Sell Factory";
 
-sendButton = newButton(headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(factoryProductionBox))});
+sendButton = newButton(factoryDiv.headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(factoryProductionBox))});
 sendButton.innerHTML = "Set production";
 
-startButton1 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',1")});
+startButton1 = newButton(factoryDiv.headSection, function () {scrMod("1028,'.$postVals[1].',1")});
 startButton1.innerHTML = "Work for - 1 hour";
 
-startButton2 = newButton(headSection, function () {scrMod("1028,'.$postVals[1].',2")});
+startButton2 = newButton(factoryDiv.headSection, function () {scrMod("1028,'.$postVals[1].',2")});
 startButton2.innerHTML = "Work for - 2 hour";
 
-startButton3 = newButton(headSection, function () {
+startButton3 = newButton(factoryDiv.headSection, function () {
 	selFactory.startProduction(3, this.parentNode.parentNode.prodContain)
 });
 startButton3.innerHTML = "Work for - 4 hour";
 
-startButton4 = newButton(headSection, function () {
+startButton4 = newButton(factoryDiv.headSection, function () {
 	setupPromise("1028,'.$postVals[1].',4").then(v => {
 		let result = setArrayInts(v.split(","));
 		console.log(result);
@@ -242,13 +246,13 @@ startButton4 = newButton(headSection, function () {
 });
 startButton4.innerHTML = "Work for - 8 hour";
 
-factoryDiv.prodContain = addDiv("", "orderContain", headSection);
+factoryDiv.prodContain = addDiv("", "orderContain", factoryDiv.headSection);
 selFactory.production = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100);
 //fProductionBox = selFactory.production.render(factoryDiv.prodContain);
 console.log(prodList);
-factoryProductionBox = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:2});
+factoryProductionBox = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:1});
 
-upgradeButton = newButton(headSection, function () {
+upgradeButton = newButton(factoryDiv.headSection, function () {
 	resourceQuery(factoryUpgradeProducts, factoryUpgradeServices, function () {
 		scrMod("1031,'.$postVals[1].'");})
 	});

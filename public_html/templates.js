@@ -1544,14 +1544,14 @@ loadLaborItems = function(laborDat) {
 	return tmpArray;
 }
 
-/*
+
 loadFactoryLabor = function (laborDat) {
 	factoryLabor = new Array();
 	factoryLabor.push(new laborItem({objID:0, pay:0, ability:0, laborType:0}));
 	for (var i=0; i<laborDat.length; i+=10) {
 		factoryLabor.push(new laborItem({objID:(laborDat[i]/10+1), pay:(laborDat[i+5]), ability:(laborDat[i+8]), laborType:laborDat[i]}));
 	}
-}*/
+}
 
 factoryLaborDetail = function(thisLabor, factoryID, target) {
 	let item = thisLabor.renderSummary(target);

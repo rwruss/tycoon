@@ -303,11 +303,11 @@ class factory extends object {
 		// Check first 7 labor types at the factory
 		for ($i=0; $i<7; $i++) {
 			if ($thisProduct->objDat[38+$i] > 0) {
-				print_r($this->objDat);
+				//print_r($this->objDat);
 				echo 'Check labor type '.$this->objDat[$this->laborOffset+10*$i];
 				fseek($laborEqFile, $this->objDat[$this->laborOffset+10*$i]*4000);
 				$eqDat = unpack('i*', fread($laborEqFile, 80));
-				print_r($eqDat);
+				//print_r($eqDat);
 
 				$eqArray = array_fill(0, 1000, 0);
 				$eqArray[1] = $eqDat[1];
@@ -318,19 +318,20 @@ class factory extends object {
 				$eqArray[6] = $eqDat[6];
 				$eqArray[7] = $eqDat[7];
 				$eqArray[8] = $eqDat[8];
-				$eqArray[9] = $eqDat[19];
-				$eqArray[10] = $eqDat[1];
-				$eqArray[11] = $eqDat[1];
-				$eqArray[12] = $eqDat[1];
-				$eqArray[13] = $eqDat[1];
-				$eqArray[14] = $eqDat[1];
-				$eqArray[15] = $eqDat[1];
-				$eqArray[16] = $eqDat[1];
-				$eqArray[17] = $eqDat[1];
-				$eqArray[18] = $eqDat[1];
-				$eqArray[19] = $eqDat[1];
-				$eqArray[20] = $eqDat[1];
+				$eqArray[9] = $eqDat[9];
+				$eqArray[10] = $eqDat[10];
+				$eqArray[11] = $eqDat[11];
+				$eqArray[12] = $eqDat[12];
+				$eqArray[13] = $eqDat[13];
+				$eqArray[14] = $eqDat[14];
+				$eqArray[15] = $eqDat[15];
+				$eqArray[16] = $eqDat[16];
+				$eqArray[17] = $eqDat[17];
+				$eqArray[18] = $eqDat[18];
+				$eqArray[19] = $eqDat[19];
+				$eqArray[20] = $eqDat[20];
 
+				echo ($this->laborOffset+10*$i).' --> '.$this->objDat[$this->laborOffset+10*$i].' --> '.$eqArray[$this->objDat[$this->laborOffset+10*$i]];
 				$effectiveRate = $eqArray[$this->objDat[$this->laborOffset+10*$i]]/10000;
 
 				$workTime = max(1,$this->objDat[$this->laborOffset+10*$i]);

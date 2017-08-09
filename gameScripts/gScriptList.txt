@@ -92,7 +92,6 @@
 1092 - PROCESS: Show purchase options for a selected vehicle type
 
 TO DO:
-https://stackoverflow.com/questions/1375714/load-external-javascript-on-function-call
 https://msdn.microsoft.com/en-us/library/aa365574(v=vs.85).aspx
 https://msdn.microsoft.com/en-us/library/windows/desktop/ms738545(v=vs.85).aspx
 https://stackoverflow.com/questions/33401895/how-to-set-up-communication-between-php-and-c

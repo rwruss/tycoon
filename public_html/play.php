@@ -3,7 +3,7 @@
 $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
 $numProducts = 42;
-$numFactories = 10;
+$numFactories = 11;
 $supplyBlockSize = 360000;
 
 require_once('./slotFunctions.php');
@@ -344,7 +344,7 @@ echo '
 		xmlhttp.send(params);
 	}
 
-	/*
+/*
 	function makeBox(bName, val, h, w, x, y) {
 		console.log(arguments);
 		e = window.event || arguments[0];
@@ -355,7 +355,7 @@ echo '
 	function closeBox() {
 		this.parentNode.remove();
 	}
-	
+
 	function killBox(trg) {
 		console.log(trg + " name is " + trg.nodeName)
 		if (trg.nodeName == "DIV") {
@@ -376,7 +376,7 @@ echo '
 		console.log("destroying " + testNode.parentNode.parentObj.nodeType + "  via " + testNode);
 		testNode.parentNode.parentObj.destroyWindow();
 	}
-	*/
+*/
 	function getData(rTrg, prm, tTrg) {
 		var tot_length = 0;
 		params = "val1="+prm.join();
@@ -502,15 +502,14 @@ echo '
 		if (document.getElementById("diagCB").checked) document.getElementById("diagBox").style.width = "300";
 		else  document.getElementById("diagBox").style.width = 0;
 	}
-
-	/*
+/*
 	function sendValue(src, dst) {
 		//alert("source has a value of " + document.getElementById(src).value);
 		dst = dst + ","+document.getElementById(src).value;
 		alert(dst);
 		makeBox("someBox", dst, 500, 500, 200, 50);
-	}*/
-
+	}
+*/
 	function getDescription(trg, info, src) {
 		info = info  + ","+document.getElementById(src).value;
 		passClick(info, trg);
@@ -586,7 +585,7 @@ echo '
 		nationList = new Array("Canada", "Mexico", "United States");
 
 		// initialize windows
-		useDeskTop.newPane("dialogPane");
+		//useDeskTop.newPane("dialogPane");
 		companyLabor = loadCompanyLabor(['.implode(',', $companyLabor).']);
 		//loadCompanyLabor(['.implode(',', $companyLabor).']);
 		webGLStart();
