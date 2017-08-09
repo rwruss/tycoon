@@ -1,16 +1,17 @@
-var gl, mapBuffer, mapFrameBuffer;
+var gl, mapBuffer, mapFrameBuffer, squarePointsBuffer, squareIndexBuffer;
+var elapsed, lastTime, timeNow;
 
-mapFrameBuffer = gl.createFramebuffer();
-initTextureFramebuffer(mapFrameBuffer, rttTexture, 1200, 700);
+var mvMatrix = mat4.create();
+var pMatrix = mat4.create();
 
-gl.useProgram(bufferProgram);
-gl.bindFramebuffer(gl.FRAMEBUFFER, mapFrameBuffer);
-gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+//mapFrameBuffer = gl.createFramebuffer();
+//initTextureFramebuffer(mapFrameBuffer, rttTexture, 1200, 700);
 
-class shader  {
-	constructor (src) {
-
-	}
+animate = function () {
+	timeNow = new Date().getTime();
+    elapsed = timeNow - lastTime;
+	rY += elapsed*wY;
+	lastTime = timeNow;
 }
 
 canvasInit = function () {
@@ -25,6 +26,34 @@ canvasInit = function () {
 	new_canvas.width = parseInt(new_canvas.style.width);
 	new_canvas.height = parseInt(new_canvas.style.height);
 	}
+	
+drawScene = function () {
+	
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+	gl.useProgram(bufferProgram);
+	
+	mat4.identity(mvMatrix);
+
+	mat4.rotate(mvMatrix, degToRad(45), [1, 0, 0]);
+
+	gl.useProgram(bufferProgram);
+    bufferProgram.VPAttribute = gl.getAttribLocation(bufferProgram, "aVertexPosition");
+    gl.enableVertexAttribArray(bufferProgram.VPAttribute);
+
+	bufferProgram.textureCoordAttribute = gl.getAttribLocation(bufferProgram, "aTextureCoord");
+    gl.enableVertexAttribArray(bufferProgram.textureCoordAttribute);
+
+    bufferProgram.pMatrixUniform = gl.getUniformLocation(bufferProgram, "uPMatrix");
+    bufferProgram.mvMatrixUniform = gl.getUniformLocation(bufferProgram, "uMVMatrix");
+
+	bufferProgram.samplerUniform = gl.getUniformLocation(bufferProgram, "uSampler");
+	bufferProgram.tileNumberUniform = gl.getUniformLocation(bufferProgram, "uTileNum");
+	bufferProgram.scaleUniform = gl.getUniformLocation(bufferProgram, "uMapScale");
+	bufferProgram.offsetUniform = gl.getUniformLocation(bufferProgram, "uMapOffset");
+	
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+	gl.drawElements(gl.TRIANGLE_STRIP, drawLength, gl.UNSIGNED_SHORT, 0);
+}
 
 findPos = function (obj) {
 	var curleft = curtop = 0;
@@ -48,6 +77,18 @@ handleClick = function (event)	{
 	gl.readPixels(cpos[0], cpos[1], 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixelValues);
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 	}
+	
+initBuffers = function () {
+	tick();
+	
+	squarePointsBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, squarePointsBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1., 0., -1., -1., 0., 1., 1., 0., -1., 1., 0., 1.]), gl.STATIC_DRAW);
+	
+	squareIndexBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareIndexBuffer);
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0,1,2,3]), gl.STATIC_DRAW);
+}
 
 initShaders = function () {
 	var fragShader = getShader(gl, "buffer-fs");
@@ -69,11 +110,6 @@ initShaders = function () {
 
 	bufferProgram.pMatrixUniform = gl.getUniformLocation(bufferProgram, "uPMatrix");
 	bufferProgram.mvMatrixUniform = gl.getUniformLocation(bufferProgram, "uMVMatrix");
-
-	bufferProgram.samplerUniform = gl.getUniformLocation(bufferProgram, "uSampler");
-	bufferProgram.tileNumberUniform = gl.getUniformLocation(bufferProgram, "uTileNum");
-	bufferProgram.scaleUniform = gl.getUniformLocation(bufferProgram, "uMapScale");
-	bufferProgram.offsetUniform = gl.getUniformLocation(bufferProgram, "uMapOffset");
 }
 
 initTextureFramebuffer = function (trg, trgTex, width, height) {
@@ -98,6 +134,23 @@ initTextureFramebuffer = function (trg, trgTex, width, height) {
 
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 	}
+	
+setMatrixUniforms = function(shader) {
+        gl.uniformMatrix4fv(shader.pMatrixUniform, false, pMatrix);
+        gl.uniformMatrix4fv(shader.mvMatrixUniform, false, mvMatrix);
+
+		var normalMatrix = mat3.create();
+        mat4.toInverseMat3(mvMatrix, normalMatrix);
+        mat3.transpose(normalMatrix);
+        gl.uniformMatrix3fv(shader.nMatrixUniform, false, normalMatrix);
+		}
+	
+tick = function () {
+	requestAnimFrame(tick);
+	handleKeys();
+	drawScene();
+	animate();
+	}
 
 webGLStart = function (canvas) {
         try {
@@ -110,5 +163,8 @@ webGLStart = function (canvas) {
         if (!gl) {
             alert("Could not initialise WebGL, sorry :-(");
         }
+		
+	gl.clearColor(1.0, 0.0, 0.0, 0.0);
+    gl.enable(gl.DEPTH_TEST);
 	initShaders();
     }
