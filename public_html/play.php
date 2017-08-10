@@ -159,10 +159,28 @@ echo '
 <script type="text/javascript" src="tycoonObjects.js"></script>
 <script type="text/javascript" src="gl.js"></script>
 
-<script id="shader-fs" type="x-shader/x-fragment">
+<script id="buffer-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_FragColor = vColor;
+    }
 </script>
 
-<script id="shader-vs" type="x-shader/x-vertex">
+<script id="buffer-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vColor = vec4(0.1,1.,0.5,1.);
+    }
 </script>
 
 <script type="text/javascript">
@@ -588,7 +606,7 @@ echo '
 		//useDeskTop.newPane("dialogPane");
 		companyLabor = loadCompanyLabor(['.implode(',', $companyLabor).']);
 		//loadCompanyLabor(['.implode(',', $companyLabor).']);
-		webGLStart();
+		canvasInit();
 	}
 
 window.addEventListener("load", initGame);
@@ -617,7 +635,7 @@ window.addEventListener("load", initGame);
 		<a href="javascript:void(0);" id="readMsg">Read Messages</a>
 	</div>
 	<div id="gmPnl" style="position:absolute; top:40; left:110; height:650; width:1200; border:1px solid #000000; overflow:hidden">
-		<canvas style="position:absolute" id="gameCanvas" style="border: none;"></canvas>
+		<canvas style="position:absolute" id="gameCanvas" style="border: none; height:650; width:1200"></canvas>
 	</div>
 	<div id="topBar" style="position:absolute; top:15; left:110; height:25; width:1200; border:1px solid #000000; overflow:hidden">
 		<div id="cashBox" style="position:absolute; top:0; left:0; height:25; border:1px solid #000000; padding-right:5; overflow:hidden"></div>
@@ -627,7 +645,7 @@ window.addEventListener("load", initGame);
 	<div id="scrBox" style="width:0; height:0; overflow:hidden;">
 	</div>
 	<div style="width:0; height:0; overflow:hidden;">
-		<div style="position:absolute;  overflow:hidden; width:0; height:0; left:1210; top:150;"><canvas id="tCanvas" style="border: 1px solid black;" width=720 height=720></canvas></div>
+		<div style="position:absolute;  overflow:hidden; width:0; height:0; left:1210; top:150;"></div>
 		<div id="pointDat" style="position:absolute; right:0; bottom:0;"></div>
 		<div id="diagBox" style="position:absolute; right:50; top:0; width:0; overflow:hidden;">
 			<table>
