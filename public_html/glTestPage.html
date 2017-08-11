@@ -1,0 +1,41 @@
+<html>
+<script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+<script type="text/javascript" src="webgl-utils.js"></script>
+<script type="text/javascript" src="gl.js"></script>
+
+<script id="buffer-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_FragColor = vColor;
+    }
+</script>
+
+<script id="buffer-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vColor = vec4(1.,0.,0.,1.);
+    }
+</script>
+<script>
+
+var currentlyPressedKeys = [];
+var rY;
+window.addEventListener("load", canvasInit);
+</script>
+
+<div id="gmPnl" style="position:absolute; top:40; left:110; height:650; width:1200; border:1px solid #000000; overflow:hidden">
+	<canvas style="position:absolute" id="gameCanvas" style="border: none; height:650; width:1200"></canvas>
+</div>
+<input style = "position:absolute; right:15; top:20" id="rYVal">
+
+</html>
