@@ -28,8 +28,10 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 }
 
 $optionList = $thisFactory->productionOptions();
+print_r($optionList);
 $optionCheck = true;
 $productIndex = $postVals[3] - 1;
+
 
 if ($productIndex < 0) exit ('error 5001-1');
 // Verify that the production item is valid for this factory
@@ -55,9 +57,10 @@ if ($optionCheck) {
 	if ($thisFactory->get('currentProd') > 1)	$thisFactory->updateStocks($offerDatFile);
 
 	// Set new item production
-	echo 'Set production of item '.$optionList[$productIndex].' to '.$productionRate;
+	echo 'Set production of item '.$optionList[$productIndex].' to '.$productionRate.'<p>';
 	$thisFactory->save('currentProd', $optionList[$productIndex]);
 	$thisFactory->save('prodRate', $productionRate);
+	echo 'Current prod is '.$thisFactory->get('currentProd').'<p>';
 
 	echo '<script>
 	productMaterial = ['.implode(',', $thisProduct->reqMaterials).'];

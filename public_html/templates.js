@@ -584,7 +584,7 @@ laborBox = function (id, target) {
 }
 
 materialBox = function (id, qty, target) {
-	///console.log("show material box for produ " + id);
+	console.log("show material box for produ " + id);
 	let thisRsc = productArray[id].renderSummary(target);
 
 	thisRsc.qtyDiv = addDiv("asdf", "productQty", thisRsc);

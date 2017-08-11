@@ -3,6 +3,7 @@ var elapsed, lastTime, timeNow;
 
 var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
+var mvMatrixStack = [];
 
 //mapFrameBuffer = gl.createFramebuffer();
 //initTextureFramebuffer(mapFrameBuffer, rttTexture, 1200, 700);
@@ -32,6 +33,10 @@ canvasInit = function () {
 	webGLStart(canvas);
 	}
 
+degToRad = function (degrees) {
+		return degrees * Math.PI / 180;
+}
+
 drawScene = function () {
 	gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -40,6 +45,12 @@ drawScene = function () {
 
 
 	mat4.identity(mvMatrix);
+
+	mat4.translate(mvMatrix, [0., -0.5, -8.0]);
+	mat4.rotate(mvMatrix, degToRad(-25), [1, 0, 0]);
+
+	mvPushMatrix();
+
 	gl.useProgram(bufferProgram);
 	//mat4.rotate(mvMatrix, degToRad(45), [1, 0, 0]);
 
@@ -49,6 +60,7 @@ drawScene = function () {
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareIndexBuffer);
 	setMatrixUniforms(bufferProgram);
 	gl.drawElements(gl.TRIANGLE_STRIP, 4, gl.UNSIGNED_SHORT, 0);
+	mvPopMatrix();
 	//console.log(gl.getError());
 }
 
@@ -146,7 +158,10 @@ handleKeys = function () {
 initBuffers = function () {
 	squarePointsBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, squarePointsBuffer);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1., 0., -1., -1., 0., 1., 1., 0., -1., 1., 0., 1.]), gl.STATIC_DRAW);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ -1.0, -1.0,  1.0,
+             1.0, -1.0,  1.0,
+             -1.0,  1.0,  1.0,
+            1.0,  1.0,  1.0,]), gl.STATIC_DRAW);
 
 	squareIndexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareIndexBuffer);
@@ -205,6 +220,19 @@ initTextureFramebuffer = function (trg, trgTex, width, height) {
 
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 	}
+
+mvPushMatrix = function () {
+      var copy = mat4.create();
+      mat4.set(mvMatrix, copy);
+      mvMatrixStack.push(copy);
+  }
+
+mvPopMatrix = function () {
+      if (mvMatrixStack.length == 0) {
+          throw "Invalid popMatrix!";
+      }
+      mvMatrix = mvMatrixStack.pop();
+  }
 
 setMatrixUniforms = function(shader) {
 	gl.uniformMatrix4fv(shader.pMatrixUniform, false, pMatrix);

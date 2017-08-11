@@ -4,8 +4,8 @@ if (sizeof($postVals) != 3) exit('error 8201-0');
 
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'r+b'); // r+b
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b'); // r+b
 
 // Load target factory
 $thisFactory = loadObject($postVals[1], $objFile, 1600);
@@ -65,9 +65,12 @@ for ($i=0; $i<10; $i++) { // i is the index of the resource required by the prod
 }
 
 if (sizeof($rscFail) > 0) {
+	$rscError = [-1];
 	foreach ($rscFail as $rscID=>$rscQty) {
-		print_R($rscFail);
+		//print_R($rscFail);
 		//echo 'Need '.$rscQty.' of resource type '.$thisFactory->resourceStores[$rscID];
+		array_push($rscError, $rscQty, $thisFactory->resourceStores[$rscID]);
+		echo implode(',', $rscError);
 		}
 	exit();
 }

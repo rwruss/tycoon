@@ -81,8 +81,9 @@ for ($i=0; $i<10; $i++) {
 		fseek($offerDatFile, $thisObj->objDat[$thisObj->orderListStart+$i]);
 		$offerDat = unpack('i*', fread($offerDatFile, 64));
 		array_push($materialOrders, $postVals[1], $i); //id, qty, time
-		//$materialOrders = array_merge($materialOrders, $offerDat);
-		$materialOrders = $materialOrders + $offerDat;
+		$materialOrders = array_merge($materialOrders, $offerDat);
+		//$materialOrders = $materialOrders + $offerDat;
+		print_r($offerDat);
 	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 }
 fclose($offerDatFile);
@@ -135,6 +136,10 @@ fclose($contractFile);
 
 print_r($thisObj->invStats());
 
+$optionList = $thisObj->productionOptions();
+for ($i=0; $i<5; $i++) {
+}
+
 echo '<script>
 selFactory = playerFactories['.$postVals[2].'];
 
@@ -185,12 +190,16 @@ for ($i=2; $i<6; $i++) {
 }
 echo ']);*/
 let tmpProdItems = [];
+let selectedIndex = 0;
 tmpProdItems.push(new factoryProduction(0,0,0,0,0));
 //tmpProdItems.push(new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').',6));
 for (let i=0; i<5; i++) {
 	if (selFactory.productStores[i] > 0) {
 		if (selFactory.productStores[i] != '.$thisObj->get('currentProd').')	tmpProdItems.push(new factoryProduction('.$postVals[1].', 0, selFactory.productStores[i], 0,i+1));
-		else tmpProdItems.push(new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').',i+1));
+		else {
+			tmpProdItems.push(new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').',i+1));
+			selectedIndex = i+1;
+		}
 	}
 }
 console.log(tmpProdItems)
@@ -236,21 +245,30 @@ startButton4 = newButton(factoryDiv.headSection, function () {
 	setupPromise("1028,'.$postVals[1].',4").then(v => {
 		let result = setArrayInts(v.split(","));
 		console.log(result);
+		if (result[0] < 0) {
+			switch (result[0]) {
+				case -1:
+					console.log("resource qty error");
+					break;
+			}
+		} else {
 		let fProduction = new factoryProduction(result[0], result[1], result[2], result[3]);
 		this.parentNode.parentNode.prodContain.innerHTML = "";
 		let fProductionBox = fProduction.render(this.parentNode.parentNode.prodContain);
 
 		selFactory.materialInv = result.slice(4);
 		selFactory.showInventory(factoryDiv.reqBox.stores);
+		}
 	})
 });
 startButton4.innerHTML = "Work for - 8 hour";
 
 factoryDiv.prodContain = addDiv("", "orderContain", factoryDiv.headSection);
-selFactory.production = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100);
+selFactory.production = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100, '.$thisObj->get('currentProd').');
 //fProductionBox = selFactory.production.render(factoryDiv.prodContain);
 console.log(prodList);
-factoryProductionBox = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:1});
+console.log(selectedIndex);
+factoryProductionBox = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:selectedIndex});
 
 upgradeButton = newButton(factoryDiv.headSection, function () {
 	resourceQuery(factoryUpgradeProducts, factoryUpgradeServices, function () {

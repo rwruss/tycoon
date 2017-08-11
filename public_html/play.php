@@ -179,7 +179,7 @@ echo '
 
     void main(void) {
         gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vColor = vec4(0.1,1.,0.5,1.);
+        vColor = vec4(1.,0.,0.,1.);
     }
 </script>
 
@@ -562,7 +562,7 @@ echo '
 		for (var i=0; i<numProducts; i++) {
 			productArray.push(new product({objType:product, objID:(i), objName:objNames[i]}));
 		}
-		//console.log(productArray);
+		console.log(productArray);
 
 		playerProducts = [0];
 		for (var i=0; i<playerFactories.length; i++) {
