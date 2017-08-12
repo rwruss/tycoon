@@ -170,7 +170,7 @@ if ($postVals[2] == 0) {
 
   	// Record the player ordering and the arrival time in the offer list file
   	fseek($offerDatFile, $postVals[2]+44);
-  	fwrite($offerDatFile, pack('i*', $pGameID, $now+600));
+  	fwrite($offerDatFile, pack('i*', $pGameID, $now+60));
   	flock($offerDatFile, LOCK_UN);
 
     // overwrite the order in the slot List

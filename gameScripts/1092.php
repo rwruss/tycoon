@@ -8,14 +8,17 @@ PVS
 */
 
 require_once('./slotFunctions.php');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'rb');
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 
-// Load the list of offers for the product
-	$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
-	$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
+$vehicleTypes = [41];
 
-	echo 'Read offer slot '.$productID;
+for ($i=0; $i<$z = sizeof($vehicleTypes); $i++ ) {
+	// Load the list of offers for the product
+	$productID = $vehicleTypes[$i];
+	//echo 'Read offer slot '.$productID;
 	$offerList = new itemSlot($productID, $offerListFile, 1000);
-	print_R($offerList->slotData);
+	//print_R($offerList->slotData);
 	$emptyOffers = new itemSlot(0, $offerListFile, 1000, TRUE);
 
 	$offerCount = 0;
@@ -23,6 +26,7 @@ require_once('./slotFunctions.php');
 	$numOffers = sizeof($offerList->slotData);
 	//$showOffers = [0, 100, 299, 0, 50, 50, 50, 0, 8, 9, 10, $productID];
 	$showOffers = [];
+
 	while ($checkCount < $numOffers && $offerCount < 100) {
 		//echo 'Read item #'.$checkCount.' ('.$offerList->slotData[$checkCount].')';
 		if ($offerList->slotData[$checkCount] > 0) {
@@ -43,12 +47,13 @@ require_once('./slotFunctions.php');
 		}
 		$checkCount++;
 	}
-
+}
 fclose($offerListFile);
 fclose($offerDatFile);
 
-$vinfo = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+$vinfo = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
 
-echo implode(',', $vinfo);
+//echo implode(',', $vinfo);
+echo implode(',', $showOffers);
 
 ?>

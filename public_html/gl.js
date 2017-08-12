@@ -19,7 +19,6 @@ animate = function () {
     elapsed = timeNow - lastTime;
 	rY += (elapsed*wY);
 	lastTime = timeNow;
-	document.getElementById("rYVal").value = rY;
 }
 
 canvasInit = function () {
@@ -53,22 +52,22 @@ drawScene = function () {
 
 	mat4.identity(mvMatrix);
 
-	
+
 	mat4.translate(mvMatrix, [0., -0.5, -8.0]);
 	mat4.rotate(mvMatrix, degToRad(rY), [0, 1, 0]);
 	//mat4.rotate(mvMatrix, degToRad(-25), [1, 0, 0]);
-	
-	
+
+
 
 	mvPushMatrix();
 	gl.useProgram(bufferProgram);
 	//mat4.rotate(mvMatrix, degToRad(45), [1, 0, 0]);
-	
-	
+
+
 	// Draw the framebuffer
 	gl.bindFramebuffer(gl.FRAMEBUFFER, mapFrameBuffer);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-	
+
 	gl.bindBuffer(gl.ARRAY_BUFFER, squarePointsBuffer);
 	gl.vertexAttribPointer(bufferProgram.VPAttribute, 3, gl.FLOAT, false, 0, 0);
 
@@ -148,7 +147,7 @@ handleClick = function (event)	{
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 	console.log(pixelValues);
 	}
-	
+
 handleKeyDown = function (event) {
 	currentlyPressedKeys[event.keyCode] = true;
 	}
@@ -201,7 +200,7 @@ initBuffers = function () {
 	squareIndexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, squareIndexBuffer);
 	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0,1,2,3]), gl.STATIC_DRAW);
-	
+
 	mapFrameTexture = gl.createTexture();
 	mapFrameBuffer = gl.createFramebuffer();
 	initTextureFramebuffer(mapFrameBuffer, mapFrameTexture, 1200, 700);
@@ -332,9 +331,9 @@ webGLStart = function (canvas) {
 
 	gl.clearColor(0.0, 1.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
-	
+
 	document.onkeydown = handleKeyDown;
 	document.onkeyup = handleKeyUp;
-	
+
 	initShaders();
     }

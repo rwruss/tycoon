@@ -129,6 +129,10 @@ echo '<p>';
 fseek($productFile, 0);
 fgets($productFile);
 $count = 0;
+$productTypes = [];
+$productTypes['Item'] = 1;
+$productTypes['Transport'] = 2;
+$productTypes['Service'] = 3;
 while (($line = fgets($productFile)) !== false) {
   $lineItems = explode(',', $line);
   $productReqs[trim($lineItems[0])][0] = $productList[$lineItems[1]];
@@ -152,6 +156,7 @@ while (($line = fgets($productFile)) !== false) {
   $productArray[4] = 4;
   $productArray[9] = $count;
   $productArray[11] = $lineItems[41];
+	$productArray[13] = $productTypes[$lineItems[42]];
 
   for ($i=0; $i<10; $i++) {
     $productArray[18+$i] = $productList[$lineItems[1+$i]];

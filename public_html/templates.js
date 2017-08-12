@@ -1724,6 +1724,7 @@ factoryBuildMenu = function () {
 transportMenu = function () {
 	console.log("transportMenu");
 	thisDiv = useDeskTop.newPane("adsfasfdsf");
+	thisDiv.innerHTML = "";
 	thisDiv.headSection = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.options = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.content = addDiv("", "stdFloatDiv", thisDiv);
@@ -1797,11 +1798,11 @@ transportMenu = function () {
 }
 
 showVehicles = function(data, trg) {
-	for (var i=0; i<data.length; i+=16) {
+	for (var i=0; i<data.length; i+=17) {
 		let thisVehicle = addDiv("", "", thisDiv.content);
-		thisVehicle.innerHTML = "V# " + i;
+		thisVehicle.innerHTML = "V# " + data[0];
 
-		thisVehicle.sendStr = "1091,"+i;
+		thisVehicle.sendStr = "1091,"+data[0];
 		thisVehicle.addEventListener("click", function () {
 			scrMod(this.sendStr);
 		})
