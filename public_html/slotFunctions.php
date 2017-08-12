@@ -118,7 +118,8 @@ class itemSlot extends dataSlot {
 		$this->slotData = unpack('i*', $this->dataString);
 	}
 
-	function addItem($value, $file) {
+	function addItem($value) {
+		$file = $this->useFile;
 		// Determine if there is a spot to add the item
 		$emptySpot = array_search(0, $this->slotData);
 		if (!$emptySpot) {

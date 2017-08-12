@@ -182,9 +182,9 @@ class factory extends object {
 	showOrders(trg) {
 		trg.innerHTML = "";
 		this.factoryOrders = new Array();
-		for (var i=0; i<this.materialOrder.length; i+=18) {
-			console.log(this.materialOrder.slice(i, i+18));
-			this.factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+18)));
+		for (var i=0; i<this.materialOrder.length; i+=19) {
+			console.log(this.materialOrder.slice(i, i+19));
+			this.factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+19)));
 			//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 		}
 
@@ -1157,11 +1157,14 @@ class factoryUpgrade {
 class factoryOrder {
 	constructor(dat) {
 		this.factoryID = dat[0];
-		this.endTime = dat[8];
+		this.endTime = dat[9];
 		this.timeBoost = 0;
-		this.material = dat[12];
-		this.qty = dat[2];
-		this.orderNum = dat[1];
+		this.material = dat[13];
+		this.qty = dat[3];
+		this.orderNum = dat[2];
+		this.orderID = dat[1];
+		this.orderSize = dat.length;
+		
 	}
 
 	boostClock(deltaT) {
@@ -1178,13 +1181,50 @@ class factoryOrder {
 
 	updateOrder() {
 		console.log("update order #" + this.orderNum);
-		this.factoryID = materialOrder[this.orderNum*18];
-		this.endTime = materialOrder[this.orderNum*18+8];
+		this.factoryID = materialOrder[this.orderNum*this.orderSize];
+		this.endTime = materialOrder[this.orderNum*this.orderSize+8];
 		this.timeBoost = 0;
-		this.material = materialOrder[this.orderNum*18+12];
-		this.qty = materialOrder[this.orderNum*18+2];
-		this.orderNum = materialOrder[this.orderNum*18+1];
+		this.material = materialOrder[this.orderNum*this.orderSize+12];
+		this.qty = materialOrder[this.orderNum*this.orderSize+2];
+		this.orderNum = materialOrder[this.orderNum*this.orderSize+1];
 		this.showItem(this.displayBox, true);
+	}
+	
+	newOrder (trg) {
+		textBlob("", trg, "Select which item you want to order");
+		let tmpInventory = [];
+		console.log("look for factory " + this.factoryID)
+		for (let f=0; f<playerFactories.length; f++) {
+			console.log(playerFactories[f].objID + " VS " +this.factoryID)
+			if (playerFactories[f].objID == this.factoryID) {
+				console.log("matched factory " + this.factoryID)
+				for (i=0; i<playerFactories[f].materialInv.length; i+=2) {
+					tmpInventory.push(new product({objID:playerFactories[f].materialInv[i]}));
+				}
+			break;
+			}
+		}
+
+		let invList = new uList(tmpInventory);
+		invList.reset();
+
+		trg.orderBox1 = invList.SLsingleButton(trg);
+		var orderSelectButton = newButton(trg, function () {scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(trg.orderBox1))});
+		trg.offerContainer = addDiv("", "stdContain", trg);
+
+		orderSelectButton.innerHTML = "Find Offers";
+	}
+	
+	orderDetails (trg) {
+		textBlob("", trg, "Order Details");
+		let transportOpts = newButton(trg);
+		transportOpts.innerHTML = "arrange transport";
+		transportOpts.sendStr = "1093,"+this.factoryID+","+this.orderID;
+		transportOpts.addEventListener("click", function () {
+			getASync(this.sendStr).then(v => {
+				let result = v.split(",");
+			})
+		});
 	}
 
 	showItem (containerBox, boost=true) {
@@ -1193,38 +1233,26 @@ class factoryOrder {
 		containerBox.timeBox = addDiv("", "timeFloat", containerBox);
 		containerBox.parentObj = this;
 		var thisObject = this;
-		if (this.material == 0) containerBox.addEventListener("click", function (e) {
+		if (this.material == 0) {
+			containerBox.addEventListener("click", function (e) {
 
 			useDeskTop.newPane("xyzPane");
 			orderPane = useDeskTop.getPane("xyzPane");
 			orderPane.innerHTML = "";
 
 			e.stopPropagation();
-
-			textBlob("", orderPane, "Select which item you want to order");
-			let tmpInventory = [];
-			console.log("look for factory " + containerBox.parentObj.factoryID)
-			for (let f=0; f<playerFactories.length; f++) {
-				console.log(playerFactories[f].objID + " VS " + containerBox.parentObj.factoryID)
-				if (playerFactories[f].objID == containerBox.parentObj.factoryID) {
-					console.log("matched factory " + containerBox.parentObj.factoryID)
-					for (i=0; i<playerFactories[f].materialInv.length; i+=2) {
-						tmpInventory.push(new product({objID:playerFactories[f].materialInv[i]}));
-					}
-				break;
-				}
-			}
-
-			let invList = new uList(tmpInventory);
-			invList.reset();
-
-			orderPane.orderBox1 = invList.SLsingleButton(orderPane);
-			var orderSelectButton = newButton(orderPane, function () {scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(orderPane.orderBox1))});
-			orderPane.offerContainer = addDiv("", "stdContain", orderPane);
-
-			orderSelectButton.innerHTML = "Find Offers";
-
+			thisObject.newOrder(orderPane);
 			});
+		} else {
+			containerBox.addEventListener("click", function (e) {
+				useDeskTop.newPane("xyzPane");
+				orderPane = useDeskTop.getPane("xyzPane");
+				orderPane.innerHTML = "";
+
+				e.stopPropagation();
+				thisObject.orderDetails(orderPane);
+			})
+		}
 
 		let date = new Date();
 		if (this.endTime > Math.floor(date.getTime()/1000)) {

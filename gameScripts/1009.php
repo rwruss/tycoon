@@ -60,11 +60,13 @@ if ($optionCheck && $spotCheck !== false) {
 		//echo 'Read item #'.$checkCount.' ('.$offerList->slotData[$checkCount].')';
 		if ($offerList->slotData[$checkCount] > 0) {
 			//echo 'Load offer #'.$offerList->slotData[$checkCount].' at spot '.$checkCount;
-			fseek($offerDatFile, $offerList->slotData[$checkCount]);
-			$tmpDat = unpack('i*', fread($offerDatFile, 64));
-			if ($tmpDat[1] > 0) {
+			//fseek($offerDatFile, $offerList->slotData[$checkCount]);
+			//$tmpDat = unpack('i*', fread($offerDatFile, 64));
+			$thisOffer = loadOffer($offerList->slotData[$checkCount], $offerDatFile);
+			
+			if ($thisOffer->objDat[1] > 0) {
 				array_push($showOffers, $offerList->slotData[$checkCount]);
-				$showOffers = array_merge($showOffers, $tmpDat);
+				$showOffers = array_merge($showOffers, $thisOffer->objDat);
 				$offerCount++;
 			} else {
 				// Delete the reference in the list of offers

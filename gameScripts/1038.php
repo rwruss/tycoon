@@ -30,11 +30,14 @@ $boostDurations = [60, 600, 1800, 3600];
 $now = time();
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
 if ($thisFactory->objDat[$thisFactory->orderListStart + $postVals[2]] > 0) {
-	fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart + $postVals[2]]);
-	$objDat = unpack('i*', fread($offerDatFile, 64));
-	if ($objDat[13] > $now) {
+	//fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart + $postVals[2]]);
+	//$objDat = unpack('i*', fread($offerDatFile, 64));
+	
+	$thisOrder = loadOrder($thisFactory->objDat[$thisFactory->orderListStart + $postVals[2]], $offerDatFile);
+	
+	if ($thisOrder->objDat[13] > $now) {
 		fseek($offerDatFile, $thisFactory->objDat[$thisFactory->orderListStart + $postVals[2]] + 48);
-		fwrite($offerDatFile, $objDat[13]-$boostDurations[$postVals[3]]);
+		fwrite($offerDatFile, $thisOrder->objDat[13]-$boostDurations[$postVals[3]]);
 		
 		$thisUser->save('boost'.$postVals[3], $thisUser->get('boost'.$postVals[3])-1);
 		$_SESSION['boosts'][$postVals[3]]--;

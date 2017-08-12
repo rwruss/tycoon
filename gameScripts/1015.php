@@ -1,14 +1,14 @@
 <?php
-
+/*
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$offerFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
 
 fclose($objFile);
-fclose($offerFile);
-
+fclose($offerListFile);
+*/
 // Load list of cities that can be sold to
 
 echo '<script>

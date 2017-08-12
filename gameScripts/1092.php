@@ -8,18 +8,18 @@ PVS
 */
 
 require_once('./slotFunctions.php');
-$offerListFile = fopen($gamePath.'/saleOffers.slt', 'rb');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'rb'); //r+b
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 
 $vehicleTypes = [41];
 
+$emptyOffers = new itemSlot(0, $offerListFile, 1000, TRUE);
 for ($i=0; $i<$z = sizeof($vehicleTypes); $i++ ) {
 	// Load the list of offers for the product
 	$productID = $vehicleTypes[$i];
 	//echo 'Read offer slot '.$productID;
 	$offerList = new itemSlot($productID, $offerListFile, 1000);
 	//print_R($offerList->slotData);
-	$emptyOffers = new itemSlot(0, $offerListFile, 1000, TRUE);
 
 	$offerCount = 0;
 	$checkCount = 1;
@@ -31,11 +31,13 @@ for ($i=0; $i<$z = sizeof($vehicleTypes); $i++ ) {
 		//echo 'Read item #'.$checkCount.' ('.$offerList->slotData[$checkCount].')';
 		if ($offerList->slotData[$checkCount] > 0) {
 			//echo 'Load offer #'.$offerList->slotData[$checkCount].' at spot '.$checkCount;
-			fseek($offerDatFile, $offerList->slotData[$checkCount]);
-			$tmpDat = unpack('i*', fread($offerDatFile, 64));
-			if ($tmpDat[1] > 0) {
+			//fseek($offerDatFile, $offerList->slotData[$checkCount]);
+			//$offerDat = unpack('i*', fread($offerDatFile, 64));
+			$thisOffer = loadOffer($offerList->slotData[$checkCount], $offerDatFile);
+			$offerDat = $thisOffer->objDat;
+			if ($thisOffer->objDat[1] > 0) {
 				array_push($showOffers, $offerList->slotData[$checkCount]);
-				$showOffers = array_merge($showOffers, $tmpDat);
+				$showOffers = array_merge($showOffers, $thisOffer->objDat);
 				$offerCount++;
 			} else {
 				// Delete the reference in the list of offers

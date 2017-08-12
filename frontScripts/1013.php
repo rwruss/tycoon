@@ -10,7 +10,8 @@ $_SESSION['gameId'] = $postVals[1];
 
 // record player as a user in this new game
 $playerFile = fopen("../games/".$postVals[1]."/objects.dat", "r+b");
-$gameOfferFile = fopen("../games/".$postVals[1]."/saleOffers.dat", "r+b");
+$gameOfferFile = fopen("../games/".$postVals[1]."/saleOffers.slt", 'r+b');
+//$gameOfferFile = fopen("../games/".$postVals[1]."/saleOffers.dat", "r+b");
 $generalSlotFile = fopen("../games/".$postVals[1]."/gameSlots.slt", "r+b");
 if (flock($playerFile, LOCK_EX)) {
   fseek($playerFile, 0, SEEK_END);

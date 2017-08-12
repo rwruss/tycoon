@@ -1,7 +1,5 @@
 <?php
 
-$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
-
 if ($thisObj->get('constStatus') > 0) {
 	$projectsFile = fopen($gamePath.'/projects.prj', 'rb');
 	echo 'Load project '.$thisObj->get('constStatus');
@@ -62,11 +60,12 @@ $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
 $saleDat = [];
 for ($i=1; $i<9; $i++) {
 	if ($thisObj->get('offer'.$i) > 0) {
-		fseek($offerDatFile, $thisObj->get('offer'.$i));
-		$tmpDat = unpack('i*', fread($offerDatFile, 44));
-		if ($tmpDat[1] > 0) {
+		//fseek($offerDatFile, $thisObj->get('offer'.$i));
+		$thisOffer = loadOffer($thisObj->get('offer'.$i), $offerDatFile);
+		//$tmpDat = unpack('i*', fread($offerDatFile, 44));
+		if ($thisOffer->objDat[1] > 0) {
 			$saleDat[] = $thisObj->get('offer'.$i);
-			$saleDat = array_merge($saleDat, $tmpDat);
+			$saleDat = array_merge($saleDat, $thisOffer->objDat);
 		} else {
 			$thisObj->save('offer'.$i, 0);
 		}
@@ -78,13 +77,16 @@ for ($i=1; $i<9; $i++) {
 $materialOrders = [];
 for ($i=0; $i<10; $i++) {
 	if ($thisObj->objDat[$thisObj->orderListStart+$i] > 0) {
-		fseek($offerDatFile, $thisObj->objDat[$thisObj->orderListStart+$i]);
-		$offerDat = unpack('i*', fread($offerDatFile, 64));
-		array_push($materialOrders, $postVals[1], $i); //id, qty, time
-		$materialOrders = array_merge($materialOrders, $offerDat);
+		//fseek($offerDatFile, $thisObj->objDat[$thisObj->orderListStart+$i]);
+		//$offerDat = unpack('i*', fread($offerDatFile, 64));
+		
+		$thisOffer = loadOffer($thisObj->objDat[$thisObj->orderListStart+$i], $offerDatFile);
+		
+		array_push($materialOrders, $postVals[1], $thisObj->objDat[$thisObj->orderListStart+$i],  $i); //factory ID, offer id, spot
+		$materialOrders = array_merge($materialOrders, $thisOffer->objDat);
 		//$materialOrders = $materialOrders + $offerDat;
-		print_r($offerDat);
-	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+		print_r($thisOffer->objDat);
+	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 }
 fclose($offerDatFile);
 
@@ -330,7 +332,6 @@ selFactory.showContracts(factoryDiv.contracts);
 
 </script>';
 
-fclose($offerListFile);
-//fclose($offerDatFile);
+fclose($offerDatFile);
 
 ?>

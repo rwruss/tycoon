@@ -1,11 +1,24 @@
 <?php
 
+// purchase vehicle and set up transportation route
+
+/*
+PVs
+1 - Offer ID
+*/
+
 require_once('./objectClass.php');
 require_once('./transportClass.php');
 require_once('./slotFunctions.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
+
+// Load the offer information
+//fseek($offerDatFile, $postVals[1]);
+//$offerDat = unpack('i*', fread($offerDatFile, 64));
+$thisOffer = loadOffer($postVals[1], $offerDatFile);
 
 echo 'Purchase vehicle type '.$postVals[1];
 
@@ -52,6 +65,7 @@ if ($thisPlayer->get('transportOptions') == 0) {
 $routeList = new itemSlot($thisPlayer->get('transportOptions'), $transportFile, 40);
 $routeList->addItem($routeID, $transportFile);
 
+fclose($offerDatFile);
 fclose($transportFile);
 fclose($objFile);
 ?>

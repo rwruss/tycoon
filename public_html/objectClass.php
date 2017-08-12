@@ -389,15 +389,9 @@ class factory extends object {
 		$now = time();
 		$saveFactory = false;
 
-		/*
+		
 		// Update facility construction or upgrades as needed
-		$constructDelta = $this->get('constPtsRem') - $now;
-		if ($constructDelta <= 0 && $this->get('upgradeInProgress') > 0) {
-			$this->set('factoryLevel', $this->get('upgradeInProgress'));
-			$this->set('upgradeInProgress', 0);
-			$saveFactory = true;
-		} else $this->nextUpdate = $this->get('constPtsRem');
-		*/
+
 		// Sort material requirements into the storage index for the factory
 		$rscSpots = [];
 		for ($i=0; $i<sizeof($this->resourceStores)/2; $i++) {
@@ -409,8 +403,11 @@ class factory extends object {
 			if ($this->objDat[$this->orderListStart+$i] > 0) {
 				fseek($orderDatFile, $this->objDat[$this->orderListStart+$i]);
 				$orderDat = unpack('i*', fread($orderDatFile, 64));
-
-				if ($orderDat[13] <= $now) { // order has arrived
+				
+				$thisOrder = loadOrder($this->objDat[$this->orderListStart+$i], $orderDatFile);
+				$orderDat = $thisOrder->objDat;
+				
+				if ($thisOrder->objDat[13] <= $now) { // order has arrived
 					$this->objDat[$this->inputOffset+$rscSpots[$orderDat[11]]]+= $orderDat[1]; // adjust the material quantity
 					$this->objDat[$this->inputCost + $rscSpots[$orderDat[11]]] += $orderDat[1]*$orderDat[2];  // adjust the inventory costs
 					$this->objDat[$this->inputPollution + $rscSpots[$orderDat[11]]] += $orderDat[5]; // adjust the inventroy pollution
@@ -769,6 +766,13 @@ class project extends object {
 	}
 }
 
+class offer extends object {
+	function __construct($id, $dat, $file) {
+		parent::__construct($id, $dat, $file);
+
+	}
+}
+
 
 function loadProduct($id, $file, $size) {
 	fseek($file, $id*1000);
@@ -816,6 +820,13 @@ function loadProject($id, $file) {
 	return new project($id, $dat, $file);
 }
 
+function loadOffer($id, $file) {
+	fseek($file, $id);
+	$dat = unpack('i*', fread($file, 100));
+	
+	return new offer($id, $dat, $file);
+}
+
 function loadObject($id, $file, $size) {
 	global $defaultBlockSize;
 	//echo 'Seek to '.($id*$defaultBlockSize);
@@ -851,6 +862,15 @@ function loadObject($id, $file, $size) {
 		break;
 	}
 
+}
+
+function packArray($data) {
+	reset($data);
+	$str = pack('i', current($data));
+	for ($i=1; $i<sizeof($data); $i++) {
+		$str = $str.pack('i', next($data));
+	}
+	return $str;
 }
 
 ?>

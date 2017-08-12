@@ -111,7 +111,26 @@ echo 'Sales tax is '.$salesTax;
 $location = 0;
 $conglID = 0;
 // Quantity, Price, Selling Factory ID, Quality, Pollution, Rights, Time, Location, sellerID, Selling Conglomerate ID, Item ID, Buying Player, Delivery Time, Material Cost, Labor Cost, Sales Tax Rate
-$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID, $postVals[3], 0, 0, $materialCost, $laborCost, $salesTax);
+$saleDat = array_fill(1, 25, 0);
+$saleDat[1] = $postVals[4]; // Qunatity
+$saleDat[2] = intval($postVals[5]*100); // Price
+$saleDat[3] = $postVals[1]; // Selling factory ID
+$saleDat[4] = 100; // Quality
+$saleDat[5] = 100; // Pollution
+$saleDat[6] = 100; // Rights
+$saleDat[7] = time(); // Time
+$saleDat[8] = $location; // location
+$saleDat[9] = $pGameID; // seller ID
+$saleDat[10] = $conglID; // selling conglomerate ID
+$saleDat[11] = $postVals[3]; // item ID
+$saleDat[12] = 0; // buying player
+$saleDat[13] = 0; // delivery time
+$saleDat[14] = $materialCost;
+$saleDat[15] = $laborCost;
+$saleDat[16] = $salesTax;
+
+
+//$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID, $postVals[3], 0, 0, $materialCost, $laborCost, $salesTax);
 
 // Look for space in the offerDatFile
 $checkGroup = 0;
@@ -121,7 +140,7 @@ if (flock($offerDatFile, LOCK_EX)) {
 	//$offerGroups = floor($offerSize/4000);
 
 	$offerLoc=0;
-	$emptyOffers = new itemSlot(0, $offerListFile, 1004, TRUE);
+	$emptyOffers = new itemSlot(0, $offerListFile, 1000, TRUE);
 	for ($i=1; $i<sizeof($emptyOffers); $i++) {
 		if ($emptyOffers[$i] > 0) {
 			$offerLoc = $emptyOffers[$i];
@@ -129,10 +148,10 @@ if (flock($offerDatFile, LOCK_EX)) {
 			break;
 		}
 	}
-	if ($offerLoc == 0) $offerLoc = max(64,ceil($offerSize/64)*64);
+	if ($offerLoc == 0) $offerLoc = max(100,ceil($offerSize/100)*100);
 
 	fseek($offerDatFile, $offerLoc);
-	fwrite($offerDatFile, $saleDat);
+	fwrite($offerDatFile, packArray($saleDat));
 	flock($offerDatFile, LOCK_UN);
 }
 

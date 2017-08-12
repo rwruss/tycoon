@@ -118,13 +118,14 @@ if ($handle = opendir('../games/'.$newGameId)) {
 		}
 	closedir($handle);
 	}
-
+	
 function packArray($data) {
-  $str = pack('i', current($data));
-  for ($i=1; $i<sizeof($data); $i++) {
-    $str = $str.pack('i', next($data));
-  }
-  return $str;
+	reset($data);
+	$str = pack('i', current($data));
+	for ($i=1; $i<sizeof($data); $i++) {
+		$str = $str.pack('i', next($data));
+	}
+	return $str;
 }
 
 ?>

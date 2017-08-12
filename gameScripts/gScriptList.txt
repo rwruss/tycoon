@@ -90,6 +90,7 @@
 1090 - PROCESS: Save changes to a route
 1091 - PROCESS: Purchase of a vehicle and create a transport rotue
 1092 - PROCESS: Show purchase options for a selected vehicle type
+1093 - PROCESS: Get transport options for a factory order
 
 TO DO:
 https://msdn.microsoft.com/en-us/library/aa365574(v=vs.85).aspx
