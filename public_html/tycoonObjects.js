@@ -1222,7 +1222,13 @@ class factoryOrder {
 		transportOpts.sendStr = "1093,"+this.factoryID+","+this.orderID;
 		transportOpts.addEventListener("click", function () {
 			getASync(this.sendStr).then(v => {
-				let result = v.split(",");
+				let transList = v.split(",");
+				
+				if (transList[0] == -1) {
+					console.log("orderDetails error");
+					return;
+				}
+				routeSelection(setArrayInts(transList), trg.content);
 			})
 		});
 	}

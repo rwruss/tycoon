@@ -35,6 +35,7 @@ $modeChanges = routeLegs($pathInfo);
 $legInfo = []; // leg, company, time, cost, vehicle, capacity
 //echo 'There are '.sizeof($modeChanges).' mode changes';
 
+$tmpArray = array_fill(0,13,0);
 for ($i=0; $i<sizeof($modeChanges)/2; $i++) {
 	//echo 'One mode from '.$modeChanges[$i].' to '.$modeChanges[$i+1].'<br>';
 
@@ -47,21 +48,7 @@ for ($i=0; $i<sizeof($modeChanges)/2; $i++) {
 
 	// Insert spot for default option for this leg
 	array_push($legInfo, 0, $i,0,0,0,$pathHead[3],1,1,1,0,0,0,0); // optionID, legNum, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
-
-	// Look up available transport for each segment of the route
-	//$legRoutes = new itemSlot($pathRoute, $transportFile, 40);
-	/*
-	for ($j=1; $j<=sizeof($legRoutes->slotData); $j++) {
-		// Load the route data
-		fseek($transportFile, $legRoutes->slotData[$j]);
-		$routeDat = fread($transportFile, 140);
-		$routeInfo = unpack('i*', substr($routeDat, 0, 56));
-		$routeStops = unpack('s*', substr($routeDat, 56));
-
-		// Determine total travel time
-		$routeDist = array_sum(array_slice($routeStops, 11));
-		$routeTime = $routeDist/$routeInfo[3];
-	}*/
+	$legInfo = array_merge(loadRouteOptions($pathRoute, $transportFile));
 }
 
 fclose($objFile);

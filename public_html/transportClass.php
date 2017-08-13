@@ -104,6 +104,41 @@ function loadPathHead($routeFile, $routeNum) {
 	return $routeHead;
 }
 
+function loadRouteOptions($pathRoute, $tranportFile) {
+	// Look up available transport for each segment of the route
+	$legRoutes = new itemSlot($pathRoute, $transportFile, 40);
+	$legInfo = [];
+	$tmpArray = array_fill(0,13,0);
+	for ($j=1; $j<=sizeof($legRoutes->slotData); $j++) {
+		// Load the route data
+		fseek($transportFile, $legRoutes->slotData[$j]);
+		$routeDat = fread($transportFile, 140);
+		$routeInfo = unpack('i*', substr($routeDat, 0, 56));
+		$routeStops = unpack('s*', substr($routeDat, 56));
+
+		// Determine total travel time
+		$routeDist = array_sum(array_slice($routeStops, 11));
+		$routeTime = $routeDist/$routeInfo[3];
+		
+		$tmpArray[0] = $j; // option ID
+		$tmpArray[1] = $i; // leg Num
+		$tmpArray[2] = $legRoutes->slotData[$j]; // route ID
+		$tmpArray[3] = $routeInfo[1]; // owner
+		$tmpArray[4] = $routeInfo[2]; // mode
+		$tmpArray[5] = $routeDist; // distance
+		$tmpArray[6] = $routeInfo[3]; // speed
+		$tmpArray[7] = $routeInfo[4]; // cost/vol
+		$tmpArray[8] = $routeInfo[5]; // cost/wt
+		$tmpArray[9] = $routeInfo[6]; // cap-vol
+		$tmpArray[10] = $routeInfo[7]; // cap-wt
+		$tmpArray[11] = $routeInfo[8]; // status
+		$tmpArray[12] = $routeInfo[14]; // vehicle
+		
+		$legInfo = array_merge($legInfo, $tmpArray);
+	}
+	return $tmpArray;
+}
+
 function loadRoutePath($routeFile, $routeNum) {
 	$pathHead = loadPathHead($routeFile, $routeNum);
 	//print_r($pathHead);

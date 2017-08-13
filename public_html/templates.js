@@ -1747,7 +1747,7 @@ transportMenu = function () {
 				return p;
 			}
 			tmpFunc("1088").then(v => {
-				transList = v.split(",");
+				let transList = v.split(",");
 				thisPlayer.transOptions = setArrayInts(transList);
 				console.log(thisPlayer.transOptions);
 				routeAccess(thisPlayer.transOptions, thisDiv.content);
@@ -1771,7 +1771,7 @@ transportMenu = function () {
 			return p;
 		}
 		tmpFunc("1089").then(v => {
-			transList = v.split(",");
+			let transList = v.split(",");
 			playerRoutes(setArrayInts(transList), thisDiv.content);
 		});
 	});
@@ -2322,14 +2322,6 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	salePane.innerHTML = "";
 	salePane.head = addDiv("", "stdFloatDiv", salePane);
 	salePane.legArea = addDiv("", "stdFloatDiv", salePane);
-	salePane.legItems = [];
-	//salePane.legItems[0] = addDiv("", "stdFloatDiv", salePane.legArea);
-	//salePane.legItems[1] = addDiv("", "stdFloatDiv", salePane.legArea);
-	salePane.opts = addDiv("", "stdFloatDiv", salePane);
-	salePane.opts.innerHTML = "route options";
-
-	//salePane.legItems[0].innerHTML = "leg 0";
-	//salePane.legItems[1].innerHTML = "leg 1";
 
 	// display the factory summary
 	console.log(playerFactories);
@@ -2351,8 +2343,21 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 	getASync(sendStr + "," + saleQty).then(v => {
 		//console.log(v);
 		routeDat = v.split(",");
-		routeOptionList = [];
-		for (var i=0; i*13<routeDat.length; i++) {
+		if (routeDat[0] == -1) {
+			console.log("SaleWindow error");
+			return;
+		}
+		routeSelection(routeDat, salePane);
+	});
+}
+
+routeSelection = function (routeDat, trg) {
+	let routeOptionList = [];
+	selectedRouteList = [];
+	trg.legItems = [];
+	trg.opts = addDiv("", "stdFloatDiv", trg);
+	trg.opts.innerHTML = "route options";
+	for (var i=0; i*13<routeDat.length; i++) {
 			// optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
 			console.log(routeDat.slice(i*13, i*13+13));
 			routeOptionList.push(new legRoute(routeDat.slice(i*13, i*13+13), i));
@@ -2361,12 +2366,12 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 			console.log(routeOptionList);
 
 			// Verify a container for this item
-			if (!(routeOptionList[i].legNum in salePane.legItems)) {
-				salePane.legItems[routeOptionList[i].legNum] = addDiv("", "stdFloatDiv", salePane.legArea);
-				salePane.legItems[routeOptionList[i].legNum].innerHTML = "Leg " + routeOptionList[i].legNum;
+			if (!(routeOptionList[i].legNum in trg.legItems)) {
+				trg.legItems[routeOptionList[i].legNum] = addDiv("", "stdFloatDiv", trg.legArea);
+				trg.legItems[routeOptionList[i].legNum].innerHTML = "Leg " + routeOptionList[i].legNum;
 			}
 
-			let routeOption = routeOptionList[i].renderOption(salePane.opts);
+			let routeOption = routeOptionList[i].renderOption(trg.opts);
 			//console.log(selectedRouteList);
 			routeOption.addEventListener("click", function () {
 				console.log("adjust leg " + this.parent.legNum);
@@ -2376,7 +2381,6 @@ saleWindow = function (prodIndex, saleQty, factoryID, sendStr) {
 				console.log(selectedRouteList);
 			});
 		}
-	});
 }
 
 getASync = async function (val) {
