@@ -15,11 +15,11 @@ require_once('./objectClass.php');
 require_once('./invoiceFunctions.php');
 require_once('./taxCalcs.php');
 
-$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b');
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
-$cityFile = fopen($gamePath.'/cities.dat', 'rb');
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'rb'); //r+b
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb'); // r+b
+$cityFile = fopen($gamePath.'/cities.dat', 'rb'); //rb
+$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); // r+b
 
 $buyingPlayer = loadObject($pGameID, $objFile, 400);
 $buyingFactory = loadObject($postVals[1], $objFile, 1600);
@@ -69,14 +69,14 @@ if ($postVals[2] == 0) {
     //$offerDat = unpack('i*', fread($offerDatFile, 64));
 	$thisOffer = loadOffer($postVals[2], $offerDatFile);
 	$offerDat = $thisOffer->objDat;
-    print_r($offerDat);
+    //print_r($offerDat);
     if ($offerDat[1] > 0 ) {
       // offer still available
     } else {
       exit('offer no longer available');
     }
     $baseCost = $offerDat[1]*$offerDat[2];
-	
+
 	$purchaseQty = min($postVals[5], $offerDat[1]);
 
   $transaction = array_fill(0, 25, 0);
@@ -149,38 +149,40 @@ if ($postVals[2] == 0) {
   	$sellingFactory->set('periodSales', $sellingFactory->get('periodSales')+$baseCost-$sellerTax);
 
   	$sellingPlayer->set('money', $sellingPlayer->get('money')+$baseCost-$sellerTax);
-	
+
 	// Load the list of open/completed offers
     $openOfferList = new itemSlot(0, $offerListFile, 1000, TRUE);
-	
+
 	// remove the order from the selling factory (if all of the order is purchased)
-	if ($postVals[5] >= $offerDat[1]) {
+	if ($purchaseQty >= $offerDat[1]) {
+    echo 'Full offer: remove offer from factory ('.$purchaseQty.' vs '.$offerDat[1].')';
 		$purchaseID = $postVals[2];
 		for ($i=1; $i<9; $i++) {
-		  echo 'Some loop';
+
 		  if ($sellingFactory->get('offer'.$i) == $postVals[2]) {
 			$sellingFactory->set('offer'.$i,0);
 			break;
 		  }
 		}
-		
+
 	// Record the player ordering and the arrival time in the offer list file
 	$offerDat[12] = $pGameID;
-	$offerDat[13] = $now+60;	
-	
+	$offerDat[13] = $now+60;
+
 	// overwrite the order in the slot List
     $offerList = new itemSlot($postVals[4], $offerListFile, 1000);
     $offerList->deleteByValue($postVals[2], $offerListFile);
-	
+
 	// add order item to the list of available orders
 	$openOfferList->addItem($postVals[2]);
 	} else {
+    echo '<p>Partial order';
 		// this is a partial order - make a new order for delivery at the factory
 		$newOrder = $offerDat;
 		$newOrder[1] = $purchaseQty;
 		$newOrder[12] = $pGameID;
 		$newOrder[13] =  $now+60;
-		
+
 		// look for an open purchase spot to use or create one
 		$purchaseID = 0;
 		for ($i=1; $i<$z = sizeof($openOfferList->slotData); $i++) {
@@ -190,23 +192,25 @@ if ($postVals[2] == 0) {
 				break;
 			}
 		}
-		if ($purchaseID = 0) {
+		if ($purchaseID == 0) {
 			fseek($offerDatFile, 0, SEEK_END);
-			$purchaseID = ftell($offerDatFile);
+			$purchaseID = max(1,ceil(ftell($offerDatFile)/100))*100;
 		}
-		
+
+    echo 'Record new offer '.$purchaseID.'<br>';
+
 		fseek($offerDatFile, $purchaseID);
-		fwrite($offerDatFile, packArray($newOrder));		
-		
+		fwrite($offerDatFile, packArray($newOrder));
+
 		// record the qty remaining in the offer
 		$offerDat[1] -= $purchaseQty;
 	}
 	fseek($offerDatFile, $postVals[2]);
   	fwrite($offerDatFile, packArray($offerDat));
 	flock($offerDatFile, LOCK_UN);
-	
+
     $sellingFactory->saveAll($sellingFactory->linkFile);
-	
+
   	if ($sellingFactory->get('owner') == $pGameID) {
   		$buyingPlayer->set('money', $buyingPlayer->get('money')+$baseCost);
   	} else {

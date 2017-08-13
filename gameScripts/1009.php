@@ -26,7 +26,7 @@ for ($i=0; $i<20; $i++) {
 if (!$optionCheck) exit('error 9001-1');
 // confirm that there are order spots available
 $spotCheck = false;
-//$orderItems = $thisFactory->materialOrders();
+$orderItems = $thisFactory->materialOrders();
 for ($i=0; $i<10; $i++) {
 	if ($orderItems[$i] == 0) {
 		$spotCheck = $i;
@@ -63,7 +63,7 @@ if ($optionCheck && $spotCheck !== false) {
 			//fseek($offerDatFile, $offerList->slotData[$checkCount]);
 			//$tmpDat = unpack('i*', fread($offerDatFile, 64));
 			$thisOffer = loadOffer($offerList->slotData[$checkCount], $offerDatFile);
-			
+
 			if ($thisOffer->objDat[1] > 0) {
 				array_push($showOffers, $offerList->slotData[$checkCount]);
 				$showOffers = array_merge($showOffers, $thisOffer->objDat);

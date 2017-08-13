@@ -9,10 +9,10 @@ class dataSlot {
 	public $start, $size;
 
 	function __construct($start, $slotFile, $size, $zeroCheck = FALSE) {
-
+		$this->useFile = $slotFile;
 		if ($start > 0 || $zeroCheck) {
 			$this->init($start, $slotFile, $size);
-			$this->useFile = $slotFile;
+
 		} else {
 			//echo 'Check failed (sF.php)';
 			$this->slotData = [];
@@ -116,6 +116,7 @@ class itemSlot extends dataSlot {
 		parent::__construct($start, $slotFile, $size, $zeroCheck);
 
 		$this->slotData = unpack('i*', $this->dataString);
+		$this->useFile = $slotFile;
 	}
 
 	function addItem($value) {

@@ -1379,28 +1379,24 @@ msgSummary = function (trg, fromName, fromID, time, subject, msgStatus, s, e) {
 }
 
 receiveOffers = function(offerDat) {
+	console.log(offerDat.length);
 	if (offerDat.length == 0) {
 		orderPane.offerContainer.innerHTML = "No offers available."
 		return};
 	offerList = [];
-	for (var i=0; i<offerDat.length; i+=17) {
-		offerList.push(new offer(offerDat.slice(i, i+17)));
+	for (var i=0; i<offerDat.length; i+=26) {
+		console.log("offer " + i);
+		offerList.push(new offer(offerDat.slice(i, i+26)));
 	}
 
 	showOffers = new uList(offerList);
 	console.log(offerList);
-	/*
-	showOffers.addSort("Price", price);
-	showOffers.addSort("Qunatity", qty);
-	showOffers.addSort("Quality", quality);
-	showOffers.addSort("Pollution", pollution);
-	showOffers.addSort("Rights", rights);
-	*/
+
 	orderPane.offerContainer.innerHTML = "";
 	showOffers.SLShowAll(orderPane.offerContainer, function(x, y) {
 		let offerItem = x;
 		let item = x.renderSummary(y);
-		item.buyBox.addEventListener("click", function () {scrMod("1010," + selectedFactory + "," +offerItem.objID + "," +  SLreadSelection(orderPane.orderBox1))});
+		item.buyBox.addEventListener("click", function () {scrMod("1010," + selectedFactory + "," +offerItem.objID + "," +  SLreadSelection(orderPane.orderBox1) + "," + this.parentNode.qtySelect.slide.value)});
 		});
 }
 

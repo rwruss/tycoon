@@ -182,9 +182,9 @@ class factory extends object {
 	showOrders(trg) {
 		trg.innerHTML = "";
 		this.factoryOrders = new Array();
-		for (var i=0; i<this.materialOrder.length; i+=19) {
-			console.log(this.materialOrder.slice(i, i+19));
-			this.factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+19)));
+		for (var i=0; i<this.materialOrder.length; i+=28) {
+			console.log(this.materialOrder.slice(i, i+28));
+			this.factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+28)));
 			//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 		}
 
@@ -252,10 +252,10 @@ class factory extends object {
 	}
 
 	showSales(trg) {
-		//console.log("show sales");
+		console.log("show sales" + this.factorySales.length);
 		let oList = [];
-		for (var i=0; i<this.factorySales.length; i+=12) {
-			oList.push(new offer(this.factorySales.slice(i, i+12)));
+		for (var i=0; i<this.factorySales.length; i+=25) {
+			oList.push(new offer(this.factorySales.slice(i, i+25)));
 		}
 		for (var i=0; i<oList.length; i++) {
 			console.log("show offer " + i);
@@ -805,8 +805,7 @@ class offer {
 
 		thisDiv.buyBox.innerHTML = "Buy " + this.qty + " for " + totalCost;
 
-		//thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
+		thisDiv.qtySelect = slideValBar(thisDiv, "", 0, this.qty);
 
 		//thisDiv.nameDiv.innerHTML = this.qty + " @ " + (this.price)/100 + " tax " + (this.salesTax/100);
 		return thisDiv;
@@ -1164,7 +1163,7 @@ class factoryOrder {
 		this.orderNum = dat[2];
 		this.orderID = dat[1];
 		this.orderSize = dat.length;
-		
+
 	}
 
 	boostClock(deltaT) {
@@ -1189,7 +1188,7 @@ class factoryOrder {
 		this.orderNum = materialOrder[this.orderNum*this.orderSize+1];
 		this.showItem(this.displayBox, true);
 	}
-	
+
 	newOrder (trg) {
 		textBlob("", trg, "Select which item you want to order");
 		let tmpInventory = [];
@@ -1209,12 +1208,13 @@ class factoryOrder {
 		invList.reset();
 
 		trg.orderBox1 = invList.SLsingleButton(trg);
-		var orderSelectButton = newButton(trg, function () {scrMod("1009, " + thisObject.factoryID + ", "+ SLreadSelection(trg.orderBox1))});
+		var orderSelectButton = newButton(trg, function () {scrMod(this.sendStr + ", "+ SLreadSelection(trg.orderBox1))});
+		orderSelectButton.sendStr = "1009, " + this.factoryID
 		trg.offerContainer = addDiv("", "stdContain", trg);
 
 		orderSelectButton.innerHTML = "Find Offers";
 	}
-	
+
 	orderDetails (trg) {
 		textBlob("", trg, "Order Details");
 		let transportOpts = newButton(trg);
