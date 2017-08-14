@@ -82,7 +82,7 @@
 1082 - PROCESS: Set a new price for construction at a factory
 1083 - PROCESS: Add default construction points to a factory
 1084 - PROCESS: Show shipping opotions for sale to city
-1085 - PROCESS: Receive shipping and sale order for a city/factory
+1085 - PROCESS: Receive shipping and sale order for a city/factory NOT CURRENTLY USED
 1086 - PROCESS: Get tax rates for a shipment
 1087 - PROCESS: Load city pay and demand information for a shipment/sale pricing
 1088 - PROCESS: Load the places that a company has transport access in
@@ -91,8 +91,10 @@
 1091 - PROCESS: Purchase of a vehicle and create a transport rotue
 1092 - PROCESS: Show purchase options for a selected vehicle type
 1093 - PROCESS: Get transport options for a factory order
+1094 - PROCESS: Save transport options for material delivery to a factory
 
 TO DO:
+Verify route capactiy in transportClass.php::processRouteCosts
 https://msdn.microsoft.com/en-us/library/aa365574(v=vs.85).aspx
 https://msdn.microsoft.com/en-us/library/windows/desktop/ms738545(v=vs.85).aspx
 https://stackoverflow.com/questions/33401895/how-to-set-up-communication-between-php-and-c

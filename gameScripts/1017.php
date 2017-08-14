@@ -15,7 +15,7 @@ print_r($postVals);
 for ($i=1; $i<sizeof($postVals); $i++) {
 	$postVals[$i-1] = $postVals[$i];
 }
-array_pop($postVals);
+array_pop($postVals);  // why is this necessary??
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 require_once('./taxCalcs.php');
@@ -27,6 +27,8 @@ $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 $supplyFile = fopen($gamePath.'/citySupply.csf', 'rb');
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
+$routeFile = fopen($gamePath.'/routes.rtf', 'rb');
+$transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
 
 // Verify that the factory can sell this product
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
@@ -164,56 +166,33 @@ $thisFactory->adjProduct($prodIndex, $sentQual, $sentPol, $sentRights, $material
 $thisFactory->saveAll($objFile);
 
 // Determine the shipping time
-$routeFile = fopen($gamePath.'/routes.rtf', 'rb');
-$transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
-
 $shipmentWeight = 100;
 
 /// Load the route information
 $pathNum = calcRouteNum($thisFactory->get('region_3'), $postVals[2]);
-$pathHead = loadPathHead($routeFile, $pathNum);
-$pathInfo = loadRoutePath($routeFile, $pathNum);
+//$pathHead = loadPathHead($routeFile, $pathNum);
+$pathInfo = loadPath($routeFile, $pathNum);
 
 $legCosts = [];
 $legTimes = [];
 $legOwners = [];
 $modeChanges = routeLegs($pathInfo);
-print_r($postVals);
-$modeChangeNum = 0;
-for ($i=5; $i<sizeof($postVals); $i+=2) {
-	if ($postVals[$i] > 0 ) {
-		$legRoute = loadRoute($postVals[$i], $transportFile);
-		$legInfo = $legRoute->legInfo($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
-		$legTimes[] = $legInfo[0]/$legRoute->get('speed');
-		$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
-		$legOwners[] = $legRoute->get('owner');
-	} else {
-		$pathNum = calcRouteNum($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
-		fseek($routeFile, $pathNum*12);
-		$pathHead = unpack('i*', fread($routeFile, 12));
-		echo '<p>Default transport option is selected for leg '.$pathNum.'<br>';
-		$legTimes[] = $pathHead[3];
-		$legCosts[] = $pathHead[3];
-		$legOwners[] = 0;
-		print_r($pathHead);
-	}
-	$modeChangeNum += 2;
+
+$routeList = [];
+for ($i=5; $i<$z=sizeof($postVals); $i+=2) {
+	$routeList[] = $postVals[$i];
 }
+
+routeLegDetails($routeList, $legCosts, $legTimes, $legOwners, $transportFile);
 
 $totalCost = array_sum($legCosts);
 $totalTime = array_sum($legTimes);
+
+processRouteCosts($thisPlayer, $totalCost, $objFile);
+
+print_r($postVals);
+
 echo 'Total shipping time = '.array_sum($legTimes).'<br>Total Shipping Cost = '.array_sum($legCosts).'<p>';
-
-// deduct the shipping cost from the selling player
-$thisPlayer->save('money', $thisPlayer->get('money') - $totalCost[$i]);
-
-// credit the shipping cost to the shipping company and deduct from the shipper
-for ($i=0; $i<sizeof($legOwners); $i++) {
-	if ($legOwners[$i] > 0) {
-		$transportingPlayer = loadObject($legOwners[$i], $objFile, 400);
-		$transportingPlayer->save('money', $transportingPlayer->get('money') + $legCosts[$i]);
-	}
-}
 
 fclose($transportFile);
 fclose($routeFile);
@@ -296,4 +275,6 @@ fclose($cityFile);
 fclose($supplyFile);
 fclose($slotFile);
 fclose($contractFile);
+fclose($routeFile);
+fclose($transportFile);
 ?>

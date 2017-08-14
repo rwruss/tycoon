@@ -1160,7 +1160,7 @@ class factoryOrder {
 		this.timeBoost = 0;
 		this.material = dat[13];
 		this.qty = dat[3];
-		this.orderNum = dat[2];
+		this.orderNum = dat[2]; // which order number this is for the factory
 		this.orderID = dat[1];
 		this.orderSize = dat.length;
 
@@ -1178,6 +1178,7 @@ class factoryOrder {
 		return containerBox;
 	}
 
+	/*
 	updateOrder() {
 		console.log("update order #" + this.orderNum);
 		this.factoryID = materialOrder[this.orderNum*this.orderSize];
@@ -1187,7 +1188,20 @@ class factoryOrder {
 		this.qty = materialOrder[this.orderNum*this.orderSize+2];
 		this.orderNum = materialOrder[this.orderNum*this.orderSize+1];
 		this.showItem(this.displayBox, true);
+	}*/
+	
+	updateOrder(dat) {
+		console.log("update order #" + this.orderNum);
+		//this.factoryID = dat[0];
+		this.endTime = dat[12];
+		this.timeBoost = 0;
+		this.material = dat[10];
+		this.qty = dat[0];
+		//this.orderNum = dat[2]; // which order number this is for the factory
+		//this.orderID = dat[1];
+		//this.orderSize = dat.length;
 	}
+	
 
 	newOrder (trg) {
 		textBlob("", trg, "Select which item you want to order");
@@ -1217,10 +1231,27 @@ class factoryOrder {
 
 	orderDetails (trg) {
 		textBlob("", trg, "Order Details");
-		let transportOpts = newButton(trg);
+		trg.tansportBox = addDiv("", "", trg);
+		
+		let transportOpts = newButton(trg.tansportBox);
 		transportOpts.innerHTML = "arrange transport";
+		transportOpts.parentObj = this;
 		transportOpts.sendStr = "1093,"+this.factoryID+","+this.orderID;
 		transportOpts.addEventListener("click", function () {
+			let saveRouteButton = newButton(trg);
+			saveButton.sendStr = "1094," + ","+this.orderID + "," + this.factoryID + ",";
+			saveRouteButton.addEventListener("click", function () {
+				getASync(this.sendStr + selectedRouteList.join(",")).then(v => {
+					let r = v.split(",");
+					if (r[0] == -1) {
+						console.log("orderDetails error");
+						return;
+					}
+					this.parentObj.updateOrder(r);
+				})
+				//scrMod(this.sendStr + selectedRouteList.join(","));
+			});
+			
 			getASync(this.sendStr).then(v => {
 				let transList = v.split(",");
 				
@@ -1228,7 +1259,7 @@ class factoryOrder {
 					console.log("orderDetails error");
 					return;
 				}
-				routeSelection(setArrayInts(transList), trg.content);
+				routeSelection(setArrayInts(transList), trg);
 			})
 		});
 	}

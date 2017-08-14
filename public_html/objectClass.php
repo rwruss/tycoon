@@ -162,7 +162,7 @@ class business extends object {
 
 class factory extends object {
 	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights,
-		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats, $contractsOffset, $nextUpdate;
+		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats, $contractsOffset, $nextUpdate, $offersOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
@@ -181,6 +181,7 @@ class factory extends object {
 		$this->laborCosts = 77;
 		$this->contractsOffset = 320;
 		$this->prodInv = 47;
+		$this->offersOffset = 231;
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
@@ -769,7 +770,9 @@ class project extends object {
 class offer extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-
+		
+		$this->attrList['buyer'] = 12;
+		$this->attrList['deliverTime'] = 13;
 	}
 }
 

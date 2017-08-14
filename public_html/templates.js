@@ -2358,29 +2358,29 @@ routeSelection = function (routeDat, trg) {
 	trg.opts = addDiv("", "stdFloatDiv", trg);
 	trg.opts.innerHTML = "route options";
 	for (var i=0; i*13<routeDat.length; i++) {
-			// optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
-			console.log(routeDat.slice(i*13, i*13+13));
-			routeOptionList.push(new legRoute(routeDat.slice(i*13, i*13+13), i));
-			selectedRouteList[i*2] = 0;
-			selectedRouteList[i*2+1] = 0;
-			console.log(routeOptionList);
+		// optionID, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
+		console.log(routeDat.slice(i*13, i*13+13));
+		routeOptionList.push(new legRoute(routeDat.slice(i*13, i*13+13), i));
+		selectedRouteList[i*2] = 0;
+		selectedRouteList[i*2+1] = 0;
+		console.log(routeOptionList);
 
-			// Verify a container for this item
-			if (!(routeOptionList[i].legNum in trg.legItems)) {
-				trg.legItems[routeOptionList[i].legNum] = addDiv("", "stdFloatDiv", trg.legArea);
-				trg.legItems[routeOptionList[i].legNum].innerHTML = "Leg " + routeOptionList[i].legNum;
-			}
-
-			let routeOption = routeOptionList[i].renderOption(trg.opts);
-			//console.log(selectedRouteList);
-			routeOption.addEventListener("click", function () {
-				console.log("adjust leg " + this.parent.legNum);
-				selectedRouteList[this.parent.legNum*2] = this.parent.optionID; // route ID
-				selectedRouteList[this.parent.legNum*2+1] = this.parent.arraySpot; // spot in array
-				useDeskTop.getPane("saleWindow").legItems[this.parent.legNum].appendChild(this);
-				console.log(selectedRouteList);
-			});
+		// Verify a container for this item
+		if (!(routeOptionList[i].legNum in trg.legItems)) {
+			trg.legItems[routeOptionList[i].legNum] = addDiv("", "stdFloatDiv", trg.legArea);
+			trg.legItems[routeOptionList[i].legNum].innerHTML = "Leg " + routeOptionList[i].legNum;
 		}
+
+		let routeOption = routeOptionList[i].renderOption(trg.opts);
+		//console.log(selectedRouteList);
+		routeOption.addEventListener("click", function () {
+			console.log("adjust leg " + this.parent.legNum);
+			selectedRouteList[this.parent.legNum*2] = this.parent.optionID; // route ID
+			selectedRouteList[this.parent.legNum*2+1] = this.parent.arraySpot; // spot in array
+			useDeskTop.getPane("saleWindow").legItems[this.parent.legNum].appendChild(this);
+			console.log(selectedRouteList);
+		});
+	}
 }
 
 getASync = async function (val) {

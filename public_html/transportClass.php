@@ -62,7 +62,7 @@ class routeObj {
 	}
 }
 
-function loadRoute ($routeNum, $routeFile) {
+function loadRoutePath ($routeNum, $routeFile) {
 	fseek($routeFile, $routeNum);
 	$routeHead = unpack('i*', fread($routeFile, 12));
 	fseek($routeFile, $routeHead[1]);
@@ -78,25 +78,6 @@ function calcRouteNum($city1, $city2) {
 	$routeNum = ($hiCity-1)*($hiCity)/2 + $hiCity - $loCity;
 	return $routeNum;
 }
-
-function routeLegs($routeInfo) {
-	$modeChanges = [];
-	if (sizeof($routeInfo) > 5) {
-		$modeChanges = [$routeInfo[1]]; // starting node id
-		for ($i=5; $i<sizeof($routeInfo); $i+=3) {
-			if ($routeInfo[$i] != $routeInfo[$i-3]) { // compare the route types of this leg and the pvs leg
-				$modeChanges[] = $routeInfo[$i-4]; // the end node ID for the previous mode
-				$modeChanges[] = $routeInfo[$i-1]; // make this node ID the start for the next mode
-			}
-		}
-		$modeChanges[] = $routeInfo[sizeof($routeInfo)-2]; // record the final node ID
-	} else {
-		$modeChanges = [$routeInfo[1], $routeInfo[1]];
-	}
-
-	return $modeChanges;
-}
-
 function loadPathHead($routeFile, $routeNum) {
 	fseek($routeFile, $routeNum*12);
 	$routeHead = unpack('i*', fread($routeFile, 12));
@@ -139,7 +120,7 @@ function loadRouteOptions($pathRoute, $tranportFile) {
 	return $tmpArray;
 }
 
-function loadRoutePath($routeFile, $routeNum) {
+function loadPath($routeFile, $routeNum) {
 	$pathHead = loadPathHead($routeFile, $routeNum);
 	//print_r($pathHead);
 
@@ -156,5 +137,60 @@ function packArray($data, $type='i') {
   }
   return $str;
 }
+
+function processRouteCosts($thisPlayer, $totalCost, $objFile) {
+	// deduct the shipping cost from the selling player
+	$thisPlayer->save('money', $thisPlayer->get('money') - $totalCost[$i]);
+
+	// credit the shipping cost to the shipping company and deduct from the shipper
+	for ($i=0; $i<sizeof($legOwners); $i++) {
+		if ($legOwners[$i] > 0) {
+			$transportingPlayer = loadObject($legOwners[$i], $objFile, 400);
+			$transportingPlayer->save('money', $transportingPlayer->get('money') + $legCosts[$i]);
+		}
+	}
+}
+
+function routeLegs($routeInfo) {
+	$modeChanges = [];
+	if (sizeof($routeInfo) > 5) {
+		$modeChanges = [$routeInfo[1]]; // starting node id
+		for ($i=5; $i<sizeof($routeInfo); $i+=3) { // starting at second node route type(i=5)
+			if ($routeInfo[$i] != $routeInfo[$i-3]) { // compare the route types of this leg and the pvs leg
+				$modeChanges[] = $routeInfo[$i-4]; // the end node ID for the previous mode
+				$modeChanges[] = $routeInfo[$i-1]; // make this node ID the start for the next mode
+			}
+		}
+		if (end($modeChanges) != $routeInfo[sizeof($routeInfo)-2]) $modeChanges[] = $routeInfo[sizeof($routeInfo)-2]; // record the final node ID
+	} else {
+		$modeChanges = [$routeInfo[1], $routeInfo[1]];
+	}
+
+	return $modeChanges;
+}
+
+function routeLegDetails($routeList, &$legCosts, &$legTimes, &$legOwners, $transportFile) {
+	$modeChangeNum = 0;
+	for ($i=0; $i<sizeof($routeList); $i+++) {
+		if ($routeList[$i] > 0 ) {
+			$legRoute = loadRoute($routeList[$i], $transportFile);
+			$legInfo = $legRoute->legInfo($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
+			$legTimes[] = $legInfo[0]/$legRoute->get('speed');
+			$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
+			$legOwners[] = $legRoute->get('owner');
+		} else {
+			$pathNum = calcRouteNum($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
+			fseek($routeFile, $pathNum*12);
+			$pathHead = unpack('i*', fread($routeFile, 12));
+			echo '<p>Default transport option is selected for leg '.$pathNum.'<br>';
+			$legTimes[] = $pathHead[3];
+			$legCosts[] = $pathHead[3];
+			$legOwners[] = 0;
+			print_r($pathHead);
+		}
+		$modeChangeNum += 2;
+	}
+}
+
 
 ?>
