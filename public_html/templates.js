@@ -1314,7 +1314,7 @@ showRequiredLabor = function(trg, reqdLabor) {
 }*/
 
 showOrders = function (trg, orderInfo) {
-	//console.log(factoryOrders.length);
+	console.log(orderInfo);
 	for (i=0; i<orderInfo.length; i++) {
 		orderInfo[i].render(trg);
 	}

@@ -15,11 +15,11 @@ require_once('./objectClass.php');
 require_once('./invoiceFunctions.php');
 require_once('./taxCalcs.php');
 
-$offerListFile = fopen($gamePath.'/saleOffers.slt', 'rb'); //r+b
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb'); // r+b
+$offerListFile = fopen($gamePath.'/saleOffers.slt', 'r+b'); //r+b
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b'); // r+b
 $cityFile = fopen($gamePath.'/cities.dat', 'rb'); //rb
 $objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); // r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); // r+b
 
 $buyingPlayer = loadObject($pGameID, $objFile, 400);
 $buyingFactory = loadObject($postVals[1], $objFile, 1600);
@@ -231,10 +231,10 @@ for ($i=0; $i<10; $i++) {
 	if ($buyingFactory->objDat[$buyingFactory->orderListStart+$i] > 0) {
     echo 'Load order #'.$i.'<br>';
 		fseek($offerDatFile, $buyingFactory->objDat[$buyingFactory->orderListStart+$i]);
-		$offerDat = unpack('i*', fread($offerDatFile, 64));
-		array_push($materialOrders, $postVals[1], $i); //time, id, qty
+		$offerDat = unpack('i*', fread($offerDatFile, 100));
+		array_push($materialOrders, $postVals[1], $buyingFactory->objDat[$buyingFactory->orderListStart+$i],$i); //time, id, qty
 		$materialOrders = array_merge($materialOrders, $offerDat);
-	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+	} else array_push($materialOrders, $postVals[1],0,$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0); // header: factory ID, offer ID, spot
 }
 print_r($materialOrders);
 echo '<script>

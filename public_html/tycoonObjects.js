@@ -254,8 +254,8 @@ class factory extends object {
 	showSales(trg) {
 		console.log("show sales" + this.factorySales.length);
 		let oList = [];
-		for (var i=0; i<this.factorySales.length; i+=25) {
-			oList.push(new offer(this.factorySales.slice(i, i+25)));
+		for (var i=0; i<this.factorySales.length; i+=26) {
+			oList.push(new offer(this.factorySales.slice(i, i+26)));
 		}
 		for (var i=0; i<oList.length; i++) {
 			console.log("show offer " + i);
@@ -813,6 +813,7 @@ class offer {
 
 	renderSale(target) {
 		var thisDiv = addDiv(null, 'udHolder', target);
+		console.log(this);
 		console.log("render product "+ this.productID);
 		productArray[this.productID].renderSummary(thisDiv);
 
@@ -1171,6 +1172,7 @@ class factoryOrder {
 	}
 
 	render(target, boost=true) {
+		console.log(this);
 		var containerBox = addDiv("", "orderContain", target);
 
 		this.displayBox = containerBox;
@@ -1189,7 +1191,7 @@ class factoryOrder {
 		this.orderNum = materialOrder[this.orderNum*this.orderSize+1];
 		this.showItem(this.displayBox, true);
 	}*/
-	
+
 	updateOrder(dat) {
 		console.log("update order #" + this.orderNum);
 		//this.factoryID = dat[0];
@@ -1201,7 +1203,7 @@ class factoryOrder {
 		//this.orderID = dat[1];
 		//this.orderSize = dat.length;
 	}
-	
+
 
 	newOrder (trg) {
 		textBlob("", trg, "Select which item you want to order");
@@ -1232,7 +1234,7 @@ class factoryOrder {
 	orderDetails (trg) {
 		textBlob("", trg, "Order Details");
 		trg.tansportBox = addDiv("", "", trg);
-		
+
 		let transportOpts = newButton(trg.tansportBox);
 		transportOpts.innerHTML = "arrange transport";
 		transportOpts.parentObj = this;
@@ -1251,10 +1253,10 @@ class factoryOrder {
 				})
 				//scrMod(this.sendStr + selectedRouteList.join(","));
 			});
-			
+
 			getASync(this.sendStr).then(v => {
 				let transList = v.split(",");
-				
+
 				if (transList[0] == -1) {
 					console.log("orderDetails error");
 					return;
