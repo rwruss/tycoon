@@ -21,27 +21,37 @@ $routeFile = fopen($gamePath.'/routes.rtf', 'rb');
 $transportFile = fopen($gamePath.'/transOpts.tof', 'rb');
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b');
 
+// Load the player information
+$thisPlayer = ??
+
 // Load the offer information
 $thisOffer = loadOffer($postVals[2], $objFile);
 if ($thisOffer->get('buyer') != $pGameID) exit ('error 9401-1');
 
 /// Apply the selected routes
+$routeObjects = [];
 $legCosts = [];
 $legTimes = [];
 $legOwners = [];
-$modeChanges = routeLegs($pathInfo);
+$legCaps = []; // leg capacity -> volume, weight
+//$modeChanges = routeLegs($pathInfo);
+
 
 $routeList = [];
 for ($i=2; $i<$z=sizeof($postVals); $i+=2) {
 	$routeList[] = $postVals[$i];
 }
 
-routeLegDetails($routeList, $legCosts, $legTimes, $legOwners, $transportFile);
+routeLegDetails($routeList, $routeObjects, $legCosts, $legTimes, $legOwners, $legCaps, $transportFile);
+// verify enough capacity
+for ($i=0; $i<$z=sizeof($routeList)); $i++) {
+	if ($legCaps[$i*2] < $thisOffer->get('volume') || $legCaps[$i*2+1] < $thisOffer->get('weight')) exit ('error 9401-2');
+}
 
 $totalCost = array_sum($legCosts);
 $totalTime = array_sum($legTimes);
 
-processRouteCosts($thisPlayer, $totalCost, $objFile);
+processRouteCosts($thisPlayer, $legCosts, $routeObjects, $legCaps, $objFile);
 
 // update the delivery time of the order at the factory
 $now = time();

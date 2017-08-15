@@ -3,13 +3,14 @@
 //transportClass.php
 
 class routeObj {
-	public $id, $stops, $stopsDist, $objDat, $attrList;
+	public $id, $stops, $stopsDist, $objDat, $attrList, $file;
 
-	function __construct($id, $dat) {
+	function __construct($id, $dat, $file) {
 		$this->id = $id;
 		$this->objDat = unpack('s*', substr($dat, 4, 20));
 		$this->stops = unpack('s*', substr($dat, 56, 20));
 		$this->stopsDist = unpack('s*', substr($dat, 76, 20));
+		$this->file = $file;
 
 		$this->attrList['owner'] = 1;
 		$this->attrList['mode'] = 2;
@@ -21,7 +22,19 @@ class routeObj {
 		$this->attrList['weightCap'] = 7;
 		$this->attrList['status'] = 8;
 		$this->attrList['runFreq'] = 9;
-		$this->attrList['vehicle'] = 9;
+		
+		$this->attrList['lEarning'] = 11;
+		$this->attrList['pEarning'] = 13;
+		$this->attrList['vehicle'] = 14;
+	}
+	
+	function adjVal($desc, $incr) {
+		if (array_key_exists($desc, $this->attrList)) {
+			$this->objDat[$this->attrList[$desc]] -= $incr;
+		} else {
+			echo 'seterr: DESC: "'.$desc.'" Not found in type '.$this->objDat[4].' ('.$desc.')';
+			return false;
+		}
 	}
 
 	function get($desc) {
@@ -31,6 +44,20 @@ class routeObj {
 			echo 'DESC: "'.$desc.'" Not found in type '.$this->objDat[4].' ('.$desc.')';
 			return false;
 		}
+	}
+	
+	function set($desc, $val) {
+		if (array_key_exists($desc, $this->attrList)) {
+			$this->objDat[$this->attrList[$desc]] = $val;
+		} else {
+			echo 'seterr: DESC: "'.$desc.'" Not found in type '.$this->objDat[4].' ('.$desc.')';
+			return false;
+		}
+	}
+	
+	function saveAll() {
+		fseek($file, $this->id);
+		fwrite($file, packArray($this->objDat));
 	}
 
 	function legInfo ($start, $end) {
@@ -68,7 +95,7 @@ function loadRoutePath ($routeNum, $routeFile) {
 	fseek($routeFile, $routeHead[1]);
 	$routeDat = fread($routeFile, $routeHead[2]);
 
-	return new routeObj($routeNum, $routeDat);
+	return new routeObj($routeNum, $routeDat, $routeFile);
 }
 
 function calcRouteNum($city1, $city2) {
@@ -138,17 +165,32 @@ function packArray($data, $type='i') {
   return $str;
 }
 
-function processRouteCosts($thisPlayer, $totalCost, $objFile) {
+function processRouteCosts($thisPlayer, $legCosts, $routeObjects, $legCaps, $objFile) {
 	// deduct the shipping cost from the selling player
+	$totalCost = array_sum($legCosts);
 	$thisPlayer->save('money', $thisPlayer->get('money') - $totalCost[$i]);
 
 	// credit the shipping cost to the shipping company and deduct from the shipper
+	for($i=0; $i<$z=sizeof($routeObjects); $i++) {
+		if (getClass($routeObjects[$i]) == routeObj) {
+			$routeObjects[$i]->adjVal('spaceCap', -$legCaps[$i*2]);
+			$routeObjects[$i]->adjVal('weightCap', -$legCaps[$i*2+1]);
+			$routeObjects[$i]->adjVal('lEarning', $legCosts[$i]);
+			$routeObjects[$i]->adjVal('pEarning', $legCosts[$i]);
+			$rotueObjects[$i]->saveAll();
+		}
+	}
+	/*
 	for ($i=0; $i<sizeof($legOwners); $i++) {
 		if ($legOwners[$i] > 0) {
 			$transportingPlayer = loadObject($legOwners[$i], $objFile, 400);
 			$transportingPlayer->save('money', $transportingPlayer->get('money') + $legCosts[$i]);
 		}
-	}
+	}*/
+}
+
+function processRouteStats() {
+	
 }
 
 function routeLegs($routeInfo) {
@@ -169,15 +211,17 @@ function routeLegs($routeInfo) {
 	return $modeChanges;
 }
 
-function routeLegDetails($routeList, &$legCosts, &$legTimes, &$legOwners, $transportFile) {
+function routeLegDetails($routeList, &$legRoutes, &$legCosts, &$legTimes, &$legOwners, &$legCaps, $transportFile) {
 	$modeChangeNum = 0;
 	for ($i=0; $i<sizeof($routeList); $i+++) {
 		if ($routeList[$i] > 0 ) {
-			$legRoute = loadRoute($routeList[$i], $transportFile);
-			$legInfo = $legRoute->legInfo($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
-			$legTimes[] = $legInfo[0]/$legRoute->get('speed');
-			$legCosts[] = $shipmentWeight/$legRoute->get('weightCost');
-			$legOwners[] = $legRoute->get('owner');
+			$tmpRoute = loadRoute($routeList[$i], $transportFile);
+			$legInfo = $tmpRoute->legInfo($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
+			$legTimes[] = $legInfo[0]/$tmpRoute->get('speed');
+			$legCosts[] = $shipmentWeight/$tmpRoute->get('weightCost');
+			$legOwners[] = $tmpRoute->get('owner');
+			array_push($legCaps, $tmpRoute->get('spaceCap'), $tmpRoute->get('weightCap'));
+			$legRoutes[] = $tmpRoute;
 		} else {
 			$pathNum = calcRouteNum($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);
 			fseek($routeFile, $pathNum*12);
@@ -186,6 +230,7 @@ function routeLegDetails($routeList, &$legCosts, &$legTimes, &$legOwners, $trans
 			$legTimes[] = $pathHead[3];
 			$legCosts[] = $pathHead[3];
 			$legOwners[] = 0;
+			$legRoutes[] = 0;
 			print_r($pathHead);
 		}
 		$modeChangeNum += 2;

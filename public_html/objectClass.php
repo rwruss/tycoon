@@ -771,8 +771,14 @@ class offer extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 		
+		$this->attrList['qty'] = 1;
+		
+		$this->attrList['product'] = 11;
 		$this->attrList['buyer'] = 12;
 		$this->attrList['deliverTime'] = 13;
+		
+		$this->attrList['weight'] = 19;
+		$this->attrList['volume'] = 20;
 	}
 }
 
