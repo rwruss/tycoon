@@ -107,6 +107,8 @@ $sellingFactory->saveItem($sellingFactory->productStats+$productNum*5+4, $sellin
 
 echo 'Sales tax is '.$salesTax;
 
+$thisProduct = loadProduct($, $objFile, 1000);
+
 // create sale dat
 $location = 0;
 $conglID = 0;
@@ -130,8 +132,8 @@ $saleDat[15] = $laborCost;
 $saleDat[16] = $salesTax;
 $saleDat[17] = $sellingFactory->get('region_3'); // origin of sale
 $saleDat[18] = 0; // destination of sale
-$saleDat[19] = 1; // Product weight
-$saleDat[20] = 1; // Product Volume
+$saleDat[19] = $thisProduct->get('unitWeight')*$postVals[4]; // Product weight
+$saleDat[20] = $thisProduct->get('unitVolume')*$postVals[4]; // Product Volume
 
 
 //$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID, $postVals[3], 0, 0, $materialCost, $laborCost, $salesTax);

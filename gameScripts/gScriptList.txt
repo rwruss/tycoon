@@ -94,6 +94,8 @@
 1094 - PROCESS: Save transport options for material delivery to a factory
 
 TO DO:
+VARIABLE RESOURCE PRODUCTION BASED ON MAP LOCATION (Farms, Mines, Etc)
+RESOURCE PRODUCTION BY LABOR SKILL LEVEL
 Verify route capactiy in transportClass.php::processRouteCosts
 Transport taxes?
 https://msdn.microsoft.com/en-us/library/aa365574(v=vs.85).aspx
@@ -101,7 +103,7 @@ https://msdn.microsoft.com/en-us/library/windows/desktop/ms738545(v=vs.85).aspx
 https://stackoverflow.com/questions/33401895/how-to-set-up-communication-between-php-and-c
 Transport company
 Create transport options
-Turn on city/national pay in 1027 and 1087 for real pay amounts at cities
+Turn on city/national worker pay in 1027 and 1087 for real pay amounts at cities
 Show each tax category rate when selling a shipment that has arrived at a city
 Verify citysupplyfile size and spots fopen($gamePath.'/citySupply.csf', 'rb');
 Premium boosts from premium management

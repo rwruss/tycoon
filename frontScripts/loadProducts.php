@@ -152,17 +152,19 @@ while (($line = fgets($productFile)) !== false) {
 	}
 
   // read ingredients into array
-  $productArray = array_fill(1, 250, 0);
-  $productArray[4] = 4;
-  $productArray[9] = $count;
-  $productArray[11] = $lineItems[41];
-	$productArray[13] = $productTypes[$lineItems[42]];
+  $productArray = array_fill(1, 250, 0); 
+  $productArray[4] = 4; // type
+  $productArray[9] = $count; // ??
+  $productArray[11] = $lineItems[41]; // base prod rate/hour
+	$productArray[12] = $productTypes[$lineItems[42]]; // product type
+	$productArray[13] = $lineItems[43];  // unit weight
+	$productArray[14] = $lineItems[44]; // unit volume
 
   for ($i=0; $i<10; $i++) {
-    $productArray[18+$i] = $productList[$lineItems[1+$i]];
-    $productArray[28+$i] = $lineItems[11+$i];
-    $productArray[38+$i] = $laborItems[$lineItems[21+$i]];
-		$productArray[48+$i] = $lineItems[31+$i];
+    $productArray[18+$i] = $productList[$lineItems[1+$i]]; // material requirements
+    $productArray[28+$i] = $lineItems[11+$i]; // material quantities
+    $productArray[38+$i] = $laborItems[$lineItems[21+$i]]; // labor requirements
+		$productArray[48+$i] = $lineItems[31+$i]; // labor weights
 		//echo 'EQ #'.$i.':'.$lineItems[31+$i].'<p>';
   }
 	//print_r($productArray);

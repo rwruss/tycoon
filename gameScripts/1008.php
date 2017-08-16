@@ -34,20 +34,30 @@ $thisBusiness->save('money', $thisBusiness->get('money')-$factoryCost);
 
 // Get a new project ID
 $newProjID = 0;
-if (flock($projectFile, LOCK_EX)) {
+$emptyProjects = new itemSlot(0, $projectFile, 100, TRUE);
+for ($i=1; $i<$z=sizeof($emptyProjects->slotData); $i++) {
+	if ($emptyProjects->slotData[$i] > 0) {
+		$newProjID = $emptyProjects->slotData[$i];
+		$emptyProjects->deleteByValue($newProjID);
+		break;
+	}
+}
+if ($newProjID == 0) {
+	if (flock($projectFile, LOCK_EX)) {
 
-	fseek($projectFile, 0, SEEK_END);
-	$newProjID = max(ceil(ftell($projectFile)/100),1);
-	echo '<p>NEW PROJECT ID IS '.$newProjID.'<p>';
-	if ($newProjID > 0) {
-		fseek($projectFile, $newProjID*100+96);
-		fwrite($projectFile, pack('i', 0));
-		fflush($projectFile);
-		flock($projectFile, LOCK_UN);
-	} else {
-		flock($projectFile, LOCK_UN);
-		fclose($projectFile);
-		exit('error 8001-1');
+		fseek($projectFile, 0, SEEK_END);
+		$newProjID = max(ceil(ftell($projectFile)/100),2);
+		echo '<p>NEW PROJECT ID IS '.$newProjID.'<p>';
+		if ($newProjID > 0) {
+			fseek($projectFile, $newProjID*100+96);
+			fwrite($projectFile, pack('i', 0));
+			fflush($projectFile);
+			flock($projectFile, LOCK_UN);
+		} else {
+			flock($projectFile, LOCK_UN);
+			fclose($projectFile);
+			exit('error 8001-1');
+		}
 	}
 }
 
@@ -123,8 +133,9 @@ $thisProject = new project($newProjID, $projectDat, $projectFile);
 print_r($thisProject->objDat);
 $thisProject->saveAll();
 
-$testProject = loadProject($newProjID, $projectFile);
-print_r($testProject->objDat);
+// Add to the list of open projects
+$projectList = new itemSlot(1, $projectFile, 100);
+$projectList->addItem($newProjID);
 
 fclose($projectFile);
 fclose($objFile);

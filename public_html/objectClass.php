@@ -674,12 +674,14 @@ class product extends object {
 
 		$this->itemBlockSize = 100;
 
-		$this->attrList['numMaterial'] = 11;
 		$this->attrList['baseRate'] = 11;
-		$this->attrList['numLabor'] = 12;
+		$this->attrList['prodType'] = 12;
+		$this->attrList['unitWeight'] = 13;
+		$this->attrList['unitVolume'] = 14;
+		
 		$this->attrList['matReq1'] = 18;
 		$this->attrList['matReq2'] = 19;
-		$this->attrList['matReq3'] = 20;
+		$this->attrList['matReq3'] = 20;		
 		$this->attrList['matReq4'] = 21;
 		$this->attrList['matReq5'] = 22;
 		$this->attrList['matReq6'] = 23;
@@ -687,6 +689,7 @@ class product extends object {
 		$this->attrList['matReq8'] = 25;
 		$this->attrList['matReq9'] = 26;
 		$this->attrList['matReq10'] = 27;
+		
 		$this->attrList['matQty1'] = 28;
 		$this->attrList['matQty2'] = 29;
 		$this->attrList['matQty3'] = 30;

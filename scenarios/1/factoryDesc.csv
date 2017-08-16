@@ -1,12 +1,16 @@
-0 - Description,1 - Product 1,2 - Product 2,3 - Product 3,4 - Product 4,5 - Product 5,6 - Cost (in cents)
-Grain Farm,Wheat,Corn,None,None,None,1000
-Chicken Farm,Chicken,None,None,None,None,1000
-Ranch,Cattle,None,None,None,None,1000
-Meat Processor,Packaged Chicken,Packaged Beef,Pigs,None,None,1000
-Fruit Farm,Grapes,Berries,None,None,None,1000
-Brewery,Wine,Beer,Spirits,None,None,1000
-Metal Mill,Steel,Aluminum Cans,None,None,None,1000
-Electronics Plant,Computer Parts,CPUs,Computers,None,None,1000
-Auto Factory,Cars,SUV,Small Truck,Large Truck,None,1000
-Mine,Coal,Iron,None,None,None,1000
-Oil Well,Oil,Natural Gas,None,None,None,1000
+0 - Description,1 - Product 1,2 - Product 2,3 - Product 3,4 - Product 4,5 - Product 5,6 - Cost (in cents),7 - Base Prod 1,8 - Base Prod 2,9 - Base Prod 3,10 - Base Prod 4,11 - Base Prod 5
+Grain Farm,Wheat,Corn,None,None,None,1000,1,1,1,1,1
+Chicken Farm,Chicken,None,None,None,None,1000,1,1,1,1,1
+Ranch,Cattle,None,None,None,None,1000,1,1,1,1,1
+Meat Processor,Packaged Chicken,Packaged Beef,Pigs,None,None,1000,1,1,1,1,1
+Fruit Farm,Grapes,Berries,None,None,None,1000,1,1,1,1,1
+Brewery,Wine,Beer,Spirits,None,None,1000,1,1,1,1,1
+Metal Mill,Steel,Aluminum Cans,None,None,None,1000,1,1,1,1,1
+Electronics Plant,Computer Parts,CPUs,Computers,None,None,1000,1,1,1,1,1
+Auto Factory,Cars,SUV,Small Truck,Large Truck,None,1000,1,1,1,1,1
+Coal Mine,Coal,None,None,None,None,1000,1,1,1,1,1
+Oil Well,Oil,Natural Gas,None,None,None,1000,1,1,1,1,1
+Construction Company,Construction Services,None,None,None,None,1000,1,1,1,1,1
+Concrete Plant,Concrete,None,None,None,None,1000,1,1,1,1,1
+Iron Mine,Iron,None,None,None,None,1000,1,1,1,1,1
+Quarry,Rock,None,None,None,None,1000,1,1,1,1,1
