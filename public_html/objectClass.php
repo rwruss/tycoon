@@ -390,7 +390,7 @@ class factory extends object {
 		$now = time();
 		$saveFactory = false;
 
-		
+
 		// Update facility construction or upgrades as needed
 
 		// Sort material requirements into the storage index for the factory
@@ -404,10 +404,10 @@ class factory extends object {
 			if ($this->objDat[$this->orderListStart+$i] > 0) {
 				fseek($orderDatFile, $this->objDat[$this->orderListStart+$i]);
 				$orderDat = unpack('i*', fread($orderDatFile, 64));
-				
-				$thisOrder = loadOrder($this->objDat[$this->orderListStart+$i], $orderDatFile);
+
+				$thisOrder = loadOffer($this->objDat[$this->orderListStart+$i], $orderDatFile);
 				$orderDat = $thisOrder->objDat;
-				
+
 				if ($thisOrder->objDat[13] <= $now) { // order has arrived
 					$this->objDat[$this->inputOffset+$rscSpots[$orderDat[11]]]+= $orderDat[1]; // adjust the material quantity
 					$this->objDat[$this->inputCost + $rscSpots[$orderDat[11]]] += $orderDat[1]*$orderDat[2];  // adjust the inventory costs
@@ -770,13 +770,13 @@ class project extends object {
 class offer extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->attrList['qty'] = 1;
-		
+
 		$this->attrList['product'] = 11;
 		$this->attrList['buyer'] = 12;
 		$this->attrList['deliverTime'] = 13;
-		
+
 		$this->attrList['weight'] = 19;
 		$this->attrList['volume'] = 20;
 	}
@@ -832,7 +832,7 @@ function loadProject($id, $file) {
 function loadOffer($id, $file) {
 	fseek($file, $id);
 	$dat = unpack('i*', fread($file, 100));
-	
+
 	return new offer($id, $dat, $file);
 }
 

@@ -22,12 +22,12 @@ class routeObj {
 		$this->attrList['weightCap'] = 7;
 		$this->attrList['status'] = 8;
 		$this->attrList['runFreq'] = 9;
-		
+
 		$this->attrList['lEarning'] = 11;
 		$this->attrList['pEarning'] = 13;
 		$this->attrList['vehicle'] = 14;
 	}
-	
+
 	function adjVal($desc, $incr) {
 		if (array_key_exists($desc, $this->attrList)) {
 			$this->objDat[$this->attrList[$desc]] -= $incr;
@@ -45,7 +45,7 @@ class routeObj {
 			return false;
 		}
 	}
-	
+
 	function set($desc, $val) {
 		if (array_key_exists($desc, $this->attrList)) {
 			$this->objDat[$this->attrList[$desc]] = $val;
@@ -54,7 +54,7 @@ class routeObj {
 			return false;
 		}
 	}
-	
+
 	function saveAll() {
 		fseek($file, $this->id);
 		fwrite($file, packArray($this->objDat));
@@ -112,39 +112,43 @@ function loadPathHead($routeFile, $routeNum) {
 	return $routeHead;
 }
 
-function loadRouteOptions($pathRoute, $tranportFile) {
+function loadRouteOptions($pathRoute, $transportFile) {
 	// Look up available transport for each segment of the route
 	$legRoutes = new itemSlot($pathRoute, $transportFile, 40);
 	$legInfo = [];
 	$tmpArray = array_fill(0,13,0);
+	//echo 'Load ('.sizeof($legRoutes->slotData).') options for route #'.$pathRoute;
 	for ($j=1; $j<=sizeof($legRoutes->slotData); $j++) {
-		// Load the route data
-		fseek($transportFile, $legRoutes->slotData[$j]);
-		$routeDat = fread($transportFile, 140);
-		$routeInfo = unpack('i*', substr($routeDat, 0, 56));
-		$routeStops = unpack('s*', substr($routeDat, 56));
+		if ($legRoutes->slotData[$j] > 0) {
+			echo 'Run route '.$legRoutes->slotData[$j].'<br>';
+			// Load the route data
+			fseek($transportFile, $legRoutes->slotData[$j]);
+			$routeDat = fread($transportFile, 140);
+			$routeInfo = unpack('i*', substr($routeDat, 0, 56));
+			$routeStops = unpack('s*', substr($routeDat, 56));
 
-		// Determine total travel time
-		$routeDist = array_sum(array_slice($routeStops, 11));
-		$routeTime = $routeDist/$routeInfo[3];
-		
-		$tmpArray[0] = $j; // option ID
-		$tmpArray[1] = $i; // leg Num
-		$tmpArray[2] = $legRoutes->slotData[$j]; // route ID
-		$tmpArray[3] = $routeInfo[1]; // owner
-		$tmpArray[4] = $routeInfo[2]; // mode
-		$tmpArray[5] = $routeDist; // distance
-		$tmpArray[6] = $routeInfo[3]; // speed
-		$tmpArray[7] = $routeInfo[4]; // cost/vol
-		$tmpArray[8] = $routeInfo[5]; // cost/wt
-		$tmpArray[9] = $routeInfo[6]; // cap-vol
-		$tmpArray[10] = $routeInfo[7]; // cap-wt
-		$tmpArray[11] = $routeInfo[8]; // status
-		$tmpArray[12] = $routeInfo[14]; // vehicle
-		
-		$legInfo = array_merge($legInfo, $tmpArray);
+			// Determine total travel time
+			$routeDist = array_sum(array_slice($routeStops, 11));
+			$routeTime = $routeDist/$routeInfo[3];
+
+			$tmpArray[0] = $j; // option ID
+			$tmpArray[1] = $i; // leg Num
+			$tmpArray[2] = $legRoutes->slotData[$j]; // route ID
+			$tmpArray[3] = $routeInfo[1]; // owner
+			$tmpArray[4] = $routeInfo[2]; // mode
+			$tmpArray[5] = $routeDist; // distance
+			$tmpArray[6] = $routeInfo[3]; // speed
+			$tmpArray[7] = $routeInfo[4]; // cost/vol
+			$tmpArray[8] = $routeInfo[5]; // cost/wt
+			$tmpArray[9] = $routeInfo[6]; // cap-vol
+			$tmpArray[10] = $routeInfo[7]; // cap-wt
+			$tmpArray[11] = $routeInfo[8]; // status
+			$tmpArray[12] = $routeInfo[14]; // vehicle
+
+			$legInfo = array_merge($legInfo, $tmpArray);
+		}
 	}
-	return $tmpArray;
+	return $legInfo;
 }
 
 function loadPath($routeFile, $routeNum) {
@@ -156,7 +160,7 @@ function loadPath($routeFile, $routeNum) {
 
 	return unpack('i*', $routeDat);
 }
-
+/*
 function packArray($data, $type='i') {
   $str = '';
   foreach ($data as $value) {
@@ -164,7 +168,7 @@ function packArray($data, $type='i') {
   }
   return $str;
 }
-
+*/
 function processRouteCosts($thisPlayer, $legCosts, $routeObjects, $legCaps, $objFile) {
 	// deduct the shipping cost from the selling player
 	$totalCost = array_sum($legCosts);
@@ -190,7 +194,7 @@ function processRouteCosts($thisPlayer, $legCosts, $routeObjects, $legCaps, $obj
 }
 
 function processRouteStats() {
-	
+
 }
 
 function routeLegs($routeInfo) {
@@ -213,7 +217,7 @@ function routeLegs($routeInfo) {
 
 function routeLegDetails($routeList, &$legRoutes, &$legCosts, &$legTimes, &$legOwners, &$legCaps, $transportFile) {
 	$modeChangeNum = 0;
-	for ($i=0; $i<sizeof($routeList); $i+++) {
+	for ($i=0; $i<sizeof($routeList); $i++) {
 		if ($routeList[$i] > 0 ) {
 			$tmpRoute = loadRoute($routeList[$i], $transportFile);
 			$legInfo = $tmpRoute->legInfo($modeChanges[$modeChangeNum], $modeChanges[$modeChangeNum+1]);

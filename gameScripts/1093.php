@@ -24,6 +24,7 @@ $prodWeight = 1;
 $thisOffer = loadOffer($postVals[2], $offerDatFile);
 
 // get the destination of the shipment
+print_r($thisOffer->objDat);
 $origin = $thisOffer->objDat[17];
 $dest = $thisOffer->objDat[18];
 
@@ -31,7 +32,8 @@ $legInfo = [];
 
 // Load the rotue information
 $pathNum = calcRouteNum($origin, $dest);
-$pathInfo = loadRoutePath($routeFile, $pathNum);
+$pathInfo = loadPath($routeFile, $pathNum);
+echo 'Path info for path '.$pathNum.' which is from '.$origin.' to '.$dest.'<p>';
 $modeChanges = routeLegs($pathInfo);
 
 $legInfo = []; // leg, company, time, cost, vehicle, capacity
@@ -42,13 +44,14 @@ for ($i=0; $i<sizeof($modeChanges)/2; $i++) {
 	$pathRoute = calcRouteNum($modeChanges[$i*2], $modeChanges[$i*2+1]);
 	fseek($routeFile, $pathRoute*12);
 	$pathHead = unpack('i*', fread($routeFile, 12));
-	//echo 'Mode '.$modeChanges[$i].' to '.$modeChanges[$i+1].' is route '.$pathRoute;
+	print_r($pathHead);
+	echo 'Mode '.$modeChanges[$i].' to '.$modeChanges[$i+1].' is route '.$pathRoute.'<br>';
 	//print_r($pathHead);
 
 	// Insert spot for default option for this leg
 	array_push($legInfo, 0, $i,0,0,0,$pathHead[3],1,1,1,0,0,0,0); // optionID, legNum, routeID, owner, mode, distance, speed, cost/vol, cost/wt, cap-vol, cap-wt, status, vehicle
-
-	$legInfo = array_merge(loadRouteOptions($pathRoute, $transportFile));
+	print_r($legInfo);
+	$legInfo = array_merge($legInfo, loadRouteOptions($pathRoute, $transportFile));
 }
 
 fclose($offerDatFile);

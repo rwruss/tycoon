@@ -79,9 +79,9 @@ for ($i=0; $i<10; $i++) {
 	if ($thisObj->objDat[$thisObj->orderListStart+$i] > 0) {
 		//fseek($offerDatFile, $thisObj->objDat[$thisObj->orderListStart+$i]);
 		//$offerDat = unpack('i*', fread($offerDatFile, 64));
-		
+
 		$thisOffer = loadOffer($thisObj->objDat[$thisObj->orderListStart+$i], $offerDatFile);
-		
+
 		array_push($materialOrders, $postVals[1], $thisObj->objDat[$thisObj->orderListStart+$i],  $i); //factory ID, offer id, spot
 		$materialOrders = array_merge($materialOrders, $thisOffer->objDat);
 		//$materialOrders = $materialOrders + $offerDat;
@@ -206,6 +206,8 @@ for (let i=0; i<5; i++) {
 }
 console.log(tmpProdItems)
 prodList = new uList(tmpProdItems);
+factoryDiv.infoSection = addDiv("", "stdFloatDiv", factoryDiv);
+textBlob("", factoryDiv.infoSection, "Location: City #'.$thisObj->get('region_3').'");
 factoryDiv.headSection = addDiv("", "stdFloatDiv", factoryDiv);
 factoryDiv.headSection.style.height = 250;
 factoryDiv.headSection.rate = textBlob("", factoryDiv.headSection, "Rate: '.($thisObj->get('prodRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");

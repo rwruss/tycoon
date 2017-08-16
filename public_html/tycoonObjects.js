@@ -1233,15 +1233,17 @@ class factoryOrder {
 
 	orderDetails (trg) {
 		textBlob("", trg, "Order Details");
-		trg.tansportBox = addDiv("", "", trg);
+		//trg.tansportBox = addDiv("", "", trg);
+		trg.head = addDiv("", "stdFloatDiv", trg);
+		trg.legArea = addDiv("", "stdFloatDiv", trg);
 
-		let transportOpts = newButton(trg.tansportBox);
+		let transportOpts = newButton(trg.head);
 		transportOpts.innerHTML = "arrange transport";
 		transportOpts.parentObj = this;
 		transportOpts.sendStr = "1093,"+this.factoryID+","+this.orderID;
 		transportOpts.addEventListener("click", function () {
 			let saveRouteButton = newButton(trg);
-			saveButton.sendStr = "1094," + ","+this.orderID + "," + this.factoryID + ",";
+			saveRouteButton.sendStr = "1094," + ","+this.orderID + "," + this.factoryID + ",";
 			saveRouteButton.addEventListener("click", function () {
 				getASync(this.sendStr + selectedRouteList.join(",")).then(v => {
 					let r = v.split(",");

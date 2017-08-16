@@ -86,8 +86,8 @@ if ($postVals[2] == 0) {
   $transaction[5] = $offerDat[5]; // pollution
   $transaction[6] = $offerDat[6]; // rights
   $transaction[7] = $offerDat[11]; // product ID
-  $transaction[14] = $offerDat[14];
-  $transaction[15] = $offerDat[15];
+  $transaction[14] = $offerDat[14]; // material cost
+  $transaction[15] = $offerDat[15]; // labor cost
 
   $sellingFactory = loadObject($offerDat[3], $objFile, 1600);
   $sellingCity = loadCity($sellingFactory->get('region_3'), $cityFile);
@@ -166,8 +166,9 @@ if ($postVals[2] == 0) {
 		}
 
 	// Record the player ordering and the arrival time in the offer list file
-	$offerDat[12] = $pGameID;
-	$offerDat[13] = $now+60;
+	$offerDat[12] = $pGameID; // buyer
+	$offerDat[13] = $now+60; // delivery time
+  $offerDat[18] = $buyingFactory->get('region_3');// destination territory
 
 	// overwrite the order in the slot List
     $offerList = new itemSlot($postVals[4], $offerListFile, 1000);
@@ -182,6 +183,7 @@ if ($postVals[2] == 0) {
 		$newOrder[1] = $purchaseQty;
 		$newOrder[12] = $pGameID;
 		$newOrder[13] =  $now+60;
+    $newOrder[18] = $buyingFactory->get('region_3');// destination territory
 
 		// look for an open purchase spot to use or create one
 		$purchaseID = 0;

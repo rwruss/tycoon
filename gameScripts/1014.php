@@ -128,6 +128,10 @@ $saleDat[13] = 0; // delivery time
 $saleDat[14] = $materialCost;
 $saleDat[15] = $laborCost;
 $saleDat[16] = $salesTax;
+$saleDat[17] = $sellingFactory->get('region_3'); // origin of sale
+$saleDat[18] = 0; // destination of sale
+$saleDat[19] = 1; // Product weight
+$saleDat[20] = 1; // Product Volume
 
 
 //$saleDat = pack('i*', $postVals[4], intval($postVals[5]*100), $postVals[1], 100, 100, 100, time(), $location, $pGameID, $conglID, $postVals[3], 0, 0, $materialCost, $laborCost, $salesTax);
