@@ -6,7 +6,13 @@ class object {
 	public $objDat, $linkFile;
 	function __construct($id, $dat, $file) {
 		$this->linkFile = $file;
-
+		$this->unitID = $id;
+		$this->attrList = [];
+		
+		if (strlen($dat) == 0) {
+			$this->objDat = array_fill(1,100,0);
+		}
+		/*
 		if (sizeof($dat) == 0) {
 			//echo 'Start a blank unit';
 			$this->objDat = array_fill(1, 100, 0);
@@ -14,9 +20,7 @@ class object {
 			$this->objDat = $dat;
 		}
 		//echo 'Set as type '.gettype($this->objDat);
-		$this->unitID = $id;
-
-		$this->attrList = [];
+		
 		$this->attrList['xLoc'] = 1;
 		$this->attrList['yLoc'] = 2;
 		$this->attrList['icon'] = 3;
@@ -24,7 +28,7 @@ class object {
 		$this->attrList['owner'] = 5;
 		$this->attrList['subType'] = 9;
 		$this->attrList['lastUpdate'] = 10;
-
+		*/
 		$this->itemBlockSize = 100;
 	}
 
@@ -91,6 +95,8 @@ class object {
 class user extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['lastLogin'] = 1;
 		$this->attrList['gold'] = 2;
@@ -124,6 +130,8 @@ class user extends object {
 class business extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['ownedObjects'] = 11;
 		$this->attrList['money'] = 14;
@@ -162,26 +170,34 @@ class business extends object {
 
 class factory extends object {
 	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights,
-		$orderListStart, $padTaxOffset, $inputOffset, $productOffset, $productStats, $contractsOffset, $nextUpdate, $offersOffset;
+		$orderListStart, $padTaxOffset, $inputOffset, $prodInv, $productStats, $contractsOffset, $nextUpdate, $offersOffset;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', substr($dat, 0, 904);
+		$tmp_a1 = unpack('S*', substr($dat, 904, 260);
+		$tmp_a2 = unpack("C*", substr($dat, 1164, 130);
 
+		$this->inputOffset = 31; // offset to inventory for each input
+		$this->prodInv = 47;
+		//$this->productOffset = 47; // offset to inventory slots for each product made at factory
+		$this->orderListStart = 52;
+		$this->laborCosts = 77;
 		$this->inputCost = 82;  // offset to input material cost for each product
 		$this->inputPollution = 98; // offset to input pollution level for each input
 		$this->inputRights = 114; // offset to input rights level for each input
-		$this->orderListStart = 52;
-		$this->paidTaxOffset = 274;
-		$this->inputOffset = 31; // offset to inventory for each input
-		$this->inputQuality = 304; // offset to input quality level for each input
+		
+		$this->offersOffset = 131;
+		$this->productStats = 139; // offset to stats for each product made (quality, pollution, rights, material cost, labor cost)
+		$this->paidTaxOffset = 174;		
+		$this->inputQuality = 204; // offset to input quality level for each input
+		$this->contractsOffset = 220;
+		
 		$this->laborOffset = 131;
-		$this->eqRateOffset = 264;
-		$this->productOffset = 47; // offset to inventory slots for each product made at factory
-		$this->productStats = 239; // offset to stats for each product made (quality, pollution, rights, material cost, labor cost)
-		$this->laborCosts = 77;
-		$this->contractsOffset = 320;
-		$this->prodInv = 47;
-		$this->offersOffset = 231;
+		$this->eqRateOffset = 164;		
+		
+		
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
@@ -297,10 +313,12 @@ class factory extends object {
 	}
 
 	function setProdRate($prodID, $thisProduct, $laborEqFile) {
+		return 10;
+		/*
 		// Review labor affects
 		$productionRate = 0;
 		$productionItems = 0;
-
+	
 		// Check first 7 labor types at the factory
 		for ($i=0; $i<7; $i++) {
 			if ($thisProduct->objDat[38+$i] > 0) {
@@ -350,7 +368,7 @@ class factory extends object {
 		$totalRate = intval($thisProduct->get('baseRate')*$productionRate/$productionItems*100);
 		$this->set('prodRate', $totalRate);
 		$this->saveAll($this->linkFile);
-		return $totalRate;
+		return $totalRate;*/
 	}
 
 	function resourceInv() {
@@ -437,7 +455,7 @@ class factory extends object {
 					}
 				}
 
-				$this->objDat[$this->productOffset+$productIndex] += $this->get('prodQty');
+				$this->objDat[$this->prodInv+$productIndex] += $this->get('prodQty');
 				$this->objDat[$this->productStats+$productIndex*5+0] += $this->get('prodQuality'); // product quality
 				$this->objDat[$this->productStats+$productIndex*5+1] += $this->get('prodPollution'); // product Pollution
 				$this->objDat[$this->productStats+$productIndex*5+2] += $this->get('prodRights'); // product Rights
@@ -495,9 +513,11 @@ class city extends object {
 
 	function __construct($id, $dat, $file, $binDat) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 
 		//echo 'Bin dat length of '.strlen($binDat);
-		$this->binDat = $binDat;
+		$this->binDat = $dat;
 		$this->supplyBlockSize = 360000;
 		$this->priceBlockSize = 40000;
 
@@ -641,36 +661,14 @@ class city extends object {
 	*/
 }
 
-/*
-class invoice {
-	function __construct($invoiceDat) {
-		// create invoice
-		$now = time();
-		$invoiceInfo = array_fill(1, 20, 0);
-		$invoiceInfo[1] = 1; // status: unpaid
-		$invoiceInfo[2] = $contractInfo[3]; // contract Price
-		$invoiceInfo[3] = $sentQty;
-		$invoiceInfo[4] = $contractInfo[16]; // contract Price
-		$invoiceInfo[5] = $sentQual;
-		$invoiceInfo[6] = $sentPol;
-		$invoiceInfo[7] = $sentRights;
-		$invoiceInfo[8] = $now;
-		$invoiceInfo[9] = 0;
-		$invoiceInfo[11] = $contractInfo[22]; // invoice link
-		$invoiceInfo[12] = $now + 600; // Delivery time
-		$invoiceInfo[13] = $buyerCost;
-		$invoiceInfo[14] = $postVals[3];
-		$invoiceInfo[15] = $materialCost;
-		$invoiceInfo[16] = $laborCost;
-		$invoiceInfo[17] = $postVals[1];
-	}
-}
-*/
+
 
 class product extends object {
 	public $reqMaterials, $reqLabor;
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 
 		$this->itemBlockSize = 100;
 
@@ -717,6 +715,8 @@ class product extends object {
 class region extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['money'] = 11;
 		$this->attrList['pGDP'] = 12;
@@ -732,18 +732,23 @@ class region extends object {
 class labor extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 	}
 }
 
 class factoryTemplate extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 	}
 }
 
 class school {
 	public $schoolRates;
 	function __construct($schoolType) {
+		$this->objDat = unpack('i*', $dat);
 		switch($schoolType) {
 			case 1:
 				$this->schoolRates = array_fill(1, 4, 5);
@@ -755,6 +760,8 @@ class school {
 class project extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['owner'] = 1;
 		$this->attrList['factoryID'] = 2;
@@ -773,6 +780,8 @@ class project extends object {
 class offer extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
+		
+		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['qty'] = 1;
 
@@ -845,42 +854,42 @@ function loadObject($id, $file, $size) {
 
 	fseek($file, $id*$defaultBlockSize);
 	$binDat = fread($file, $size);
-	$dat = unpack('i*', $binDat);
+	$dat = unpack('i*', substr($binDat, 0, 16));
 	//print_r($dat);
 	switch($dat[4]) {
 		case 1:
-			return new business($id, $dat, $file);
+			return new business($id, $binDat, $file);
 		break;
 
 		case 2:
-			return new labor($id, $dat, $file);
+			return new labor($id, $binDat, $file);
 		break;
 
 		case 3:
-			return new factory($id, $dat, $file);
+			return new factory($id, $binDat, $file);
 		break;
 
 		case 5:
-			return new city($id, $dat, $file, $binDat);
+			return new city($id, $binDat, $file);
 		break;
 
 		case 7:
-			return new factoryTemplate($id, $dat, $file);
+			return new factoryTemplate($id, $binDat, $file);
 		break;
 
 		default:
 			print_r($dat);
-			exit('error '.$dat[4].' OCH 847');
+			exit('error '.$dat[4].' OCH 877');
 		break;
 	}
 
 }
 
-function packArray($data) {
+function packArray($data, $format = 'i') {
 	reset($data);
 	$str = pack('i', current($data));
 	for ($i=1; $i<sizeof($data); $i++) {
-		$str = $str.pack('i', next($data));
+		$str = $str.pack($format, next($data));
 	}
 	return $str;
 }

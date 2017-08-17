@@ -44,7 +44,7 @@ if ($productCheck) {
 $invCheck = true;
 if ($sellingFactory->get('prodInv'.$inventorySlot) >= $postVals[4]) {
 	//$newQty = $sellingFactory->get('prodInv'.$inventorySlot) - $postVals[4];
-	$newQty = $sellingFactory->objDat[$sellingFactory->productOffset+$inventorySlot-1] - $postVals[4];
+	$newQty = $sellingFactory->objDat[$sellingFactory->prodInv+$inventorySlot-1] - $postVals[4];
 	echo 'Set new inventory to '.$newQty;
 	$sellingFactory->save('prodInv'.$inventorySlot, $newQty);
 	$invCheck = false;
@@ -98,11 +98,11 @@ $salesTax = $taxes[7]+$taxes[17]+$taxes[27];
 
 // Calculate material cost for the sale and deduct from inventory material cost
 $productNum = $inventorySlot-1;
-$materialCost = $postVals[4]*$sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+3]/$sellingFactory->objDat[$sellingFactory->productOffset + $productNum]; // Num Selling * Material Cost/Total Inventory
+$materialCost = $postVals[4]*$sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+3]/$sellingFactory->objDat[$sellingFactory->prodInv + $productNum]; // Num Selling * Material Cost/Total Inventory
 $sellingFactory->saveItem($sellingFactory->productStats+$productNum*5+3, $sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+3] - $materialCost);
 
 // Calculate labor cost for the sale and deduct from inventory material cost
-$laborCost = $postVals[4]*$sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+4]/$sellingFactory->objDat[$sellingFactory->productOffset + $productNum]; // Num Selling * Labor Cost/Total Inventory
+$laborCost = $postVals[4]*$sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+4]/$sellingFactory->objDat[$sellingFactory->prodInv + $productNum]; // Num Selling * Labor Cost/Total Inventory
 $sellingFactory->saveItem($sellingFactory->productStats+$productNum*5+4, $sellingFactory->objDat[$sellingFactory->productStats+$productNum*5+4] - $laborCost);
 
 echo 'Sales tax is '.$salesTax;
