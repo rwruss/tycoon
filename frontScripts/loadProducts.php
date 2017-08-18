@@ -12,11 +12,22 @@ $laborEqFile = fopen('../scenarios/'.$scenario.'/laborEq.dat', 'w');
 fseek($laborEqFile, 1000*8000*4-4);
 fwrite($laborEqFile, pack('i', 0));
 
+// load skills
+$skillFile = fopen('../scenarios/'.$scenario.'/skillList.csv', 'rb');
+$skillCount = 1;
+$skillList = [];
+while(($line = fgets($skillFile)) !== false) {
+	$lineItems = explode(',', $line);
+	$skillList[trim($lineItems[0])] = $skillCount;
+	$skillCount++;
+}
+fclose($skillFile);
 
+$now = time();
 // Load labor descriptions and equivalancies
-$laborFile = fopen('../scenarios/'.$scenario.'/laborDesc.csv', 'rb');
+$laborDescFile = fopen('../scenarios/'.$scenario.'/laborSkillSets.csv', 'rb');
 $count = 0;
-while (($line = fgets($laborFile)) !== false) {
+while (($line = fgets($laborDescFile)) !== false) {
 	$lineItems = explode(',', $line);
   $laborItems[trim($lineItems[0])] = $count;
   $count++;
@@ -28,8 +39,8 @@ print_R($laborItems);
 echo '<p>';
 
 // Record first line separately as it has no prereqs or eqs
-fseek($laborFile, 0);
-$line = fgets($laborFile);
+fseek($laborDescFile, 0);
+$line = fgets($laborDescFile);
 $lineItems = explode(',', $line);
 fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
 $laborCount = 1;
@@ -45,43 +56,41 @@ $schoolLists[7] = [];
 $schoolLists[8] = [];
 $schoolLists[9] = [];
 $schoolLists[10] = [];
-while (($line = fgets($laborFile)) !== false) {
+
+while (($line = fgets($laborDescFile)) !== false) {
 	$lineItems = explode(',', $line);
+	print_r($lineItems);
 	fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
 
-	// REcord promotion options for each labor items
-	$promotionDat = '';
-	for ($i=1; $i<11; $i++) {
-		$promotionDat .= pack('i', $laborItems[trim($lineItems[$i])]);
-	}
-	fseek($laborDetailFile, $laborCount*1000+4);
-	fwrite($laborDetailFile, $promotionDat);
-
-	$eqArray = array_fill(1, 1000, 0);
-	$laborItemNum = $laborItems[trim($lineItems[0])];
-	$eqArray[$laborItemNum] = 10000;
-
-	echo '<p>EQS for item #'.$laborCount.' - item #'.$laborItemNum.'<br>';
-		if ($lineItems[21] != '') {
-			for ($j=21; $j<sizeof($lineItems); $j+=2) {
-				$eqItemNum = $laborItems[trim($lineItems[$j])];
- 				echo 'eq for '.trim($lineItems[$j]).' (item #'.$laborItemNum.') is ('.$laborItems[trim($lineItems[$j])].')->> '.trim($lineItems[$j]).'<br>';
-
-				$eqArray[$eqItemNum] = intval($lineItems[$j+1]*100);
-		}
-	}
-
 	// Add item to relevant school lists
-	for ($i=1; $i<=10; $i++) {
-		if ($lineItems[$i+10] > 0) {
+	for ($i=0; $i<10; $i++) {
+		if ($lineItems[$i+51] > 0) {
 			$schoolLists[$i][] = $laborCount;
-			$schoolLists[$i][] = $lineItems[$i+10];
+			//$schoolLists[$i][] = $lineItems[$i+51];
 		}
 	}
 
-	echo 'EQ Array Sum:'.array_sum($eqArray);
-	fseek($laborEqFile, $laborCount*4000);
-	fwrite($laborEqFile, packArray($eqArray));
+	// create labor templates
+	$tmpDat = array_fill(0, 26, 0);
+	$tmpDat[0] = $laborCount; // labor type
+	$tmpDat[1] = 0; // creation time
+	$tmpDat[2] = 0; // home city
+	// tmp Dat 3- 12 is skills
+	$tmpDat[3] = $skillList[trim($lineItems[1])];
+	$tmpDat[4] = $skillList[trim($lineItems[2])];
+	$tmpDat[5] = $skillList[trim($lineItems[3])];
+	$tmpDat[6] = $skillList[trim($lineItems[4])];
+	$tmpDat[7] = $skillList[trim($lineItems[5])];
+	$tmpDat[8] = $skillList[trim($lineItems[6])];
+	$tmpDat[9] = $skillList[trim($lineItems[7])];
+	$tmpDat[10] = $skillList[trim($lineItems[8])];
+	$tmpDat[11] = $skillList[trim($lineItems[9])];
+	$tmpDat[12] = $skillList[trim($lineItems[10])];
+
+	$tmpDat[13] = 0; // talent
+	$tmpDat[14] = 0; // motivation
+	$tmpDat[15] = 0; // intelligence
+
 	$laborCount++;
 }
 
@@ -109,8 +118,12 @@ for ($i=1; $i<11; $i++) {
 
 fclose($schoolFile);
 
+
+
+print_r($skillList);
+
 // Load each product description into the product array
-$productFile = fopen('../scenarios/'.$scenario.'/products.csv', 'rb');
+$productFile = fopen('../scenarios/'.$scenario.'/products_new.csv', 'rb');
 fgets($productFile);
 $count = 0;
 while (($line = fgets($productFile)) !== false) {
@@ -134,7 +147,9 @@ $productTypes['Item'] = 1;
 $productTypes['Transport'] = 2;
 $productTypes['Service'] = 3;
 while (($line = fgets($productFile)) !== false) {
+
   $lineItems = explode(',', $line);
+	print_R($lineItems);
   $productReqs[trim($lineItems[0])][0] = $productList[$lineItems[1]];
   $productReqs[trim($lineItems[0])][1] = $productList[$lineItems[2]];
   $productReqs[trim($lineItems[0])][2] = $productList[$lineItems[3]];
@@ -148,25 +163,35 @@ while (($line = fgets($productFile)) !== false) {
 
 	echo trim($lineItems[0]).' Requires:<br>';
 	for ($i=0; $i<10; $i++) {
-		echo $productReqs[trim($lineItems[0])][$i].'<br>';
+		echo $productReqs[trim($lineItems[0])][$i].' - '.($lineItems[$i+1]).'<br>';
 	}
 
   // read ingredients into array
-  $productArray = array_fill(1, 250, 0); 
+	echo 'Product type '.$lineItems[63].'<br>';
+  $productArray = array_fill(1, 250, 0);
   $productArray[4] = 4; // type
   $productArray[9] = $count; // ??
   $productArray[11] = $lineItems[41]; // base prod rate/hour
-	$productArray[12] = $productTypes[$lineItems[42]]; // product type
+	$productArray[12] = $productTypes[trim($lineItems[63])]; // product type
 	$productArray[13] = $lineItems[43];  // unit weight
 	$productArray[14] = $lineItems[44]; // unit volume
 
   for ($i=0; $i<10; $i++) {
     $productArray[18+$i] = $productList[$lineItems[1+$i]]; // material requirements
     $productArray[28+$i] = $lineItems[11+$i]; // material quantities
-    $productArray[38+$i] = $laborItems[$lineItems[21+$i]]; // labor requirements
-		$productArray[48+$i] = $lineItems[31+$i]; // labor weights
-		//echo 'EQ #'.$i.':'.$lineItems[31+$i].'<p>';
+
+
   }
+	for ($i=0; $i<20; $i++) {
+		if ($lineItems[21+$i] != 'x') {
+			$productArray[38+$i] = $skillList[$lineItems[21+$i]]; // skill requirements
+			$productArray[58+$i] = $lineItems[41+$i]; // skill weights
+
+			echo 'Skill: '.$lineItems[21+$i].' - # '.$skillList[$lineItems[21+$i]].'<br>';
+		} else {
+			echo $lineItems[21+$i].'<br>';
+		}
+	}
 	//print_r($productArray);
 	$packedProducts = packArray($productArray);
   fseek($objFile, $count*$dataBlockSize);
@@ -183,6 +208,7 @@ echo '<p>';
 
 fseek($productFile, 0);
 fgets($productFile);
+/*
 while (($line = fgets($productFile)) !== false) {
   //echo $line.'<br>';
   $lineItems = explode(',', $line);
@@ -193,7 +219,7 @@ while (($line = fgets($productFile)) !== false) {
     $lineArray[37+$i] = $laborItems[$lineItems[21+$i]];
   }
   //print_r($lineArray);
-}
+}*/
 
 // Assign storage spots to factories
 $factoryFile = fopen('../scenarios/'.$scenario.'/factoryDesc.csv', 'rb');
@@ -242,7 +268,7 @@ while (($line = fgets($factoryFile)) !== false) {
 					break;
 				  }
 				}
-			}
+			} else $inventoryCheck = false;
 		}
 
   if ($inventoryCheck) echo 'CANT SETUP FACTORY TYPE '.$lineItems[0].' - TOO MUCH INVENTORY<Br>';
@@ -272,7 +298,7 @@ while (($line = fgets($factoryFile)) !== false) {
 }
 
 fclose($productFile);
-fclose($laborFile);
+fclose($laborDescFile);
 fclose($factoryFile);
 fclose($objFile);
 fclose($nameFile);
@@ -293,10 +319,10 @@ fwrite($contractListFile, pack('i', 0));
 fclose($contractListFile);
 
 
-function packArray($data) {
-  $str = pack('i', current($data));
+function packArray($data, $type = 'i') {
+  $str = pack($type, current($data));
   for ($i=1; $i<sizeof($data); $i++) {
-    $str = $str.pack('i', next($data));
+    $str = $str.pack($type, next($data));
   }
   return $str;
 }

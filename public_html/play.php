@@ -2,7 +2,7 @@
 
 $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
-$numProducts = 42;
+$numProducts = 43;
 $numFactories = 11;
 $supplyBlockSize = 360000;
 

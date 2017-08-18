@@ -8,7 +8,7 @@ class object {
 		$this->linkFile = $file;
 		$this->unitID = $id;
 		$this->attrList = [];
-		
+
 		if (strlen($dat) == 0) {
 			$this->objDat = array_fill(1,100,0);
 		}
@@ -20,7 +20,7 @@ class object {
 			$this->objDat = $dat;
 		}
 		//echo 'Set as type '.gettype($this->objDat);
-		
+		*/
 		$this->attrList['xLoc'] = 1;
 		$this->attrList['yLoc'] = 2;
 		$this->attrList['icon'] = 3;
@@ -28,7 +28,7 @@ class object {
 		$this->attrList['owner'] = 5;
 		$this->attrList['subType'] = 9;
 		$this->attrList['lastUpdate'] = 10;
-		*/
+
 		$this->itemBlockSize = 100;
 	}
 
@@ -95,7 +95,7 @@ class object {
 class user extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['lastLogin'] = 1;
@@ -130,7 +130,7 @@ class user extends object {
 class business extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['ownedObjects'] = 11;
@@ -174,10 +174,10 @@ class factory extends object {
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
-		$this->objDat = unpack('i*', substr($dat, 0, 904);
-		$tmp_a1 = unpack('S*', substr($dat, 904, 260);
-		$tmp_a2 = unpack("C*", substr($dat, 1164, 130);
+
+		$this->objDat = unpack('i*', substr($dat, 0, 904));
+		$tmp_a1 = unpack('S*', substr($dat, 904, 260));
+		$tmp_a2 = unpack("C*", substr($dat, 1164, 130));
 
 		$this->inputOffset = 31; // offset to inventory for each input
 		$this->prodInv = 47;
@@ -187,17 +187,17 @@ class factory extends object {
 		$this->inputCost = 82;  // offset to input material cost for each product
 		$this->inputPollution = 98; // offset to input pollution level for each input
 		$this->inputRights = 114; // offset to input rights level for each input
-		
+
 		$this->offersOffset = 131;
 		$this->productStats = 139; // offset to stats for each product made (quality, pollution, rights, material cost, labor cost)
-		$this->paidTaxOffset = 174;		
+		$this->paidTaxOffset = 174;
 		$this->inputQuality = 204; // offset to input quality level for each input
 		$this->contractsOffset = 220;
-		
+
 		$this->laborOffset = 131;
-		$this->eqRateOffset = 164;		
-		
-		
+		$this->eqRateOffset = 164;
+
+
 
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
@@ -318,7 +318,7 @@ class factory extends object {
 		// Review labor affects
 		$productionRate = 0;
 		$productionItems = 0;
-	
+
 		// Check first 7 labor types at the factory
 		for ($i=0; $i<7; $i++) {
 			if ($thisProduct->objDat[38+$i] > 0) {
@@ -513,7 +513,7 @@ class city extends object {
 
 	function __construct($id, $dat, $file, $binDat) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 
 		//echo 'Bin dat length of '.strlen($binDat);
@@ -667,7 +667,7 @@ class product extends object {
 	public $reqMaterials, $reqLabor;
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 
 		$this->itemBlockSize = 100;
@@ -676,10 +676,10 @@ class product extends object {
 		$this->attrList['prodType'] = 12;
 		$this->attrList['unitWeight'] = 13;
 		$this->attrList['unitVolume'] = 14;
-		
+
 		$this->attrList['matReq1'] = 18;
 		$this->attrList['matReq2'] = 19;
-		$this->attrList['matReq3'] = 20;		
+		$this->attrList['matReq3'] = 20;
 		$this->attrList['matReq4'] = 21;
 		$this->attrList['matReq5'] = 22;
 		$this->attrList['matReq6'] = 23;
@@ -687,7 +687,7 @@ class product extends object {
 		$this->attrList['matReq8'] = 25;
 		$this->attrList['matReq9'] = 26;
 		$this->attrList['matReq10'] = 27;
-		
+
 		$this->attrList['matQty1'] = 28;
 		$this->attrList['matQty2'] = 29;
 		$this->attrList['matQty3'] = 30;
@@ -715,7 +715,7 @@ class product extends object {
 class region extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['money'] = 11;
@@ -732,7 +732,7 @@ class region extends object {
 class labor extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 	}
 }
@@ -740,7 +740,7 @@ class labor extends object {
 class factoryTemplate extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 	}
 }
@@ -760,7 +760,7 @@ class school {
 class project extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['owner'] = 1;
@@ -780,7 +780,7 @@ class project extends object {
 class offer extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
-		
+
 		$this->objDat = unpack('i*', $dat);
 
 		$this->attrList['qty'] = 1;
@@ -797,7 +797,8 @@ class offer extends object {
 
 function loadProduct($id, $file, $size) {
 	fseek($file, $id*1000);
-	$dat = unpack('i*', fread($file, $size));
+	//$dat = unpack('i*', fread($file, $size));
+	$dat = fread($file, $size);
 
 	return new product($id, $dat, $file);
 }
@@ -808,7 +809,7 @@ function loadCity($id, $file) {
 	$binDat = fread($file, 1000);
 	$dat = unpack('i*', $binDat);
 
-	return new city($id, $dat, $file, $binDat);
+	return new city($id, $binDat, $file, $binDat);
 }
 
 function loadCityDemands($id, $file) {
@@ -817,33 +818,37 @@ function loadCityDemands($id, $file) {
 	$binDat = fread($file, 81000);
 	$dat = unpack('i*', $binDat);
 
-	return new city($id, $dat, $file, $binDat);
+	return new city($id, $binDat, $file, $binDat);
 }
 
 function loadRegion($id, $file) {
 	fseek($file, $id*200);
-	$dat = unpack('i*', fread($file, 200));
+	//$dat = unpack('i*', fread($file, 200));
+	$dat = fread($file, 200);
 
 	return new region($id, $dat, $file);
 }
 
 function loadUser($id, $file) {
 	fseek($file, $id*500);
-	$dat = unpack('i*', fread($file, 500));
+	//$dat = unpack('i*', fread($file, 500));
+	$dat = fread($file, 500);
 
 	return new user($id, $dat, $file);
 }
 
 function loadProject($id, $file) {
 	fseek($file, $id*100);
-	$dat = unpack('i*', fread($file, 100));
+	//$dat = unpack('i*', fread($file, 100));
+	$dat = fread($file, 100);
 
 	return new project($id, $dat, $file);
 }
 
 function loadOffer($id, $file) {
 	fseek($file, $id);
-	$dat = unpack('i*', fread($file, 100));
+	//$dat = unpack('i*', fread($file, 100));
+	$dat = fread($file, 100);
 
 	return new offer($id, $dat, $file);
 }
@@ -887,10 +892,15 @@ function loadObject($id, $file, $size) {
 
 function packArray($data, $format = 'i') {
 	reset($data);
-	$str = pack('i', current($data));
+	$z = current($data);
+	echo 'pack ('.$format.') '.$z.'<br>';
+	$str = pack($format, $z);
 	for ($i=1; $i<sizeof($data); $i++) {
-		$str = $str.pack($format, next($data));
+		$z = next($data);
+		$str = $str.pack($format, $z);
+		echo 'pack ('.$format.')'.$z.' - Length: '.strlen($str).'<br>';
 	}
+	echo 'Return '.strlen($str);
 	return $str;
 }
 

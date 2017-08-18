@@ -13,10 +13,10 @@ echo 'Hire labor type '.$postVals[2].' from school type '.$postVals[4].' at city
 require_once('./objectClass.php');
 require_once('./slotFunctions.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$schoolFile = fopen($gamePath.'/schools.dat', 'r+b');
-$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
+$schoolFile = fopen($gamePath.'/schools.dat', 'rb'); //r+b
+$cityFile = fopen($gamePath.'/cities.dat', 'rb'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
 
 $now = time();
 
@@ -80,12 +80,12 @@ if ($postVals[1] > 0) {
 			$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 			$emptySpots->addItem($postVals[2], $laborSlotFile);
 
-			// remove the labor from its type slot
+			// remove the labor from its city slot
 			$homeCity = loadCity($laborDat[9], $cityFile);
 			$cityLabor = new itemSlot($homeCity->get('cityLaborSlot'), $laborSlotFile, 40);
 			$cityLabor->deleteByValue($postVals[2], $laborSlotFile);
 
-			// remove the labor from its city slot
+			// remove the labor from its type slot
 			$laborTypeList = new itemSlot($laborDat[1], $laborSlotFile, 40);
 			$laborTypeList->deleteByValue($postVals[2], $laborSlotFile);
 
@@ -122,9 +122,48 @@ if ($postVals[3] > 0) {
 			break;
 		}
 	}
-	$laborStr = pack('i*', $postVals[2], 0, 0, $now, 0, 0, $now, $now, 0, 0);
+	//$laborStr = pack('i*', $postVals[2], 0, 0, $now, 0, 0, $now, $now, 0, 0);
+	$laborDat = [];
+	$laborDat[0] = 0; // labor type
+	$laborDat[1] = $now; // creation time - need to adjust for days/hours
+	$laborDat[2] = 0; // home city
+	$laborDat[3] = 0; // skill pts 1
+	$laborDat[4] = 0; // skill pts 2
+	$laborDat[5] = 0; // skill pts 3
+	$laborDat[6] = 0; // skill pts 4
+	$laborDat[7] = 0; // skill pts 5
+	$laborDat[8] = 0; // skill pts 6
+	$laborDat[9] = 0; // skill pts 7
+	$laborDat[10] = 0; // skill pts 8
+	$laborDat[11] = 0; // skill pts 9
+	$laborDat[12] = 0; // skill pts 10
+	$laborDat[13] = 1; // Talent
+	$laborDat[14] = 1; // Motivation
+	$laborDat[15] = 1; // Intelligence
+	$laborDat[16] = 1; // skill 1
+	$laborDat[17] = 2; // skill 2
+	$laborDat[18] = 3; // skill 3
+	$laborDat[19] = 4; // skill 4
+	$laborDat[20] = 5; // skill 5
+	$laborDat[21] = 6; // skill 6
+	$laborDat[22] = 7; // skill 7
+	$laborDat[23] = 8; // skill 8
+	$laborDat[24] = 9; // skill 9
+	$laborDat[25] = 10; // skill 10
+
+	print_r(array_slice($laborDat, 0, 3));
+	print_r(array_slice($laborDat, 3, 10));
+	print_r(array_slice($laborDat, 13, 10));
+
+	$s2 = packArray(array_slice($laborDat, 0, 13), 's');
+	$s3 = packArray(array_slice($laborDat, 13, 13), 'C');
+
+	$laborStr = packArray(array_slice($laborDat, 3, 13), 's').packArray(array_slice($laborDat, 13, 13), 'C');
+	echo 'LABOR STRING LENGTH is '.strlen($laborStr).' --> '.strlen($s2).' + '.strlen($s3);
+
+
 	$laborList->addItem($slotFile, $laborStr, $location);
-	
+
 	echo '<script>addCompanyLabor(['.implode(unpack('i*', $laborStr)).'], companyLabor)</script>';
 }
 

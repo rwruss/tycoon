@@ -1,25 +1,25 @@
-None,Skill 1,S2,S3,S4,S5,S6,S7,S8,S9,S10,Base Skill 1,BS2,BS3,BS4,BS5,BS6,BS7,BS8,BS9,BS10,S1 Max,S2Mx,S3Mx,S4Mx,S5Mx,S6Mx,S7Mx,S8Mx,S9Mx,S10Mx,Specialty 1,Sp2,Sp3,Sp4,Sp5,Sp6,Sp7,Sp8,Sp9,Sp10,Sp11,Sp12,Sp13,Sp14,Sp15,Sp16,Sp17,Sp18,Sp19,Sp20
-Unskilled Labor,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,,,,,,,,,,,,,,,,,,,,
-Farm Hand,Agriculture,Logistics,Strength,None,None,None,None,None,None,None,200,200,200,0,0,0,0,0,0,0,15000,15000,15000,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Farmer,Agriculture,Logistics,Strength,None,None,None,None,None,None,None,10000,10000,10000,0,0,0,0,0,0,0,30000,30000,30000,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Expert Farmer,Agriculture,Logistics,Strength,None,None,None,None,None,None,None,25000,25000,25000,0,0,0,0,0,0,0,60000,60000,60000,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Rancher,Ranching,Agriculture,Strength,Logistics,None,None,None,None,None,None,200,100,200,200,0,0,0,0,0,0,60000,60000,60000,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Expert Rancher,Ranching,Agriculture,Strength,Logistics,None,None,None,None,None,None,200,100,200,200,0,0,0,0,0,0,60000,60000,60000,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Asst Meat Processor,Strength,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Meat Processor,Strength,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Expert Meat Processor,Strength,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Miner,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Millworker,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Brewer,Logistics,Chemistry,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Electrical Engineer,Engineering,Electronics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Petroleum Engineer,Engineering,Chemistry,Geology,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Chemist,Cheistry,Physics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Oil Hand,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Roughneck,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Computer Tech,Electronics,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Factory Worker,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Project Manager,Management,Logistics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Construction Labor,Strength,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Operator,Mechanical,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Plant Manager,Management,Logistics,Manufacturing,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
-Auto Worker,Strength,Dexterity,Manufacturing,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,
+None,Skill 1,S2,S3,S4,S5,S6,S7,S8,S9,S10,Base Skill 1,BS2,BS3,BS4,BS5,BS6,BS7,BS8,BS9,BS10,S1 Max,S2Mx,S3Mx,S4Mx,25 - S5Mx,S6Mx,S7Mx,S8Mx,S9Mx,S10Mx,Specialty 1,Sp2,Sp3,Sp4,Sp5,Sp6,Sp7,Sp8,Sp9,Sp10,Sp11,Sp12,Sp13,Sp14,Sp15,Sp16,Sp17,Sp18,Sp19,Sp20,51 - School 1,Sc2,Sc3,Sc4,Sc5,Sc6,Sc7,Sc8,Sc9,Sc10
+Unskilled Labor,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,0,0,0,0,0,0,0,0,0
+Farm Hand,Agriculture,Logistics,Strength,None,None,None,None,None,None,None,200,200,200,0,0,0,0,0,0,0,15000,15000,15000,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Farmer,Agriculture,Logistics,Strength,None,None,None,None,None,None,None,10000,10000,10000,0,0,0,0,0,0,0,30000,30000,30000,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Expert Farmer,Agriculture,Logistics,Strength,None,None,None,None,None,None,None,25000,25000,25000,0,0,0,0,0,0,0,60000,60000,60000,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Rancher,Ranching,Agriculture,Strength,Logistics,None,None,None,None,None,None,200,100,200,200,0,0,0,0,0,0,60000,60000,60000,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Expert Rancher,Ranching,Agriculture,Strength,Logistics,None,None,None,None,None,None,200,100,200,200,0,0,0,0,0,0,60000,60000,60000,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Asst Meat Processor,Strength,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Meat Processor,Strength,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Expert Meat Processor,Strength,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Miner,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Millworker,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Brewer,Logistics,Chemistry,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Electrical Engineer,Engineering,Electronics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Petroleum Engineer,Engineering,Chemistry,Geology,you,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Chemist,Cheistry,Physics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Oil Hand,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Roughneck,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Computer Tech,Electronics,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Factory Worker,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Project Manager,Management,Logistics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Construction Labor,Strength,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Operator,Mechanical,Dexterity,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Plant Manager,Management,Logistics,Manufacturing,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0
+Auto Worker,Strength,Dexterity,Manufacturing,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,1,0,0,0,0,0,0,0,0

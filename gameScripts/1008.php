@@ -73,7 +73,7 @@ if (flock($objFile, LOCK_EX)) {
 
 	echo 'Template type: '.$factoryType.' for new object '.$newID;
 	$newObjDat = array_fill(1, 400, 0);
-	$newObj = new factory($newID, $newObjDat, $objFile);
+	$newObj = new factory($newID, packArray($newObjDat), $objFile);
 
 	// Set default parameters for this factory
 	$now = time();
@@ -129,7 +129,7 @@ $projectDat[7] = 1; // status
 echo '<p>Project Data for project '.$newProjID.'<p>';
 print_r($projectDat);
 
-$thisProject = new project($newProjID, $projectDat, $projectFile);
+$thisProject = new project($newProjID, packArray($projectDat), $projectFile);
 print_r($thisProject->objDat);
 $thisProject->saveAll();
 
