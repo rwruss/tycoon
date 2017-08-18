@@ -1,5 +1,6 @@
 <?php
 
+// ADJUST THIS FOR THE NEW LABOR FORMAT
 // move workers between a factory and company labor slots
 
 //print_r($postVals);
@@ -10,7 +11,7 @@ pvs
 3-new labor item
 4-new labor item pay rate
 */
-
+/*
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
@@ -122,5 +123,5 @@ showLabor('.$postVals[1].', factoryLabor);
 fclose($objFile);
 fclose($slotFile);
 fclose($laborEqFile);
-
+*/
 ?>

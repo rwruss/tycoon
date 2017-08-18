@@ -12,7 +12,7 @@ $thisCity = loadCity($postVals[1], $cityFile);
 
 // Load the city labor
 echo 'Check slot '.$thisCity->get('cityLaborSlot');
-$laborPool = [];
+xxxxx$laborPool = [];
 if ($thisCity->get('cityLaborSlot')>0) {
 	$cityLabor = new itemSlot($thisCity->get('cityLaborSlot'), $laborSlotFile, 40);
 	for ($i=1; $i<sizeof($cityLabor->slotData); $i+=10) {

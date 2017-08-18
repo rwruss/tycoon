@@ -1,5 +1,5 @@
 <?php
-
+/*
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
@@ -84,5 +84,5 @@ showFactoryLabor(businessDiv.laborSection.aassigned, factoryLabor);
 fclose($objFile);
 fclose($slotFile);
 fclose($cityFile);
-
+*/
 ?>

@@ -14,12 +14,98 @@ require_once('./objectClass.php');
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb');
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
-$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb');
+//$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb');
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
-$thisFactory = loadObject($postVals[1], $objFile, 1000);
+$thisFactory = loadObject($postVals[1], $objFile, 1600);
 
+// Load the player business labor list
+$laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
+
+// check each item assigned to the factory to see if it has changed
+$removedLabor = [];
+$clearList = [];
+for ($i=0; $i<10; $i++) {
+	$newLaborID = $postVals[3+$i*2];
+	
+	if ($newLaborID < 11) {
+		// this is an existing labor item at the factory
+	} else {
+		// this is a labor item from the company being added into the factory
+		
+		// verify that the player owns this labor item
+		if (verifyOwner($postVals[$newLaborID], $laborSlot)) {
+		
+			// Load the new labor item
+			fseek($laborPoolFile, $newLaborID);
+			$thisLabor = new labor(fread($laborPoolFile, 48));
+			
+			// record the old labor item to be removed from the factory
+			$removedLabor[] = $thisFactory->laborItems[$i];
+			
+			// put the new labor item into the slot
+			$thisFactory->laborItems[$i] = $thisLabor;
+			
+			// record this labor item to be cleared from the labor pool file
+			$clearList[] = $newLaborID;
+		}
+	}
+}
+
+// save the updated factory labor (need to update production rates too)
+$thisFactory->saveLabor();
+
+// clear the spots for the units that were taken out of the labor pool and remove them from the players labor list
+$emptyLabor = new labor(pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+for ($i=0; $i<$z=sizeof($clearList); $i++) {
+	fseek($laborPoolFile, $clearList[$i]);
+	fwrite($laborPoolFile, $emptyLabor->packLabor());
+	
+	$laborSlot->removeByValue($clearList[$i]);
+}
+
+// put items removed from the factory back in to the labor pool file and player labor list
+$emptyList = new itemSlot(0, $laborPoolFile, 40, TRUE);
+for ($i=0; $i<$z=sizeof($removedLabor); $i++) {
+	$useSpot = 0;
+	for ($j=1; $j<$y=sizeof($emptyList->slotData); $j++) {
+		if ($emptyList->slotData[$j] > 0) {
+			$useSpot = $emptyList->slotData[$j]; // use this empty slot
+			$emptyList->removeByValue($emptyList->slotData[$j]); // remove from the list of empty slots
+			break;
+		}
+	}
+	if ($useSpot == 0) { // create a new spot
+		fseek($laborPoolFile, 0, SEEK_END);
+		$useSpot = ftell($laborPoolFile);
+		fwrite($laborPoolFile, $removedLabor[$i]->packLabor());
+	}
+	
+	// add this new spot to the player's labor list
+	$laborSlot->addItem($useSpot);
+}
+
+function verifyOwner($laborID, $laborList) {
+	// verify that the labor exists in the player's labor list
+	$ownerCheck = false;
+	for ($i=1; $i<$z=sizeof($laborList->slotData); $i++) {
+		if ($laborList->slotData[$i] == $laborID) {
+			$ownerCheck = true;
+			break;
+		}
+	}
+	return $ownerCheck;
+}
+
+
+// Load the labor item in question
+
+
+
+
+/*
 $lOff = $thisFactory->laborOffset;
 $startFactoryLabor = array_slice($thisFactory->objDat, $lOff-1, 100);
 
@@ -132,8 +218,9 @@ for ($i=0; $i<10; $i++) {
 echo '];
 showLabor('.$postVals[1].', factoryLabor);
 	</script>';
-
-fclose($laborEqFile);
+*/
+fclose($laborPoolFile);
+//fclose($laborEqFile);
 fclose($objFile);
 fclose($slotFile);
 

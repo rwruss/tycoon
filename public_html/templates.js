@@ -1515,13 +1515,14 @@ edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 }
 
 loadCompanyLabor = function (laborDat) {
-	//console.log(laborDat);
+	console.log("REDO loadCompanyLabor");
+	/*
 	let tmpArray = new Array();
 	for (var i=0; i<laborDat.length; i+=11) {
 		//console.log("TYPE " + laborDat[i]);
 		if (laborDat[i+1]>0)	tmpArray.push(new laborItem({objID:laborDat[i]+100, pay:laborDat[i+6], ability:laborDat[i+9], laborType:laborDat[i+1]}));
 	}
-	return tmpArray;
+	return tmpArray;*/
 }
 
 addCompanyLabor = function (laborDat, laborArray) {

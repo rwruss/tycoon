@@ -74,7 +74,7 @@ class object {
 	}
 
 	function saveBlock($loc, $str) {
-		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc*4-4);
+		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc-4);
 		fwrite($this->linkFile, $str);
 	}
 
@@ -170,14 +170,14 @@ class business extends object {
 
 class factory extends object {
 	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights,
-		$orderListStart, $padTaxOffset, $inputOffset, $prodInv, $productStats, $contractsOffset, $nextUpdate, $offersOffset;
+		$orderListStart, $padTaxOffset, $inputOffset, $prodInv, $productStats, $contractsOffset, $nextUpdate, $offersOffset; $laborItems;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
 		$this->objDat = unpack('i*', substr($dat, 0, 904));
-		$tmp_a1 = unpack('S*', substr($dat, 904, 260));
-		$tmp_a2 = unpack("C*", substr($dat, 1164, 130));
+		//$tmp_a1 = unpack('S*', substr($dat, 904, 260));
+		//$tmp_a2 = unpack("C*", substr($dat, 1164, 130));
 
 		$this->inputOffset = 31; // offset to inventory for each input
 		$this->prodInv = 47;
@@ -194,11 +194,9 @@ class factory extends object {
 		$this->inputQuality = 204; // offset to input quality level for each input
 		$this->contractsOffset = 220;
 
-		$this->laborOffset = 131;
-		$this->eqRateOffset = 164;
-
-
-
+		$this->laborOffset = 227;
+		//$this->eqRateOffset = 164;
+		
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
 		$this->attrList['constStatus'] = 3;
@@ -268,6 +266,28 @@ class factory extends object {
 		$this->productStores[] = $this->objDat[49];
 		$this->productStores[] = $this->objDat[50];
 		$this->productStores[] = $this->objDat[51];
+		
+		$this->loadLabor($dat);
+	}
+	
+	function adjustLabor($laborSpot, $laborItem) {
+		$packDat = pack('i*', $laborDat[0], $laborDat[1], $laborDat[2], $laborDat[3], $laborDat[4], $laborDat[5], $laborDat[6], $laborDat[7], $laborDat[8], $laborDat[9]);
+
+		//$this->saveBlock(($this->laborOffset+$laborSpot*10)*4, $packDat);
+
+		$this->objDat[$this->laborOffset+$laborSpot*10] = $laborDat[0];
+		$this->objDat[$this->laborOffset+$laborSpot*10+1] = $laborDat[1];
+		$this->objDat[$this->laborOffset+$laborSpot*10+2] = $laborDat[2];
+		$this->objDat[$this->laborOffset+$laborSpot*10+3] = $laborDat[3];
+		$this->objDat[$this->laborOffset+$laborSpot*10+4] = $laborDat[4];
+		$this->objDat[$this->laborOffset+$laborSpot*10+5] = $laborDat[5];
+		$this->objDat[$this->laborOffset+$laborSpot*10+6] = $laborDat[6];
+		$this->objDat[$this->laborOffset+$laborSpot*10+7] = $laborDat[7];
+		$this->objDat[$this->laborOffset+$laborSpot*10+8] = $laborDat[8];
+		$this->objDat[$this->laborOffset+$laborSpot*10+9] = $laborDat[9];
+
+		echo 'Write data:';
+		print_r($laborDat);
 	}
 
 	function adjProduct($prodIndex, $sentQual, $sentPol, $sentRights, $materialCost, $laborCost) {
@@ -310,6 +330,21 @@ class factory extends object {
 		$tmpA = array_merge($tmpA, array_slice($this->objDat, 239, 25));
 
 		return $tmpA;
+	}
+	
+	function loadLabor($dat) {
+		for ($i=0; $i<10; $i++) {
+			$this->laborItems[$i] = new labor(substr($dat, 904+48*$i, 48), $this->linkFile);
+		}
+	}
+	
+	function saveLabor() {
+		$str = '';
+		for ($i=0; $i<10; $i++) {
+			$str .= $this->laborItems[$i]->packLabor();
+		}
+		
+		$this->saveBlock($this->laborOffset, $packDat);
 	}
 
 	function setProdRate($prodID, $thisProduct, $laborEqFile) {
@@ -483,28 +518,6 @@ class factory extends object {
 	function materialOrders() {
 		return array_slice($this->objDat, 51, 10);
 	}
-
-	function adjustLabor($laborSpot, $laborDat) {
-		$packDat = pack('i*', $laborDat[0], $laborDat[1], $laborDat[2], $laborDat[3], $laborDat[4], $laborDat[5], $laborDat[6], $laborDat[7], $laborDat[8], $laborDat[9]);
-
-		$this->saveBlock($this->laborOffset+$laborSpot*10, $packDat);
-		//fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->laborOffset+$laborSpot*10)*4-4);
-		//fwrite($this->linkFile, $packDat);
-
-		$this->objDat[$this->laborOffset+$laborSpot*10] = $laborDat[0];
-		$this->objDat[$this->laborOffset+$laborSpot*10+1] = $laborDat[1];
-		$this->objDat[$this->laborOffset+$laborSpot*10+2] = $laborDat[2];
-		$this->objDat[$this->laborOffset+$laborSpot*10+3] = $laborDat[3];
-		$this->objDat[$this->laborOffset+$laborSpot*10+4] = $laborDat[4];
-		$this->objDat[$this->laborOffset+$laborSpot*10+5] = $laborDat[5];
-		$this->objDat[$this->laborOffset+$laborSpot*10+6] = $laborDat[6];
-		$this->objDat[$this->laborOffset+$laborSpot*10+7] = $laborDat[7];
-		$this->objDat[$this->laborOffset+$laborSpot*10+8] = $laborDat[8];
-		$this->objDat[$this->laborOffset+$laborSpot*10+9] = $laborDat[9];
-
-		echo 'Write data:';
-		print_r($laborDat);
-	}
 }
 
 class city extends object {
@@ -644,7 +657,7 @@ class city extends object {
 
 	function changeLaborItem($spotNumber, $attrArray) {
 		$datStr = pack('i*', $attrArray[0], $attrArray[1], $attrArray[2], $attrArray[3], $attrArray[4], $attrArray[5], $attrArray[6], $attrArray[7], $attrArray[8], $attrArray[9]);
-		$fileOffset = $this->laborStoreOffset+$spotNumber*10;
+		$fileOffset = ($this->laborStoreOffset+$spotNumber*10)*4;
 		$this->saveBlock($fileOffset, $datStr);
 	}
 
@@ -729,11 +742,20 @@ class region extends object {
 	}
 }
 
-class labor extends object {
-	function __construct($id, $dat, $file) {
-		parent::__construct($id, $dat, $file);
-
-		$this->objDat = unpack('i*', $dat);
+class labor {
+	private $format, $binDat;
+	
+	function __construct($dat) {
+		//parent::__construct($id, $dat, $file);
+		
+		$this->format = "NNSSSCCCCSCSCSCSCSCSCSCSCSCSC"
+		$this->binDat = $dat;
+		
+		$this->laborDat = unpack($this->format, $dat);
+	}
+	
+	function packLabor() {
+		return pack($this->format, ...$this->laborDat);
 	}
 }
 
@@ -793,6 +815,8 @@ class offer extends object {
 		$this->attrList['volume'] = 20;
 	}
 }
+
+
 
 
 function loadProduct($id, $file, $size) {
@@ -865,11 +889,11 @@ function loadObject($id, $file, $size) {
 		case 1:
 			return new business($id, $binDat, $file);
 		break;
-
+		/*
 		case 2:
 			return new labor($id, $binDat, $file);
 		break;
-
+		*/
 		case 3:
 			return new factory($id, $binDat, $file);
 		break;

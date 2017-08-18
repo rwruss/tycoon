@@ -94,7 +94,8 @@
 1094 - PROCESS: Save transport options for material delivery to a factory
 
 TO DO:
-Change labor slots in 1057 to be by labor item ID instead of block slots
+Create labor pool templates
+
 VARIABLE RESOURCE PRODUCTION BASED ON MAP LOCATION (Farms, Mines, Etc)
 RESOURCE PRODUCTION BY LABOR SKILL LEVEL
 Verify route capactiy in transportClass.php::processRouteCosts
@@ -209,6 +210,7 @@ Demographic demand effects
   - demand by education, etc
 Show correct shipment information for a company in 1002
 verify total distance in each path calculatoin
+Change labor slots in 1057 to be by labor item ID instead of block slots
 
 IDEAS:
 Politics/mayors for cities - set polices and influence city and population demands

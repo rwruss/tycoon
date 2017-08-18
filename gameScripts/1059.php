@@ -10,12 +10,66 @@ PVs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b');
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b');
-$cityFile = fopen($gamePath.'/cities.dat', 'r+b');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
+$cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
+$laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
+$emptyLabor = new labor(pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+if (flock($laborPoolFile, LOCK_EX)) {
+	if ($postVals[2] > 0) {
+		// remove labor from a factory and put into the labor pool
+		$thisFactory = loadObject($postVals[2], $objFile, 1600);
+		$removedLabor = $thisFactory->laborItems[$postVals[1]];
+		
+		$thisFactory->laborItems[$postVals[1]] = $emptyLabor;
+		$thisFactory->saveLabor();
+		
+		// add it in to the labor pool
+		$laborID = 0;
+		$emptyList = new itemSlot(0, $laborPoolFile, 40, TRUE);
+		for ($i=1; $i<$z=sizeof($emptyList->slotData); $i++) {
+			if ($emptyList->slotData[$i] > 0) {
+				$laborID = $emptyList->slotData[$i];
+				$emptyList->removeByValue($emptyList->slotData[$i]);
+				break;
+			}
+		}
+		
+		if ($laborID == 0) {
+			fseek($laborPoolFile, 0, SEEK_END);
+			$laborID = ftell($laborPoolFile);
+		}
+		fseek($laborPoolFile, $laborID);
+		fwrite($laborPoolFile, removedLabor->packLabor());
+		
+	} else {
+		// remove the labor from a player labor pool
+		$laborID = $laborSlot->slotData[$postVals[1]];
+		fseek($laborPoolFile, $laborID);
+		$removedLabor = new labor(fread($laborPoolFile, 48));
+	}
+	flock($laborPoolFile, LOCK_UN);
+}
+
+if (flock($laborSlotFile, LOCK_EX)) {
+	// add labor to list of labor by type
+	$laborTypeList = new itemSlot($laborType, $laborSlotFile, 40);
+	$laborTypeList->addItem($laborID, $laborSlotFile);
+
+	// add labor to the list of labor by city
+	$thisCity = loadCity($homeCity, $cityFile);
+	if ($thisCity->get('cityLaborSlot') == 0) {
+		$thisCity->save('cityLaborSlot', newSlot($laborSlotFile));
+	}
+	
+	$cityLabor = new itemSlot($thisCity->get('cityLaborSlot'), $laborSlotFile, 40);
+	$cityLabor->addItem($laborID, $laborSlotFile);
+}
+
+/*
 $emptyData = pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 if ($postVals[2] > 0) {
 	// this labor is at a factory
@@ -88,6 +142,7 @@ if (flock($laborPoolFile, LOCK_EX)) {
 	$laborTypeList->addItem($laborSpot, $laborSlotFile);
 	flock($laborSlotFile, LOCK_UN);
 }
+*/
 
 fclose($objFile);
 fclose($slotFile);

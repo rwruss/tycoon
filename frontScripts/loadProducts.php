@@ -100,6 +100,10 @@ fseek($laborSlotFile, $laborCount*40-4);
 fwrite($laborSlotFile, pack('i', 0));
 fclose($laborSlotFile);
 
+// Create template labor items for each type
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'w');
+fclose($laborPoolFile);
+
 // record schools file
 $schoolFile = fopen('../scenarios/'.$scenario.'/schools.dat', 'wb');
 fseek($schoolFile, 88);

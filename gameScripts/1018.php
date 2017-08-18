@@ -11,7 +11,6 @@ $thisBusiness = loadObject($pGameID, $objFile, 400);
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
 
-
 // Load company labor
 echo 'Labor in slot '.$thisBusiness->get('laborSlot');
 $laborSlot = new itemSlot($thisBusiness->get('laborSlot'), $slotFile, 40);
@@ -89,62 +88,11 @@ textBlob("", addLabor, "Company Labor Pool");
 var companyLaborItems = addDiv("", "stdFloatDiv", addLabor);
 
 laborAdj = newButton(addLabor, function () {scrMod("1019,'.$postVals[1].'")});
-laborAdj.innerHTML = "Hire labor";</script>
-
-';
-
-/*
-Snip 1
-*/
-
-
-
+laborAdj.innerHTML = "Hire labor";</script>';
 
 fclose($objFile);
 fclose($slotFile);
 fclose($cityFile);
 
-/* Snip 1
-
-
-emptyObject = new laborItem({objID:"empty", pay:0, ability:0, laborType:0});
-emptyItem = emptyObject.renderSummary(null);
-
-console.log("empty item oo: " + emptyItem.ownerObject);
-
-for (var i=0; i<factoryLabor.length; i++) {
-	var thisLabor = factoryLabor[i].renderSummary(factoryLaborItems);
-	thisLabor.addEventListener("click", function () {switchGroups(this, factoryLaborItems, companyLaborItems, emptyItem, 10)});
-}
-
-
-for (var i=0; i<companyLabor.length; i++) {
-	var thisLabor = companyLabor[i].renderSummary(companyLaborItems);
-	thisLabor.addEventListener("click", function () {switchGroups(this, factoryLaborItems, companyLaborItems, emptyItem, 10)});
-}
-
-saveLabor = newButton(factoryLaborSection, "");
-saveLabor.addEventListener("click", function () {
-	let nodes = factoryLaborItems.childNodes;
-	let objList = [];
-	for (let i=0; i<nodes.length; i++) {
-		console.log("oo: " + nodes[i].getAttribute("ownerObject"));
-		if (nodes[i].getAttribute("ownerObject") != "empty") {
-			objList.push(nodes[i].getAttribute("ownerObject"));
-		} else {objList.push(0)}
-	}
-	console.log(objList);
-	scrMod("1022,'.$postVals[1].',"+objList);
-
-	});
-saveLabor.innerHTML = "Save labor";
-
-laborSelect = new uList(laborArray, {useItems:[1, 5, 7, 9]});
-laborBox1 = laborSelect.SLsingleButton(addLabor, {renderFunction: (function (x, y, z) {
-console.log("item #" + z);
-return x.renderQty(y, 100);})});
-
-';
-*/
 
 ?>
