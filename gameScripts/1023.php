@@ -1,5 +1,6 @@
 <?php
 
+// adjust for new labor type?
 // Show labot item detail at a factory
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');

@@ -278,7 +278,6 @@ selFactory.showOutputs(factoryDiv.productInvSection);
 
 salesSection = addDiv("", "stdFloatDiv", factoryDiv);
 
-
 factoryDiv.laborSection = addDiv("", "stdFloatDiv", factoryDiv);
 factoryDiv.laborSection.skills = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
 factoryDiv.laborSection.aassigned = addDiv("", "stdFloatDiv", factoryDiv.laborSection);

@@ -15,7 +15,7 @@
 1015 - MENU: Sell to a city
 1016 - Output pricing for items at a city
 1017 - PROCESS: Selling items to a city
-1018 - Assign labor to factory
+1018 - Assign labor to factory - NOT CURRENTLY USED
 1019 - MENU: Hire labor
 1020 - PROCESS: Load labor available at city - NOT CURRENTLY USED
 1021 - PROCESS: Hire labor from a city to a factory or a company - NOT CURRENTLY USED

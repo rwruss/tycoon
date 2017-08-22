@@ -1,6 +1,6 @@
 <?php
 
-// ADJUST THIS FOR THE NEW LABOR FORMAT
+// ADJUST THIS FOR THE NEW LABOR FORMAT - yes
 // move workers between a factory and company labor slots
 
 //print_r($postVals);

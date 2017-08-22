@@ -194,7 +194,7 @@ class factory extends object {
 	showLabor(trg) {
 		console.log(this.labor);
 		let factoryLabor = new Array();
-		//factoryLabor.push(new laborItem({objID:0, pay:0, ability:0, laborType:0}));
+		factoryLabor.push(new laborItem([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]));
 		for (var i=0; i<this.labor.length; i+=29) {
 			factoryLabor.push(new laborItem(this.labor.slice(i, i+29)));
 			//factoryLabor.push(new laborItem({objID:(this.labor[i]/10+1), pay:(this.labor[i+5]), ability:(this.labor[i+8]), laborType:this.labor[i]}));
