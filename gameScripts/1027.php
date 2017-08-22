@@ -12,12 +12,15 @@ $thisCity = loadCity($postVals[1], $cityFile);
 
 // Load the city labor
 echo 'Check slot '.$thisCity->get('cityLaborSlot');
-xxxxx$laborPool = [];
+$laborPool = [];
 if ($thisCity->get('cityLaborSlot')>0) {
 	$cityLabor = new itemSlot($thisCity->get('cityLaborSlot'), $laborSlotFile, 40);
 	for ($i=1; $i<sizeof($cityLabor->slotData); $i+=10) {
 		if ($cityLabor->slotData[$i] > 0) {
-			$laborPool = array_merge($laborPool, array_slice($cityLabor->slotData, $i-1, 10));
+			//$laborPool = array_merge($laborPool, array_slice($cityLabor->slotData, $i-1, 10));
+			fseek($laborPoolFile, $cityLabor->slotData[$i]);
+			$tmpLabor = new labor(fread($laborPoolFile, 48));
+			$laborPool = array_merge($laborPool, $tmpLabor->laborDat);
 		}
 	}
 }

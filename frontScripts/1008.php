@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 echo "scrPane";
 
 //print_r($postVals);
@@ -89,7 +89,7 @@ if ($match) {
 		fclose($playerFile);
 
 		// Set session variables
-		session_start();
+
 		$_SESSION['playerId'] = $matchVal[1];
 		$_SESSION['pHandle'] = $testName;
 		$_SESSION['boosts'] = array_slice($playerDat, 50, 20);

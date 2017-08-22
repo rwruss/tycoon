@@ -13,10 +13,10 @@ echo 'Hire labor type '.$postVals[2].' from school type '.$postVals[4].' at city
 require_once('./objectClass.php');
 require_once('./slotFunctions.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
-$schoolFile = fopen($gamePath.'/schools.dat', 'rb'); //r+b
-$cityFile = fopen($gamePath.'/cities.dat', 'rb'); //r+b
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'r+b'); //r+b
+$schoolFile = fopen($gamePath.'/schools.dat', 'r+b'); //r+b
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); //r+b
 
 $now = time();
 
@@ -36,6 +36,7 @@ if ($postVals[3] > 0) {
 	if ($spotFail) exit("No more room for labor at this factory");
 }
 
+$useLaborID = $postVals[2];
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b');
 $laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b');
 if ($postVals[1] > 0) {
@@ -60,19 +61,20 @@ if ($postVals[1] > 0) {
 	}
 
 	if ($schoolFail) exit("This school cannot train this type of labor");
-		
+
 	// school quality
 	$schoolQuality = 100;
-	
+
 	// load the default for this labor type
 	fseek($laborPoolFile, $postVals[2]*48);
 	$newLaborItem = new labor(fread($laborPoolFile, 48), null);
-	
-	// create a new labor type
+	print_r($newLaborItem->laborDat);
+
+	// create a new labor item
 	$newLaborItem->laborDat = array_fill(1, 29, 0);
 	$newLaborItem->laborDat[1] = $postVals[3]; // current city
 	$newLaborItem->laborDat[2] = 0; // current pay
-	$newLaborItem->laborDat[3] = 0; // labor type
+	//$newLaborItem->laborDat[3] = 0; // labor type
 	$newLaborItem->laborDat[4] = $now; // creating time
 	$newLaborItem->laborDat[4] = $postVals[3]; // home city
 	$newLaborItem->laborDat[5] = 0; // talent
@@ -88,11 +90,20 @@ if ($postVals[1] > 0) {
 	$newLaborItem->laborDat[25] = $schoolQuality; // skill Points
 	$newLaborItem->laborDat[26] = $schoolQuality; // skill Points
 	$newLaborItem->laborDat[27] = $schoolQuality; // skill Points
+
+	if (flock($laborPoolFile, LOCK_EX)) {
+
+		fseek($laborPoolFile, 0, SEEK_END);
+		$useLaborID = ftell($laborPoolFile);
+		echo 'WRITE: '.fwrite($laborPoolFile, $newLaborItem->packLabor());
+		flock($laborPoolFile, LOCK_UN);
+		echo 'record labor item '.$useLaborID;
+	}
 } else {
 	// hiring from the global labor pool
 	echo 'Hire labor item '.$postVals[2].' from the labor pool';
-	
-	
+
+
 
 	if (flock($laborPoolFile, LOCK_EX)) {
 		if (flock($laborSlotFile, LOCK_EX)) {
@@ -118,7 +129,7 @@ if ($postVals[1] > 0) {
 		flock($laborPoolFile, LOCK_UN);
 	}
 
-	
+
 }
 
 // Add the labor to the factory or the company
@@ -128,20 +139,20 @@ if ($postVals[3] > 0) {
 	//$thisFactory->adjustLabor($factorySpot, array_values($laborDat)); //($spotNumber, $attrArray)
 	$thisFactory->laborItems[$factorySpot] = $newLaborItem;
 	$thisFactory->saveLabor();
-	
+
 	if ($postVals[1] == 0) { // hiring for existing labor pool so delete the item from the pool
 		// delete from labor pool
 		fseek($laborPoolFile, $postVals[2]);
-		fwrite($laborPoolFile, pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
-		
+		fwrite($laborPoolFile, pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+
 		// add a marker for an empty labor spot
 		echo 'record empty marker';
 		$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 		$emptySpots->addItem($postVals[2], $laborSlotFile);
 	}
-	
+
 } else {
-	
+
 	echo 'Add to company labor spot';
 	$thisBusiness = loadObject($pGameID, $objFile, 400);
 
@@ -152,10 +163,14 @@ if ($postVals[3] > 0) {
 		echo 'Save new labor slot #'.$laborSlot;
 	}
 	$laborList = new itemSlot($laborSlot, $slotFile, 40);
-	$laborList->addItem($postVals[2]);
+	$laborList->addItem($useLaborID);
+	print_r($laborList->slotData);
 
 	echo '<script>addCompanyLabor(['.implode(unpack('i*', $laborStr)).'], companyLabor)</script>';
 }
+echo '<p>RECORDED:<P>';
+print_r($newLaborItem->laborDat);
+
 fclose($laborPoolFile);
 fclose($laborSlotFile);
 fclose($objFile);

@@ -183,7 +183,7 @@ class factory extends object {
 		trg.innerHTML = "";
 		this.factoryOrders = new Array();
 		for (var i=0; i<this.materialOrder.length; i+=28) {
-			console.log(this.materialOrder.slice(i, i+28));
+			//console.log(this.materialOrder.slice(i, i+28));
 			this.factoryOrders.push(new factoryOrder(this.materialOrder.slice(i, i+28)));
 			//factoryOrders.push(new factoryOrder('.$postVals[1].', materialOrder[i], materialOrder[i+1], materialOrder[i+2], i/3));
 		}
@@ -192,15 +192,17 @@ class factory extends object {
 	}
 
 	showLabor(trg) {
+		console.log(this.labor);
 		let factoryLabor = new Array();
-		factoryLabor.push(new laborItem({objID:0, pay:0, ability:0, laborType:0}));
-		for (var i=0; i<this.labor.length; i+=10) {
-			factoryLabor.push(new laborItem({objID:(this.labor[i]/10+1), pay:(this.labor[i+5]), ability:(this.labor[i+8]), laborType:this.labor[i]}));
+		//factoryLabor.push(new laborItem({objID:0, pay:0, ability:0, laborType:0}));
+		for (var i=0; i<this.labor.length; i+=29) {
+			factoryLabor.push(new laborItem(this.labor.slice(i, i+29)));
+			//factoryLabor.push(new laborItem({objID:(this.labor[i]/10+1), pay:(this.labor[i+5]), ability:(this.labor[i+8]), laborType:this.labor[i]}));
 		}
 
 		trg.innerHTML = "";
 
-		for (var i=1; i<factoryLabor.length; i++) {
+		for (var i=0; i<factoryLabor.length; i++) {
 			let laborItem = factoryLabor[i].renderFire(factoryDiv.laborSection.aassigned, "1059,"+i+","+this.objID);
 			if (factoryLabor[i].laborType > 0) {
 				} else {
@@ -223,6 +225,28 @@ class factory extends object {
 		}
 	}
 
+	prodLaborSkills(productID, trg) {
+		// total up all of the labor skills for the factory
+		let tmpASkills = [];
+		let tmpALvls = [];
+		for (let i=0; i<10; i++) {
+			for (let j=0; j<10; j++) {
+				let tmpIndex = tmpASkills.indexOf(this.labor[29*i+9+j]);
+				//console.log(tmpIndex);
+				if (tmpIndex >= 0) {
+					//console.log(tmpIndex + " += " + this.labor[29*i+19+j]);
+					tmpALvls[tmpIndex] += this.labor[29*i+19+j];
+				} else {
+					tmpASkills.push(this.labor[29*i+9+j]);
+					tmpALvls.push(this.labor[29*i+19+j]);
+				}
+			}
+		}
+		if (tmpASkills.length == 1 && tmpASkills[0] == 0) {
+			trg.innerHTML = "no labor skills";
+		} else trg.innerHTML = tmpASkills.length + "/" + tmpASkills[0];
+	}
+
 	setProdRate(rate, trg) {
 		this.currentRate = rate;
 		trg.innerHTML = "Rate: " + this.currentRate + "<br>Lifetime Earnings: $TBD<br>Period Earnings: $TBD";
@@ -233,6 +257,11 @@ class factory extends object {
 		for (var i=0; i<this.productMaterial.length; i+=2) {
 			materialBox(this.productMaterial[i], this.productMaterial[i+1], trg);
 		}
+	}
+
+	showProdSkills(trg) {
+		console.log(this.productSkills);
+		trg.innerHTML = this.productSkills;
 	}
 
 	showReqLabor(trg) {
@@ -940,13 +969,14 @@ class service {
 
 class labor {
 	constructor(details) {
-
-		this.objID = details.objID,
-		this.objName = details.objName,
-		this.qty = details.qty || 0;
-		this.edClass = details.edClass || "0",
-		this.laborType = details.laborType,
-		this.quality = details.ability || 0;
+		// expect detailsof 29 items
+		//console.log(details);
+		this.objID = details[0],
+		this.objName = "??",
+		//this.qty = details.qty || 0;
+		//this.edClass = details.edClass || "0",
+		this.laborType = details[3],
+		this.details = details;
 		//console.log('create product ' + this.objID);
 	}
 
@@ -958,17 +988,20 @@ class labor {
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 
 		addImg("asdf", "laborImg", thisDiv); // labor image
-
+		/*
 		thisDiv.qualBar = addDiv("asdf", "laborQualBar", thisDiv); // labor quality bar;
 		let qualPct = (this.quality%3600)/3600;
 		thisDiv.qualBar.style.width = 10 + 65*qualPct;
 		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
-
+		*/
+		/*
 		thisDiv.qualNum = addDiv("asdf", "laborQualNum", thisDiv);
 		thisDiv.qualNum.innerHTML = this.quality;
-
+		*/
+		/*
 		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
 		thisDiv.eduDiv.innerHTML = this.edClass;
+		*/
 
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
@@ -1052,7 +1085,9 @@ class labor {
 class laborItem extends labor {
 	constructor(details) {
 		super(details);
-		this.pay = details.pay;
+
+		this.pay = details[2];
+		//console.log(this)
 	}
 
 	renderSummary(target) {
@@ -1070,11 +1105,9 @@ class laborItem extends labor {
 		thisDiv.qualBar.style.width = 10 + 65*qualPct;
 		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
 
-		thisDiv.qualNum = addDiv("asdf", "laborQualNum", thisDiv);
-		thisDiv.qualNum.innerHTML = this.quality;
+		thisDiv.skills = addDiv("asdf", "laborQualNum", thisDiv);
+		thisDiv.skills.innerHTML = "skills";
 
-		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
-		thisDiv.eduDiv.innerHTML = this.edClass;
 		/*
 		thisDiv.fireDiv = addDiv("asdf", "laborFire", thisDiv);
 		thisDiv.fireDiv.innerHTML = "F";
@@ -1172,7 +1205,7 @@ class factoryOrder {
 	}
 
 	render(target, boost=true) {
-		console.log(this);
+		//console.log(this);
 		var containerBox = addDiv("", "orderContain", target);
 
 		this.displayBox = containerBox;

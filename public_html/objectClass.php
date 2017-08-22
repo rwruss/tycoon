@@ -170,12 +170,13 @@ class business extends object {
 
 class factory extends object {
 	public $resourceStores, $templateDat, $materialOrders, $tempList, $laborOffset, $productStores, $eqRateOffset, $inputCost, $inputPollution, $inputRights,
-		$orderListStart, $padTaxOffset, $inputOffset, $prodInv, $productStats, $contractsOffset, $nextUpdate, $offersOffset; $laborItems;
+		$orderListStart, $padTaxOffset, $inputOffset, $prodInv, $productStats, $contractsOffset, $nextUpdate, $offersOffset, $laborItems;
 
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
 		$this->objDat = unpack('i*', substr($dat, 0, 904));
+
 		//$tmp_a1 = unpack('S*', substr($dat, 904, 260));
 		//$tmp_a2 = unpack("C*", substr($dat, 1164, 130));
 
@@ -196,7 +197,7 @@ class factory extends object {
 
 		$this->laborOffset = 227;
 		//$this->eqRateOffset = 164;
-		
+
 		$this->attrList['factoryLevel'] = 1;
 		$this->attrList['factoryStatus'] = 2;
 		$this->attrList['constStatus'] = 3;
@@ -247,9 +248,9 @@ class factory extends object {
 		$inputInventoryIndex = 61;
 
 		// Load template information
-		//echo 'load factory type '.$dat[9];
+		echo 'load factory type '.$this->objDat[9];
 		global $templateBlockSize;
-		fseek($file, $dat[9]*$templateBlockSize);
+		fseek($file, $this->objDat[9]*$templateBlockSize);
 		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
 		//print_r($this->templateDat);
 
@@ -266,10 +267,12 @@ class factory extends object {
 		$this->productStores[] = $this->objDat[49];
 		$this->productStores[] = $this->objDat[50];
 		$this->productStores[] = $this->objDat[51];
-		
+
 		$this->loadLabor($dat);
+		echo 'LABOR ITEMS<p>';
+		//print_r($this->laborItems);
 	}
-	
+
 	function adjustLabor($laborSpot, $laborItem) {
 		$packDat = pack('i*', $laborDat[0], $laborDat[1], $laborDat[2], $laborDat[3], $laborDat[4], $laborDat[5], $laborDat[6], $laborDat[7], $laborDat[8], $laborDat[9]);
 
@@ -331,19 +334,19 @@ class factory extends object {
 
 		return $tmpA;
 	}
-	
+
 	function loadLabor($dat) {
 		for ($i=0; $i<10; $i++) {
 			$this->laborItems[$i] = new labor(substr($dat, 904+48*$i, 48), $this->linkFile);
 		}
 	}
-	
+
 	function saveLabor() {
 		$str = '';
 		for ($i=0; $i<10; $i++) {
 			$str .= $this->laborItems[$i]->packLabor();
 		}
-		
+
 		$this->saveBlock($this->laborOffset, $packDat);
 	}
 
@@ -723,6 +726,14 @@ class product extends object {
 			$this->reqLabor[] = $this->objDat[38+$i];
 		}
 	}
+
+	function productSkills() {
+		$tmpArray = array_fill(0, 20, 0);
+		for ($i= 0; $i<20; $i++) {
+			$tmpArray[$i] = $this->objDat[38+$i];
+		}
+		return $tmpArray;
+	}
 }
 
 class region extends object {
@@ -744,18 +755,31 @@ class region extends object {
 
 class labor {
 	private $format, $binDat;
-	
+	public $laborDat;
+
 	function __construct($dat) {
 		//parent::__construct($id, $dat, $file);
-		
-		$this->format = "NNSSSCCCCSCSCSCSCSCSCSCSCSCSC"
+
+		$this->format = "Na/Nb/Sc/Sd/Se/Cf/Cg/Ch/Ci/Sj/Ck/Sl/Cm/Sn/Co/Sp/Cq/Sr/Cs/St/Cu/Sv/Cw/Sx/Cy/Sz/Caa/Sab/Cac";
+		$this->packFormat = "NNSSSCCCCSCSCSCSCSCSCSCSCSCSC";
 		$this->binDat = $dat;
-		
-		$this->laborDat = unpack($this->format, $dat);
+
+		$this->laborDat = array_values(unpack($this->format, $dat));
+		array_unshift($this->laborDat, 0);
+		unset($this->laborDat[0]);
+		//$packArguments = [$this->forma, $this->binDat];
+
+		//$packArguments = ["N", "N", "S", "S", "S", "C", "C", "C", "C", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C"];
+		//$output = call_user_func_array("unpack", $packArguments);
+		//echo'<p>UNsorted';
+		//print_r($this->laborDat);
+
 	}
-	
+
 	function packLabor() {
-		return pack($this->format, ...$this->laborDat);
+		echo '<p>Pack this<p>';
+		print_r($this->laborDat);
+		return pack($this->packFormat, ...$this->laborDat);
 	}
 }
 

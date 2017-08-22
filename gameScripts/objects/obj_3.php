@@ -5,7 +5,7 @@ if ($thisObj->get('constStatus') > 0) {
 	echo 'Load project '.$thisObj->get('constStatus');
 	$thisProject = loadProject($thisObj->get('constStatus'), $projectsFile);
 	fclose($projectsFile);
-	print_r($thisProject->objDat);
+	//print_r($thisProject->objDat);
 }
 
 
@@ -85,12 +85,12 @@ for ($i=0; $i<10; $i++) {
 		array_push($materialOrders, $postVals[1], $thisObj->objDat[$thisObj->orderListStart+$i],  $i); //factory ID, offer id, spot
 		$materialOrders = array_merge($materialOrders, $thisOffer->objDat);
 		//$materialOrders = $materialOrders + $offerDat;
-		print_r($thisOffer->objDat);
+		//print_r($thisOffer->objDat);
 	} else array_push($materialOrders, $postVals[1],$i,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 }
 fclose($offerDatFile);
 
-print_r($materialOrders);
+//print_r($materialOrders);
 
 // Load factory contracts and invoice orders
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');
@@ -106,12 +106,12 @@ for ($i=0; $i<5; $i++) {
 		$contractDat = fread($contractFile, 100);
 		$contractStr .= $contractDat.pack('i', $thisObj->objDat[$thisObj->contractsOffset+$i]);
 		$contractInfo = unpack('i*', $contractDat);
-		print_r($contractInfo);
+		//print_r($contractInfo);
 		$invoiceLink[] = $contractInfo[22];
 	}
 }
 
-print_r($invoiceLink);
+//print_r($invoiceLink);
 $invoiceSend = [];
 for ($i=0; $i<sizeof($invoiceLink); $i++) {
 	$invCount = 0;
@@ -125,7 +125,7 @@ for ($i=0; $i<sizeof($invoiceLink); $i++) {
 		//$invoiceInfo = unpack('s*', substr($invoiceDat, 56));
 		$invoiceInfo = array_merge(unpack('i*', substr($invoiceDat, 0, 56)), unpack('s*', substr($invoiceDat, 56)));
 		echo 'SHOW INVOICE INFO for invoice('.$invCount.'):';
-		print_r($invoiceInfo);
+		//print_r($invoiceInfo);
 		$invoiceSend = array_merge($invoiceSend, $invoiceInfo);
 		$invoiceNum = $invoiceInfo[10];
 		$invCount++;
@@ -136,11 +136,19 @@ $headStr = pack('i', $contractCount).$headStr;
 $contractStr = $headStr.$contractStr;
 fclose($contractFile);
 
-print_r($thisObj->invStats());
+//print_r($thisObj->invStats());
 
 $optionList = $thisObj->productionOptions();
 for ($i=0; $i<5; $i++) {
 }
+
+$factoryLabor = [];
+for ($i=0; $i<10; $i++) {
+	//echo 'labor item '.$i.'<br>';
+	//print_r($thisObj->laborItems[$i]->laborDat);
+	$factoryLabor = array_merge($factoryLabor, $thisObj->laborItems[$i]->laborDat);
+}
+//print_r($factoryLabor);
 
 echo '<script>
 selFactory = playerFactories['.$postVals[2].'];
@@ -148,35 +156,20 @@ selFactory = playerFactories['.$postVals[2].'];
 selectedFactory = '.$postVals[1].';
 factoryDiv = useDeskTop.newPane("factoryInfo");
 factoryDiv.innerHTML = "";
-selFactory.factorySales = ['.implode(',', $saleDat).'];';
-
-/*
-if ($constructDelta > 0) {
-	echo 'var updateArea = addDiv("", "stdFloatDiv", factoryDiv);';
-
-	if ($thisObj->get('factoryLevel') == 0) {
-		// this is new construction
-		echo '';
-	} else {
-		// this is an upgrade
-		echo 'thisUpgrade = new factoryUpgrade('.$postVals[1].', '.($thisObj->get('constructCompleteTime')).');
-		thisUpgrade.render(updateArea)';
-	}
-}*/
-
-echo '
+selFactory.factorySales = ['.implode(',', $saleDat).'];
 selFactory.factoryUpgradeProducts = [];
 selFactory.factoryUpgradeServies = [];
 selFactory.productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).'];
 selFactory.productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
-selFactory.productLabor = ['.implode(',', $productInfo->reqLabor).'];
+//selFactory.productLabor = ['.implode(',', $productInfo->reqLabor).'];
+selFactory.productSkills = ['.implode(',', $productInfo->productSkills()).'];
 selFactory.materialInv = ['.implode(',', $thisObj->resourceInv()).'];
 selFactory.materialOrder = ['.implode(',', $materialOrders).'];
 selFactory.inProduction = ['.$thisObj->get('prodLength').', '.$thisObj->get('prodStart').', '.$thisObj->get('prodQty').'];
 selFactory.contracts = ['.implode(',', array_merge(unpack('i*', $contractStr), $invoiceSend)).'];
 
 //loadFactoryLabor(['.implode(',', array_slice($thisObj->objDat, ($thisObj->laborOffset-1), 100)).']);
-selFactory.labor = ['.implode(',', array_slice($thisObj->objDat, ($thisObj->laborOffset-1), 100)).'];
+selFactory.labor = ['.implode(',', $factoryLabor).'];
 
 inventoryItems = [];
 for (i=0; i<selFactory.materialInv.length; i+=2) {
@@ -184,13 +177,6 @@ for (i=0; i<selFactory.materialInv.length; i+=2) {
 }
 //invList = new uList(inventoryItems);
 
-/*
-prodList = new uList([new product({objID:0}), new product({objID:'.$thisObj->getTemp('prod1').'})';
-
-for ($i=2; $i<6; $i++) {
-	if ($thisObj->getTemp('prod'.$i)>0) echo ', new product({objID:'.$thisObj->getTemp('prod'.$i).'})';
-}
-echo ']);*/
 let tmpProdItems = [];
 let selectedIndex = 0;
 tmpProdItems.push(new factoryProduction(0,0,0,0,0));
@@ -233,6 +219,9 @@ sellButton.innerHTML = "Sell Factory";
 
 sendButton = newButton(factoryDiv.headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(factoryProductionBox))});
 sendButton.innerHTML = "Set production";
+
+saleButton = newButton(factoryDiv.headSection, function () {scrMod("1013,'.$postVals[1].'")});
+saleButton.innerHTML = "Sell Products";
 
 startButton1 = newButton(factoryDiv.headSection, function () {scrMod("1028,'.$postVals[1].',1")});
 startButton1.innerHTML = "Work for - 1 hour";
@@ -288,12 +277,10 @@ textBlob("", factoryDiv.productInvSection, "Output Inventory");
 selFactory.showOutputs(factoryDiv.productInvSection);
 
 salesSection = addDiv("", "stdFloatDiv", factoryDiv);
-saleButton = newButton(salesSection, function () {scrMod("1013,'.$postVals[1].'")});
-saleButton.innerHTML = "Sell Products";
+
 
 factoryDiv.laborSection = addDiv("", "stdFloatDiv", factoryDiv);
-factoryDiv.laborPool = addDiv("", "stdFloatDiv", factoryDiv);
-textBlob("", factoryDiv.laborPool, "Unassigned Labor");
+factoryDiv.laborSection.skills = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
 factoryDiv.laborSection.aassigned = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
 textBlob("", factoryDiv.laborSection.aassigned, "Labor working here");
 
@@ -302,14 +289,22 @@ selFactory.showLabor(factoryDiv.laborSection.aassigned);
 
 factoryDiv.reqBox = addDiv("", "stdFloatDiv", factoryDiv);
 textBlob("", factoryDiv.reqBox, "Per unit of production, this requires:");
+
 factoryDiv.reqBox.materials = addDiv("", "stdFloatDiv", factoryDiv.reqBox);
+factoryDiv.reqBox.skills = addDiv("", "stdFloatDiv", factoryDiv.reqBox);
+console.log(selFactory);
+
 
 //showProdRequirements(reqBox.materials, productMaterial);
 selFactory.showProdRequirements(factoryDiv.reqBox.materials);
 
-factoryDiv.laborSection.required = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
+factoryDiv.reqBox.skills.innerHTML = "recommended skills for product";
+selFactory.showProdSkills(factoryDiv.reqBox.skills);
+selFactory.prodLaborSkills(1, factoryDiv.laborSection.skills);
+
+//factoryDiv.laborSection.required = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
 //showRequiredLabor(factoryDiv.laborSection.required, productLabor);
-selFactory.showReqLabor(factoryDiv.laborSection.required);
+//selFactory.showReqLabor(factoryDiv.laborSection.required);
 
 factoryDiv.reqBox.stores = addDiv("", "stdFloatDiv", factoryDiv);
 //showInventory('.$postVals[1].', materialInv);

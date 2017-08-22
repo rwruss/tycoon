@@ -1622,7 +1622,11 @@ companyLaborList = function(laborList, trg) {
 	});
 }
 
-showCityLabor = function(trg, cityID, laborList) {
+showCityLabor = function(trg, cityID, laborDat) {
+	laborList = new Array();
+	for (let i=0; i<laborDat.legnth; i+=29) {
+
+	}
 	/*
 	cLaborList = new uList(laborList);
 	cLaborList.SLShowAll(trg, function(x,y,z) {

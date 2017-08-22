@@ -101,8 +101,15 @@ fwrite($laborSlotFile, pack('i', 0));
 fclose($laborSlotFile);
 
 // Create template labor items for each type
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'w');
+$laborPoolFile = fopen('../scenarios/'.$scenario.'/laborPool.dat', 'w');
+$laborHead = pack('i*', 0, 0);
+$laborFoot = pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0);
+for ($i=0; $i<$laborCount; $i++) {
+	$laborBod = pack('S*', $i, 0);
+	echo '<br>'.$i.' -> '.fwrite($laborPoolFile, $laborHead.$laborBod.$laborFoot);
+}
 fclose($laborPoolFile);
+echo '<p>Recorded '.$laborCount.' labor templates<p>';
 
 // record schools file
 $schoolFile = fopen('../scenarios/'.$scenario.'/schools.dat', 'wb');
