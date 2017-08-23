@@ -1516,6 +1516,12 @@ edictDetail = function(trg, cityID, effects, desc, buttonDescs) {
 
 loadCompanyLabor = function (laborDat) {
 	console.log("REDO loadCompanyLabor");
+	console.log(laborDat);
+	let tmpArray = new Array();
+	for (var i=0; i<laborDat.length; i+=30) {
+		tmpArray.push(new laborItem(laborDat.slice(i, i+30)));
+	}
+	return tmpArray;
 	/*
 	let tmpArray = new Array();
 	for (var i=0; i<laborDat.length; i+=11) {

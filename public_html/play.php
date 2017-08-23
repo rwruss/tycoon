@@ -95,21 +95,23 @@ echo '<p>';*/
 $companyLabor = [];
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
-print_r($laborSlot->slotData);
+//print_r($laborSlot->slotData);
 $laborCount = 0;
 for ($i=1; $i<sizeof($laborSlot->slotData); $i++) {
-	echo 'Load labor item '.$laborSlot->slotData[$i].'<br>';
-	fseek($laborPoolFile, $laborSlot->slotData[$i]);
-	$thisLabor = new labor(fread($laborPoolFile, 48));
+	if ($laborSlot->slotData[$i] > 0) {
+		echo 'Load labor item '.$laborSlot->slotData[$i].'<br>';
+		fseek($laborPoolFile, $laborSlot->slotData[$i]);
+		$thisLabor = new labor(fread($laborPoolFile, 48));
 
-	$companyLabor[] = $laborCount;
-	$companyLabor = array_merge($companyLabor, $thisLabor->laborDat);
+		$companyLabor[] = $laborSlot->slotData[$i];
+		$companyLabor = array_merge($companyLabor, $thisLabor->laborDat);
 
-	//$companyLabor = $laborSlot->slotData;
-	$laborCount++;
+		//$companyLabor = $laborSlot->slotData;
+		$laborCount++;
+	}
 }
 fclose($laborPoolFile);
-print_r($companyLabor);
+//print_r($companyLabor);
 
 // Load pending deliveries to cities
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb');

@@ -9,9 +9,9 @@ pvs
 */
 
 /*
-Case 1 - Hire a new labor item from a school to a factory 
+Case 1 - Hire a new labor item from a school to a factory
 Case 2 - Hire a new labor item from a school to a business ($postVals[3] == 0)
-Case 3 - Hire an existing labor item from the labor pool to a factory 
+Case 3 - Hire an existing labor item from the labor pool to a factory
 Case 4 - Hire an existing labor item from the labor pool to a business ($postVals[3] == 0)
 */
 
@@ -52,15 +52,15 @@ $trgLabor->laborDat[1] = 1; // Current city
 
 if ($postVals[3] == 0) {
 	// hire to a business
-	
+
 	// get the labor item
 	if ($postVals[2] < 25) {
 		$useLabor = templateLabor($postVals[2], $gameHour, $laborPoolFile);
 	} else $useLabor = $existingLabor($postVals[2], $laborPoolFile);
-	
+
 	// Adjust labor parameters
 	$trgLabor->laborDat[1] = 1; // Current city
-	
+
 	// Save labor
 	if ($postVals[2] < 25) {
 		$useLocation = saveAsNew($useLabor, $laborPoolFile, $laborSlotFile);
@@ -69,7 +69,7 @@ if ($postVals[3] == 0) {
 		fwrite($laborPoolFile, $useLabor->packLabor());
 		$useLocation = $postVals[2];
 	}
-	
+
 	// add to business item list
 	echo 'Add to company labor spot';
 	$thisBusiness = loadObject($pGameID, $objFile, 400);
@@ -82,13 +82,13 @@ if ($postVals[3] == 0) {
 	}
 	$laborList = new itemSlot($laborSlot, $slotFile, 40);
 	$laborList->addItem($useLocation);
-	
-	
+
+
 } else {
 	// hire to a factory
-	
+
 	// determine factory labor slot (if available) - done above
-	
+
 	// get the labor item
 	if ($postVals[2] < 25) {
 		$useLabor = templateLabor($postVals[2], $gameHour, $laborPoolFile);
@@ -96,10 +96,10 @@ if ($postVals[3] == 0) {
 		$useLabor = $existingLabor($postVals[2], $laborPoolFile);
 		deleteLabor($postVals[2], $laborPoolFile, $laborSlotFile);
 	}
-	
+
 	// Adjust labor parameters
 	$trgLabor->laborDat[1] = 1; // Current city
-	
+
 	// save in factory
 	$thisFactory->laborItems[$factorySpot] = $useLabor;
 	$thisFactory->saveLabor();
@@ -111,38 +111,38 @@ if ($useLabor->laborDat[1] > 0) {
 	$cityLabor = new itemSlot($homeCity->get('cityLaborSlot'), $laborSlotFile, 40);
 	$cityLabor->deleteByValue($postVals[2], $laborSlotFile);
 }
-	
+
 // remove from type pool list
 $laborTypeList = new itemSlot($useLabor->laborDat[3], $laborSlotFile, 40);
 $laborTypeList->deleteByValue($postVals[2], $laborSlotFile);
 
-functio deleteLabor($id, $laborPoolFile, $laborSlotFile) {
+function deleteLabor($id, $laborPoolFile, $laborSlotFile) {
 	fseek($laborPoolFile, $id);
 	fwrite($laborPoolFile, pack('i*', 0,0,0,0,0,0,0,0,0,0,0,0));
-	
-	$emptySpots = new itemList(0, $laborSlotFile, 40, TRUE);
+
+	$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 	$emptySpots->addItem($id);
 }
 
 function saveAsNew($laborItem, $laborPoolFile, $laborSlotFile) {
 	// look for empty spots in the laborPoolFile
 	$useLocation = 0;
-	$emptySpots = new itemList(0, $laborSlotFile, 40, TRUE);
+	$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 	for ($i=1; $i<$z=sizeof($emptySpots->slotData); $i++) {
-		if ($emptySpots[$i] > 0) {
+		if ($emptySpots->slotData[$i] > 0) {
 			$useLocation = $emptySpots[$i];
 			$emptySpots->deleteByValue($emptySpots[$i]);
 			break;
 		}
 	}
-	
+
 	if ($useLocation == 0) {
 		fseek($laborPoolFile, 0, SEEK_END);
 		$useLocation = ftell($laborPoolFile);
 	}
-	
+
 	fseek($laborPoolFile, $useLocation);
-	fwrite(laborPoolFile, $laborItem->packLabor());
+	fwrite($laborPoolFile, $laborItem->packLabor());
 	return ($useLocation);
 }
 
@@ -150,7 +150,7 @@ function templateLabor($typeID, $gameHour, $laborPoolFile) {
 	// Load a labor template
 	fseek($laborPoolFile, $typeID*48);
 	$trgLabor = new labor(fread($laborPoolFile, 48));
-	
+
 	$trgLabor->laborDat[4] = $gameHour; // creation time
 	return $trgLabor;
 }
@@ -159,7 +159,7 @@ function existingLabor($id, $laborPoolFile) {
 	// load an existing labor item
 	fseek($laborPoolFile, $id);
 	$trgLabor = new labor(fread($laborPoolFile, 48));
-	
+
 	return $trgLabor;
 }
 
