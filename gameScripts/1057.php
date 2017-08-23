@@ -117,8 +117,9 @@ $laborTypeList = new itemSlot($useLabor->laborDat[3], $laborSlotFile, 40);
 $laborTypeList->deleteByValue($postVals[2], $laborSlotFile);
 
 function deleteLabor($id, $laborPoolFile, $laborSlotFile) {
+	$emptyLabor = loadLaborItem(0, NULL);
 	fseek($laborPoolFile, $id);
-	fwrite($laborPoolFile, pack('i*', 0,0,0,0,0,0,0,0,0,0,0,0));
+	fwrite($laborPoolFile, $emptyLabor->packLabor());
 
 	$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 	$emptySpots->addItem($id);

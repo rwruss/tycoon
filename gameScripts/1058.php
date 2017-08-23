@@ -11,6 +11,96 @@ pvs
 3-new labor item
 4-new labor item pay rate
 */
+
+require_once('./slotFunctions.php');
+require_once('./objectClass.php');
+
+$objFile = fopen($gamePath.'/objects.dat', 'r+b');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b');
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b');
+
+// Load the business & factory
+$thisBusiness = loadObject($pGameID, $objFile, 400);
+$thisFactory = loadObject($postVals[1], $objFile, 1100);
+
+if (flock($laborPoolFile, LOCK_EX) {
+	if ($postVals[3] > 99) {
+		// * move a new labor item into this slot * \\
+		
+		// load the new labor
+		$newLabor = loadLaborItem($laborPoolFile, $postVals[3]);
+		
+		$oldLabor = $thisFactory->laborItems[$postVals[2]];
+		if ($oldLabor->laborDat[3] > 0) {
+			// move the existing labor out of the factory and into the business slot file at the location of the old item
+			fseek($laborPoolFile, $postVals[3]);
+			fwrite($laborPoolFile, $oldLabor->packLabor());
+		} else {
+			// No existing labor - delete the reference to this labor from the business labor pool and add it to the empty list
+			$laborSlot = $thisBusiness->get('laborSlot');
+			if (flock($slotFile, LOCK_EX)) {
+				if ($laborSlot == 0) {
+					$laborSlot = newSlot($slotFile);
+					$thisBusiness->save('laborSlot', $laborSlot);
+					echo 'Save new labor slot #'.$laborSlot;
+				}
+				$laborList = new itemSlot($laborSlot, $slotFile, 40);
+				$laborList->deleteByValue($oldLabor->laborDat[3]);
+				flock($slotFile, LOCK_UN);
+			}
+		}
+		
+		// save the new labor into the factory
+		$thisFactory->laborItems[$postVals[2]] = $newLabor;
+		$thisFactory->saveLabor();
+	}
+	else if ($postVals[3] > 0) {
+		// adjust the existing labor item in the factory slot
+		$oldLabor = $thisFactory->laborItems[$postVals[2]];
+	}
+	else if ($postVals[3] == 0) {
+		// remove an item from the factory with no replacement
+		$newLabor = loadLaborItem($laborPoolFile, 0);
+		$oldLabor = $thisFactory->laborItems[$postVals[2]];
+		if (flock($laborPoolFile, LOCK_EX) {
+			addLaborToPool($oldLabor, $laborPoolFile, $laborSlotFile);
+			flock($laborPoolFile, LOCK_UN);
+		}
+		
+		$thisFactory->laborItems[$postVals[2]] = $newLabor;
+		$thisFactory->saveLabor();
+	}
+	
+	flock($laborPoolFile, LOCK_UN);
+}
+
+function addLaborToPool($laborItem, $laborPoolFile, $laborSlotFile) {
+	$useSpot = 0;
+	
+	// look for an empty spot or create a new one	
+	$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
+	for ($i=1; $i<$z = sizeof($emptySpots->slotData); $i++) {
+		if ($emptySpots[$i] > 0) {
+			$useSpot = $emptySpots[$i];
+			$emptySpots->deleteByValue($useSpot);
+			
+			fseek($laborPoolFile, $useSpot);
+			fwrite($laborPoolFile, $laborItem->packLabor());
+		}
+	}
+	if ($useSpot == 0) {
+		fseek($laborPoolFile, 0, SEEK_END);
+		$useSpot = ftell($laborPoolFile);
+		fwrite($laborPoolFile, $laborItem->packLabor());
+	}
+	
+	return $useSpot;
+}
+
+
+
+/// old stuff
 /*
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');

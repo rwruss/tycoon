@@ -1,5 +1,11 @@
 <?php
 
+/*
+pvs
+1 - factory ID
+2 - labor spot
+*/
+
 // adjust for new labor type?
 // Show labot item detail at a factory
 require_once('./slotFunctions.php');

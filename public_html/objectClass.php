@@ -351,6 +351,22 @@ class factory extends object {
 	}
 
 	function setProdRate($prodID, $thisProduct, $laborEqFile) {
+		// load the product information
+		
+		$skillLevels = array_fill(0, 256, 0);
+		$skillModifiers = array_fill(0, 256, 0);
+		// compare skill sets against the current labor
+		for ($i=0; $i<10; $i++) {
+			for ($j=0; $j<10; $j++) {
+				$skillLevels[$this->laborItems[$i]->laborDat[$j+9]] += $this->laborItems[$i]->laborDat[$j+10];
+			}
+		}
+		
+		// compare to the skill rates required for the product
+		for ($i=0; $i<10; $i++) {
+			
+		}
+		
 		return 10;
 		/*
 		// Review labor affects
@@ -767,13 +783,6 @@ class labor {
 		$this->laborDat = array_values(unpack($this->format, $dat));
 		array_unshift($this->laborDat, 0);
 		unset($this->laborDat[0]);
-		//$packArguments = [$this->forma, $this->binDat];
-
-		//$packArguments = ["N", "N", "S", "S", "S", "C", "C", "C", "C", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C", "S", "C"];
-		//$output = call_user_func_array("unpack", $packArguments);
-		//echo'<p>UNsorted';
-		//print_r($this->laborDat);
-
 	}
 
 	function packLabor() {
@@ -899,6 +908,16 @@ function loadOffer($id, $file) {
 	$dat = fread($file, 100);
 
 	return new offer($id, $dat, $file);
+}
+
+function loadLaborItem($id, $file) {
+	if ($id > 0) {
+		fseek($file, $id);
+		return new labor(fread($file, 48));
+	} else {
+		// return a blank labor item
+		return new labor (pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+	}
 }
 
 function loadObject($id, $file, $size) {
