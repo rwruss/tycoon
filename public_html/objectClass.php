@@ -75,7 +75,8 @@ class object {
 
 	function saveBlock($loc, $str) {
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc-4);
-		fwrite($this->linkFile, $str);
+		$checkVal = fwrite($this->linkFile, $str);
+		echo 'recoreded '.$checkVal.' of '.strlen($str).' at '.$loc;
 	}
 
 
@@ -248,7 +249,7 @@ class factory extends object {
 		$inputInventoryIndex = 61;
 
 		// Load template information
-		echo 'load factory type '.$this->objDat[9];
+		//echo 'load factory type '.$this->objDat[9];
 		global $templateBlockSize;
 		fseek($file, $this->objDat[9]*$templateBlockSize);
 		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
@@ -269,8 +270,8 @@ class factory extends object {
 		$this->productStores[] = $this->objDat[51];
 
 		$this->loadLabor($dat);
-		echo 'LABOR ITEMS<p>';
-		//print_r($this->laborItems);
+		//echo 'LABOR ITEMS<p>';
+		print_r($this->laborItems);
 	}
 
 	function adjustLabor($laborSpot, $laborItem) {
@@ -346,13 +347,13 @@ class factory extends object {
 		for ($i=0; $i<10; $i++) {
 			$str .= $this->laborItems[$i]->packLabor();
 		}
-
-		$this->saveBlock($this->laborOffset, $packDat);
+		print_r($this->laborItems);
+		$this->saveBlock($this->laborOffset*4, $str);
 	}
 
 	function setProdRate($prodID, $thisProduct, $laborEqFile) {
 		// load the product information
-		
+
 		$skillLevels = array_fill(0, 256, 0);
 		$skillModifiers = array_fill(0, 256, 0);
 		// compare skill sets against the current labor
@@ -361,12 +362,12 @@ class factory extends object {
 				$skillLevels[$this->laborItems[$i]->laborDat[$j+9]] += $this->laborItems[$i]->laborDat[$j+10];
 			}
 		}
-		
+
 		// compare to the skill rates required for the product
 		for ($i=0; $i<10; $i++) {
-			
+
 		}
-		
+
 		return 10;
 		/*
 		// Review labor affects
@@ -775,7 +776,6 @@ class labor {
 
 	function __construct($dat) {
 		//parent::__construct($id, $dat, $file);
-
 		$this->format = "Na/Nb/Sc/Sd/Se/Cf/Cg/Ch/Ci/Sj/Ck/Sl/Cm/Sn/Co/Sp/Cq/Sr/Cs/St/Cu/Sv/Cw/Sx/Cy/Sz/Caa/Sab/Cac";
 		$this->packFormat = "NNSSSCCCCSCSCSCSCSCSCSCSCSCSC";
 		$this->binDat = $dat;
@@ -786,8 +786,8 @@ class labor {
 	}
 
 	function packLabor() {
-		echo '<p>Pack this<p>';
-		print_r($this->laborDat);
+		//echo '<p>Pack this<p>';
+		//print_r($this->laborDat);
 		return pack($this->packFormat, ...$this->laborDat);
 	}
 }
@@ -911,6 +911,7 @@ function loadOffer($id, $file) {
 }
 
 function loadLaborItem($id, $file) {
+	//echo 'Load labor item '.$id;
 	if ($id > 0) {
 		fseek($file, $id);
 		return new labor(fread($file, 48));
