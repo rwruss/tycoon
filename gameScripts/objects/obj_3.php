@@ -146,6 +146,7 @@ $factoryLabor = [];
 for ($i=0; $i<10; $i++) {
 	//echo 'labor item '.$i.'<br>';
 	//print_r($thisObj->laborItems[$i]->laborDat);
+	$factoryLabor[] = $i;
 	$factoryLabor = array_merge($factoryLabor, $thisObj->laborItems[$i]->laborDat);
 }
 //print_r($factoryLabor);
