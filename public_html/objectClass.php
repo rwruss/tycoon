@@ -351,22 +351,40 @@ class factory extends object {
 		$this->saveBlock($this->laborOffset*4, $str);
 	}
 
-	function setProdRate($prodID, $thisProduct, $laborEqFile) {
-		// load the product information
-
+	function setProdRate($prodID, $thisProduct) {
+		// calc total skills from labor force
 		$skillLevels = array_fill(0, 256, 0);
 		$skillModifiers = array_fill(0, 256, 0);
-		// compare skill sets against the current labor
+		$totalLaborSkill = 0;
 		for ($i=0; $i<10; $i++) {
 			for ($j=0; $j<10; $j++) {
 				$skillLevels[$this->laborItems[$i]->laborDat[$j+9]] += $this->laborItems[$i]->laborDat[$j+10];
+				$totalLaborSkill += $this->laborItems[$i]->laborDat[$j+10];;
+			}
+		}
+		
+		// load the product information
+		$prodDat = loadProduct($prodID, $this->linkFile);
+		$totalProdSkill = 0;
+		$skillsRequired = 0;
+		for ($i=0; $i<10; $i++) {
+			if ($proDat[38+$i] > 0) {
+				$totalProdSkill = $prodDat[48+$i];
+				$skillsRequired++;
 			}
 		}
 
-		// compare to the skill rates required for the product
-		for ($i=0; $i<10; $i++) {
-
+		$baseProduction = floor($totalLaborSkill/$totalProdSkill);
+		
+		// get the % required for each skill
+		$laborPcts = array_fill(0, $skillsRequired, 0);
+		$totalPct = 0;
+		for ($i=0; $i<$skillsRequired; $i++) {
+			$laborPcts[$i] = $skillLevels[$prodDat[38+$i]/($baseProduction * $prodDat[48+$i]);
+			$totalPct += min(1, $laborPcts[$i]);
 		}
+		
+		$productionRate = $baseProduction * $totalPct;
 
 		return 10;
 		/*
@@ -852,10 +870,10 @@ class offer extends object {
 
 
 
-function loadProduct($id, $file, $size) {
+function loadProduct($id, $file) {
 	fseek($file, $id*1000);
 	//$dat = unpack('i*', fread($file, $size));
-	$dat = fread($file, $size);
+	$dat = fread($file, 1000);
 
 	return new product($id, $dat, $file);
 }
