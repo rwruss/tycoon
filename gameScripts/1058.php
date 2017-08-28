@@ -15,10 +15,10 @@ pvs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b');
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
@@ -78,13 +78,16 @@ if (flock($laborPoolFile, LOCK_EX)) {
 	flock($laborPoolFile, LOCK_UN);
 }
 
+$productionRate = $thisFactory->setProdRate();
+$thisFactory->set('prodRate', $productionRate);
+
 function addLaborToPool($laborItem, $laborPoolFile, $laborSlotFile) {
 	$useSpot = 0;
 
 	// look for an empty spot or create a new one
 	$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 	for ($i=1; $i<$z = sizeof($emptySpots->slotData); $i++) {
-		if ($emptySpots[$i] > 0) {
+		if ($emptySpots->slotData[$i] > 0) {
 			$useSpot = $emptySpots[$i];
 			$emptySpots->deleteByValue($useSpot);
 

@@ -7,10 +7,10 @@ $objFile = fopen('../scenarios/'.$scenario.'/objects.dat', 'w');
 $nameFile = fopen('../scenarios/'.$scenario.'/objNames.dat', 'w');
 $laborNameFile = fopen('../scenarios/'.$scenario.'/laborNames.dat', 'w');
 $laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w');
-$laborEqFile = fopen('../scenarios/'.$scenario.'/laborEq.dat', 'w');
+//$laborEqFile = fopen('../scenarios/'.$scenario.'/laborEq.dat', 'w');
 
-fseek($laborEqFile, 1000*8000*4-4);
-fwrite($laborEqFile, pack('i', 0));
+//fseek($laborEqFile, 1000*8000*4-4);
+//fwrite($laborEqFile, pack('i', 0));
 
 // load skills
 $skillFile = fopen('../scenarios/'.$scenario.'/skillList.csv', 'rb');
@@ -315,7 +315,7 @@ fclose($objFile);
 fclose($nameFile);
 fclose($laborNameFile);
 fclose($laborDetailFile);
-fclose($laborEqFile);
+//fclose($laborEqFile);
 
 // create sales file
 $salesFile = fopen('../scenarios/'.$scenario.'/saleOffers.slt', 'wb');

@@ -68,9 +68,9 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 	$ownedObjects = new itemSlot($thisPlayer->get('ownedObjects'), $slotFile, 40);
 
 
-	for ($i=1; $i<sizeof($ownedObjects->slotData); $i++) {
+	for ($i=1; $i<=sizeof($ownedObjects->slotData); $i++) {
 		if ($ownedObjects->slotData[$i] > 0) {
-			//echo 'Object '.$ownedObjects->slotData[$i].'<br>';
+			echo 'Object '.$ownedObjects->slotData[$i].'<br>';
 			$thisObject = loadObject($ownedObjects->slotData[$i], $unitFile, 1600);
 			if ($thisObject->get('oType') == 3) {
 				// calculate selling taxes for this factory
@@ -78,6 +78,7 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 				$taxRates = taxRates(0, $thisObject, null, $sellingCity, $thisPlayer, $slotFile);
 
 				$factoryList = array_merge($factoryList, $thisObject->overViewInfo(), $taxRates);
+				//print_r($thisObject->overViewInfo());
 				//$factoryList = array_merge($factoryList, $thisObject->overViewInfo());
 				//array_push($factoryList, $thisObject->get('subType'), $thisObject->get('currentProd'), $thisObject->get('prodRate'), $ownedObjects->slotData[$i]);
 			}
@@ -86,10 +87,10 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 	}
 }
 
-/*
+
 echo '<p>Factory LIST:';
-print_r($factoryList);
-echo '<p>';*/
+//print_r($factoryList);
+echo '<p>';
 
 // Load company labor
 $companyLabor = [];
@@ -99,7 +100,7 @@ $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
 $laborCount = 0;
 for ($i=1; $i<sizeof($laborSlot->slotData); $i++) {
 	if ($laborSlot->slotData[$i] > 0) {
-		echo 'Load labor item '.$laborSlot->slotData[$i].'<br>';
+		//echo 'Load labor item '.$laborSlot->slotData[$i].'<br>';
 		fseek($laborPoolFile, $laborSlot->slotData[$i]);
 		$thisLabor = new labor(fread($laborPoolFile, 48));
 

@@ -271,7 +271,7 @@ class factory extends object {
 
 		$this->loadLabor($dat);
 		//echo 'LABOR ITEMS<p>';
-		print_r($this->laborItems);
+		//print_r($this->laborItems);
 	}
 
 	function adjustLabor($laborSpot, $laborItem) {
@@ -291,7 +291,7 @@ class factory extends object {
 		$this->objDat[$this->laborOffset+$laborSpot*10+9] = $laborDat[9];
 
 		echo 'Write data:';
-		print_r($laborDat);
+		//print_r($laborDat);
 	}
 
 	function adjProduct($prodIndex, $sentQual, $sentPol, $sentRights, $materialCost, $laborCost) {
@@ -331,7 +331,8 @@ class factory extends object {
 		$tmpA[15] = $this->get('subType');
 
 		// add product parameters - material costs
-		$tmpA = array_merge($tmpA, array_slice($this->objDat, 239, 25));
+		//print_r(array_slice($this->objDat, 239, 25));
+		$tmpA = array_merge($tmpA, array_slice($this->objDat, $this->productStats, 25));
 
 		return $tmpA;
 	}
@@ -347,11 +348,11 @@ class factory extends object {
 		for ($i=0; $i<10; $i++) {
 			$str .= $this->laborItems[$i]->packLabor();
 		}
-		print_r($this->laborItems);
+		//print_r($this->laborItems);
 		$this->saveBlock($this->laborOffset*4, $str);
 	}
 
-	function setProdRate($prodID, $thisProduct) {
+	function setProdRate() {
 		// calc total skills from labor force
 		$skillLevels = array_fill(0, 256, 0);
 		$skillModifiers = array_fill(0, 256, 0);
@@ -362,31 +363,35 @@ class factory extends object {
 				$totalLaborSkill += $this->laborItems[$i]->laborDat[$j+10];;
 			}
 		}
-		
+
 		// load the product information
-		$prodDat = loadProduct($prodID, $this->linkFile);
+		$prodDat = loadProduct($this->get('currentProd'), $this->linkFile);
+		print_r($prodDat);
 		$totalProdSkill = 0;
 		$skillsRequired = 0;
-		for ($i=0; $i<10; $i++) {
-			if ($proDat[38+$i] > 0) {
-				$totalProdSkill = $prodDat[48+$i];
+		for ($i=0; $i<20; $i++) {
+			if ($prodDat->objDat[38+$i] > 0) {
+				$totalProdSkill += $prodDat->objDat[58+$i];
 				$skillsRequired++;
 			}
 		}
 
 		$baseProduction = floor($totalLaborSkill/$totalProdSkill);
-		
-		// get the % required for each skill
-		$laborPcts = array_fill(0, $skillsRequired, 0);
-		$totalPct = 0;
-		for ($i=0; $i<$skillsRequired; $i++) {
-			$laborPcts[$i] = $skillLevels[$prodDat[38+$i]/($baseProduction * $prodDat[48+$i]);
-			$totalPct += min(1, $laborPcts[$i]);
-		}
-		
-		$productionRate = $baseProduction * $totalPct;
+		echo 'Base production is '.$baseProduction.' ('.$totalLaborSkill.' / '.$totalProdSkill.')';
 
-		return 10;
+		if ($baseProduction > 0) {
+			// get the % required for each skill
+			$laborPcts = array_fill(0, $skillsRequired, 0);
+			$totalPct = 0;
+			for ($i=0; $i<$skillsRequired; $i++) {
+				$laborPcts[$i] = $skillLevels[$prodDat->objDat[38+$i]]/($baseProduction * $prodDat->objDat[48+$i]);
+				$totalPct += min(1, $laborPcts[$i]);
+			}
+
+			$productionRate = $baseProduction * $totalPct;
+
+			return 10;
+		} else return 0;
 		/*
 		// Review labor affects
 		$productionRate = 0;

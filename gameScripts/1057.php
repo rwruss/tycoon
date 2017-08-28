@@ -21,16 +21,16 @@ echo 'Hire labor type '.$postVals[2].' from school type '.$postVals[4].' at city
 require_once('./objectClass.php');
 require_once('./slotFunctions.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
-$schoolFile = fopen($gamePath.'/schools.dat', 'rb'); //r+b
-$cityFile = fopen($gamePath.'/cities.dat', 'rb'); //r+b
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'r+b'); //r+b
+$schoolFile = fopen($gamePath.'/schools.dat', 'r+b'); //r+b
+$cityFile = fopen($gamePath.'/cities.dat', 'r+b'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); //r+b
 
 $now = time();
 $gameHour = floor(($now-1501545600)/3600); // hours since August 1, 2017, 0:0:0 GMT
 $useLaborID = $postVals[2];
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b');
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b');
 
 if ($postVals[3] > 0) {
 	$thisFactory = loadObject($postVals[3], $objFile, 1600);

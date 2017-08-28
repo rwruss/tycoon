@@ -1557,15 +1557,16 @@ loadFactoryLabor = function (laborDat) {
 }
 
 factoryLaborDetail = function(thisLabor, factoryID, target) {
+	console.log(thisLabor);
 	let item = thisLabor.renderSummary(target);
 	item.itemNo = 0;
 
 	item.addEventListener("click", function () {
-		let emptyLabor = new laborItem({objID:0, pay:0, ability:0, laborType:0});
+		let emptyLabor = new laborItem([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 		if (thisLabor.laborType > 0) {
 			companyLabor.push(thisLabor);
 			companyLaborOptions(companyLabor, factoryID, laborTabs.renderKids[0]);
-			thisLaborItem = emptyLabor;
+			thisLaborItem = thisLabor;
 		}
 	target.innerHTML = "";
 	emptyLabor.renderSummary(target);
@@ -1589,14 +1590,20 @@ companyLaborOptions = function(laborList, factoryID, trg) {
 		let item = x.renderSummary(y);
 		item.itemNo = z;
 		item.addEventListener("click", function(z) {
-			console.log("remove item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType)
+			console.log("remove item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType);
+			// move the selected item back into the laborList
 			if (thisLaborItem.laborType > 0) {
-				let tmp = laborList[this.itemNo];
-				laborList[this.itemNo] = thisLaborItem;
-				thisLaborItem = tmp;
+				console.log("move old down");
+				laborList.push(thisLaborItem);
+				//let tmp = laborList[this.itemNo];
+				//laborList[this.itemNo] = thisLaborItem;
+				//thisLaborItem = tmp;
 			} else {
 
 			}
+
+
+
 			console.log("remove item " + this.itemNo)
 			thisLaborItem = laborList[this.itemNo];
 			laborList.splice(this.itemNo, 1);
