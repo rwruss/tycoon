@@ -149,7 +149,7 @@ function saveAsNew($laborItem, $laborPoolFile, $laborSlotFile) {
 
 function templateLabor($typeID, $gameHour, $laborPoolFile) {
 	// Load a labor template
-	fseek($laborPoolFile, $typeID*48);
+	fseek($laborPoolFile, $typeID*88);
 	$trgLabor = new labor(fread($laborPoolFile, 48));
 
 	$trgLabor->laborDat[4] = $gameHour; // creation time

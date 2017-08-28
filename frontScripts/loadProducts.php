@@ -1,5 +1,7 @@
 <?php
 
+require_once('../public_html/objectClass.php');
+
 $dataBlockSize = 1000;
 
 $scenario = 1;
@@ -57,6 +59,7 @@ $schoolLists[8] = [];
 $schoolLists[9] = [];
 $schoolLists[10] = [];
 
+
 while (($line = fgets($laborDescFile)) !== false) {
 	$lineItems = explode(',', $line);
 	print_r($lineItems);
@@ -69,30 +72,9 @@ while (($line = fgets($laborDescFile)) !== false) {
 			//$schoolLists[$i][] = $lineItems[$i+51];
 		}
 	}
-
-	// create labor templates
-	$tmpDat = array_fill(0, 26, 0);
-	$tmpDat[0] = $laborCount; // labor type
-	$tmpDat[1] = 0; // creation time
-	$tmpDat[2] = 0; // home city
-	// tmp Dat 3- 12 is skills
-	$tmpDat[3] = $skillList[trim($lineItems[1])];
-	$tmpDat[4] = $skillList[trim($lineItems[2])];
-	$tmpDat[5] = $skillList[trim($lineItems[3])];
-	$tmpDat[6] = $skillList[trim($lineItems[4])];
-	$tmpDat[7] = $skillList[trim($lineItems[5])];
-	$tmpDat[8] = $skillList[trim($lineItems[6])];
-	$tmpDat[9] = $skillList[trim($lineItems[7])];
-	$tmpDat[10] = $skillList[trim($lineItems[8])];
-	$tmpDat[11] = $skillList[trim($lineItems[9])];
-	$tmpDat[12] = $skillList[trim($lineItems[10])];
-
-	$tmpDat[13] = 0; // talent
-	$tmpDat[14] = 0; // motivation
-	$tmpDat[15] = 0; // intelligence
-
 	$laborCount++;
 }
+
 
 // Create slots in the labor pool for each type of labor
 $laborSlotFile = fopen('../scenarios/'.$scenario.'/laborLists.slt', 'r+b');
@@ -102,13 +84,51 @@ fclose($laborSlotFile);
 
 // Create template labor items for each type
 $laborPoolFile = fopen('../scenarios/'.$scenario.'/laborPool.dat', 'w');
+fseek($laborPoolFile, 0);
+for ($i=0; $i<$laborCount; $i++) {
+	$newLabor = loadLaborItem(0, NULL);
+
+	// create labor templates
+	$newLabor->laborDat[0] = 0; // current city
+	$newLabor->laborDat[1] = 0; // current pay
+	$newLabor->laborDat[2] = $i; // labor type
+	$newLabor->laborDat[3] = 0; // creation time
+	$newLabor->laborDat[4] = 0; // Home City
+	$newLabor->laborDat[5] = 0; // talent
+	$newLabor->laborDat[6] = 0; // motivation
+	$newLabor->laborDat[7] = 0; // intelligence
+	
+	// skill then level
+	for ($j=0; $j<10; $j++) {
+		$newLabor->laborDat[8+$j*2] = $skillList[trim($lineItems[1+$j])];
+		$newLabor->laborDat[9+$j*2] = $skillList[trim($lineItems[11+$j])];
+	}
+	
+	fwrite($laborPoolFile, $newLabor->packLabor());
+	// Record labor maximum points
+	$tmpA = array_fill(0, 10, 0);
+	$tmpA[0] = $skillList[trim($lineItems[21])];
+	$tmpA[1] = $skillList[trim($lineItems[22])];
+	$tmpA[2] = $skillList[trim($lineItems[23])];
+	$tmpA[3] = $skillList[trim($lineItems[24])];
+	$tmpA[4] = $skillList[trim($lineItems[25])];
+	$tmpA[5] = $skillList[trim($lineItems[26])];
+	$tmpA[6] = $skillList[trim($lineItems[27])];
+	$tmpA[7] = $skillList[trim($lineItems[28])];
+	$tmpA[8] = $skillList[trim($lineItems[29])];
+	$tmpA[9] = $skillList[trim($lineItems[30])];
+	
+	fwrite($laborPoolFile, packArray($tmpA));
+}
+fclose($laborPoolFile);
+/*
 $laborHead = pack('i*', 0, 0);
 $laborFoot = pack('i*', 0, 0, 0, 0, 0, 0, 0, 0, 0);
 for ($i=0; $i<$laborCount; $i++) {
 	$laborBod = pack('S*', $i, 0);
 	echo '<br>'.$i.' -> '.fwrite($laborPoolFile, $laborHead.$laborBod.$laborFoot);
 }
-fclose($laborPoolFile);
+*/
 echo '<p>Recorded '.$laborCount.' labor templates<p>';
 
 // record schools file
@@ -336,6 +356,10 @@ function packArray($data, $type = 'i') {
     $str = $str.pack($type, next($data));
   }
   return $str;
+}
+
+function newLaborItem() {
+	
 }
 
 ?>

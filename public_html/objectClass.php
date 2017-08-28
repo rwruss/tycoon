@@ -370,8 +370,8 @@ class factory extends object {
 		$totalProdSkill = 0;
 		$skillsRequired = 0;
 		for ($i=0; $i<20; $i++) {
-			if ($prodDat->objDat[38+$i] > 0) {
-				$totalProdSkill += $prodDat->objDat[58+$i];
+			if ($prodDat->objDat[$prodDat->skillOffset+$i] > 0) {
+				$totalProdSkill += $prodDat->objDat[$prodDat->skillRateOffset+$i];
 				$skillsRequired++;
 			}
 		}
@@ -384,7 +384,7 @@ class factory extends object {
 			$laborPcts = array_fill(0, $skillsRequired, 0);
 			$totalPct = 0;
 			for ($i=0; $i<$skillsRequired; $i++) {
-				$laborPcts[$i] = $skillLevels[$prodDat->objDat[38+$i]]/($baseProduction * $prodDat->objDat[48+$i]);
+				$laborPcts[$i] = $skillLevels[$prodDat->objDat[$prodDat->skillOffset+$i]]/($baseProduction * $prodDat->objDat[$prodDat->skillRateOffset+$i]);
 				$totalPct += min(1, $laborPcts[$i]);
 			}
 
@@ -392,61 +392,6 @@ class factory extends object {
 
 			return 10;
 		} else return 0;
-		/*
-		// Review labor affects
-		$productionRate = 0;
-		$productionItems = 0;
-
-		// Check first 7 labor types at the factory
-		for ($i=0; $i<7; $i++) {
-			if ($thisProduct->objDat[38+$i] > 0) {
-				//print_r($this->objDat);
-				echo 'Check labor type '.$this->objDat[$this->laborOffset+10*$i];
-				fseek($laborEqFile, $this->objDat[$this->laborOffset+10*$i]*4000);
-				$eqDat = unpack('i*', fread($laborEqFile, 80));
-				//print_r($eqDat);
-
-				$eqArray = array_fill(0, 1000, 0);
-				$eqArray[1] = $eqDat[1];
-				$eqArray[2] = $eqDat[2];
-				$eqArray[3] = $eqDat[3];
-				$eqArray[4] = $eqDat[4];
-				$eqArray[5] = $eqDat[5];
-				$eqArray[6] = $eqDat[6];
-				$eqArray[7] = $eqDat[7];
-				$eqArray[8] = $eqDat[8];
-				$eqArray[9] = $eqDat[9];
-				$eqArray[10] = $eqDat[10];
-				$eqArray[11] = $eqDat[11];
-				$eqArray[12] = $eqDat[12];
-				$eqArray[13] = $eqDat[13];
-				$eqArray[14] = $eqDat[14];
-				$eqArray[15] = $eqDat[15];
-				$eqArray[16] = $eqDat[16];
-				$eqArray[17] = $eqDat[17];
-				$eqArray[18] = $eqDat[18];
-				$eqArray[19] = $eqDat[19];
-				$eqArray[20] = $eqDat[20];
-
-				echo ($this->laborOffset+10*$i).' --> '.$this->objDat[$this->laborOffset+10*$i].' --> '.$eqArray[$this->objDat[$this->laborOffset+10*$i]];
-				$effectiveRate = $eqArray[$this->objDat[$this->laborOffset+10*$i]]/10000;
-
-				$workTime = max(1,$this->objDat[$this->laborOffset+10*$i]);
-				//$laborLevel = log($workTime, 2.0)+1;
-				$laborLevel = $workTime/36000;
-				$productionRate += (0.5+$laborLevel)*$effectiveRate;
-				echo 'Labor item '.($this->objDat[$this->laborOffset+10*$i]*4000).' rate is '.((0.5+$laborLevel)*$effectiveRate).' ->> (0.5 + '.$laborLevel.') * '.$effectiveRate;
-
-				// Record labor eq rates
-				$this->objDat[$this->eqRateOffset+$i] = $effectiveRate*10000;
-				$productionItems++;
-			}
-		}
-
-		$totalRate = intval($thisProduct->get('baseRate')*$productionRate/$productionItems*100);
-		$this->set('prodRate', $totalRate);
-		$this->saveAll($this->linkFile);
-		return $totalRate;*/
 	}
 
 	function resourceInv() {
@@ -543,12 +488,30 @@ class factory extends object {
 				$this->set('prodStart', 0);
 
 				// Update labor experience
-				for ($i=0; $i<7; $i++) {
-					//$this->objDat[$this->laborOffset+$i*10+7] += $this->objDat[15];
-					$this->objDat[$this->laborOffset+$i*10+8] += intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000);
-					//echo 'Add '.intval($this->get('initProdDuration')*$this->objDat[$this->eqRateOffset+$i]/10000).' to exp. ->> '.$this->get('initProdDuration').' * '.$this->objDat[$this->eqRateOffset+$i];
+				// load the product information
+				fseek($this->linkFile, $this->get('currentProd')*1000);
+				$thisProduct = new product($this->get('currentProd'), fread($this->linkFile, 1000), $this->linkFile);
+				
+				/*
+				$this->itemBlockSize = 100;
+				$this->skillOffset = 38
+				$this->skillRateOffset = 58
+				$this->learnOffset = 78;
+				*/
+				
+				// create the matrix of learning for the product
+				$skillMatrix = array_fill(0, 256, 0);
+				for ($i=0; $i<20; $i++) {
+					$skillMatrix[$thisProduct->objDat[$thisProduct->skillOffset+$i]] += $thisProduct->objDat[$thisProduct->learnOffset+$i];
 				}
-
+				// apply the matrix to each labor item working
+				for ($i=0; $i<10; $i++) {
+					for($j=0; $j<10; $j++) {
+						$this->laborItems[$i]->laborDat[10+$i] += floor(($skillMatrix[$this->laborItems[$i]->laborDat[9+$i]]) * ($this->get('prodLength')/60));
+					}
+					
+				}
+				$this->saveLabor();
 				$saveFactory = true;
 			} else {
 				$this->nextUpdate = min($this->nextUpdate, $this->get('prodStart') + $this->get('prodLength'));
@@ -727,6 +690,9 @@ class product extends object {
 		$this->objDat = unpack('i*', $dat);
 
 		$this->itemBlockSize = 100;
+		$this->skillOffset = 38
+		$this->skillRateOffset = 58
+		$this->learnOffset = 78;
 
 		$this->attrList['baseRate'] = 11;
 		$this->attrList['prodType'] = 12;
@@ -766,7 +732,8 @@ class product extends object {
 			$this->reqLabor[] = $this->objDat[38+$i];
 		}
 	}
-
+	
+	/*
 	function productSkills() {
 		$tmpArray = array_fill(0, 20, 0);
 		for ($i= 0; $i<20; $i++) {
@@ -774,6 +741,16 @@ class product extends object {
 		}
 		return $tmpArray;
 	}
+	*/
+	
+	function prodSkillLearning() {
+		$tmpArray = array_fill(0, 40, 0);
+		for ($i=0; $i<20; $i++) {
+			$tmpArray[$i] = $this->objDat[$this->skillOffset+$i];
+			$tmpArray[$i+20] = $this->objDat[$this->learnOffset+$i];
+		}
+	}
+	
 }
 
 class region extends object {
