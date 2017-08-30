@@ -329,6 +329,6 @@ selFactory.showContracts(factoryDiv.contracts);
 
 </script>';
 
-fclose($offerDatFile);
+//fclose($offerDatFile);
 
 ?>

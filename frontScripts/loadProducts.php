@@ -59,19 +59,56 @@ $schoolLists[8] = [];
 $schoolLists[9] = [];
 $schoolLists[10] = [];
 
-
+$laborPoolFile = fopen('../scenarios/'.$scenario.'/laborPool.dat', 'w');
+fseek($laborPoolFile, 88);
 while (($line = fgets($laborDescFile)) !== false) {
+	echo '<p>';
 	$lineItems = explode(',', $line);
-	print_r($lineItems);
+	//print_r($lineItems);
 	fwrite($laborNameFile, '"'.trim($lineItems[0]).'", ');
 
 	// Add item to relevant school lists
-	for ($i=0; $i<10; $i++) {
-		if ($lineItems[$i+51] > 0) {
+	for ($i=1; $i<10; $i++) {
+		if ($lineItems[$i+50] > 0) {
 			$schoolLists[$i][] = $laborCount;
-			//$schoolLists[$i][] = $lineItems[$i+51];
+			$schoolLists[$i][] = 1;
 		}
 	}
+	$newLabor = loadLaborItem(0, NULL);
+
+	// create labor templates
+	$newLabor->laborDat[1] = 100; // current city
+	$newLabor->laborDat[2] = 100; // current pay
+	$newLabor->laborDat[3] = $laborCount; // labor type
+	$newLabor->laborDat[4] = 100; // creation time
+	$newLabor->laborDat[5] = 100; // Home City
+	$newLabor->laborDat[6] = 100; // talent
+	$newLabor->laborDat[7] = 100; // motivation
+	$newLabor->laborDat[8] = 100; // intelligence
+
+	// skill then level
+	for ($j=0; $j<10; $j++) {
+		$newLabor->laborDat[9+$j*2] = $skillList[trim($lineItems[1+$j])];
+		$newLabor->laborDat[10+$j*2] = $lineItems[11+$j];
+		echo 'Labor type '.$laborCount.' has skill '.$skillList[trim($lineItems[1+$j])].' ('.$lineItems[1+$j].') with a base value of '.($lineItems[11+$j]).'<br>';
+	}
+	print_r($newLabor);
+	fwrite($laborPoolFile, $newLabor->packLabor());
+	// Record labor maximum points
+	$tmpA = array_fill(0, 10, 0);
+	$tmpA[0] = $lineItems[21];
+	$tmpA[1] = $lineItems[22];
+	$tmpA[2] = $lineItems[23];
+	$tmpA[3] = $lineItems[24];
+	$tmpA[4] = $lineItems[25];
+	$tmpA[5] = $lineItems[26];
+	$tmpA[6] = $lineItems[27];
+	$tmpA[7] = $lineItems[28];
+	$tmpA[8] = $lineItems[29];
+	$tmpA[9] = $lineItems[30];
+
+	fwrite($laborPoolFile, packArray($tmpA));
+
 	$laborCount++;
 }
 
@@ -83,43 +120,7 @@ fwrite($laborSlotFile, pack('i', 0));
 fclose($laborSlotFile);
 
 // Create template labor items for each type
-$laborPoolFile = fopen('../scenarios/'.$scenario.'/laborPool.dat', 'w');
-fseek($laborPoolFile, 0);
-for ($i=0; $i<$laborCount; $i++) {
-	$newLabor = loadLaborItem(0, NULL);
 
-	// create labor templates
-	$newLabor->laborDat[0] = 0; // current city
-	$newLabor->laborDat[1] = 0; // current pay
-	$newLabor->laborDat[2] = $i; // labor type
-	$newLabor->laborDat[3] = 0; // creation time
-	$newLabor->laborDat[4] = 0; // Home City
-	$newLabor->laborDat[5] = 0; // talent
-	$newLabor->laborDat[6] = 0; // motivation
-	$newLabor->laborDat[7] = 0; // intelligence
-	
-	// skill then level
-	for ($j=0; $j<10; $j++) {
-		$newLabor->laborDat[8+$j*2] = $skillList[trim($lineItems[1+$j])];
-		$newLabor->laborDat[9+$j*2] = $skillList[trim($lineItems[11+$j])];
-	}
-	
-	fwrite($laborPoolFile, $newLabor->packLabor());
-	// Record labor maximum points
-	$tmpA = array_fill(0, 10, 0);
-	$tmpA[0] = $skillList[trim($lineItems[21])];
-	$tmpA[1] = $skillList[trim($lineItems[22])];
-	$tmpA[2] = $skillList[trim($lineItems[23])];
-	$tmpA[3] = $skillList[trim($lineItems[24])];
-	$tmpA[4] = $skillList[trim($lineItems[25])];
-	$tmpA[5] = $skillList[trim($lineItems[26])];
-	$tmpA[6] = $skillList[trim($lineItems[27])];
-	$tmpA[7] = $skillList[trim($lineItems[28])];
-	$tmpA[8] = $skillList[trim($lineItems[29])];
-	$tmpA[9] = $skillList[trim($lineItems[30])];
-	
-	fwrite($laborPoolFile, packArray($tmpA));
-}
 fclose($laborPoolFile);
 /*
 $laborHead = pack('i*', 0, 0);
@@ -130,11 +131,14 @@ for ($i=0; $i<$laborCount; $i++) {
 }
 */
 echo '<p>Recorded '.$laborCount.' labor templates<p>';
-
+echo '<p>SCHOOL LISTS<p>';
+print_r($schoolLists);
 // record schools file
 $schoolFile = fopen('../scenarios/'.$scenario.'/schools.dat', 'wb');
 fseek($schoolFile, 88);
 for ($i=1; $i<11; $i++) {
+	echo '<p>SCHOOL LIST '.$i.'<p>';
+	print_r($schoolLists[$i]);
 	fwrite($schoolFile, packArray($schoolLists[$i]));
 }
 fseek($schoolFile, 8);
@@ -217,8 +221,9 @@ while (($line = fgets($productFile)) !== false) {
 		if ($lineItems[21+$i] != 'x') {
 			$productArray[38+$i] = $skillList[$lineItems[21+$i]]; // skill requirements
 			$productArray[58+$i] = $lineItems[41+$i]; // skill weights
+			$productArray[78+$i] = 100; // learn rates
 
-			echo 'Skill: '.$lineItems[21+$i].' - # '.$skillList[$lineItems[21+$i]].'<br>';
+			echo 'Skill: '.$lineItems[21+$i].' - # '.$skillList[$lineItems[21+$i]].' has a learn rate of '.$productArray[78+$i].'<br>';
 		} else {
 			echo $lineItems[21+$i].'<br>';
 		}
@@ -349,7 +354,7 @@ fseek($contractListFile, $numProducts*40-4);
 fwrite($contractListFile, pack('i', 0));
 fclose($contractListFile);
 
-
+/*
 function packArray($data, $type = 'i') {
   $str = pack($type, current($data));
   for ($i=1; $i<sizeof($data); $i++) {
@@ -359,7 +364,7 @@ function packArray($data, $type = 'i') {
 }
 
 function newLaborItem() {
-	
-}
 
+}
+*/
 ?>

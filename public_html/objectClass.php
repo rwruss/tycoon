@@ -358,25 +358,30 @@ class factory extends object {
 		$skillModifiers = array_fill(0, 256, 0);
 		$totalLaborSkill = 0;
 		for ($i=0; $i<10; $i++) {
-			for ($j=0; $j<10; $j++) {
-				$skillLevels[$this->laborItems[$i]->laborDat[$j+9]] += $this->laborItems[$i]->laborDat[$j+10];
-				$totalLaborSkill += $this->laborItems[$i]->laborDat[$j+10];;
+
+			if ($this->laborItems[$i]->laborDat[3] > 0) {
+				print_r($this->laborItems[$i]);
+				for ($j=0; $j<10; $j++) {
+					$skillLevels[$this->laborItems[$i]->laborDat[$j*2+9]] += $this->laborItems[$i]->laborDat[$j*2+10];
+					$totalLaborSkill += $this->laborItems[$i]->laborDat[$j*2+10];;
+				}
 			}
 		}
 
 		// load the product information
 		$prodDat = loadProduct($this->get('currentProd'), $this->linkFile);
-		print_r($prodDat);
+		//print_r($prodDat);
 		$totalProdSkill = 0;
 		$skillsRequired = 0;
 		for ($i=0; $i<20; $i++) {
 			if ($prodDat->objDat[$prodDat->skillOffset+$i] > 0) {
+				echo $totalProdSkill.' += '.$prodDat->objDat[$prodDat->skillRateOffset+$i].'<Br>';
 				$totalProdSkill += $prodDat->objDat[$prodDat->skillRateOffset+$i];
 				$skillsRequired++;
 			}
 		}
 
-		$baseProduction = floor($totalLaborSkill/$totalProdSkill);
+		$baseProduction = ($totalLaborSkill/$totalProdSkill);
 		echo 'Base production is '.$baseProduction.' ('.$totalLaborSkill.' / '.$totalProdSkill.')';
 
 		if ($baseProduction > 0) {
@@ -384,13 +389,15 @@ class factory extends object {
 			$laborPcts = array_fill(0, $skillsRequired, 0);
 			$totalPct = 0;
 			for ($i=0; $i<$skillsRequired; $i++) {
+
 				$laborPcts[$i] = $skillLevels[$prodDat->objDat[$prodDat->skillOffset+$i]]/($baseProduction * $prodDat->objDat[$prodDat->skillRateOffset+$i]);
-				$totalPct += min(1, $laborPcts[$i]);
+				$totalPct += min(1, $laborPcts[$i])/$skillsRequired;
+				echo 'Skill '.$i.' pct is '.$laborPcts[$i].': '.$skillLevels[$prodDat->objDat[$prodDat->skillOffset+$i]].' / ('.$baseProduction.' * '.$prodDat->objDat[$prodDat->skillRateOffset+$i].')<br>';
 			}
 
-			$productionRate = $baseProduction * $totalPct;
-
-			return 10;
+			$productionRate = floor($baseProduction * $totalPct*100);
+			echo '<br>Final production is '.$productionRate.' = '.$baseProduction.' * '.$totalPct;
+			return $productionRate;
 		} else return 0;
 	}
 
@@ -491,27 +498,34 @@ class factory extends object {
 				// load the product information
 				fseek($this->linkFile, $this->get('currentProd')*1000);
 				$thisProduct = new product($this->get('currentProd'), fread($this->linkFile, 1000), $this->linkFile);
-				
+
 				/*
 				$this->itemBlockSize = 100;
 				$this->skillOffset = 38
 				$this->skillRateOffset = 58
 				$this->learnOffset = 78;
 				*/
-				
+
 				// create the matrix of learning for the product
+				echo 'ADD LEARNING TO LABOR';
 				$skillMatrix = array_fill(0, 256, 0);
 				for ($i=0; $i<20; $i++) {
 					$skillMatrix[$thisProduct->objDat[$thisProduct->skillOffset+$i]] += $thisProduct->objDat[$thisProduct->learnOffset+$i];
 				}
 				// apply the matrix to each labor item working
 				for ($i=0; $i<10; $i++) {
+					echo '<p>Labor item '.$i.'<br>';
 					for($j=0; $j<10; $j++) {
-						$this->laborItems[$i]->laborDat[10+$i] += floor(($skillMatrix[$this->laborItems[$i]->laborDat[9+$i]]) * ($this->get('prodLength')/60));
+						// adjusted for shorter production times
+						//$this->laborItems[$i]->laborDat[10+$j] += floor(($skillMatrix[$this->laborItems[$i]->laborDat[9+$j*2]]) * ($this->get('prodLength')/3600));
+						echo $this->laborItems[$i]->laborDat[10+$j*2].' += '.$skillMatrix[$this->laborItems[$i]->laborDat[9+$j*2]].' * '.$this->get('prodLength').'/3600<br>';
+						$this->laborItems[$i]->laborDat[10+$j*2] += floor(($skillMatrix[$this->laborItems[$i]->laborDat[9+$j*2]]) * (28800/3600));
+
 					}
-					
+
 				}
 				$this->saveLabor();
+				$this->set('prodRate', $this->setProdRate());
 				$saveFactory = true;
 			} else {
 				$this->nextUpdate = min($this->nextUpdate, $this->get('prodStart') + $this->get('prodLength'));
@@ -683,15 +697,15 @@ class city extends object {
 
 
 class product extends object {
-	public $reqMaterials, $reqLabor;
+	public $reqMaterials, $reqLabor, $skillOffset, $skillRateOffset, $learnOffset;
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
 		$this->objDat = unpack('i*', $dat);
 
 		$this->itemBlockSize = 100;
-		$this->skillOffset = 38
-		$this->skillRateOffset = 58
+		$this->skillOffset = 38;
+		$this->skillRateOffset = 58;
 		$this->learnOffset = 78;
 
 		$this->attrList['baseRate'] = 11;
@@ -729,20 +743,19 @@ class product extends object {
 		for ($i=0; $i<10; $i++) {
 			if ($this->objDat[18+$i] > 0) array_push($this->reqMaterials, $this->objDat[18+$i], $this->objDat[28+$i]);
 			//if ($this->objDat[38+$i] > 0) $this->reqLabor[] = $this->objDat[38+$i];
-			$this->reqLabor[] = $this->objDat[38+$i];
+			$this->reqLabor[] = $this->objDat[$this->skillOffset+$i];
 		}
 	}
-	
-	/*
+
+
 	function productSkills() {
 		$tmpArray = array_fill(0, 20, 0);
 		for ($i= 0; $i<20; $i++) {
-			$tmpArray[$i] = $this->objDat[38+$i];
+			$tmpArray[$i] = $this->objDat[$this->skillOffset+$i];
 		}
 		return $tmpArray;
 	}
-	*/
-	
+
 	function prodSkillLearning() {
 		$tmpArray = array_fill(0, 40, 0);
 		for ($i=0; $i<20; $i++) {
@@ -750,7 +763,7 @@ class product extends object {
 			$tmpArray[$i+20] = $this->objDat[$this->learnOffset+$i];
 		}
 	}
-	
+
 }
 
 class region extends object {
@@ -781,6 +794,7 @@ class labor {
 		$this->binDat = $dat;
 
 		$this->laborDat = array_values(unpack($this->format, $dat));
+		//echo '<p>LABOR DAT:<p>';
 		array_unshift($this->laborDat, 0);
 		unset($this->laborDat[0]);
 	}
@@ -961,14 +975,14 @@ function loadObject($id, $file, $size) {
 function packArray($data, $format = 'i') {
 	reset($data);
 	$z = current($data);
-	echo 'pack ('.$format.') '.$z.'<br>';
+	//echo 'pack ('.$format.') '.$z.'<br>';
 	$str = pack($format, $z);
 	for ($i=1; $i<sizeof($data); $i++) {
 		$z = next($data);
 		$str = $str.pack($format, $z);
-		echo 'pack ('.$format.')'.$z.' - Length: '.strlen($str).'<br>';
+		//echo 'pack ('.$format.')'.$z.' - Length: '.strlen($str).'<br>';
 	}
-	echo 'Return '.strlen($str);
+	//echo 'Return '.strlen($str);
 	return $str;
 }
 

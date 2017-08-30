@@ -58,6 +58,8 @@ if ($postVals[3] == 0) {
 		$useLabor = templateLabor($postVals[2], $gameHour, $laborPoolFile);
 	} else $useLabor = $existingLabor($postVals[2], $laborPoolFile);
 
+	echo 'HIRING LABOR:';
+	print_r($useLabor);
 	// Adjust labor parameters
 	$trgLabor->laborDat[1] = 1; // Current city
 

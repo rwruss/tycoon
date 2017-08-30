@@ -55,6 +55,7 @@ $defaultBlockSize = 100;
 $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
+echo 'Load player '.$pGameID;
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
 $_SESSION['game_'.$gameID]['business'] = $thisPlayer->objDat;
 
@@ -96,9 +97,9 @@ echo '<p>';
 $companyLabor = [];
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
-//print_r($laborSlot->slotData);
+print_r($laborSlot->slotData);
 $laborCount = 0;
-for ($i=1; $i<sizeof($laborSlot->slotData); $i++) {
+for ($i=1; $i<=sizeof($laborSlot->slotData); $i++) {
 	if ($laborSlot->slotData[$i] > 0) {
 		//echo 'Load labor item '.$laborSlot->slotData[$i].'<br>';
 		fseek($laborPoolFile, $laborSlot->slotData[$i]);
