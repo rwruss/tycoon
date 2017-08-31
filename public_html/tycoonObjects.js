@@ -1013,10 +1013,14 @@ class labor {
 
 		hireContain.hireButton = newButton(hireContain);
 		hireContain.hireButton.innerHTML = "Hire!";
-		hireContain.hireButton.sendStr = sendStr;
+		hireContain.hireButton.sendStr = "1057,"+sendStr;
 
 		hireContain.addEventListener("click", function () {
-			scrMod("1057,"+sendStr);
+			//scrMod("1057,"+sendStr);
+			getASync(this.sendStr).then(v => {
+				let tmpA = v.split(",");
+				if (tmpA.length == 30) 	companyLabor.push(new laborItem(tmpA));)
+			});
 		});
 
 		return hireContain;

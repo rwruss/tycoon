@@ -221,6 +221,7 @@ Group experience - similar to navyfield groups
 
 
 Get a job
+https://triplebyte.com/?ref=quora_j17_c_quiz
 http://loudprogrammer.net/interview-with-rob-percival-how-to-land-your-first-junior-developer-job/?utm_source=quora&utm_medium=answer#.WG7ISvkrKUk
 https://www.topcoder.com/
 http://sagecode.net/certification/web-dev/
