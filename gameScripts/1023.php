@@ -43,7 +43,10 @@ thisDiv.promotionArea = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", thisDiv.promotionArea, "Promotion options");
 
 saveSettings = newButton(thisDiv.promotionArea);
-saveSettings.addEventListener("click", function() {scrMod("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)})
+saveSettings.addEventListener("click", function() {
+	console.log("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
+	//scrMod("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
+})
 saveSettings.innerHTML = "Save Settings";
 thisDiv.laborArea = addDiv("", "stdFloatDiv", thisDiv);
 textBlob("", thisDiv.laborArea, "Other Labor Options");

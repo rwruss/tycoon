@@ -1015,11 +1015,12 @@ class labor {
 		hireContain.hireButton.innerHTML = "Hire!";
 		hireContain.hireButton.sendStr = "1057,"+sendStr;
 
-		hireContain.addEventListener("click", function () {
+		hireContain.hireButton.addEventListener("click", function () {
 			//scrMod("1057,"+sendStr);
+
 			getASync(this.sendStr).then(v => {
 				let tmpA = v.split(",");
-				if (tmpA.length == 30) 	companyLabor.push(new laborItem(tmpA));)
+				if (tmpA.length == 30) 	companyLabor.push(new laborItem(tmpA));
 			});
 		});
 
@@ -1099,6 +1100,7 @@ class laborItem extends labor {
 		var thisDiv = addDiv(null, 'productHolder', target);
 
 		thisDiv.ownerObject = this.objID;
+		thisDiv.parentObj = this;
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");

@@ -1566,7 +1566,7 @@ factoryLaborDetail = function(thisLabor, factoryID, target) {
 		if (thisLabor.laborType > 0) {
 			companyLabor.push(thisLabor);
 			companyLaborOptions(companyLabor, factoryID, laborTabs.renderKids[0]);
-			thisLaborItem = thisLabor;
+			thisLaborItem = emptyLabor;
 		}
 	target.innerHTML = "";
 	emptyLabor.renderSummary(target);
@@ -1583,6 +1583,31 @@ laborPaySettings = function(laborItem, factoryID, target) {
 }
 
 companyLaborOptions = function(laborList, factoryID, trg) {
+	console.log(companyLabor);
+	trg.innerHTML = "";
+	for (let i=0; i<companyLabor.length; i++) {
+		//console.log("render " + companyLabor[i].objID);
+		let item = companyLabor[i].renderSummary(trg);
+		item.addEventListener("click", function () {
+			if (thisLaborItem.laborType > 0) {
+				console.log("move old down (" + thisLaborItem.objID + ")");
+				companyLabor.push(thisLaborItem);
+				//let tmp = laborList[this.itemNo];
+				//laborList[this.itemNo] = thisLaborItem;
+				//thisLaborItem = tmp;
+		} else {
+
+		}
+		console.log("move item " + companyLabor.indexOf(this.parentObj));
+		console.log(companyLabor.splice(companyLabor.indexOf(this.parentObj),1));
+		companyLaborOptions(null, factoryID, trg);
+		thisLaborItem = this.parentObj;
+		thisDiv.laborDescArea.innerHTML = "";
+		factoryLaborDetail(thisLaborItem, factoryID, thisDiv.laborDescArea);
+		//laborPaySettings(thisLaborItem, factoryID, thisDiv.payArea);
+	});
+	}
+	/*
 	console.log(laborList);
 	trg.innerHTML = "";
 	cLaborList = new uList(laborList);
@@ -1615,7 +1640,7 @@ companyLaborOptions = function(laborList, factoryID, trg) {
 			factoryLaborDetail(thisLaborItem, factoryID, thisDiv.laborDescArea);
 			laborPaySettings(thisLaborItem, factoryID, thisDiv.payArea);
 		})
-	});
+	});*/
 }
 
 companyLaborList = function(laborList, trg) {
