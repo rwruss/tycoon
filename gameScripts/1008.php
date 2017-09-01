@@ -141,9 +141,12 @@ fclose($projectFile);
 fclose($objFile);
 fclose($slotFile);
 
+echo '1,'.$thisBusiness->get('money').','.implode(',', $newObj->overViewInfo());
+
+/*
 echo '<script>
 addFactory(['.implode(',', $newObj->overViewInfo()).']);
 thisPlayer.money = '.$thisBusiness->get('money').'
 </script>';
-
+*/
 ?>

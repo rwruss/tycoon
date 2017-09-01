@@ -1755,7 +1755,7 @@ factoryBuildMenu = function () {
 	thisDiv.cityDetail = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.buildingSelect = addDiv("", "stdFloatDiv", thisDiv);
 	thisDiv.buildingDetail = addDiv("", "stdFloatDiv", thisDiv);
-	thisDiv.buildingInProgress = addDiv("", "stdFloatDiv", thisDiv);
+	thisDiv.buildingInProgress = addDiv("buildMenuInProgress", "stdFloatDiv", thisDiv);
 	thisDiv.buildingInProgress.innerHTML = "In Progress";
 
 	locationSelect(thisDiv.locationBar, nationList, 1);
@@ -2043,7 +2043,7 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 							});
 
 							buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
-							inProgressList(newTarget.parentNode.buildingInProgress);
+							showFactoriesInProgress(newTarget.parentNode.buildingInProgress);
 						} else {
 							console.log("SELECT A CITY!");
 						}
@@ -2068,9 +2068,24 @@ buildOptionList = function(trg, detailTrg, bldgList) {
 		let trgSelect = this;
 		buildButton.addEventListener("click", function () {
 			console.log(trgSelect.value+","+document.getElementById("location_3").value);
-			scrMod("1008,"+trgSelect.value+","+document.getElementById("location_3").value)
+			getASync("1008,"+trgSelect.value+","+document.getElementById("location_3").value).then(v => {
+				let r = v.split(",");
+				if (r[0] == -1) {
+					errorAlert("error in buildOptionList");
+					return;
+				} else {
+					thisPlayer.money = r[1];
+					addFactory(r.slice(2));
+					showFactoriesInProgress(document.getElementById("buildMenuInProgress"));
+				}
+			})
+			//scrMod("1008,"+trgSelect.value+","+document.getElementById("location_3").value)
 		});
 	});
+}
+
+errorAlert = function (str) {
+	alert(str);
 }
 
 customSelectMenu = function (trg, itemList, itemNumbers) {
@@ -2209,7 +2224,7 @@ addFactory = function (dat) {
 	}
 }
 
-inProgressList = function (trg) {
+showFactoriesInProgress = function (trg) {
 	trg.innerHTML = "";
 	for (var i=0; i<inProgressFactories.length; i++) {
 		inProgressFactories[i].render(trg);
