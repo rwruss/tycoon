@@ -190,8 +190,11 @@ class factory extends object {
 		$this->inputPollution = 98; // offset to input pollution level for each input
 		$this->inputRights = 114; // offset to input rights level for each input
 
+		$this->productionSpotQty = 130;
 		$this->offersOffset = 131;
 		$this->productStats = 139; // offset to stats for each product made (quality, pollution, rights, material cost, labor cost)
+		$this->currentProductionOffset = 164;
+		$this->currentProductionRateOffset = 169;
 		$this->paidTaxOffset = 174;
 		$this->inputQuality = 204; // offset to input quality level for each input
 		$this->contractsOffset = 220;
@@ -214,18 +217,20 @@ class factory extends object {
 		$this->attrList['prodQty'] = 17;
 		$this->attrList['upgradePrice'] = 18;
 
-		$this->attrList['currentProd'] = 19; // Product ID that is currently being produced
+		$this->attrList['currentProd'] = 164; // Product ID that is currently being produced
 		$this->attrList['initProdDuration'] = 20;
 		$this->attrList['prodRate'] = 21;
 		$this->attrList['region_1'] = 22;
 		$this->attrList['region_2'] = 23;
-
 		$this->attrList['industry'] = 24;
+		
 		$this->attrList['prodQuality'] = 25;
 		$this->attrList['prodPollution'] = 26;
 		$this->attrList['prodRights'] = 27;
 		$this->attrList['prodCost'] = 28;
 		$this->attrList['prodLaborCost'] = 29;
+		
+		$this->attrList['groupType'] = 30;
 
 		$this->attrList['prodInv1'] = 47;
 		$this->attrList['prodInv2'] = 48;
@@ -254,20 +259,36 @@ class factory extends object {
 		fseek($file, $this->objDat[9]*$templateBlockSize);
 		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
 		//print_r($this->templateDat);
+		
+		if ($this->get('subType') == 0) {
+			$this->tempList['prod1'] = $this->templateDat[11];
+			$this->tempList['prod2'] = $this->templateDat[12];
+			$this->tempList['prod3'] = $this->templateDat[13];
+			$this->tempList['prod4'] = $this->templateDat[14];
+			$this->tempList['prod5'] = $this->templateDat[15];
 
-		$this->tempList['prod1'] = $this->templateDat[11];
-		$this->tempList['prod2'] = $this->templateDat[12];
-		$this->tempList['prod3'] = $this->templateDat[13];
-		$this->tempList['prod4'] = $this->templateDat[14];
-		$this->tempList['prod5'] = $this->templateDat[15];
+			$this->productStores[] = $this->objDat[47];
+			$this->productStores[] = $this->objDat[48];
+			$this->productStores[] = $this->objDat[49];
+			$this->productStores[] = $this->objDat[50];
+			$this->productStores[] = $this->objDat[51];
+		} else {
+			
+			// A mine or farm
+			$this->tempList['prod1'] = $this->objDat[$this->currentProductionOffset+0];
+			$this->tempList['prod2'] = $this->objDat[$this->currentProductionOffset+1];
+			$this->tempList['prod3'] = $this->objDat[$this->currentProductionOffset+2];
+			$this->tempList['prod4'] = $this->objDat[$this->currentProductionOffset+3];
+			$this->tempList['prod5'] = $this->objDat[$this->currentProductionOffset+4];			
+
+			$this->productStores[] = $this->objDat[47];
+			$this->productStores[] = $this->objDat[48];
+			$this->productStores[] = $this->objDat[49];
+			$this->productStores[] = $this->objDat[50];
+			$this->productStores[] = $this->objDat[51];
+		}
 
 		$this->resourceStores = $this->resourceInv();
-
-		$this->productStores[] = $this->objDat[47];
-		$this->productStores[] = $this->objDat[48];
-		$this->productStores[] = $this->objDat[49];
-		$this->productStores[] = $this->objDat[50];
-		$this->productStores[] = $this->objDat[51];
 
 		$this->loadLabor($dat);
 		//echo 'LABOR ITEMS<p>';
@@ -352,7 +373,7 @@ class factory extends object {
 		$this->saveBlock($this->laborOffset*4, $str);
 	}
 
-	function setProdRate() {
+	function setProdRate($productionSpot = 0;) {
 		// calc total skills from labor force
 		$skillLevels = array_fill(0, 256, 0);
 		$skillModifiers = array_fill(0, 256, 0);
@@ -369,7 +390,7 @@ class factory extends object {
 		}
 
 		// load the product information
-		$prodDat = loadProduct($this->get('currentProd'), $this->linkFile);
+		$prodDat = loadProduct($this->objDat[$this->currentProductionOffset+$i], $this->linkFile);
 		//print_r($prodDat);
 		$totalProdSkill = 0;
 		$skillsRequired = 0;

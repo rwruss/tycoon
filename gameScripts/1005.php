@@ -9,10 +9,10 @@ PVS
 
 require_once('./objectClass.php');
 
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); //r+b
-$objFile = fopen($gamePath.'/objects.dat', 'r+b'); // r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'rb'); // r+b
 $laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb'); // rb
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b'); //r+b
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb'); //r+b
 
 $thisFactory = loadObject($postVals[1], $objFile, 1000);
 
@@ -21,66 +21,79 @@ if ($thisFactory->get('owner') != $pGameID) {
 	exit('error 5001-1-'.$thisFactory->get('owner').'-'.$pGameID);
 }
 
+// determine how many production spots are available and get available production options
+if (thisFactory->get('groupType') > 0) {
+	$productionSpots = $thisFactory->productionSpotQty;
+	
+	$pgfFile = fopen($gamePath.'/productGroups.pgf', 'rb');
+	fseek($pgfFile, $thisObj->get('groupType')*8);
+	$headDat = unpack('i*', fread($pgfFile, 8));
+	fseek($pgfFile, $headDat[0]);
+	$optionList = unpack('i*', fread($pgfFile, $headDat[1]));
+	fclose($pgfFile);
+} else {
+	$productionSpots = 1;
+	$optionList = $thisFactory->productionOptions();
+}
+
 $now = time();
 // Confirm there is no task already started
 if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 	exit("error 5001-2");
 }
 
-$optionList = $thisFactory->productionOptions();
 print_r($optionList);
-$optionCheck = true;
 $productIndex = $postVals[3] - 1;
 
-
 if ($productIndex < 0) exit ('error 5001-1');
-// Verify that the production item is valid for this factory
 
-/*
-$optionCheck = false;
-echo 'look for '.$postVals[3].' in <br>';
-print_r($optionList);
-for ($i=0; $i<5; $i++) {
-	if ($postVals[3] == $optionList[$i]) {
-		$optionCheck = true;
-		$prodNumber = $i;
-		break;
-	}
-}
-*/
+
 $thisProduct = loadProduct($optionList[$productIndex], $objFile, 400);
 $productionRate = $thisFactory->setProdRate($optionList[$productIndex], $thisProduct, $laborEqFile);
 
-if ($optionCheck) {
+// update the current production prior to changing anything
+$thisFactory->updateStocks($offerDatFile);
+
+$productSkillList = [];
+$productMatList = [];
+for ($i=0; $i<$productionSpots; $i++) {
 	echo 'Set factory production';
 	// Update current production
-	if ($thisFactory->get('currentProd') > 1)	$thisFactory->updateStocks($offerDatFile);
+	//if ($thisFactory->objDat[$thisFactory->currentProductionOffset+$i] > 1)	$thisFactory->updateStocks($offerDatFile);
 
 	// Set new item production
+	$productIndex = $postVals[3+2*$i] - 1;
+	$thisProduct = loadProduct($optionList[$productIndex], $objFile, 400);
+	//$productionRate = $thisFactory->setProdRate($optionList[$productIndex], $thisProduct, $laborEqFile, $i);
+	$productionRate = $thisFactory->setProdRate($i);
+	
 	echo 'Set production of item '.$optionList[$productIndex].' to '.$productionRate.'<p>';
-	$thisFactory->save('currentProd', $optionList[$productIndex]);
-	$thisFactory->save('prodRate', $productionRate);
-	echo 'Current prod is '.$thisFactory->get('currentProd').'<p>';
-
-	echo '<script>
-	productMaterial = ['.implode(',', $thisProduct->reqMaterials).'];
-	selFactory.showProdRequirements(factoryDiv.reqBox.materials, productMaterial);
-
-	selFactory.productLabor = ['.implode(',', $thisProduct->reqLabor).'];
-	//showRequiredLabor(businessDiv.laborSection.required, productLabor);
-	selFactory.showReqLabor(factoryDiv.laborSection.required);
-
-	//factoryRate(headSection.rate, '.($productionRate/100).');
-	selFactory.setProdRate('.($productionRate/100).', factoryDiv.headSection.rate);
-	</script>';
-} else {
-	echo 'Not able to set';
+	$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $optionList[$productIndex];
+	$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate;
+	//$thisFactory->save('currentProd', $optionList[$productIndex]);
+	//$thisFactory->save('prodRate', $productionRate);
+	$currentProductionList[$i] = $thisFactory->objDat[$thisFactory->currentProductionOffset+$i];
+	$productSkillList = array_merge($productSkillList, $thisProduct->reqLabor);
+	$productMatList = array_merge($productMatList, $thisProduct->reqMaterials);
 }
 
+$thisFactory->saveAll();
 
 fclose($objFile);
 fclose($slotFile);
 fclose($offerDatFile);
 fclose($laborEqFile);
+
+echo 'Current prod is '.implode(',', $currentProductionList).'<p>';
+
+	echo '<script>
+	productMaterial = ['.implode(',', $thisProduct->reqMaterials).'];
+	selFactory.showProdRequirements(factoryDiv.reqBox.materials, productMaterial);
+
+	selFactory.productLabor = ['.implode(',', $productSkillList).'];
+	selFactory.showReqLabor(factoryDiv.laborSection.required);
+
+	selFactory.setProdRate('.($productionRate/100).', factoryDiv.headSection.rate);
+	</script>';
 
 ?>

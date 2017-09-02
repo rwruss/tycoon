@@ -42,9 +42,24 @@ if ($thisObj->get('factoryLevel') == 0) {
 	}
 }
 
+
 if ($thisObj->get('constStatus') > 0) {
 	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
 }
+if ($) {
+	$productionOpts = implode(',', $thisObj->productStores);
+}
+if ($thisObj->get('groupType') == 2) {
+	$pgfFile = fopen($gamePath.'/productGroups.pgf', 'rb');
+	fseek($pgfFile, $thisObj->get('groupType')*8);
+	$headDat = unpack('i*', fread($pgfFile, 8));
+	fseek($pgfFile, $headDat[0]);
+	$groupDat = unpack('i*', fread($pgfFile, $headDat[1]));
+	fclose($pgfFile);
+	
+	$productionOpts = implode(',', $groupDat);
+}
+
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 $thisObj->updateStocks($offerDatFile);
 if ($thisObj->get('currentProd') > 0) {
@@ -157,12 +172,15 @@ selFactory = playerFactories['.$postVals[2].'];
 selectedFactory = '.$postVals[1].';
 factoryDiv = useDeskTop.newPane("factoryInfo");
 factoryDiv.innerHTML = "";
+selFactory.productionSpots = 1;
 selFactory.factorySales = ['.implode(',', $saleDat).'];
 selFactory.factoryUpgradeProducts = [];
 selFactory.factoryUpgradeServies = [];
-selFactory.productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).'];
+//selFactory.productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).'];
+selFactory.currentProduction = ['.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').'];
+selFactory.productStores = ['.implode(',', $thisObj->productStores).'];
 selFactory.productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
-//selFactory.productLabor = ['.implode(',', $productInfo->reqLabor).'];
+selFactory.productionOpts = ['.$productionOpts.'];
 selFactory.productSkills = ['.implode(',', $productInfo->productSkills()).'];
 selFactory.materialInv = ['.implode(',', $thisObj->resourceInv()).'];
 selFactory.materialOrder = ['.implode(',', $materialOrders).'];
@@ -176,17 +194,15 @@ inventoryItems = [];
 for (i=0; i<selFactory.materialInv.length; i+=2) {
 	inventoryItems.push(new product({objID:selFactory.materialInv[i]}));
 }
-//invList = new uList(inventoryItems);
 
 let tmpProdItems = [];
 let selectedIndex = 0;
 tmpProdItems.push(new factoryProduction(0,0,0,0,0));
-//tmpProdItems.push(new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').',6));
 for (let i=0; i<5; i++) {
-	if (selFactory.productStores[i] > 0) {
-		if (selFactory.productStores[i] != '.$thisObj->get('currentProd').')	tmpProdItems.push(new factoryProduction('.$postVals[1].', 0, selFactory.productStores[i], 0,i+1));
+	if (selFactory.productionOpts[i] > 0) {
+		if (selFactory.productionOpts[i] != selFactory.currentProduction[2])	tmpProdItems.push(new factoryProduction('.$postVals[1].', 0, selFactory.productionOpts[i], 0,i+1)); //id, endTime, productID, qty, objID
 		else {
-			tmpProdItems.push(new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').',i+1));
+			tmpProdItems.push(new factoryProduction(selFactory.currentProduction[0], selFactory.currentProduction[1], selFactory.currentProduction[2], selFactory.currentProduction[3],i+1));
 			selectedIndex = i+1;
 		}
 	}
@@ -218,7 +234,13 @@ contractsButton.innerHTML = "Contracts";
 sellButton = newButton(factoryDiv.headSection, function () {scrMod("1043,'.$postVals[1].'")});
 sellButton.innerHTML = "Sell Factory";
 
-sendButton = newButton(factoryDiv.headSection, function () {scrMod("1005,'.$postVals[1].',"+ SLreadSelection(factoryProductionBox))});
+sendButton = newButton(factoryDiv.headSection, function () {
+	let prodStr = "";
+	for (let i=0; i<factoryProductionBox.length; i++) {
+		prodStr = prodStr + ","+SLreadSelection(factoryProductionBox[i]);
+	}
+	scrMod("1005,'.$postVals[1].',"+ prodStr);
+	});
 sendButton.innerHTML = "Set production";
 
 saleButton = newButton(factoryDiv.headSection, function () {scrMod("1013,'.$postVals[1].'")});
@@ -259,10 +281,12 @@ startButton4.innerHTML = "Work for - 8 hour";
 
 factoryDiv.prodContain = addDiv("", "orderContain", factoryDiv.headSection);
 selFactory.production = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100, '.$thisObj->get('currentProd').');
-//fProductionBox = selFactory.production.render(factoryDiv.prodContain);
 console.log(prodList);
 console.log(selectedIndex);
-factoryProductionBox = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:selectedIndex});
+factoryProductionBox = [];
+for (let i=0; i<selFactory.productionSpots; i++) {
+	factoryProductionBox = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:selectedIndex});
+}
 
 upgradeButton = newButton(factoryDiv.headSection, function () {
 	resourceQuery(factoryUpgradeProducts, factoryUpgradeServices, function () {
@@ -274,7 +298,6 @@ factoryDiv.productInvSection = addDiv("", "stdFloatDiv", factoryDiv);
 factoryDiv.productInvSection.innerHTML = "INVENTORY";
 textBlob("", factoryDiv.productInvSection, "Output Inventory");
 
-//showOutputs(factoryDiv.productInvSection, productStores);
 selFactory.showOutputs(factoryDiv.productInvSection);
 
 salesSection = addDiv("", "stdFloatDiv", factoryDiv);
@@ -284,7 +307,6 @@ factoryDiv.laborSection.skills = addDiv("", "stdFloatDiv", factoryDiv.laborSecti
 factoryDiv.laborSection.aassigned = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
 textBlob("", factoryDiv.laborSection.aassigned, "Labor working here");
 
-//showLabor('.$postVals[1].', factoryLabor);
 selFactory.showLabor(factoryDiv.laborSection.aassigned);
 
 factoryDiv.reqBox = addDiv("", "stdFloatDiv", factoryDiv);
@@ -294,20 +316,14 @@ factoryDiv.reqBox.materials = addDiv("", "stdFloatDiv", factoryDiv.reqBox);
 factoryDiv.reqBox.skills = addDiv("", "stdFloatDiv", factoryDiv.reqBox);
 console.log(selFactory);
 
-
-//showProdRequirements(reqBox.materials, productMaterial);
 selFactory.showProdRequirements(factoryDiv.reqBox.materials);
 
 factoryDiv.reqBox.skills.innerHTML = "recommended skills for product";
 selFactory.showProdSkills(factoryDiv.reqBox.skills);
 selFactory.prodLaborSkills(1, factoryDiv.laborSection.skills);
 
-//factoryDiv.laborSection.required = addDiv("", "stdFloatDiv", factoryDiv.laborSection);
-//showRequiredLabor(factoryDiv.laborSection.required, productLabor);
-//selFactory.showReqLabor(factoryDiv.laborSection.required);
 
 factoryDiv.reqBox.stores = addDiv("", "stdFloatDiv", factoryDiv);
-//showInventory('.$postVals[1].', materialInv);
 selFactory.showInventory(factoryDiv.reqBox.stores);
 
 var orderSection = addDiv("", "stdFloatDiv", factoryDiv);
@@ -317,14 +333,12 @@ factoryDiv.orderItems = addDiv("", "stdFloatDiv", orderSection);
 factoryDiv.saleItems = addDiv("", "stdFloatDiv", orderSection);
 textBlob("", orderHead, "Current orders");
 
-//showOrders(factoryDiv.orderItems, factoryOrders);
+
 selFactory.showOrders(factoryDiv.orderItems);
 
-//showSales(factoryDiv.saleItems, factorySales);
 selFactory.showSales(factoryDiv.saleItems);
 
 factoryDiv.contracts = addDiv("", "stdFloatDiv", factoryDiv);
-//factoryContracts(['.implode(',', array_merge(unpack('i*', $contractStr), $invoiceSend)).'], factoryDiv.contracts);
 selFactory.showContracts(factoryDiv.contracts);
 
 </script>';

@@ -181,42 +181,50 @@ $productTypes = [];
 $productTypes['Item'] = 1;
 $productTypes['Transport'] = 2;
 $productTypes['Service'] = 3;
+// create an array to hold up to 10 groups of products
+$productGroups = [];
+for ($i=0; $i<10; $i++) {
+	$productGroups[] = [];
+}
+
 while (($line = fgets($productFile)) !== false) {
 
-  $lineItems = explode(',', $line);
+	$lineItems = explode(',', $line);
+	
 	print_R($lineItems);
-  $productReqs[trim($lineItems[0])][0] = $productList[$lineItems[1]];
-  $productReqs[trim($lineItems[0])][1] = $productList[$lineItems[2]];
-  $productReqs[trim($lineItems[0])][2] = $productList[$lineItems[3]];
-  $productReqs[trim($lineItems[0])][3] = $productList[$lineItems[4]];
-  $productReqs[trim($lineItems[0])][4] = $productList[$lineItems[5]];
-  $productReqs[trim($lineItems[0])][5] = $productList[$lineItems[6]];
-  $productReqs[trim($lineItems[0])][6] = $productList[$lineItems[7]];
-  $productReqs[trim($lineItems[0])][7] = $productList[$lineItems[8]];
-  $productReqs[trim($lineItems[0])][8] = $productList[$lineItems[9]];
-  $productReqs[trim($lineItems[0])][9] = $productList[$lineItems[10]];
+	$productReqs[trim($lineItems[0])][0] = $productList[$lineItems[1]];
+	$productReqs[trim($lineItems[0])][1] = $productList[$lineItems[2]];
+	$productReqs[trim($lineItems[0])][2] = $productList[$lineItems[3]];
+	$productReqs[trim($lineItems[0])][3] = $productList[$lineItems[4]];
+	$productReqs[trim($lineItems[0])][4] = $productList[$lineItems[5]];
+	$productReqs[trim($lineItems[0])][5] = $productList[$lineItems[6]];
+	$productReqs[trim($lineItems[0])][6] = $productList[$lineItems[7]];
+	$productReqs[trim($lineItems[0])][7] = $productList[$lineItems[8]];
+	$productReqs[trim($lineItems[0])][8] = $productList[$lineItems[9]];
+	$productReqs[trim($lineItems[0])][9] = $productList[$lineItems[10]];
 
 	echo trim($lineItems[0]).' Requires:<br>';
 	for ($i=0; $i<10; $i++) {
 		echo $productReqs[trim($lineItems[0])][$i].' - '.($lineItems[$i+1]).'<br>';
 	}
 
-  // read ingredients into array
+	// read ingredients into array
 	echo 'Product type '.$lineItems[63].'<br>';
-  $productArray = array_fill(1, 250, 0);
-  $productArray[4] = 4; // type
-  $productArray[9] = $count; // ??
-  $productArray[11] = $lineItems[41]; // base prod rate/hour
+	$productArray = array_fill(1, 250, 0);
+	$productArray[4] = 4; // type
+	$productArray[9] = $count; // ??
+	$productArray[11] = $lineItems[41]; // base prod rate/hour
 	$productArray[12] = $productTypes[trim($lineItems[63])]; // product type
 	$productArray[13] = $lineItems[43];  // unit weight
 	$productArray[14] = $lineItems[44]; // unit volume
+	$productArray[15] = $lineItems[65]; // unit volume
 
-  for ($i=0; $i<10; $i++) {
-    $productArray[18+$i] = $productList[$lineItems[1+$i]]; // material requirements
-    $productArray[28+$i] = $lineItems[11+$i]; // material quantities
+	for ($i=0; $i<10; $i++) {
+		$productArray[18+$i] = $productList[$lineItems[1+$i]]; // material requirements
+		$productArray[28+$i] = $lineItems[11+$i]; // material quantities
+	}
 
-
-  }
+	// add skills required for product production
 	for ($i=0; $i<20; $i++) {
 		if ($lineItems[21+$i] != 'x') {
 			$productArray[38+$i] = $skillList[$lineItems[21+$i]]; // skill requirements
@@ -228,13 +236,31 @@ while (($line = fgets($productFile)) !== false) {
 			echo $lineItems[21+$i].'<br>';
 		}
 	}
+	
+	$productGroups[$lineItems[65]] = $count;
+	
 	//print_r($productArray);
 	$packedProducts = packArray($productArray);
-  fseek($objFile, $count*$dataBlockSize);
-  fwrite($objFile, $packedProducts);
+	fseek($objFile, $count*$dataBlockSize);
+	fwrite($objFile, $packedProducts);
 	echo 'Write '.(strlen($packedProducts)).' bytes at '.($count*$dataBlockSize).'<p>';
-  $count++;
+	$count++;
 }
+
+//record product groups
+$prodGroupFile = fopen('../scenarios/'.$scenario.'/productGroups.pgf', 'wb');
+$pgfLength = 0;
+$pgfHeadSize = 80;
+for ($i=0; $i<10; $i++) {
+	$headDat = pack('i*', $pgfHeadSize+$pgfLength, sizeof($productGroups[$i]);
+	fseek($prodGroupFile, $i*8);
+	fwrite($prodGroupFile, $headDat);
+	
+	fseek($prodGroupFile, $pgfHeadSize+$pgfLength);
+	fwrite($prodGroupFile, packArray($productGroups[$i]));
+	$pgfLength += sizeof($productGroups[$i]);
+}
+fclose($prodGroupFile);
 
 $numProducts = $count;
 
@@ -275,9 +301,10 @@ while (($line = fgets($factoryFile)) !== false) {
   //$factoryBitScreens[$lineItems[0]] = [0,0,0,0,0];
   $factoryObj = array_fill(1, 250, 0);
   // set object type and subtype
-  $factoryObj[4] = 7;
-  $factoryObj[8] = $lineItems[6];
-  $factoryObj[9] = $count;
+  $factoryObj[3] = $lineItems[12]; // factory class / group type
+  $factoryObj[4] = 7; // factory template type
+  $factoryObj[8] = $lineItems[6]; // Cost to build initial factory
+  $factoryObj[9] = $count; // factory type
 
   // Load what products the factory can produce and assign inventory slots to the required materials for that product
   for ($i=1; $i<=5; $i++) {
