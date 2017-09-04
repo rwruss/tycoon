@@ -65,21 +65,34 @@ for ($i=0; $i<$productionSpots; $i++) {
 
 	// Set new item production
 	$productIndex = $postVals[3+2*$i] - 1;
-	$thisProduct = loadProduct($optionList[$productIndex], $objFile, 400);
-	//$productionRate = $thisFactory->setProdRate($optionList[$productIndex], $thisProduct, $laborEqFile, $i);
-	$productionRate = $thisFactory->setProdRate($i);
+	if ($optionList[$productIndex] > 0) {
+		$thisProduct = loadProduct($optionList[$productIndex], $objFile, 400);
+		//$productionRate = $thisFactory->setProdRate($optionList[$productIndex], $thisProduct, $laborEqFile, $i);
+		$productionRate = $thisFactory->setProdRate($i);
 
-	echo 'Set production of item '.$optionList[$productIndex].' to '.$productionRate.'<p>';
-	$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $optionList[$productIndex];
-	$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate;
-	//$thisFactory->save('currentProd', $optionList[$productIndex]);
-	//$thisFactory->save('prodRate', $productionRate);
-	$currentProductionList[$i] = $thisFactory->objDat[$thisFactory->currentProductionOffset+$i];
-	$productSkillList = array_merge($productSkillList, $thisProduct->reqLabor);
-	$productMatList = array_merge($productMatList, $thisProduct->reqMaterials);
+		echo 'Set production of item '.$optionList[$productIndex].' to '.$productionRate.'<p>';
+		// set production items and production rates
+		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $optionList[$productIndex];
+		$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
+		
+		// set quality rates for each item
+		$thisFactory->productionQuality[$i+1] = $productionRate[1];
+		
+		$currentProductionList[$i] = $thisFactory->objDat[$thisFactory->currentProductionOffset+$i];
+		$productSkillList = array_merge($productSkillList, $thisProduct->reqLabor);
+		$productMatList = array_merge($productMatList, $thisProduct->reqMaterials);
+	} else {
+		// set production items and production rates
+		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = 0;
+		$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = 0;
+		
+		// set quality rates for each item
+		$thisFactory->productionQuality[$i+1] = $productionRate[1];
+	}
 }
 
-$thisFactory->saveAll();
+//$thisFactory->saveAll();
+$thisFactory->saveProductionRates();
 
 fclose($objFile);
 fclose($slotFile);
@@ -89,8 +102,8 @@ fclose($offerDatFile);
 echo 'Current prod is '.implode(',', $currentProductionList).'<p>';
 
 	echo '<script>
-	productMaterial = ['.implode(',', $thisProduct->reqMaterials).'];
-	selFactory.showProdRequirements(factoryDiv.reqBox.materials, productMaterial);
+	selFactory.productMaterial = ['.implode(',', $thisProduct->reqMaterials).'];
+	selFactory.showProdRequirements(factoryDiv.reqBox.materials);
 
 	selFactory.productLabor = ['.implode(',', $productSkillList).'];
 	selFactory.showReqLabor(factoryDiv.laborSection.required);

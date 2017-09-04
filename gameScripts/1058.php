@@ -80,8 +80,14 @@ if (flock($laborPoolFile, LOCK_EX)) {
 	flock($laborPoolFile, LOCK_UN);
 }
 
-$productionRate = $thisFactory->setProdRate();
-$thisFactory->save('prodRate', $productionRate);
+$productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
+for ($i=0; $i<$productionSpots; $i++) {
+	$productionRate = $thisFactory->setProdRate($i);
+	$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
+	$thisFactory->productionQuality[$i+1]] = $productionRate[1];
+}
+
+$thisFactory->saveProductionRates();
 
 function addLaborToPool($laborItem, $laborPoolFile, $laborSlotFile) {
 	$useSpot = 0;

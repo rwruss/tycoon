@@ -264,14 +264,14 @@ class factory extends object {
 		console.log(this.productSkills);
 		trg.innerHTML = this.productSkills;
 	}
-
+	
 	showReqLabor(trg) {
 		trg.innerHTML = "";
 		for (var i=0; i<this.productLabor.length; i++) {
 			if (this.productLabor[i]>0) laborArray[this.productLabor[i]].renderSimple(trg);
 		}
 	}
-
+	
 	showInventory(trg) {
 		trg.innerHTML = "";
 		textBlob("", trg, "Current resource stores:");

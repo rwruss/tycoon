@@ -77,6 +77,7 @@ if (flock($objFile, LOCK_EX)) {
 
 	// Set default parameters for this factory
 	$now = time();
+	$newObj->set('groupType', $templateDat[6]);
 	$newObj->set('factoryLevel', 0);
 	$newObj->set('factoryStatus', 0);
 	$newObj->set('constStatus', $newProjID);

@@ -217,7 +217,7 @@ while (($line = fgets($productFile)) !== false) {
 	$productArray[12] = $productTypes[trim($lineItems[63])]; // product type
 	$productArray[13] = $lineItems[43];  // unit weight
 	$productArray[14] = $lineItems[44]; // unit volume
-	$productArray[15] = $lineItems[65]; // unit volume
+	$productArray[15] = $lineItems[65]; // product group
 
 	for ($i=0; $i<10; $i++) {
 		$productArray[18+$i] = $productList[$lineItems[1+$i]]; // material requirements
@@ -301,8 +301,9 @@ while (($line = fgets($factoryFile)) !== false) {
   //$factoryBitScreens[$lineItems[0]] = [0,0,0,0,0];
   $factoryObj = array_fill(1, 250, 0);
   // set object type and subtype
-  $factoryObj[3] = $lineItems[12]; // factory class / group type
+  
   $factoryObj[4] = 7; // factory template type
+  $factoryObj[6] = $lineItems[12]; // factory class / group type
   $factoryObj[8] = $lineItems[6]; // Cost to build initial factory
   $factoryObj[9] = $count; // factory type
 

@@ -11,10 +11,6 @@ $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b'); // r+b
 $thisFactory = loadObject($postVals[1], $objFile, 1600);
 $thisFactory->updateStocks($offerDatFile);
 
-//print_r($thisFactory->objDat);
-//print_r($thisFactory->resourceInv());
-//print_r($thisFactory->resourceStores);
-
 // Confrim that player can give this order
 if ($thisFactory->get('owner') != $pGameID) {
 	exit("error 8201-1");
@@ -30,12 +26,19 @@ $thisProduct = loadProduct($postVals[2], $objFile, 400);
 
 // Calculate the amount of product to be produced
 $durations = [0, 3600, 7200, 14400, 28800];
-$production = intval($thisFactory->get('prodRate')*$durations[$postVals[2]]/360000); // 3600 seconds x 100 for decimal factor in production rate
-//echo 'Prod rate is '.$thisFactory->get('prodRate');
-if ($thisFactory->get('prodRate') <= 0) exit('Can\'t product anything right now');
+
+$productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
+$totalRate = 0;
+$production = array_fill(0,5,0);
+for ($i=0; $i<$productionSpots; $i++) {
+	$totalRate += $thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i];
+	$production[$i] = intval($thisFactory->objDat[$thisFactory->currentProductionRateOffset]*$durations[$postVals[2]]/360000); // 3600 seconds x 100 for decimal factor in production rate
+}
+if ($totalRate <= 0) exit('Can\'t product anything right now');
 // <-- Verify that there are enough required resources
+
 // load production requirements
-fseek($thisFactory->linkFile, $thisFactory->get('currentProd')*1000);
+fseek($thisFactory->linkFile, $thisFactory->currentProductionOffset*1000);
 $productInfo = unpack('i*', fread($thisFactory->linkFile, 200));
 
 // Sort material requirements into the storage index for the factory
@@ -108,17 +111,20 @@ foreach ($usageList as $spot => $qtyUsed) {
 $laborCost = 0;
 $qualityPoints = 0;
 $totalQualWeight = 1;
-for ($i=0; $i<7; $i++) {
+for ($i=0; $i<10; $i++) {
+	/*
 	//echo 'Labor Cost: '.$thisFactory->objDat[$thisFactory->laborOffset+$i*10+5].' * '.$durations[$postVals[2]].' / 3600 ('.($thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations[$postVals[2]]/3600).')<br>';
 	$laborCost += $thisFactory->objDat[$thisFactory->laborOffset+$i*10+5]*$durations[$postVals[2]]/3600;
 
 	$talentStats = unpack("C*", pack("i", $thisFactory->objDat[$thisFactory->laborOffset+$i*10+9]));
 	$qualityPoints += (1+($talentStats[1]-50)/100) * (1 + ($talentStats[2]-50)/200)*$talentStats[4];
-	$totalQualWeight += $talentStats[4];
+	$totalQualWeight += $talentStats[4];*/
+	$laborCost += $thisFactory->laborItems[$i]->laborDat[1]*$durations[$postVals[2]]/3600;
 }
 
 // Caluclate the quality adjustment
-$qualityMod = $qualityPoints/$totalQualWeight;
+//$qualityMod = $qualityPoints/$totalQualWeight;
+$qualityMod = 1.0;
 
 // caluclate the pollution added to the product
 $productPollution += $durations[$postVals[2]]/86400 * $thisFactory->get('polPerDay');
@@ -140,29 +146,21 @@ $thisFactory->set('prodLaborCost', $laborCost);
 
 $thisFactory->saveAll($thisFactory->linkFile);
 
+/*
 if ($thisFactory->get('currentProd') > 0) {
 	$currentProduction = ', {setVal:'.$thisFactory->get('currentProd').'}';
 } else $currentProduction = '';
 
 $currentProduction = ', {setVal:'.$thisFactory->get('currentProd').'}';
-
-/*
-echo 'Make '.$production.' in '.$durations[$postVals[2]].' ('.$overRideDurs[$postVals[2]].') Seconds.
-<script>
-
-prodContain.innerHTML = "";
-fProduction = new factoryProduction('.$postVals[1].', '.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).', '.$thisFactory->get('currentProd').', '.$production.');
-fProductionBox = fProduction.render(prodContain);
-factoryProductionBox = prodList.SLsingleButton(fProductionBox'.$currentProduction.');
-updateMaterialInv('.$postVals[1].', ['.implode(',', $thisFactory->resourceInv()).']);
-</script>';
 */
 
 $returnArray = [];
 $returnArray[0] = $postVals[1];  // This factory ID
 $returnArray[1] = ($thisFactory->get('prodLength') + $thisFactory->get('prodStart'));  // Completion Time
-$returnArray[2] = $thisFactory->get('currentProd'); // Product ID
-$returnArray[3] = $production;  // Qty to be produced
+for ($i=0; $i<$productionSpots; $i++) {}
+	$returnArray[2+$i*2] = $thisFactory->objDat[$thisFactory->currentProductionOffset]; // Product ID
+	$returnArray[3+$i*2] = $production;  // Qty to be produced
+}
 
 echo implode(',', array_merge($returnArray, $thisFactory->resourceInv()));
 

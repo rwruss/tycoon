@@ -200,6 +200,7 @@ class factory extends object {
 		$this->contractsOffset = 220;
 
 		$this->laborOffset = 227;
+		$this->productionQualityOffset = 1384;
 		//$this->eqRateOffset = 164;
 
 		$this->attrList['factoryLevel'] = 1;
@@ -217,7 +218,6 @@ class factory extends object {
 		$this->attrList['prodQty'] = 17;
 		$this->attrList['upgradePrice'] = 18;
 
-		$this->attrList['currentProd'] = 164; // Product ID that is currently being produced
 		$this->attrList['initProdDuration'] = 20;
 		$this->attrList['prodRate'] = 21;
 		$this->attrList['region_1'] = 22;
@@ -237,6 +237,8 @@ class factory extends object {
 		$this->attrList['prodInv3'] = 49;
 		$this->attrList['prodInv4'] = 50;
 		$this->attrList['prodInv5'] = 51;
+		
+		$this->attrList['currentProd'] = 164; // Product ID that is currently being produced
 
 		$this->attrList['offer1'] = 231;
 		$this->attrList['offer2'] = 232;
@@ -291,6 +293,7 @@ class factory extends object {
 		$this->resourceStores = $this->resourceInv();
 
 		$this->loadLabor($dat);
+		$this->productionQuality = unpack('S*', substr($dat, 347, 12));
 		//echo 'LABOR ITEMS<p>';
 		//print_r($this->laborItems);
 	}
@@ -372,6 +375,17 @@ class factory extends object {
 		//print_r($this->laborItems);
 		$this->saveBlock($this->laborOffset*4, $str);
 	}
+	
+	function saveProductionRates() {
+		$prodStr = '';
+		$qualStr = '';
+		for ($i=0; $i<5; $i++) {
+			$prodStr .= pack('i', $this->objDat[$this->productionRateOffset+$i]);
+			$qualStr .= pack('S', $this->productionQuality[$i+1]);
+		}
+		$this->saveBlock($this->productionRateOffset*4, $prodStr);
+		$this->saveBlock($this->productionQualityOffset*4, $qualStr);
+	}
 
 	function setProdRate($productionSpot = 0) {
 		// calc total skills from labor force
@@ -419,8 +433,8 @@ class factory extends object {
 
 			$productionRate = floor($baseProduction * $totalPct*100);
 			echo '<br>Final production is '.$productionRate.' = '.$baseProduction.' * '.$totalPct;
-			return $productionRate;
-		} else return 0;
+			return [$productionRate, $totalPct];
+		} else return [0,0];
 	}
 
 	function resourceInv() {
@@ -499,10 +513,40 @@ class factory extends object {
 			if ($this->get('prodStart') + $this->get('prodLength') <= $now) {
 				// Production is complete
 				//echo 'Update completed production for '.$this->get('prodQty').' of item '.$this->get('currentProd');
+				
+				$totalProduction = $this->objDat[$this->currentProductionRateOffset] + $this->objDat[$this->currentProductionRateOffset+1] + $this->objDat[$this->currentProductionRateOffset+2] + $this->objDat[$this->currentProductionRateOffset+3] + $this->objDat[$this->currentProductionRateOffset+4];
+				$productionPct[0] = $this->objDat[$this->currentProductionRateOffset]/$totalProduction;
+				$productionPct[1] = $this->objDat[$this->currentProductionRateOffset+1]/$totalProduction;
+				$productionPct[2] = $this->objDat[$this->currentProductionRateOffset+2]/$totalProduction;
+				$productionPct[3] = $this->objDat[$this->currentProductionRateOffset+3]/$totalProduction;
+				$productionPct[4] = $this->objDat[$this->currentProductionRateOffset+4]/$totalProduction;
 
+				$skillMatrix = array_fill(0, 256, 0);
+				for ($i=0; $i<5; $i++ ){
+					if ($this->objDat[$this->currentProductionOffset) > 0) {
+						$this->objDat[$this->prodInv+$i] += $this->get('prodQty');
+						$this->objDat[$this->productStats+$i*5+0] += $this->get('prodQuality')*$productionPct[$i]; // product quality
+						$this->objDat[$this->productStats+$i*5+1] += $this->get('prodPollution')*$productionPct[$i]; // product Pollution
+						$this->objDat[$this->productStats+$i*5+2] += $this->get('prodRights')*$productionPct[$i]; // product Rights
+						$this->objDat[$this->productStats+$i*5+3] += $this->get('prodCost')*$productionPct[$i]; // product material cost
+						$this->objDat[$this->productStats+$i*5+4] += $this->get('prodLaborCost')*$productionPct[$i]; // product labor cost
+						
+						// load the product information
+						fseek($this->linkFile, $this->get('currentProd')*1000);
+						$thisProduct = new product($this->get('currentProd'), fread($this->linkFile, 1000), $this->linkFile);
+						
+						// create the matrix of learning for the product
+						echo 'ADD LEARNING TO LABOR';
+						for ($z=0; $z<20; $z++) {
+							$skillMatrix[$thisProduct->objDat[$thisProduct->skillOffset+$z]] += $thisProduct->objDat[$thisProduct->learnOffset+$z]*$productionPct[$i];
+						}
+					}
+				}
+				/*
 				//Find product index
 				for ($i=0; $i<5; $i++){
-					if ($this->templateDat[11+$i] == $this->get('currentProd')) {
+					//if ($this->templateDat[11+$i] == $this->get('currentProd')) {
+					if ($this->objDat[$this->currentProductionOffset + $i] == $this->get('currentProd')) {
 						$productIndex = $i;
 						break;
 					}
@@ -514,27 +558,23 @@ class factory extends object {
 				$this->objDat[$this->productStats+$productIndex*5+2] += $this->get('prodRights'); // product Rights
 				$this->objDat[$this->productStats+$productIndex*5+3] += $this->get('prodCost'); // product material cost
 				$this->objDat[$this->productStats+$productIndex*5+4] += $this->get('prodLaborCost'); // product labor cost
-
-				$this->set('prodStart', 0);
+				
+				
 
 				// Update labor experience
 				// load the product information
 				fseek($this->linkFile, $this->get('currentProd')*1000);
 				$thisProduct = new product($this->get('currentProd'), fread($this->linkFile, 1000), $this->linkFile);
 
-				/*
-				$this->itemBlockSize = 100;
-				$this->skillOffset = 38
-				$this->skillRateOffset = 58
-				$this->learnOffset = 78;
-				*/
+
 
 				// create the matrix of learning for the product
 				echo 'ADD LEARNING TO LABOR';
 				$skillMatrix = array_fill(0, 256, 0);
 				for ($i=0; $i<20; $i++) {
 					$skillMatrix[$thisProduct->objDat[$thisProduct->skillOffset+$i]] += $thisProduct->objDat[$thisProduct->learnOffset+$i];
-				}
+				}*/
+				$this->set('prodStart', 0);
 				// apply the matrix to each labor item working
 				for ($i=0; $i<10; $i++) {
 					echo '<p>Labor item '.$i.'<br>';

@@ -62,11 +62,20 @@ if ($thisObj->get('groupType') == 2) {
 
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 $thisObj->updateStocks($offerDatFile);
-if ($thisObj->get('currentProd') > 0) {
-	$currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
-} else $currentProduction = '';
 
-$currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
+$productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
+//$currentProduction = [];
+$productionDat = [$postVals[1], ($thisObj->get('prodLength') + $thisObj->get('prodStart'))];
+for ($i=0; $i<$productionSpots; $i++) {
+	if ($thisObj-objDat[$thisObj->currentProductionOffset+$i] > 0) {
+		//$currentProduction[$i] = ', {setVal:'.$thisObj->get('currentProd').'}';
+		
+		$productionDat[] = $thisObj-objDat[$thisObj->currentProductionOffset+$i];
+		$productionDat[] = $thisObj-objDat[$thisObj->currentProductionRateOffset+$i];		
+	} //else $currentProduction[$i] = '';
+}
+
+//$currentProduction = ', {setVal:'.$thisObj->get('currentProd').'}';
 
 //echo 'Load production object '.$thisObj->get('currentProd');
 $productInfo = loadProduct($thisObj->get('currentProd'), $objFile, 400);
@@ -177,7 +186,7 @@ selFactory.factorySales = ['.implode(',', $saleDat).'];
 selFactory.factoryUpgradeProducts = [];
 selFactory.factoryUpgradeServies = [];
 //selFactory.productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).'];
-selFactory.currentProduction = ['.$postVals[1].','.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').'];
+selFactory.currentProduction = ['.implode(',', $productionDat).'];
 selFactory.productStores = ['.implode(',', $thisObj->productStores).'];
 selFactory.productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
 selFactory.productionOpts = ['.$productionOpts.'];
@@ -200,7 +209,7 @@ let selectedIndex = 0;
 tmpProdItems.push(new factoryProduction(0,0,0,0,0));
 for (let i=0; i<5; i++) {
 	if (selFactory.productionOpts[i] > 0) {
-		if (selFactory.productionOpts[i] != selFactory.currentProduction[2])	tmpProdItems.push(new factoryProduction('.$postVals[1].', 0, selFactory.productionOpts[i], 0,i+1)); //id, endTime, productID, qty, objID
+		if (selFactory.productionOpts[i] != selFactory.currentProduction[2]) tmpProdItems.push(new factoryProduction(selFactory.currentProduction[0], 0, selFactory.productionOpts[i], 0,i+1)); //id, endTime, productID, qty, objID
 		else {
 			tmpProdItems.push(new factoryProduction(selFactory.currentProduction[0], selFactory.currentProduction[1], selFactory.currentProduction[2], selFactory.currentProduction[3],i+1));
 			selectedIndex = i+1;
@@ -213,7 +222,7 @@ factoryDiv.infoSection = addDiv("", "stdFloatDiv", factoryDiv);
 textBlob("", factoryDiv.infoSection, "Location: City #'.$thisObj->get('region_3').'");
 factoryDiv.headSection = addDiv("", "stdFloatDiv", factoryDiv);
 factoryDiv.headSection.style.height = 250;
-factoryDiv.headSection.rate = textBlob("", factoryDiv.headSection, "Rate: '.($thisObj->get('prodRate')/100).'<br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
+factoryDiv.headSection.rate = textBlob("", factoryDiv.headSection, "Rate: " + selFactory.currentProduction[3] + " <br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
 contractsButton = newButton(factoryDiv.headSection, function () {
 	event.stopPropagation();
