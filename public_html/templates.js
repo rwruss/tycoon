@@ -2039,7 +2039,7 @@ locationSelect = function (trg, itemList, tier, offset=0) {
 								console.log(cityLists[0]);
 								console.log(cityLists[1]);
 								console.log(cityLists[2]);
-								renderCityDetail(newTarget.parentNode.cityDetail, cityLists[0].split(","), cityLists[1].split(","), cityLists[2].split(","));
+								//renderCityDetail(newTarget.parentNode.cityDetail, cityLists[0].split(","), cityLists[1].split(","), cityLists[2].split(","));
 							});
 
 							buildOptionList(newTarget.parentNode.buildingSelect, newTarget.parentNode.buildingDetail, factoryNames);
@@ -2151,18 +2151,7 @@ showContracts = function (dat, trg) {
 		let thisContract = new contract(dat.slice, i, i+108);
 		let contractItem = thisContract.render(trg);
 	}
-	/*
-	if (dat.length == 0) {
-		trg.innerHTML = "No open contracts";
-		return;
-	}
-	for (var i=0; i<dat.length; i+=27) {
-		let thisContract = new contract(dat.slice(i, i+27));
-		let contractItem = thisContract.render(trg);
-	}*/
 }
-
-
 
 contractCreateMenu = function (itemID, optionList = invList) {
 	console.log("factory " + itemID);
@@ -2225,7 +2214,7 @@ addFactory = function (dat) {
 }
 
 showFactoriesInProgress = function (trg) {
-	trg.innerHTML = "";
+	trg.innerHTML = "Factories in Progress";
 	for (var i=0; i<inProgressFactories.length; i++) {
 		inProgressFactories[i].render(trg);
 	}

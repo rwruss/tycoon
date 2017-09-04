@@ -46,8 +46,8 @@ if ($thisObj->get('factoryLevel') == 0) {
 if ($thisObj->get('constStatus') > 0) {
 	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
 }
-if ($) {
-	$productionOpts = implode(',', $thisObj->productStores);
+if ($thisObj->get('groupType') == 0) {
+	$productionOpts = implode(',', $thisObj->tempList);
 }
 if ($thisObj->get('groupType') == 2) {
 	$pgfFile = fopen($gamePath.'/productGroups.pgf', 'rb');
@@ -56,7 +56,7 @@ if ($thisObj->get('groupType') == 2) {
 	fseek($pgfFile, $headDat[0]);
 	$groupDat = unpack('i*', fread($pgfFile, $headDat[1]));
 	fclose($pgfFile);
-	
+
 	$productionOpts = implode(',', $groupDat);
 }
 
@@ -177,7 +177,7 @@ selFactory.factorySales = ['.implode(',', $saleDat).'];
 selFactory.factoryUpgradeProducts = [];
 selFactory.factoryUpgradeServies = [];
 //selFactory.productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).'];
-selFactory.currentProduction = ['.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').'];
+selFactory.currentProduction = ['.$postVals[1].','.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.$thisObj->get('currentProd').','.$thisObj->get('prodQty').'];
 selFactory.productStores = ['.implode(',', $thisObj->productStores).'];
 selFactory.productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
 selFactory.productionOpts = ['.$productionOpts.'];
@@ -235,9 +235,10 @@ sellButton = newButton(factoryDiv.headSection, function () {scrMod("1043,'.$post
 sellButton.innerHTML = "Sell Factory";
 
 sendButton = newButton(factoryDiv.headSection, function () {
+	console.log(factoryProductionBox)
 	let prodStr = "";
 	for (let i=0; i<factoryProductionBox.length; i++) {
-		prodStr = prodStr + ","+SLreadSelection(factoryProductionBox[i]);
+		prodStr = prodStr + SLreadSelection(factoryProductionBox[i]);
 	}
 	scrMod("1005,'.$postVals[1].',"+ prodStr);
 	});
@@ -285,7 +286,7 @@ console.log(prodList);
 console.log(selectedIndex);
 factoryProductionBox = [];
 for (let i=0; i<selFactory.productionSpots; i++) {
-	factoryProductionBox = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:selectedIndex});
+	factoryProductionBox[i] = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:selectedIndex});
 }
 
 upgradeButton = newButton(factoryDiv.headSection, function () {

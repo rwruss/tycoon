@@ -190,7 +190,7 @@ for ($i=0; $i<10; $i++) {
 while (($line = fgets($productFile)) !== false) {
 
 	$lineItems = explode(',', $line);
-	
+
 	print_R($lineItems);
 	$productReqs[trim($lineItems[0])][0] = $productList[$lineItems[1]];
 	$productReqs[trim($lineItems[0])][1] = $productList[$lineItems[2]];
@@ -236,9 +236,9 @@ while (($line = fgets($productFile)) !== false) {
 			echo $lineItems[21+$i].'<br>';
 		}
 	}
-	
+
 	$productGroups[$lineItems[65]] = $count;
-	
+
 	//print_r($productArray);
 	$packedProducts = packArray($productArray);
 	fseek($objFile, $count*$dataBlockSize);
@@ -252,10 +252,10 @@ $prodGroupFile = fopen('../scenarios/'.$scenario.'/productGroups.pgf', 'wb');
 $pgfLength = 0;
 $pgfHeadSize = 80;
 for ($i=0; $i<10; $i++) {
-	$headDat = pack('i*', $pgfHeadSize+$pgfLength, sizeof($productGroups[$i]);
+	$headDat = pack('i*', $pgfHeadSize+$pgfLength, sizeof($productGroups[$i]));
 	fseek($prodGroupFile, $i*8);
 	fwrite($prodGroupFile, $headDat);
-	
+
 	fseek($prodGroupFile, $pgfHeadSize+$pgfLength);
 	fwrite($prodGroupFile, packArray($productGroups[$i]));
 	$pgfLength += sizeof($productGroups[$i]);

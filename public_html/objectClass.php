@@ -223,13 +223,13 @@ class factory extends object {
 		$this->attrList['region_1'] = 22;
 		$this->attrList['region_2'] = 23;
 		$this->attrList['industry'] = 24;
-		
+
 		$this->attrList['prodQuality'] = 25;
 		$this->attrList['prodPollution'] = 26;
 		$this->attrList['prodRights'] = 27;
 		$this->attrList['prodCost'] = 28;
 		$this->attrList['prodLaborCost'] = 29;
-		
+
 		$this->attrList['groupType'] = 30;
 
 		$this->attrList['prodInv1'] = 47;
@@ -259,7 +259,7 @@ class factory extends object {
 		fseek($file, $this->objDat[9]*$templateBlockSize);
 		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
 		//print_r($this->templateDat);
-		
+
 		if ($this->get('subType') == 0) {
 			$this->tempList['prod1'] = $this->templateDat[11];
 			$this->tempList['prod2'] = $this->templateDat[12];
@@ -273,13 +273,13 @@ class factory extends object {
 			$this->productStores[] = $this->objDat[50];
 			$this->productStores[] = $this->objDat[51];
 		} else {
-			
+
 			// A mine or farm
 			$this->tempList['prod1'] = $this->objDat[$this->currentProductionOffset+0];
 			$this->tempList['prod2'] = $this->objDat[$this->currentProductionOffset+1];
 			$this->tempList['prod3'] = $this->objDat[$this->currentProductionOffset+2];
 			$this->tempList['prod4'] = $this->objDat[$this->currentProductionOffset+3];
-			$this->tempList['prod5'] = $this->objDat[$this->currentProductionOffset+4];			
+			$this->tempList['prod5'] = $this->objDat[$this->currentProductionOffset+4];
 
 			$this->productStores[] = $this->objDat[47];
 			$this->productStores[] = $this->objDat[48];
@@ -373,7 +373,7 @@ class factory extends object {
 		$this->saveBlock($this->laborOffset*4, $str);
 	}
 
-	function setProdRate($productionSpot = 0;) {
+	function setProdRate($productionSpot = 0) {
 		// calc total skills from labor force
 		$skillLevels = array_fill(0, 256, 0);
 		$skillModifiers = array_fill(0, 256, 0);
@@ -390,7 +390,8 @@ class factory extends object {
 		}
 
 		// load the product information
-		$prodDat = loadProduct($this->objDat[$this->currentProductionOffset+$i], $this->linkFile);
+		$prodDat = loadProduct($this->objDat[$this->currentProductionOffset+$productionSpot], $this->linkFile);
+		//echo 'Checkt product '.$this->objDat[$this->currentProductionOffset+$productionSpot];
 		//print_r($prodDat);
 		$totalProdSkill = 0;
 		$skillsRequired = 0;
@@ -456,6 +457,7 @@ class factory extends object {
 	}
 
 	function updateStocks($orderDatFile) {
+		echo 'update stocks';
 		$now = time();
 		$saveFactory = false;
 
