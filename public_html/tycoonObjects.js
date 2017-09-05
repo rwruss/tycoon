@@ -214,6 +214,13 @@ class factory extends object {
 		}
 	}
 
+	showProduction(trg) {
+		trg.innerHTML = this.currentProduction;
+		for (let i=2; i<this.currentProduction.length; i+=2) {
+			productArray[this.currentProduction[i]].renderDtls(trg, 0, 0, 0, 0, 0); //(target, qty, mCost, lCost, qual, pol)
+		}
+	}
+
 	showOutputs(trg) {
 		trg.innerHTML = "";
 		console.log(this.productStores);
@@ -224,6 +231,10 @@ class factory extends object {
 				productArray[this.prod[i]].renderDtls(trg, this.productStores[5+i], this.prodDtls[i*5+4], this.prodDtls[i*5+3], 0, 0);
 			}
 		}
+	}
+
+	productionOptions() {
+		console.log("factory production options");
 	}
 
 	prodLaborSkills(productID, trg) {
@@ -264,14 +275,14 @@ class factory extends object {
 		console.log(this.productSkills);
 		trg.innerHTML = this.productSkills;
 	}
-	
+
 	showReqLabor(trg) {
 		trg.innerHTML = "";
 		for (var i=0; i<this.productLabor.length; i++) {
 			if (this.productLabor[i]>0) laborArray[this.productLabor[i]].renderSimple(trg);
 		}
 	}
-	
+
 	showInventory(trg) {
 		trg.innerHTML = "";
 		textBlob("", trg, "Current resource stores:");

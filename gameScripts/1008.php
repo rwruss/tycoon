@@ -90,6 +90,7 @@ if (flock($objFile, LOCK_EX)) {
 	$newObj->set('region_3', $cityLoc);
 	$newObj->set('region_2', 0);
 	$newObj->set('region_1', 0);
+	$newObj->objDat[130] = 1;
 	$newObj->saveAll($objFile);
 
 	$testDat = unpack('i*', fread($slotFile, 40));

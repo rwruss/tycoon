@@ -74,10 +74,10 @@ for ($i=0; $i<$productionSpots; $i++) {
 		// set production items and production rates
 		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $optionList[$productIndex];
 		$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
-		
+
 		// set quality rates for each item
 		$thisFactory->productionQuality[$i+1] = $productionRate[1];
-		
+
 		$currentProductionList[$i] = $thisFactory->objDat[$thisFactory->currentProductionOffset+$i];
 		$productSkillList = array_merge($productSkillList, $thisProduct->reqLabor);
 		$productMatList = array_merge($productMatList, $thisProduct->reqMaterials);
@@ -85,7 +85,7 @@ for ($i=0; $i<$productionSpots; $i++) {
 		// set production items and production rates
 		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = 0;
 		$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = 0;
-		
+
 		// set quality rates for each item
 		$thisFactory->productionQuality[$i+1] = $productionRate[1];
 	}
@@ -108,7 +108,7 @@ echo 'Current prod is '.implode(',', $currentProductionList).'<p>';
 	selFactory.productLabor = ['.implode(',', $productSkillList).'];
 	selFactory.showReqLabor(factoryDiv.laborSection.required);
 
-	selFactory.setProdRate('.($productionRate/100).', factoryDiv.headSection.rate);
+	selFactory.setProdRate('.($productionRate[0]/100).', factoryDiv.headSection.rate);
 	</script>';
 
 ?>

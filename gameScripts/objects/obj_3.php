@@ -46,7 +46,7 @@ if ($thisObj->get('factoryLevel') == 0) {
 if ($thisObj->get('constStatus') > 0) {
 	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
 }
-if ($thisObj->get('groupType') == 0) {
+if ($thisObj->get('groupType') == 1) {
 	$productionOpts = implode(',', $thisObj->tempList);
 }
 if ($thisObj->get('groupType') == 2) {
@@ -60,18 +60,23 @@ if ($thisObj->get('groupType') == 2) {
 	$productionOpts = implode(',', $groupDat);
 }
 
+echo 'Production options are ';
+print_r($productionOpts);
+
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb');
 $thisObj->updateStocks($offerDatFile);
 
-$productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
+$productionSpots = $thisObj->objDat[$thisObj->productionSpotQty];
 //$currentProduction = [];
 $productionDat = [$postVals[1], ($thisObj->get('prodLength') + $thisObj->get('prodStart'))];
+echo 'PRODUCTIONSPOTS: '.$productionSpots;
 for ($i=0; $i<$productionSpots; $i++) {
-	if ($thisObj-objDat[$thisObj->currentProductionOffset+$i] > 0) {
+	echo 'Production spot '.$i.' is '.$thisObj->objDat[$thisObj->currentProductionOffset+$i];
+	if ($thisObj->objDat[$thisObj->currentProductionOffset+$i] > 0) {
 		//$currentProduction[$i] = ', {setVal:'.$thisObj->get('currentProd').'}';
-		
-		$productionDat[] = $thisObj-objDat[$thisObj->currentProductionOffset+$i];
-		$productionDat[] = $thisObj-objDat[$thisObj->currentProductionRateOffset+$i];		
+
+		$productionDat[] = $thisObj->objDat[$thisObj->currentProductionOffset+$i];
+		$productionDat[] = $thisObj->objDat[$thisObj->currentProductionRateOffset+$i];
 	} //else $currentProduction[$i] = '';
 }
 
@@ -208,6 +213,7 @@ let tmpProdItems = [];
 let selectedIndex = 0;
 tmpProdItems.push(new factoryProduction(0,0,0,0,0));
 for (let i=0; i<5; i++) {
+	console.log(selFactory.productionOpts[i])
 	if (selFactory.productionOpts[i] > 0) {
 		if (selFactory.productionOpts[i] != selFactory.currentProduction[2]) tmpProdItems.push(new factoryProduction(selFactory.currentProduction[0], 0, selFactory.productionOpts[i], 0,i+1)); //id, endTime, productID, qty, objID
 		else {
@@ -216,6 +222,7 @@ for (let i=0; i<5; i++) {
 		}
 	}
 }
+console.log("TEMP PROD ITEMS");
 console.log(tmpProdItems)
 prodList = new uList(tmpProdItems);
 factoryDiv.infoSection = addDiv("", "stdFloatDiv", factoryDiv);
@@ -289,14 +296,22 @@ startButton4 = newButton(factoryDiv.headSection, function () {
 });
 startButton4.innerHTML = "Work for - 8 hour";
 
-factoryDiv.prodContain = addDiv("", "orderContain", factoryDiv.headSection);
+factoryDiv.prodContain = addDiv("", "stdFloatDiv", factoryDiv.headSection);
 selFactory.production = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100, '.$thisObj->get('currentProd').');
+/*
 console.log(prodList);
 console.log(selectedIndex);
 factoryProductionBox = [];
 for (let i=0; i<selFactory.productionSpots; i++) {
 	factoryProductionBox[i] = prodList.SLsingleButton(factoryDiv.prodContain, {setVal:selectedIndex});
 }
+*/
+
+selFactory.showProduction(factoryDiv.prodContain);
+factoryDiv.prodContain.parentFactory = selFactory;
+factoryDiv.prodContain.addEventListener("click", function () {
+	this.parentFactory.productionOptions();
+})
 
 upgradeButton = newButton(factoryDiv.headSection, function () {
 	resourceQuery(factoryUpgradeProducts, factoryUpgradeServices, function () {
