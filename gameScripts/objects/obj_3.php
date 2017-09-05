@@ -69,6 +69,7 @@ $thisObj->updateStocks($offerDatFile);
 $productionSpots = $thisObj->objDat[$thisObj->productionSpotQty];
 //$currentProduction = [];
 $productionDat = [$postVals[1], ($thisObj->get('prodLength') + $thisObj->get('prodStart'))];
+$rateDat = [$postVals[1], ($thisObj->get('prodLength') + $thisObj->get('prodStart'))];
 echo 'PRODUCTIONSPOTS: '.$productionSpots;
 for ($i=0; $i<$productionSpots; $i++) {
 	echo 'Production spot '.$i.' is '.$thisObj->objDat[$thisObj->currentProductionOffset+$i];
@@ -76,7 +77,7 @@ for ($i=0; $i<$productionSpots; $i++) {
 		//$currentProduction[$i] = ', {setVal:'.$thisObj->get('currentProd').'}';
 
 		$productionDat[] = $thisObj->objDat[$thisObj->currentProductionOffset+$i];
-		$productionDat[] = $thisObj->objDat[$thisObj->currentProductionRateOffset+$i];
+		$rateDat[] = $thisObj->objDat[$thisObj->currentProductionRateOffset+$i];
 	} //else $currentProduction[$i] = '';
 }
 
@@ -192,6 +193,7 @@ selFactory.factoryUpgradeProducts = [];
 selFactory.factoryUpgradeServies = [];
 //selFactory.productStores = ['.implode(',', $thisObj->tempList).','.implode(',', $thisObj->productStores).'];
 selFactory.currentProduction = ['.implode(',', $productionDat).'];
+selFactory.currentRates = ['.implode(',', $rateDat).'];
 selFactory.productStores = ['.implode(',', $thisObj->productStores).'];
 selFactory.productMaterial = ['.implode(',', $productInfo->reqMaterials).'];
 selFactory.productionOpts = ['.$productionOpts.'];
