@@ -247,7 +247,8 @@ class factory extends object {
 		let selectedArray = [];
 		let optionsArray = [];
 		for (let i=2; i<this.currentProduction.length; i++) {
-			selectedArray.push(productArray[this.currentProduction[i]].renderSummary(null));
+			//selectedArray.push(productArray[this.currentProduction[i]].renderSummary(null));
+			selectedArray.push(this.productionOpts.indexOf(this.currentProduction[i]));
 		}
 
 		for (let i=0; i<this.productionOpts.lenth; i++) {

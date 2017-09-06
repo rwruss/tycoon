@@ -446,6 +446,9 @@ class SLoptionSelect {
 		this.optionItems = selectList;
 		this.selectTarget = selectTrg;
 		this.optionTarget = optionTrg;
+		this.optionStatus = new Array();
+		
+		this.optionStatus.fill(0, 0, this.optionItems.length);
 
 		console.log(this.selectedItems);
 		console.log(this.optionItems);
@@ -454,25 +457,26 @@ class SLoptionSelect {
 	}
 
 	init() {
-		console.log(this.selectedItems);
 		for (let i=0; i<this.selectedItems.length; i++) {
-			this.selectedItems[i].selectClass = this;
-			this.selectedItems[i].addEventListener("click", function () {
-				this.selectClass.moveItem();
-			});
+			this.optionStatus[this.selectedItems[i]] = 1;
 		}
-
+		
 		for (let i=0; i<this.optionItems.length; i++) {
 			this.optionItems[i].selectClass = this;
+			this.optionItems[i].objCount = i;
 			this.optionItems[i].addEventListener("click", function () {
-				this.selectClass.moveItem(this);
+				this.selectClass.moveItem(this.objCount);
 			});
+			
+			if (this.optionStatus[i] == 1)	{
+				this.selectTarget.appendChild(this.optionItems[i]);
+			} else this.optionItems.appendChild(this.optionItems[i]);
 		}
-
+		
 		this.showItems();
 	}
 
-	moveItem(x) {
+	moveItem(itemNum) {
 		console.log("hello!");
 		console.log(x);
 		console.log(this.selectedItems.indexOf(x));
@@ -481,6 +485,16 @@ class SLoptionSelect {
 		console.log(this.optionItems.length);
 		console.log(this.selectedItems);
 		console.log(this.optionItems);
+		
+		if (this.optionStatus[itemNum] == 1) {
+			// move back in to options
+			this.optionStatus[itemNum] = 0;
+			this.optionTarget.appendChild(this.optionItems[itemNum]);
+		} else {
+			// move in to selected
+			this.optionStatus[itemNum] = 1;
+			this.selectTarget.appendChild(this.optionItems[itemNum]);
+		}
 	}
 
 	showItems() {
