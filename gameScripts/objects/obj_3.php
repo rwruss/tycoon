@@ -311,7 +311,8 @@ for (let i=0; i<selFactory.productionSpots; i++) {
 
 selFactory.showProduction(factoryDiv.prodContain);
 factoryDiv.prodContain.parentFactory = selFactory;
-factoryDiv.prodContain.addEventListener("click", function () {
+factoryDiv.prodContain.addEventListener("click", function (e) {
+	e.stopPropagation();
 	this.parentFactory.productionOptions();
 })
 

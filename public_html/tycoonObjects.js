@@ -237,35 +237,26 @@ class factory extends object {
 		console.log("factory production options");
 		//selFactory.currentProduction;
 		//selFactory.productionOpts;
-		thisDiv = useDeskTop.newPane("productionOptions");
+		let thisDiv = useDeskTop.newPane("productionOptions");
+		thisDiv.innerHTML = "production options";
 		thisDiv.currentProd = addDiv("", "stdFloatDiv", thisDiv);
 		thisDiv.availableProd = addDiv("", "stdFloatDiv", thisDiv);
-		
-		for (let i=3; i<this.currentProd.length, i++) {
-			productArray[this.currentProduction[i].renderSummary(thisDiv.currentProd);
+
+		console.log(this.currentProduction);
+		console.log(this.productionOpts);
+		let selectedArray = [];
+		let optionsArray = [];
+		for (let i=2; i<this.currentProduction.length; i++) {
+			selectedArray.push(productArray[this.currentProduction[i]].renderSummary(null));
 		}
-		
+
 		for (let i=0; i<this.productionOpts.lenth; i++) {
 			if (this.currentProduction.indexOf(this.productionOpts[i]) == -1) {
-				let prodOpt = productArray[this.productionOpts[i].renderSummary(thisDiv.currentProd);
-				prodOpt.factory = this;
-				prodOpt.prodID = this.productionOpts[i];
-				prodOpt.addEventListener("click", function () {
-					let openSpot = this.factory.tmpProduction.indexOf(0));
-					if (this.factory.tmpProduction.indexOf(this.prodID)) == -1 && openSpot > -1) {
-						this.parentNode.currentProd.appendChild(this);
-						
-						this.factory.tmpProdution[openSpot] = this.prodID;
-					else {
-						let prodSpot = this.factory.productionOpts.indexOf(this.prodID);
-						let trg = this.parentNode.availableProd;
-						trg.insertBefore(trg.childNodes[prodSpot], this);
-						
-						let oldSpot = this.factory.tmpProduction.indexOf(this.prodID);
-						this.factory.tmpProduction[oldSpot]	= 0;
-				})
+				optionsArray.push(productArray[this.productionOpts[i]].renderSummary(null));
 			}
 		}
+		console.log("done");
+		this.prodSelect = new SLoptionSelect(selectedArray, optionsArray, thisDiv.currentProd, thisDiv.availableProd); //selectList, optionList, selectTrg, optionTrg
 	}
 
 	prodLaborSkills(productID, trg) {

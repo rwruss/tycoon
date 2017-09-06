@@ -438,3 +438,58 @@ SLFilterBy = function(listObj, prop, val) {
 	}
 	listObj.listItems = showList;
 }
+
+class SLoptionSelect {
+	constructor(selectList, optionList, selectTrg, optionTrg) {
+		console.log(selectList);
+		this.selectedItems = selectList;
+		this.optionItems = selectList;
+		this.selectTarget = selectTrg;
+		this.optionTarget = optionTrg;
+
+		console.log(this.selectedItems);
+		console.log(this.optionItems);
+
+		this.init();
+	}
+
+	init() {
+		console.log(this.selectedItems);
+		for (let i=0; i<this.selectedItems.length; i++) {
+			this.selectedItems[i].selectClass = this;
+			this.selectedItems[i].addEventListener("click", function () {
+				this.selectClass.moveItem();
+			});
+		}
+
+		for (let i=0; i<this.optionItems.length; i++) {
+			this.optionItems[i].selectClass = this;
+			this.optionItems[i].addEventListener("click", function () {
+				this.selectClass.moveItem(this);
+			});
+		}
+
+		this.showItems();
+	}
+
+	moveItem(x) {
+		console.log("hello!");
+		console.log(x);
+		console.log(this.selectedItems.indexOf(x));
+		console.log(this.optionItems.indexOf(x));
+		console.log(this.selectedItems.length);
+		console.log(this.optionItems.length);
+		console.log(this.selectedItems);
+		console.log(this.optionItems);
+	}
+
+	showItems() {
+		for (let i=0; i<this.selectedItems.length; i++) {
+			this.selectTarget.appendChild(this.selectedItems[i]);
+		}
+
+		for (let i=0; i<this.optionItems.length; i++) {
+			this.optionTarget.appendChild(this.optionItems[i]);
+		}
+	}
+}

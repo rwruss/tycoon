@@ -2504,3 +2504,12 @@ taxTable = function (rates, trg) {
 	total = rates[5]/100 + rates[15]/100 + rates[25]/100;
 	taxTable.rows[6].cells[4].innerHTML = total.toFixed(2);
 }
+
+objectSelection = function (selectList, optionList, selectTrg, optionTrg) {
+	for (let i=0; i<selectList.length; i++) {
+		selectTrg.appendChild(selectList[i]);
+	}
+	for (let i=0; i<optionList.length; i++) {
+		optionTrg.appendChild(optionList[i]);
+	}
+}
