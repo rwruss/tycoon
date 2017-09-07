@@ -249,6 +249,14 @@ class factory extends object {
 		thisDiv.submitButton.parentObj = this;
 		thisDiv.submitButton.addEventListener("click", function () {
 			console.log(this.parentObj.prodSelect.getSelection());
+			getASync().then(v => {
+				let r=v.split(",");
+				if (r[0] > -1) {
+					this.currentProduction = [r.slice(r[1])];
+					this.currentRates = ['.implode(',', $rateDat).'];
+				}
+			})
+			scrMod("1005,'.$postVals[1].',"+ prodStr);
 		});
 
 

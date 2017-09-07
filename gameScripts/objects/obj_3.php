@@ -210,7 +210,7 @@ inventoryItems = [];
 for (i=0; i<selFactory.materialInv.length; i+=2) {
 	inventoryItems.push(new product({objID:selFactory.materialInv[i]}));
 }
-
+/*
 let tmpProdItems = [];
 let selectedIndex = 0;
 tmpProdItems.push(new factoryProduction(0,0,0,0,0));
@@ -227,6 +227,7 @@ for (let i=0; i<5; i++) {
 console.log("TEMP PROD ITEMS");
 console.log(tmpProdItems)
 prodList = new uList(tmpProdItems);
+*/
 factoryDiv.infoSection = addDiv("", "stdFloatDiv", factoryDiv);
 textBlob("", factoryDiv.infoSection, "Location: City #'.$thisObj->get('region_3').'");
 factoryDiv.headSection = addDiv("", "stdFloatDiv", factoryDiv);
