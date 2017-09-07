@@ -440,70 +440,81 @@ SLFilterBy = function(listObj, prop, val) {
 }
 
 class SLoptionSelect {
-	constructor(selectList, optionList, selectTrg, optionTrg) {
-		console.log(selectList);
+	constructor(selectList, optionList, selectTrg, optionTrg, maxSelected) {
 		this.selectedItems = selectList;
-		this.optionItems = selectList;
+		this.optionItems = optionList;
 		this.selectTarget = selectTrg;
 		this.optionTarget = optionTrg;
 		this.optionStatus = new Array();
-		
+		this.maxSelected = maxSelected;
+		this.selectedQty = selectList.length;
+
 		this.optionStatus.fill(0, 0, this.optionItems.length);
 
-		console.log(this.selectedItems);
-		console.log(this.optionItems);
-
 		this.init();
+		console.log(this.selectedItems)
+
+		return this;
 	}
 
 	init() {
 		for (let i=0; i<this.selectedItems.length; i++) {
-			this.optionStatus[this.selectedItems[i]] = 1;
+			if (this.selectedItems[i] > 0) this.optionStatus[this.selectedItems[i]] = 1;
 		}
-		
+
 		for (let i=0; i<this.optionItems.length; i++) {
 			this.optionItems[i].selectClass = this;
 			this.optionItems[i].objCount = i;
 			this.optionItems[i].addEventListener("click", function () {
 				this.selectClass.moveItem(this.objCount);
 			});
-			
+
 			if (this.optionStatus[i] == 1)	{
 				this.selectTarget.appendChild(this.optionItems[i]);
-			} else this.optionItems.appendChild(this.optionItems[i]);
+			} else this.optionTarget.appendChild(this.optionItems[i]);
 		}
-		
+
 		this.showItems();
 	}
 
 	moveItem(itemNum) {
-		console.log("hello!");
-		console.log(x);
-		console.log(this.selectedItems.indexOf(x));
-		console.log(this.optionItems.indexOf(x));
-		console.log(this.selectedItems.length);
-		console.log(this.optionItems.length);
-		console.log(this.selectedItems);
-		console.log(this.optionItems);
-		
+
 		if (this.optionStatus[itemNum] == 1) {
 			// move back in to options
 			this.optionStatus[itemNum] = 0;
 			this.optionTarget.appendChild(this.optionItems[itemNum]);
+			this.selectedQty--;
 		} else {
-			// move in to selected
-			this.optionStatus[itemNum] = 1;
-			this.selectTarget.appendChild(this.optionItems[itemNum]);
+			if (this.selectedQty <= this.maxSelected) {
+					// move in to selected
+					this.optionStatus[itemNum] = 1;
+					this.selectTarget.appendChild(this.optionItems[itemNum]);
+					this.selectedQty++;
+				}
 		}
 	}
 
 	showItems() {
-		for (let i=0; i<this.selectedItems.length; i++) {
-			this.selectTarget.appendChild(this.selectedItems[i]);
-		}
 
 		for (let i=0; i<this.optionItems.length; i++) {
-			this.optionTarget.appendChild(this.optionItems[i]);
+			if (this.optionStatus[i] == 1) {
+				// move back in to options
+				//this.optionStatus[i] = 0;
+				this.selectTarget.appendChild(this.optionItems[i]);
+			} else {
+				// move in to selected
+				//this.optionStatus[itemNum] = 1;
+				this.optionTarget.appendChild(this.optionItems[i]);
+			}
 		}
+	}
+
+	getSelection() {
+		console.log(this.optionStatus);
+		let tmpA = [];
+		for (let i=0; i<this.optionStatus.length; i++) {
+			if (this.optionStatus[i] == 1) tmpA.push(i);
+		}
+		return tmpA;
 	}
 }

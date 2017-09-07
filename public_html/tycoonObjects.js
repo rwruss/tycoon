@@ -242,22 +242,48 @@ class factory extends object {
 		thisDiv.currentProd = addDiv("", "stdFloatDiv", thisDiv);
 		thisDiv.availableProd = addDiv("", "stdFloatDiv", thisDiv);
 
-		console.log(this.currentProduction);
-		console.log(this.productionOpts);
-		let selectedArray = [];
+		thisDiv.currentProd.innerHTML = "current";
+		thisDiv.availableProd.innerHTML = "options";
+
+		thisDiv.submitButton = newButton(thisDiv);
+		thisDiv.submitButton.parentObj = this;
+		thisDiv.submitButton.addEventListener("click", function () {
+			console.log(this.parentObj.prodSelect.getSelection());
+		});
+
+
+		let selectedArray = new Array();
 		let optionsArray = [];
+		//selectedArray.fill(-1, 0, 5);
+		console.log(selectedArray);
 		for (let i=2; i<this.currentProduction.length; i++) {
 			//selectedArray.push(productArray[this.currentProduction[i]].renderSummary(null));
 			selectedArray.push(this.productionOpts.indexOf(this.currentProduction[i]));
+			//selectedArray[i-2] = this.currentProduction[i];
 		}
 
-		for (let i=0; i<this.productionOpts.lenth; i++) {
+		for (let i=0; i<this.productionOpts.length; i++) {
+			/*
 			if (this.currentProduction.indexOf(this.productionOpts[i]) == -1) {
-				optionsArray.push(productArray[this.productionOpts[i]].renderSummary(null));
+				let tmpItem = productArray[this.productionOpts[i]].renderSummary(null);
+				optionsArray.push(tmpItem);
+			}*/
+			if (this.productionOpts[i] > 0) {
+
+				let tmpItem = productArray[this.productionOpts[i]].renderSummary(null);
+				optionsArray.push(tmpItem);
 			}
 		}
-		console.log("done");
-		this.prodSelect = new SLoptionSelect(selectedArray, optionsArray, thisDiv.currentProd, thisDiv.availableProd); //selectList, optionList, selectTrg, optionTrg
+
+		//add options for testing
+		for (let i=5; i<15; i++) {
+			let tmpItem = productArray[i].renderSummary(null);
+			optionsArray.push(tmpItem);
+		}
+		
+		console.log(selectedArray);
+
+		this.prodSelect = new SLoptionSelect(selectedArray, optionsArray, thisDiv.currentProd, thisDiv.availableProd, 5); //selectList, optionList, selectTrg, optionTrg
 	}
 
 	prodLaborSkills(productID, trg) {
