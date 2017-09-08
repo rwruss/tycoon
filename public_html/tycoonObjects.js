@@ -249,14 +249,15 @@ class factory extends object {
 		thisDiv.submitButton.parentObj = this;
 		thisDiv.submitButton.addEventListener("click", function () {
 			console.log(this.parentObj.prodSelect.getSelection());
-			getASync().then(v => {
+			let sendStr = "1005,"+this.parentObj.objID+",";
+			getASync(sendStr + this.parentObj.prodSelect.getSelection().join(",")).then(v => {
 				let r=v.split(",");
 				if (r[0] > -1) {
 					this.currentProduction = [r.slice(r[1])];
 					this.currentRates = ['.implode(',', $rateDat).'];
 				}
 			})
-			scrMod("1005,'.$postVals[1].',"+ prodStr);
+			//scrMod("1005,'.$postVals[1].',"+ prodStr);
 		});
 
 
@@ -288,7 +289,7 @@ class factory extends object {
 			let tmpItem = productArray[i].renderSummary(null);
 			optionsArray.push(tmpItem);
 		}
-		
+
 		console.log(selectedArray);
 
 		this.prodSelect = new SLoptionSelect(selectedArray, optionsArray, thisDiv.currentProd, thisDiv.availableProd, 5); //selectList, optionList, selectTrg, optionTrg

@@ -23,14 +23,16 @@ if ($thisFactory->get('owner') != $pGameID) {
 }
 
 // determine how many production spots are available and get available production options
-if ($thisFactory->get('groupType') > 0) {
+
+if ($thisFactory->get('groupType') > 1) {
 	$productionSpots = $thisFactory->productionSpotQty;
 
 	$pgfFile = fopen($gamePath.'/productGroups.pgf', 'rb');
-	fseek($pgfFile, $thisObj->get('groupType')*8);
+	fseek($pgfFile, $thisFactory->get('groupType')*8);
 	$headDat = unpack('i*', fread($pgfFile, 8));
-	fseek($pgfFile, $headDat[0]);
-	$optionList = unpack('i*', fread($pgfFile, $headDat[1]));
+	print_r($headDat);
+	fseek($pgfFile, $headDat[1]);
+	$optionList = unpack('i*', fread($pgfFile, $headDat[2]));
 	fclose($pgfFile);
 } else {
 	$productionSpots = 1;
@@ -43,6 +45,7 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 	exit("error 5001-2");
 }
 
+echo '<p>Option list:';
 print_r($optionList);
 $productIndex = $postVals[3] - 1;
 
@@ -58,21 +61,25 @@ $thisFactory->updateStocks($offerDatFile);
 
 $productSkillList = [];
 $productMatList = [];
+$currentProductionList = [];
+$productionSpots = 5;
 for ($i=0; $i<$productionSpots; $i++) {
-	echo 'Set factory production';
+	$productIndex = $postVals[2+$i];
+	echo '<p>Set factory production item '.$i.' ('.$productIndex.')';
 	// Update current production
 	//if ($thisFactory->objDat[$thisFactory->currentProductionOffset+$i] > 1)	$thisFactory->updateStocks($offerDatFile);
 
 	// Set new item production
-	$productIndex = $postVals[3+2*$i] - 1;
-	if ($optionList[$productIndex] > 0) {
-		$thisProduct = loadProduct($optionList[$productIndex], $objFile, 400);
+
+	if (!in_array($productIndex, $optionList)) {echo "NOT AVAILABLE";}
+	else if ($productIndex > 0) {
+		$thisProduct = loadProduct($productIndex, $objFile, 400);
 		//$productionRate = $thisFactory->setProdRate($optionList[$productIndex], $thisProduct, $laborEqFile, $i);
 		$productionRate = $thisFactory->setProdRate($i);
 
-		echo 'Set production of item '.$optionList[$productIndex].' to '.$productionRate.'<p>';
+		echo 'Set production of item '.$productIndex.' to '.$productionRate[0].'<p>';
 		// set production items and production rates
-		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $optionList[$productIndex];
+		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $productIndex;
 		$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
 
 		// set quality rates for each item
