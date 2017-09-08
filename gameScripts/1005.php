@@ -47,13 +47,22 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 
 echo '<p>Option list:';
 print_r($optionList);
-$productIndex = $postVals[3] - 1;
 
-if ($productIndex < 0) exit ('error 5001-3');
+// verify that each of the products selected for production are available to be produced
+$optionFail = false; 
+for ($i=0; $i<$productionSpots; $i++) {
+	if (!in_array($productID, $optionList)) {
+		echo "NOT AVAILABLE";
+		$optionFail = true;
+		$failList[] = $i;
+		}
+}
 
+if ($optionFail) {
+	echo '-1,'.implode(',', $failList);
+}
 
-$thisProduct = loadProduct($optionList[$productIndex], $objFile, 400);
-//$productionRate = $thisFactory->setProdRate($optionList[$productIndex], $thisProduct, $laborEqFile);
+//$productionRate = $thisFactory->setProdRate($optionList[$productID], $thisProduct, $laborEqFile);
 
 // update the current production prior to changing anything
 //echo 'update factory stocks';
@@ -62,30 +71,32 @@ $thisFactory->updateStocks($offerDatFile);
 $productSkillList = [];
 $productMatList = [];
 $currentProductionList = [];
+$currentProductionRate = [];
 $productionSpots = 5;
 for ($i=0; $i<$productionSpots; $i++) {
-	$productIndex = $postVals[2+$i];
-	echo '<p>Set factory production item '.$i.' ('.$productIndex.')';
+	$productID = $postVals[2+$i];
+	echo '<p>Set factory production item '.$i.' ('.$productID.')';
 	// Update current production
 	//if ($thisFactory->objDat[$thisFactory->currentProductionOffset+$i] > 1)	$thisFactory->updateStocks($offerDatFile);
 
 	// Set new item production
 
-	if (!in_array($productIndex, $optionList)) {echo "NOT AVAILABLE";}
-	else if ($productIndex > 0) {
-		$thisProduct = loadProduct($productIndex, $objFile, 400);
-		//$productionRate = $thisFactory->setProdRate($optionList[$productIndex], $thisProduct, $laborEqFile, $i);
+	
+	if ($productID > 0) {
+		$thisProduct = loadProduct($productID, $objFile, 400);
+		//$productionRate = $thisFactory->setProdRate($optionList[$productID], $thisProduct, $laborEqFile, $i);
 		$productionRate = $thisFactory->setProdRate($i);
 
-		echo 'Set production of item '.$productIndex.' to '.$productionRate[0].'<p>';
+		echo 'Set production of item '.$productID.' to '.$productionRate[0].'<p>';
 		// set production items and production rates
-		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $productIndex;
+		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $productID;
 		$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
 
 		// set quality rates for each item
 		$thisFactory->productionQuality[$i+1] = $productionRate[1];
 
 		$currentProductionList[$i] = $thisFactory->objDat[$thisFactory->currentProductionOffset+$i];
+		$currentProductionRate[$i] = $productionRate[0];
 		$productSkillList = array_merge($productSkillList, $thisProduct->reqLabor);
 		$productMatList = array_merge($productMatList, $thisProduct->reqMaterials);
 	} else {
@@ -95,6 +106,9 @@ for ($i=0; $i<$productionSpots; $i++) {
 
 		// set quality rates for each item
 		$thisFactory->productionQuality[$i+1] = $productionRate[1];
+		
+		$currentProductionList[$i] = 0;
+		$currentProductionRate[$i] = 0;
 	}
 }
 
@@ -106,6 +120,9 @@ fclose($slotFile);
 fclose($offerDatFile);
 //fclose($laborEqFile);
 
+echo '1,'.implode(',', $currentProductionList).','.implode(',', $currentProductionRate);
+
+/*
 echo 'Current prod is '.implode(',', $currentProductionList).'<p>';
 
 	echo '<script>
@@ -117,5 +134,5 @@ echo 'Current prod is '.implode(',', $currentProductionList).'<p>';
 
 	selFactory.setProdRate('.($productionRate[0]/100).', factoryDiv.headSection.rate);
 	</script>';
-
+*/
 ?>

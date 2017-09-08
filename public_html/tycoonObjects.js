@@ -253,8 +253,8 @@ class factory extends object {
 			getASync(sendStr + this.parentObj.prodSelect.getSelection().join(",")).then(v => {
 				let r=v.split(",");
 				if (r[0] > -1) {
-					this.currentProduction = [r.slice(r[1])];
-					this.currentRates = ['.implode(',', $rateDat).'];
+					this.currentProduction = r.slice(1,6);
+					this.currentRates = r.slice(6,11);
 				}
 			})
 			//scrMod("1005,'.$postVals[1].',"+ prodStr);
