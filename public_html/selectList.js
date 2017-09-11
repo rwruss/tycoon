@@ -459,7 +459,7 @@ class SLoptionSelect {
 
 	init() {
 		for (let i=0; i<this.selectedItems.length; i++) {
-			if (this.selectedItems[i] > 0) this.optionStatus[this.selectedItems[i]] = 1;
+			this.optionStatus[this.selectedItems[i]] = 1;
 		}
 
 		for (let i=0; i<this.optionItems.length; i++) {

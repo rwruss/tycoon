@@ -76,7 +76,7 @@ class object {
 	function saveBlock($loc, $str) {
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc-4);
 		$checkVal = fwrite($this->linkFile, $str);
-		echo 'recoreded '.$checkVal.' of '.strlen($str).' at '.$loc;
+		//echo 'recoreded '.$checkVal.' of '.strlen($str).' at '.$loc;
 	}
 
 
@@ -260,9 +260,7 @@ class factory extends object {
 		global $templateBlockSize;
 		fseek($file, $this->objDat[9]*$templateBlockSize);
 		$this->templateDat = unpack('i*', fread($file, $templateBlockSize));
-		//print_r($this->templateDat);
 
-		echo 'Group type '.$this->get('groupType');
 		if ($this->get('groupType') == 1) {
 			$this->tempList['prod1'] = $this->templateDat[11];
 			$this->tempList['prod2'] = $this->templateDat[12];
@@ -472,7 +470,7 @@ class factory extends object {
 	}
 
 	function updateStocks($orderDatFile) {
-		echo 'update stocks';
+		//echo 'update stocks';
 		$now = time();
 		$saveFactory = false;
 

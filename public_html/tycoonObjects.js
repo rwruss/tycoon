@@ -250,11 +250,19 @@ class factory extends object {
 		thisDiv.submitButton.addEventListener("click", function () {
 			console.log(this.parentObj.prodSelect.getSelection());
 			let sendStr = "1005,"+this.parentObj.objID+",";
-			getASync(sendStr + this.parentObj.prodSelect.getSelection().join(",")).then(v => {
+			let tempR = this.parentObj.prodSelect.getSelection();
+			console.log(tempR);
+			let tmpA = new Array(5);
+			for (let i=0; i<tempR.length; i++) {
+				tmpA[i] = this.parentObj.productionOpts[tempR[i]];
+			}
+			tmpA.fill(0,tempR.length,6);
+
+			getASync(sendStr + tmpA.join(",")).then(v => {
 				let r=v.split(",");
 				if (r[0] > -1) {
-					this.currentProduction = r.slice(1,6);
-					this.currentRates = r.slice(6,11);
+					this.currentProduction = r.slice(1,8);
+					this.currentRates = r.slice(8,13);
 				}
 			})
 			//scrMod("1005,'.$postVals[1].',"+ prodStr);
@@ -263,14 +271,16 @@ class factory extends object {
 
 		let selectedArray = new Array();
 		let optionsArray = [];
-		//selectedArray.fill(-1, 0, 5);
-		console.log(selectedArray);
+
 		for (let i=2; i<this.currentProduction.length; i++) {
 			//selectedArray.push(productArray[this.currentProduction[i]].renderSummary(null));
+			//console.log(this.currentProduction[i]);
+			//console.log(this.productionOpts.indexOf(this.currentProduction[i]));
 			selectedArray.push(this.productionOpts.indexOf(this.currentProduction[i]));
 			//selectedArray[i-2] = this.currentProduction[i];
 		}
-
+		console.log(this.currentProduction);
+		console.log(selectedArray);
 		for (let i=0; i<this.productionOpts.length; i++) {
 			/*
 			if (this.currentProduction.indexOf(this.productionOpts[i]) == -1) {
@@ -283,14 +293,14 @@ class factory extends object {
 				optionsArray.push(tmpItem);
 			}
 		}
-
+		/*
 		//add options for testing
 		for (let i=5; i<15; i++) {
 			let tmpItem = productArray[i].renderSummary(null);
 			optionsArray.push(tmpItem);
 		}
-
-		console.log(selectedArray);
+		*/
+		console.log(this.productionOpts);
 
 		this.prodSelect = new SLoptionSelect(selectedArray, optionsArray, thisDiv.currentProd, thisDiv.availableProd, 5); //selectList, optionList, selectTrg, optionTrg
 	}

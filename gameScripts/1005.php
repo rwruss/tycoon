@@ -14,7 +14,7 @@ $objFile = fopen($gamePath.'/objects.dat', 'rb'); // r+b
 //$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb'); // rb
 $offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb'); //r+b
 
-echo 'load factory';
+//echo 'load factory';
 $thisFactory = loadObject($postVals[1], $objFile, 1400);
 
 // Confrim that player can give this order
@@ -45,21 +45,27 @@ if ($thisFactory->get('prodLength') + $thisFactory->get('prodStart') > $now) {
 	exit("error 5001-2");
 }
 
+/*
 echo '<p>Option list:';
 print_r($optionList);
+*/
 
 // verify that each of the products selected for production are available to be produced
-$optionFail = false; 
+$optionFail = false;
+$productionSpots = 5;
 for ($i=0; $i<$productionSpots; $i++) {
+	$productID = $postVals[2+$i];
 	if (!in_array($productID, $optionList)) {
-		echo "NOT AVAILABLE";
+		//echo "<br>ITEM '.$productID.' NOT AVAILABLE";
 		$optionFail = true;
-		$failList[] = $i;
-		}
+		$failList[] = $productID;
+	} else {
+		//echo "<br>ITEM '.$productID.' AVAILABLE";
+	}
 }
 
 if ($optionFail) {
-	echo '-1,'.implode(',', $failList);
+	exit('-1,'.implode(',', $failList));
 }
 
 //$productionRate = $thisFactory->setProdRate($optionList[$productID], $thisProduct, $laborEqFile);
@@ -75,19 +81,18 @@ $currentProductionRate = [];
 $productionSpots = 5;
 for ($i=0; $i<$productionSpots; $i++) {
 	$productID = $postVals[2+$i];
-	echo '<p>Set factory production item '.$i.' ('.$productID.')';
-	// Update current production
-	//if ($thisFactory->objDat[$thisFactory->currentProductionOffset+$i] > 1)	$thisFactory->updateStocks($offerDatFile);
+	//echo '<p>Set factory production item '.$i.' ('.$productID.')';
+
 
 	// Set new item production
 
-	
+
 	if ($productID > 0) {
 		$thisProduct = loadProduct($productID, $objFile, 400);
 		//$productionRate = $thisFactory->setProdRate($optionList[$productID], $thisProduct, $laborEqFile, $i);
 		$productionRate = $thisFactory->setProdRate($i);
 
-		echo 'Set production of item '.$productID.' to '.$productionRate[0].'<p>';
+		//echo 'Set production of item '.$productID.' to '.$productionRate[0].'<p>';
 		// set production items and production rates
 		$thisFactory->objDat[$thisFactory->currentProductionOffset+$i] = $productID;
 		$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
@@ -106,7 +111,7 @@ for ($i=0; $i<$productionSpots; $i++) {
 
 		// set quality rates for each item
 		$thisFactory->productionQuality[$i+1] = $productionRate[1];
-		
+
 		$currentProductionList[$i] = 0;
 		$currentProductionRate[$i] = 0;
 	}
@@ -120,19 +125,6 @@ fclose($slotFile);
 fclose($offerDatFile);
 //fclose($laborEqFile);
 
-echo '1,'.implode(',', $currentProductionList).','.implode(',', $currentProductionRate);
+echo '1,'.$postVals[1].','.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.implode(',', $currentProductionList).','.implode(',', $currentProductionRate);
 
-/*
-echo 'Current prod is '.implode(',', $currentProductionList).'<p>';
-
-	echo '<script>
-	selFactory.productMaterial = ['.implode(',', $thisProduct->reqMaterials).'];
-	selFactory.showProdRequirements(factoryDiv.reqBox.materials);
-
-	selFactory.productLabor = ['.implode(',', $productSkillList).'];
-	selFactory.showReqLabor(factoryDiv.laborSection.required);
-
-	selFactory.setProdRate('.($productionRate[0]/100).', factoryDiv.headSection.rate);
-	</script>';
-*/
 ?>
