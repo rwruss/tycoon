@@ -11,8 +11,8 @@ pvs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb');
-$cityFile = fopen($gamePath.'/cities.dat', 'rb');
+$objFile = fopen($gamePath.'/objects.dat', 'rb');  //rb
+//$cityFile = fopen($gamePath.'/cities.dat', 'rb');
 
 // Load the factory and get the labor details for the item in question
 $thisFactory = loadObject($postVals[1], $objFile, 1400);
@@ -46,6 +46,14 @@ saveSettings = newButton(thisDiv.promotionArea);
 saveSettings.addEventListener("click", function() {
 	console.log("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
 	//scrMod("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
+	let sendStr = "1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value;
+	getASync(sendStr).then(v => {
+		let r=v.split(",");
+		if (r[0] > -1) {
+			let currentRates = r.slice(1,6);
+			console.log(currentRates);
+		}
+	});
 })
 saveSettings.innerHTML = "Save Settings";
 thisDiv.laborArea = addDiv("", "stdFloatDiv", thisDiv);
@@ -59,7 +67,7 @@ factoryHireMenu(laborTabs.renderKids[1], '.$postVals[1].');
 laborTabs.renderKids[1].subTarget = addDiv("", "stdFloatDiv", laborTabs.renderKids[1]);
 </script>';
 
-fclose($cityFile);
+//fclose($cityFile);
 fclose($objFile);
 
 ?>

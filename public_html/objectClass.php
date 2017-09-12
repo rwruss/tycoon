@@ -394,7 +394,7 @@ class factory extends object {
 		for ($i=0; $i<10; $i++) {
 
 			if ($this->laborItems[$i]->laborDat[3] > 0) {
-				print_r($this->laborItems[$i]);
+				//print_r($this->laborItems[$i]);
 				for ($j=0; $j<10; $j++) {
 					$skillLevels[$this->laborItems[$i]->laborDat[$j*2+9]] += $this->laborItems[$i]->laborDat[$j*2+10];
 					$totalLaborSkill += $this->laborItems[$i]->laborDat[$j*2+10];;
@@ -410,14 +410,14 @@ class factory extends object {
 		$skillsRequired = 0;
 		for ($i=0; $i<20; $i++) {
 			if ($prodDat->objDat[$prodDat->skillOffset+$i] > 0) {
-				echo $totalProdSkill.' += '.$prodDat->objDat[$prodDat->skillRateOffset+$i].'<Br>';
+				//echo $totalProdSkill.' += '.$prodDat->objDat[$prodDat->skillRateOffset+$i].'<Br>';
 				$totalProdSkill += $prodDat->objDat[$prodDat->skillRateOffset+$i];
 				$skillsRequired++;
 			}
 		}
 
 		$baseProduction = ($totalLaborSkill/$totalProdSkill);
-		echo 'Base production is '.$baseProduction.' ('.$totalLaborSkill.' / '.$totalProdSkill.')';
+		//echo 'Base production is '.$baseProduction.' ('.$totalLaborSkill.' / '.$totalProdSkill.')';
 
 		if ($baseProduction > 0) {
 			// get the % required for each skill
@@ -427,11 +427,11 @@ class factory extends object {
 
 				$laborPcts[$i] = $skillLevels[$prodDat->objDat[$prodDat->skillOffset+$i]]/($baseProduction * $prodDat->objDat[$prodDat->skillRateOffset+$i]);
 				$totalPct += min(1, $laborPcts[$i])/$skillsRequired;
-				echo 'Skill '.$i.' pct is '.$laborPcts[$i].': '.$skillLevels[$prodDat->objDat[$prodDat->skillOffset+$i]].' / ('.$baseProduction.' * '.$prodDat->objDat[$prodDat->skillRateOffset+$i].')<br>';
+				//echo 'Skill '.$i.' pct is '.$laborPcts[$i].': '.$skillLevels[$prodDat->objDat[$prodDat->skillOffset+$i]].' / ('.$baseProduction.' * '.$prodDat->objDat[$prodDat->skillRateOffset+$i].')<br>';
 			}
 
 			$productionRate = floor($baseProduction * $totalPct*100);
-			echo '<br>Final production is '.$productionRate.' = '.$baseProduction.' * '.$totalPct;
+			//echo '<br>Final production is '.$productionRate.' = '.$baseProduction.' * '.$totalPct;
 			return [$productionRate, $totalPct];
 		} else return [0,0];
 	}

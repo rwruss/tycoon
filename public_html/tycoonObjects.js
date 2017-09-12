@@ -216,7 +216,7 @@ class factory extends object {
 
 	showProduction(trg) {
 		trg.innerHTML = this.currentProduction;
-		for (let i=2; i<this.currentProduction.length; i+=2) {
+		for (let i=2; i<this.currentProduction.length; i++) {
 			productArray[this.currentProduction[i]].renderDtls(trg, 0, 0, 0, 0, 0); //(target, qty, mCost, lCost, qual, pol)
 		}
 	}
@@ -233,10 +233,7 @@ class factory extends object {
 		}
 	}
 
-	productionOptions() {
-		console.log("factory production options");
-		//selFactory.currentProduction;
-		//selFactory.productionOpts;
+	productionOptions(trgParent) {
 		let thisDiv = useDeskTop.newPane("productionOptions");
 		thisDiv.innerHTML = "production options";
 		thisDiv.currentProd = addDiv("", "stdFloatDiv", thisDiv);
@@ -247,11 +244,12 @@ class factory extends object {
 
 		thisDiv.submitButton = newButton(thisDiv);
 		thisDiv.submitButton.parentObj = this;
+		thisDiv.submitButton.refreshTarget = trgParent;
 		thisDiv.submitButton.addEventListener("click", function () {
-			console.log(this.parentObj.prodSelect.getSelection());
+			//console.log(this.parentObj.prodSelect.getSelection());
 			let sendStr = "1005,"+this.parentObj.objID+",";
 			let tempR = this.parentObj.prodSelect.getSelection();
-			console.log(tempR);
+			//console.log(tempR);
 			let tmpA = new Array(5);
 			for (let i=0; i<tempR.length; i++) {
 				tmpA[i] = this.parentObj.productionOpts[tempR[i]];
@@ -261,13 +259,17 @@ class factory extends object {
 			getASync(sendStr + tmpA.join(",")).then(v => {
 				let r=v.split(",");
 				if (r[0] > -1) {
-					this.currentProduction = r.slice(1,8);
-					this.currentRates = r.slice(8,13);
+					this.parentObj.currentProduction = r.slice(1,8);
+					this.parentObj.currentRates = r.slice(8,13);
+					console.log(this.parentObj);
+					console.log(this.refreshTarget);
+					this.parentObj.showProduction(this.refreshTarget);
+
+					//let oldPane = useDeskTop.getPane("productionOptions");
+					useDeskTop.removePaneByDesc("productionOptions");
 				}
 			})
-			//scrMod("1005,'.$postVals[1].',"+ prodStr);
 		});
-
 
 		let selectedArray = new Array();
 		let optionsArray = [];

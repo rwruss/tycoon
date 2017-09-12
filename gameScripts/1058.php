@@ -15,10 +15,10 @@ pvs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b');
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b');
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b');
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b');
+$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb'); //r+b
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb'); //r+b
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
@@ -30,8 +30,8 @@ if (flock($laborPoolFile, LOCK_EX)) {
 
 		// load the new labor
 		$newLabor = loadLaborItem($postVals[3], $laborPoolFile);
-		echo 'New Labor:';
-		print_r($newLabor);
+		//echo 'New Labor:';
+		//print_r($newLabor);
 
 		$oldLabor = $thisFactory->laborItems[$postVals[2]];
 		if ($oldLabor->laborDat[3] > 0) {
@@ -42,7 +42,7 @@ if (flock($laborPoolFile, LOCK_EX)) {
 
 			// No existing labor - delete the reference to this labor from the business labor pool and add it to the empty list
 			$laborSlot = $thisBusiness->get('laborSlot');
-			echo 'Delete this labor spot from slot '.$laborSlot;
+			//echo 'Delete this labor spot from slot '.$laborSlot;
 			if (flock($slotFile, LOCK_EX)) {
 				if ($laborSlot == 0) {
 					$laborSlot = newSlot($slotFile);
@@ -81,13 +81,16 @@ if (flock($laborPoolFile, LOCK_EX)) {
 }
 
 $productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
+$updatedProductionRates = [0,0,0,0,0];
 for ($i=0; $i<$productionSpots; $i++) {
 	$productionRate = $thisFactory->setProdRate($i);
-	$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
-	$thisFactory->productionQuality[$i+1]] = $productionRate[1];
+	$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];;
+	$updatedProductionRates[$i] = $productionRate[0];
+	$thisFactory->productionQuality[$i+1] = $productionRate[1];
 }
 
 $thisFactory->saveProductionRates();
+echo '1,'.implode(',', $updatedProductionRates);
 
 function addLaborToPool($laborItem, $laborPoolFile, $laborSlotFile) {
 	$useSpot = 0;

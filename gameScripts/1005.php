@@ -9,10 +9,10 @@ PVS
 
 require_once('./objectClass.php');
 
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
-$objFile = fopen($gamePath.'/objects.dat', 'rb'); // r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'r+b'); // r+b
 //$laborEqFile = fopen($scnPath.'/laborEq.dat', 'rb'); // rb
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb'); //r+b
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b'); //r+b
 
 //echo 'load factory';
 $thisFactory = loadObject($postVals[1], $objFile, 1400);
@@ -125,6 +125,6 @@ fclose($slotFile);
 fclose($offerDatFile);
 //fclose($laborEqFile);
 
-echo '1,'.$postVals[1].','.($thisObj->get('prodLength') + $thisObj->get('prodStart')).','.implode(',', $currentProductionList).','.implode(',', $currentProductionRate);
+echo '1,'.$postVals[1].','.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).','.implode(',', $currentProductionList).','.implode(',', $currentProductionRate);
 
 ?>

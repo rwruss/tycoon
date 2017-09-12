@@ -797,24 +797,7 @@ class deskTop {
 			}
 		}
 
-		/*
-		if (this.paneList[desc]) {
-			console.log(this.paneList);
-			console.log("already made: " + this.constructor.name + " -> " + Object.keys(this.paneList));
-		} else {
-			if (type == "menu") {
-				var mkPane = new menu(desc, this);
-				this.paneList[desc] = mkPane;
-				console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
-			} else {
-				var mkPane = new regPane(desc, this);
-				//console.log(mkPane);
-				this.paneList[desc] = mkPane;
-				//console.log("just made " + desc + " --- "  + Object.keys(this.paneList));
-			}
-			//console.log("created " + desc);
-		}*/
-		//console.log("Set item " + newPaneSpot + " to top");
+
 		this.paneToTop(this.paneList[newPaneSpot]);
 		return this.paneList[newPaneSpot].divEl.childNodes[1];
 	}
@@ -831,13 +814,7 @@ class deskTop {
 				}
 			}
 		}
-		/*
-				var count = 1;
-		for (var item in this.paneList) {
-			//console.log("arrange " + item + " = " + count);
-			this.paneList[item].divEl.style.zIndex = count;
-			count++;
-		}*/
+
 	}
 
 	getPane(desc) {
@@ -848,12 +825,7 @@ class deskTop {
 				return this.paneList[i].divEl.childNodes[1];
 			}
 		}
-		/*
-		if (this.paneList[desc]) {
-			this.paneToTop(this.paneList[desc]);
-			return this.paneList[desc].divEl.childNodes[1];
-		} else {
-		}*/
+
 	}
 
 	paneToTop(thisPane) {
@@ -881,14 +853,21 @@ class deskTop {
 				//console.log(this.paneList[i].desc + " != " +  thisPane.desc)
 			}
 		}
-		//delete this.paneList[thisPane.desc];
 
-		//console.log(this.paneList);
-		//console.log(Object.keys(this.paneList));
+	}
 
-		//let i = this.paneList.indexOf(thisPane.desc);
-		//console.log("delete index " + i);
-		//this.paneList.splice(i, 1);
+	removePaneByDesc(desc) {
+		console.log("remvove " + desc);
+		for (let i=0; i<this.paneList.length; i++) {
+			console.log(this.paneList[i].desc);
+			if (this.paneList[i].desc == desc) {
+				this.paneList[i].destroyWindow();
+				//this.paneList.splice(i, 1);
+				//console.log("delete spot " + i);
+			} else {
+				//console.log(this.paneList[i].desc + " != " +  thisPane.desc)
+			}
+		}
 	}
 }
 

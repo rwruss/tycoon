@@ -293,11 +293,12 @@ for (let i=0; i<selFactory.productionSpots; i++) {
 }
 */
 
-selFactory.showProduction(factoryDiv.prodContain);
-factoryDiv.prodContain.parentFactory = selFactory;
-factoryDiv.prodContain.addEventListener("click", function (e) {
+factoryDiv.prodContain.prodDtl = addDiv("", "", factoryDiv.prodContain);
+selFactory.showProduction(factoryDiv.prodContain.prodDtl);
+factoryDiv.prodContain.prodDtl.parentFactory = selFactory;
+factoryDiv.prodContain.prodDtl.addEventListener("click", function (e) {
 	e.stopPropagation();
-	this.parentFactory.productionOptions();
+	this.parentFactory.productionOptions(this);
 })
 
 upgradeButton = newButton(factoryDiv.headSection, function () {
