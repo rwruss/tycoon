@@ -26,7 +26,7 @@ if ($laborDetails[8]/518400 > $promoDat[1]) {
 	$promoOpts = [$promoDat[2], $promoDat[3], $promoDat[4], $promoDat[5], $promoDat[6], $promoDat[7], $promoDat[8], $promoDat[9], $promoDat[10], $promoDat[11]];
 }
 
-
+/*
 // Out put promotion options and set pay...
 echo '<script>
 useDeskTop.newPane("laborItemPane");
@@ -66,7 +66,7 @@ companyLaborOptions(tmpLabor, '.$postVals[1].', laborTabs.renderKids[0]);
 factoryHireMenu(laborTabs.renderKids[1], '.$postVals[1].');
 laborTabs.renderKids[1].subTarget = addDiv("", "stdFloatDiv", laborTabs.renderKids[1]);
 </script>';
-
+*/
 //fclose($cityFile);
 fclose($objFile);
 

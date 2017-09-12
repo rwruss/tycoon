@@ -170,6 +170,48 @@ class factory extends object {
 
 		return container;
 	}
+	
+	laborDetailOptions(itemNum) {
+		useDeskTop.newPane("laborItemPane");
+		thisDiv = useDeskTop.getPane("laborItemPane");
+		thisDiv.innerHTML = "";
+
+		thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
+		
+		//thisLaborItem = new laborItem([itemNum, LABOR DATA FOR THIS ITEM]);
+		thisLaborItem = new laborItem(this.labor.slice(itemNum*30, itemNum*30+30));
+		factoryLaborDetail(thisLaborItem, '.$postVals[1].', thisDiv.laborDescArea);
+		
+		thisDiv.payArea = addDiv("", "stdFloatDiv", thisDiv);
+		laborPaySettings(thisLaborItem, '.$postVals[1].', thisDiv.payArea);
+		thisDiv.promotionArea = addDiv("", "stdFloatDiv", thisDiv);
+		textBlob("", thisDiv.promotionArea, "Promotion options");
+		
+		saveSettings = newButton(thisDiv.promotionArea);
+		saveSettings.addEventListener("click", function() {			
+			//scrMod("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
+			let sendStr = "1058," + this.objID + "," + itemNum + "," +thisLaborItem.objID + "," + thisDiv.laborPay.slider.slide.value;
+			console.log(sendStr);
+			getASync(sendStr).then(v => {
+				let r=v.split(",");
+				if (r[0] > -1) {
+					let currentRates = r.slice(1,6);
+					console.log(currentRates);
+				}
+			});
+		});
+		
+		saveSettings.innerHTML = "Save Settings";
+		thisDiv.laborArea = addDiv("", "stdFloatDiv", thisDiv);
+		textBlob("", thisDiv.laborArea, "Other Labor Options");
+		laborTabs = new tabMenu(["Company Labor", "Hire Labor"]);
+		laborTabs.renderTabs(thisDiv.laborArea);
+		
+		tmpLabor = companyLabor;
+		companyLaborOptions(tmpLabor, this.objID, laborTabs.renderKids[0]);
+		factoryHireMenu(laborTabs.renderKids[1], this.objID);
+		laborTabs.renderKids[1].subTarget = addDiv("", "stdFloatDiv", laborTabs.renderKids[1]);
+	}
 
 	prodDetail(target, prodIndex) {
 		var container = addDiv("", "", target);
@@ -209,8 +251,13 @@ class factory extends object {
 				} else {
 				}
 			//let itemNum = i;
-			laborItem.sendStr = "1023,"+this.objID+","+i
-			laborItem.addEventListener("click", function () {scrMod(this.sendStr)});
+			//laborItem.sendStr = "1023,"+this.objID+","+i
+			laborItem.parentFactory = this;
+			laborItem.laborSpot = i;
+			laborItem.addEventListener("click", function () {
+				//scrMod(this.sendStr);
+				this.parentFactory.laborDetailOptions(this.laborSpot);
+				});
 		}
 	}
 
