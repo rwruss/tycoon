@@ -518,3 +518,141 @@ class SLoptionSelect {
 		return tmpA;
 	}
 }
+
+class SLobjectSelect {
+	constructor(selectedList, optionList, selectTrg, maxSelected) {
+		this.selectedItems = selectedList;
+		this.optionItems = optionList;
+		this.optionStatus = new Array(this.optionItems.length);
+		this.maxSelected = maxSelected;
+		this.selectedQty = selectedList.length;
+		this.lastItemSlected = 0;
+
+		this.optionStatus.fill(0, 0, this.optionItems.length);
+
+		return this;
+	}
+
+	init() {
+		for (let i=0; i<this.selectedItems.length; i++) {
+			this.optionStatus[this.selectedItems[i]] = 1;
+		}
+
+		for (let i=0; i<this.optionItems.length; i++) {
+		}
+
+		this.showItems();
+	}
+
+	moveItem(itemNum, divObject) {
+		console.log("move item " + itemNum);
+		let item;
+		if (this.optionStatus[itemNum] == 1) {
+			// move back in to options
+			console.log("unselet an item");
+			//this.optionStatus[itemNum] = 0;
+			this.selectedQty--;
+			item = this.unSelectItem(this.optionItems[itemNum], itemNum, divObject);
+		} else {
+			// move in to selected
+			console.log("SELECT an item");
+			//this.optionStatus[this.lastItemSlected] = 0;
+			//this.optionStatus[itemNum] = 1;
+			
+			this.selectedQty++;
+			item = this.selectItem(this.optionItems[itemNum], itemNum, divObject);
+			
+		}
+		console.log("add listener");
+		console.log(item);
+		item.listClass = this;
+		item.itemNum = itemNum;
+		item.addEventListener("click", function () {
+			this.listClass.moveItem(this.itemNum, this);
+		});
+		//console.log(this.optionStatus);
+	}
+
+	showItems() {
+		for (let i=0; i<this.optionItems.length; i++) {
+			let item;
+			if (this.optionStatus[i] == 1) {
+				// move back in to options
+				item = this.selectItem(this.optionItems[i], i, null);
+			} else {
+				// move in to selected
+				item = this.unSelectItem(this.optionItems[i], i, null);
+			}
+			
+			item.listClass = this;
+			item.itemNum = i;
+			item.addEventListener("click", function () {
+				this.listClass.moveItem(this.itemNum, this);
+			});
+		}
+	}
+
+	getSelection() {
+		console.log(this.optionStatus);
+		let tmpA = [];
+		for (let i=0; i<this.optionStatus.length; i++) {
+			if (this.optionStatus[i] == 1) tmpA.push(i);
+		}
+		return tmpA;
+	}
+}
+
+class laborSelect extends SLobjectSelect {
+	constructor (selectedList, optionList, selectTrg, maxSelected) {
+		super(selectedList, optionList, selectTrg, maxSelected);
+		this.selectedArea = addDiv("", "stdFloatDiv", selectTrg);
+		this.optionArea = addDiv("", "stdFloatDiv", selectTrg);
+		
+		this.selectedArea.innerHTML = "SELECTIONS";
+		this.optionArea.innerHTML = "OPTIONS";
+		
+		this.displayList = new Array(optionList.length);
+		this.displayList.fill(1);
+		this.selectedObject = -1;
+		
+		this.init();
+	}
+	
+	selectItem(item, itemNum, divObject) {
+		
+		this.selectedArea.innerHTML = "";
+		this.displayList[itemNum] = 0;
+		
+		if (divObject) {
+			
+			divObject.parentNode.removeChild(divObject);
+		}
+
+		let oldNum = this.selectedObject;
+		if (oldNum > -1) {
+			this.moveItem(oldNum, null);
+		}
+		this.selectedObject = itemNum;
+		this.optionStatus[itemNum] = 1;
+		this.optionStatus[oldNum] = 0;
+		
+		return item.renderSummary(this.selectedArea);
+		
+	}
+	
+	unSelectItem(item, itemNum, divObject) {
+		
+		this.selectedObject = -1;
+		this.selectedArea.innerHTML = "";
+		this.displayList[itemNum] = 1;
+		this.optionStatus[itemNum] = 0;
+		
+		let thisInstance = item.renderSummary(null);
+		let count = 0;
+		for (let i=0; i<itemNum; i++) {
+			count += this.displayList[i];
+		}
+		this.optionArea.insertBefore(thisInstance, this.optionArea.childNodes[count]);
+		return thisInstance;
+	}
+}

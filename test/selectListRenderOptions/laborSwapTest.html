@@ -1,0 +1,53 @@
+<link rel="stylesheet" type="text/css" href="e:/websites/tycoon/public_html/gameStyles.css">
+<script src="e:/websites/tycoon/public_html/templates.js"></script>
+<script src="e:/websites/tycoon/public_html/tycoonObjects.js"></script>
+<script src="e:/websites/tycoon/public_html/selectList.js"></script>
+<script>
+
+var laborNames = [
+	"labor 1", 
+	"labor 2", 
+	"labor 3", 
+	"labor 4", 
+	"labor 5", 
+	"labor 6", 
+	"labor 7", 
+	"labor 8", 
+	"labor 9", 
+	"labor 10", 
+	"labor 11", 
+	"labor 12", 
+	"labor 13", 
+	"labor 14", 
+	"labor 15", 
+	"labor 16", 
+	"labor 17", 
+	"labor 18", 
+	"labor 19", 
+	"labor 20"];
+
+function initTest() {
+	let thisLabor = new laborItem([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]);
+	//thisLabor.renderSummary(document.getElementById("gmPnl"));
+	
+	let options = [];
+	for (let i=0; i<20; i++) {
+		options.push(new laborItem([1,2,3,i,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]));
+	}
+	
+	let trg = document.getElementById("gmPnl");
+	//let abcde = new laborSelect();
+	let selectStuff = new laborSelect([], options, trg, 1); // selectedList, optionList, selectTrg, optionTrg, maxSelected, selectFunction, unSelectFunction
+	let sendButton = newButton(trg);
+	sendButton.addEventListener("click", function () {
+		console.log(selectStuff.getSelection());
+	});
+}
+
+window.addEventListener("load", initTest);
+</script>
+
+<div id="gmPnl" class="container">
+</div>
+
+
