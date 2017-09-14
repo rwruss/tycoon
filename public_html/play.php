@@ -200,7 +200,7 @@ echo '
 	var factoryLabor  = new Array();
 	var routeOptionList = new Array();
 	var selectedRouteList = new Array();
-	var factoryList, playerFactories, playerProducts, playerProdNames, playerProducts, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv, shipmentList;
+	var factoryList, playerFactories, playerProducts, playerProdNames, playerProducts, inProgressFactories, factoryDiv, tmpLabor, infoPane, serviceInv, shipmentList, selectedLaborItem;
 	var playerUnits;
 	var moveString = new Array();
 	var selFactory;

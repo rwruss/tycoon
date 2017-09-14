@@ -1544,7 +1544,7 @@ factoryLaborDetail = function(thisLabor, factoryID, target) {
 		let emptyLabor = new laborItem([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
 		if (thisLabor.laborType > 0) {
 			companyLabor.push(thisLabor);
-			companyLaborOptions(companyLabor, factoryID, laborTabs.renderKids[0]);
+			companyLaborOptions(factoryID, laborTabs.renderKids[0]);
 			thisLaborItem = emptyLabor;
 		}
 	target.innerHTML = "";
@@ -1556,70 +1556,33 @@ factoryLaborDetail = function(thisLabor, factoryID, target) {
 laborPaySettings = function(laborItem, factoryID, target) {
 	target.innerHTML = "";
 	textBlob("", target, "Current pay for this employee");
-	thisDiv.laborPay = payBox(target, 1000);
-	thisDiv.laborPay.slider.slide.step = ".01";
-	setSlideVal(thisDiv.laborPay, laborItem.pay/100);
+	target.laborPay = payBox(target, 1000);
+	target.laborPay.slider.slide.step = ".01";
+	setSlideVal(target.laborPay, laborItem.pay/100);
 }
 
-companyLaborOptions = function(laborList, factoryID, trg) {
+companyLaborOptions = function(factoryID, trg, selectedLaborBox) {
 	console.log(companyLabor);
 	trg.innerHTML = "";
 	for (let i=0; i<companyLabor.length; i++) {
 		//console.log("render " + companyLabor[i].objID);
 		let item = companyLabor[i].renderSummary(trg);
 		item.addEventListener("click", function () {
-			if (thisLaborItem.laborType > 0) {
-				console.log("move old down (" + thisLaborItem.objID + ")");
-				companyLabor.push(thisLaborItem);
-				//let tmp = laborList[this.itemNo];
-				//laborList[this.itemNo] = thisLaborItem;
-				//thisLaborItem = tmp;
+			if (selectedLaborItem.laborType > 0) {
+				console.log("move old down (" + selectedLaborItem.objID + ")");
+				companyLabor.push(selectedLaborItem);
+
 		} else {
 
 		}
 		console.log("move item " + companyLabor.indexOf(this.parentObj));
 		console.log(companyLabor.splice(companyLabor.indexOf(this.parentObj),1));
-		companyLaborOptions(null, factoryID, trg);
-		thisLaborItem = this.parentObj;
-		thisDiv.laborDescArea.innerHTML = "";
-		factoryLaborDetail(thisLaborItem, factoryID, thisDiv.laborDescArea);
-		//laborPaySettings(thisLaborItem, factoryID, thisDiv.payArea);
+		companyLaborOptions(factoryID, trg, selectedLaborBox);
+		selectedLaborItem = this.parentObj;
+		selectedLaborBox.innerHTML = "";
+		factoryLaborDetail(selectedLaborItem, factoryID, selectedLaborBox);
 	});
 	}
-	/*
-	console.log(laborList);
-	trg.innerHTML = "";
-	cLaborList = new uList(laborList);
-	cLaborList.SLShowAll(trg, function(x,y,z) {
-		let item = x.renderSummary(y);
-		item.itemNo = z;
-		item.addEventListener("click", function(z) {
-			console.log("remove item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType);
-			// move the selected item back into the laborList
-			if (thisLaborItem.laborType > 0) {
-				console.log("move old down");
-				laborList.push(thisLaborItem);
-				//let tmp = laborList[this.itemNo];
-				//laborList[this.itemNo] = thisLaborItem;
-				//thisLaborItem = tmp;
-			} else {
-
-			}
-
-
-
-			console.log("remove item " + this.itemNo)
-			thisLaborItem = laborList[this.itemNo];
-			laborList.splice(this.itemNo, 1);
-
-			companyLaborOptions(laborList, factoryID, trg);
-			console.log("move labor item up");
-			thisDiv.laborDescArea.innerHTML = "";
-
-			factoryLaborDetail(thisLaborItem, factoryID, thisDiv.laborDescArea);
-			laborPaySettings(thisLaborItem, factoryID, thisDiv.payArea);
-		})
-	});*/
 }
 
 companyLaborList = function(laborList, trg) {
@@ -1628,14 +1591,6 @@ companyLaborList = function(laborList, trg) {
 	cLaborList = new uList(laborList);
 	cLaborList.SLShowAll(trg, function(x,y,z) {
 		let item = x.renderFire(y, "1059,"+x.objID+",0");
-		//item.itemNo = z;
-		//item.fireDiv.sendStr = "1059,"+z+",0";
-		/*
-		item.fireDiv.addEventListener("click", function(z) {
-			console.log("detail for item " + this.parentNode.itemNo + "(type) " + laborList[this.parentNode.itemNo].laborType);
-			console.log("fure " + this.sendStr);
-			scrMod(this.sendStr);
-		});*/
 	});
 }
 
@@ -1644,15 +1599,6 @@ showCityLabor = function(trg, cityID, laborDat) {
 	for (let i=0; i<laborDat.legnth; i+=29) {
 
 	}
-	/*
-	cLaborList = new uList(laborList);
-	cLaborList.SLShowAll(trg, function(x,y,z) {
-		let item = x.renderSummary(y);
-		item.itemNo = z;
-		item.addEventListener("click", function(z) {
-			console.log("detail for item " + this.itemNo + "(type) " + laborList[this.itemNo].laborType);
-		});
-	});*/
 }
 
 laborHireList = function(trg, factoryID, laborList) {

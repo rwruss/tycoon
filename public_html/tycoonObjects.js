@@ -170,27 +170,30 @@ class factory extends object {
 
 		return container;
 	}
-	
+
 	laborDetailOptions(itemNum) {
+		console.log("laborDetailOptions");
 		useDeskTop.newPane("laborItemPane");
-		thisDiv = useDeskTop.getPane("laborItemPane");
+		let thisDiv = useDeskTop.getPane("laborItemPane");
 		thisDiv.innerHTML = "";
 
 		thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
-		
-		//thisLaborItem = new laborItem([itemNum, LABOR DATA FOR THIS ITEM]);
-		thisLaborItem = new laborItem(this.labor.slice(itemNum*30, itemNum*30+30));
-		factoryLaborDetail(thisLaborItem, '.$postVals[1].', thisDiv.laborDescArea);
-		
+
+		//selectedLaborItem = new laborItem([itemNum, LABOR DATA FOR THIS ITEM]);
+		selectedLaborItem = new laborItem(this.labor.slice(itemNum*30, itemNum*30+30));
+		factoryLaborDetail(selectedLaborItem, this.objID, thisDiv.laborDescArea);
+
 		thisDiv.payArea = addDiv("", "stdFloatDiv", thisDiv);
-		laborPaySettings(thisLaborItem, '.$postVals[1].', thisDiv.payArea);
+		laborPaySettings(selectedLaborItem, this.objID, thisDiv.payArea);
 		thisDiv.promotionArea = addDiv("", "stdFloatDiv", thisDiv);
 		textBlob("", thisDiv.promotionArea, "Promotion options");
-		
-		saveSettings = newButton(thisDiv.promotionArea);
-		saveSettings.addEventListener("click", function() {			
-			//scrMod("1058,'.$postVals[1].','.$postVals[2].',"+thisLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
-			let sendStr = "1058," + this.objID + "," + itemNum + "," +thisLaborItem.objID + "," + thisDiv.laborPay.slider.slide.value;
+
+
+		let saveSettings = newButton(thisDiv.promotionArea);/*
+		saveSettings.addEventListener("click", function(e) {
+			e.stopPropagation();
+			//scrMod("1058,'.$postVals[1].','.$postVals[2].',"+selectedLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
+			let sendStr = "1058," + this.objID + "," + itemNum + "," +selectedLaborItem.objID + "," + thisDiv.laborPay.slider.slide.value;
 			console.log(sendStr);
 			getASync(sendStr).then(v => {
 				let r=v.split(",");
@@ -200,17 +203,17 @@ class factory extends object {
 				}
 			});
 		});
-		
+		*/
 		saveSettings.innerHTML = "Save Settings";
 		thisDiv.laborArea = addDiv("", "stdFloatDiv", thisDiv);
 		textBlob("", thisDiv.laborArea, "Other Labor Options");
-		laborTabs = new tabMenu(["Company Labor", "Hire Labor"]);
+		let laborTabs = new tabMenu(["Company Labor", "Hire Labor"]);
 		laborTabs.renderTabs(thisDiv.laborArea);
-		
-		tmpLabor = companyLabor;
-		companyLaborOptions(tmpLabor, this.objID, laborTabs.renderKids[0]);
+		/*
+		companyLaborOptions(this.objID, laborTabs.renderKids[0], thisDiv.laborDescArea);
 		factoryHireMenu(laborTabs.renderKids[1], this.objID);
 		laborTabs.renderKids[1].subTarget = addDiv("", "stdFloatDiv", laborTabs.renderKids[1]);
+		*/
 	}
 
 	prodDetail(target, prodIndex) {
@@ -254,8 +257,8 @@ class factory extends object {
 			//laborItem.sendStr = "1023,"+this.objID+","+i
 			laborItem.parentFactory = this;
 			laborItem.laborSpot = i;
-			laborItem.addEventListener("click", function () {
-				//scrMod(this.sendStr);
+			laborItem.addEventListener("click", function (e) {
+				e.stopPropagation();
 				this.parentFactory.laborDetailOptions(this.laborSpot);
 				});
 		}
