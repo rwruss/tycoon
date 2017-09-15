@@ -176,8 +176,11 @@ class factory extends object {
 		useDeskTop.newPane("laborItemPane");
 		let thisDiv = useDeskTop.getPane("laborItemPane");
 		thisDiv.innerHTML = "";
+		
+		let tmpLabor = companyLabor;
+		tmpLabor.push(new laborItem(this.labor.slice(itemNum*30, itemNum*30+30));
 
-		let laborOpts = new laborSelect([], companyLabor, thisDiv, 1);
+		let laborOpts = new laborSelect([tmpLabor.length-1], companyLabor, thisDiv, 1);
 		/*
 		thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
 

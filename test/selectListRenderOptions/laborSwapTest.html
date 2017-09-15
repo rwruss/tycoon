@@ -37,7 +37,7 @@ function initTest() {
 	
 	let trg = document.getElementById("gmPnl");
 	//let abcde = new laborSelect();
-	let selectStuff = new laborSelect([], options, trg, 1); // selectedList, optionList, selectTrg, optionTrg, maxSelected, selectFunction, unSelectFunction
+	let selectStuff = new laborSelect([5], options, trg, 1); // selectedList, optionList, selectTrg, optionTrg, maxSelected, selectFunction, unSelectFunction
 	let sendButton = newButton(trg);
 	sendButton.addEventListener("click", function () {
 		console.log(selectStuff.getSelection());

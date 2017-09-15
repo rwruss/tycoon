@@ -574,16 +574,36 @@ class SLobjectSelect {
 	}
 
 	showItems() {
+		let item;
 		for (let i=0; i<this.optionItems.length; i++) {
-			let item;
+			/*
+			
 			if (this.optionStatus[i] == 1) {
 				// move back in to options
 				item = this.selectItem(this.optionItems[i], i, null);
 			} else {
-				// move in to selected
+				// move in to selected				
 				item = this.unSelectItem(this.optionItems[i], i, null);
 			}
 			
+			item.listClass = this;
+			item.itemNum = i;
+			item.addEventListener("click", function () {
+				this.listClass.moveItem(this.itemNum, this);
+			});*/
+			if (this.optionStatus[i] == 0) {
+				item = this.unSelectItem(this.optionItems[i], i, null);
+				item.listClass = this;
+				item.itemNum = i;
+				item.addEventListener("click", function () {
+					this.listClass.moveItem(this.itemNum, this);
+				});
+			}
+		}
+		
+		//let item;
+		for (let i=0; i<this.selectedItems.length; i++) {
+			item = this.selectItem(this.optionItems[this.selectedItems[i]], this.selectedItems[i], null);
 			item.listClass = this;
 			item.itemNum = i;
 			item.addEventListener("click", function () {
@@ -619,17 +639,17 @@ class laborSelect extends SLobjectSelect {
 	}
 	
 	selectItem(item, itemNum, divObject) {
-		
+		console.log("draw selected item");
 		this.selectedArea.innerHTML = "";
 		this.displayList[itemNum] = 0;
 		
-		if (divObject) {
-			
+		if (divObject) {			
 			divObject.parentNode.removeChild(divObject);
 		}
 
 		let oldNum = this.selectedObject;
 		if (oldNum > -1) {
+			console.log("Remove the old item");
 			this.moveItem(oldNum, null);
 		}
 		this.selectedObject = itemNum;
@@ -643,7 +663,8 @@ class laborSelect extends SLobjectSelect {
 	unSelectItem(item, itemNum, divObject) {
 		
 		this.selectedObject = -1;
-		this.selectedArea.innerHTML = "";
+		//this.selectedArea.innerHTML = "";
+		if (divObject) divObject.parentNode.removeChild(divObject);
 		this.displayList[itemNum] = 1;
 		this.optionStatus[itemNum] = 0;
 		
