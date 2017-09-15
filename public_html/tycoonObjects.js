@@ -177,6 +177,8 @@ class factory extends object {
 		let thisDiv = useDeskTop.getPane("laborItemPane");
 		thisDiv.innerHTML = "";
 
+		let laborOpts = new laborSelect([], companyLabor, thisDiv, 1);
+		/*
 		thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
 
 		//selectedLaborItem = new laborItem([itemNum, LABOR DATA FOR THIS ITEM]);
@@ -189,7 +191,7 @@ class factory extends object {
 		textBlob("", thisDiv.promotionArea, "Promotion options");
 
 
-		let saveSettings = newButton(thisDiv.promotionArea);/*
+		let saveSettings = newButton(thisDiv.promotionArea);
 		saveSettings.addEventListener("click", function(e) {
 			e.stopPropagation();
 			//scrMod("1058,'.$postVals[1].','.$postVals[2].',"+selectedLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
@@ -203,13 +205,13 @@ class factory extends object {
 				}
 			});
 		});
-		*/
+
 		saveSettings.innerHTML = "Save Settings";
 		thisDiv.laborArea = addDiv("", "stdFloatDiv", thisDiv);
 		textBlob("", thisDiv.laborArea, "Other Labor Options");
 		let laborTabs = new tabMenu(["Company Labor", "Hire Labor"]);
 		laborTabs.renderTabs(thisDiv.laborArea);
-		/*
+
 		companyLaborOptions(this.objID, laborTabs.renderKids[0], thisDiv.laborDescArea);
 		factoryHireMenu(laborTabs.renderKids[1], this.objID);
 		laborTabs.renderKids[1].subTarget = addDiv("", "stdFloatDiv", laborTabs.renderKids[1]);
