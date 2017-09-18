@@ -461,6 +461,8 @@ class SLoptionSelect {
 		for (let i=0; i<this.selectedItems.length; i++) {
 			this.optionStatus[this.selectedItems[i]] = 1;
 		}
+		console.log("INIT");
+		console.log(this.optionItems);
 
 		for (let i=0; i<this.optionItems.length; i++) {
 			this.optionItems[i].selectClass = this;
@@ -540,7 +542,7 @@ class SLobjectSelect {
 
 		for (let i=0; i<this.optionItems.length; i++) {
 		}
-
+		console.log(this.optionStatus);
 		this.showItems();
 	}
 
@@ -555,16 +557,14 @@ class SLobjectSelect {
 			item = this.unSelectItem(this.optionItems[itemNum], itemNum, divObject);
 		} else {
 			// move in to selected
-			console.log("SELECT an item");
+			console.log("SELECT an item " + itemNum);
 			//this.optionStatus[this.lastItemSlected] = 0;
 			//this.optionStatus[itemNum] = 1;
-			
+
 			this.selectedQty++;
 			item = this.selectItem(this.optionItems[itemNum], itemNum, divObject);
-			
+
 		}
-		console.log("add listener");
-		console.log(item);
 		item.listClass = this;
 		item.itemNum = itemNum;
 		item.addEventListener("click", function () {
@@ -574,23 +574,10 @@ class SLobjectSelect {
 	}
 
 	showItems() {
+		console.log(this.optionItems);
 		let item;
+
 		for (let i=0; i<this.optionItems.length; i++) {
-			/*
-			
-			if (this.optionStatus[i] == 1) {
-				// move back in to options
-				item = this.selectItem(this.optionItems[i], i, null);
-			} else {
-				// move in to selected				
-				item = this.unSelectItem(this.optionItems[i], i, null);
-			}
-			
-			item.listClass = this;
-			item.itemNum = i;
-			item.addEventListener("click", function () {
-				this.listClass.moveItem(this.itemNum, this);
-			});*/
 			if (this.optionStatus[i] == 0) {
 				item = this.unSelectItem(this.optionItems[i], i, null);
 				item.listClass = this;
@@ -598,18 +585,26 @@ class SLobjectSelect {
 				item.addEventListener("click", function () {
 					this.listClass.moveItem(this.itemNum, this);
 				});
+			} else {
+				item = this.selectItem(this.optionItems[i], i, null);
+				item.listClass = this;
+				item.itemNum = i;
+				item.addEventListener("click", function () {
+					this.listClass.moveItem(this.itemNum, this);
+				});
 			}
 		}
-		
+		/*
 		//let item;
 		for (let i=0; i<this.selectedItems.length; i++) {
+			//count++
 			item = this.selectItem(this.optionItems[this.selectedItems[i]], this.selectedItems[i], null);
 			item.listClass = this;
-			item.itemNum = i;
+			//item.itemNum = count;
 			item.addEventListener("click", function () {
 				this.listClass.moveItem(this.itemNum, this);
 			});
-		}
+		}*/
 	}
 
 	getSelection() {
@@ -623,57 +618,103 @@ class SLobjectSelect {
 }
 
 class laborSelect extends SLobjectSelect {
-	constructor (selectedList, optionList, selectTrg, maxSelected) {
+	constructor (selectedList, optionList, selectTrg, maxSelected, params) {
 		super(selectedList, optionList, selectTrg, maxSelected);
 		this.selectedArea = addDiv("", "stdFloatDiv", selectTrg);
 		this.optionArea = addDiv("", "stdFloatDiv", selectTrg);
-		
+
 		this.selectedArea.innerHTML = "SELECTIONS";
 		this.optionArea.innerHTML = "OPTIONS";
-		
+
 		this.displayList = new Array(optionList.length);
+		this.hiddenList = new Array(optionList.length);
 		this.displayList.fill(1);
+		this.hiddenList.fill(0);
 		this.selectedObject = -1;
-		
+
+		this.itemDivs = new Array(optionList.length);;
+
 		this.init();
 	}
-	
+
 	selectItem(item, itemNum, divObject) {
-		console.log("draw selected item");
+		console.log("draw selected item " + itemNum);
 		this.selectedArea.innerHTML = "";
+		this.selectedArea.item = addDiv("", "", this.selectedArea);
+		this.selectedArea.payDiv = addDiv("", "", this.selectedArea);
 		this.displayList[itemNum] = 0;
-		
-		if (divObject) {			
+		/*
+		if (divObject) {
 			divObject.parentNode.removeChild(divObject);
+		}*/
+		if (this.itemDivs[itemNum]) {
+			this.itemDivs[itemNum].parentNode.removeChild(this.itemDivs[itemNum]);
 		}
 
 		let oldNum = this.selectedObject;
 		if (oldNum > -1) {
-			console.log("Remove the old item");
+			//console.log("Remove the old item");
 			this.moveItem(oldNum, null);
 		}
 		this.selectedObject = itemNum;
 		this.optionStatus[itemNum] = 1;
 		this.optionStatus[oldNum] = 0;
-		
-		return item.renderSummary(this.selectedArea);
-		
+
+		let newDiv = item.renderSummary(this.selectedArea.item);
+		this.itemDivs[itemNum] = newDiv;
+		laborPaySettings(item, this.selectedArea.payDiv);
+
+		return newDiv;
+
 	}
-	
+
 	unSelectItem(item, itemNum, divObject) {
-		
+		console.log("unselect " + itemNum);
 		this.selectedObject = -1;
 		//this.selectedArea.innerHTML = "";
 		if (divObject) divObject.parentNode.removeChild(divObject);
 		this.displayList[itemNum] = 1;
 		this.optionStatus[itemNum] = 0;
-		
+
 		let thisInstance = item.renderSummary(null);
-		let count = 0;
-		for (let i=0; i<itemNum; i++) {
-			count += this.displayList[i];
+		if (!this.hiddenList[itemNum]) {
+
+			let count = 0;
+			for (let i=0; i<itemNum; i++) {
+				count += this.displayList[i];
+			}
+			this.optionArea.insertBefore(thisInstance, this.optionArea.childNodes[count]);
 		}
-		this.optionArea.insertBefore(thisInstance, this.optionArea.childNodes[count]);
+		this.itemDivs[itemNum] = thisInstance;
 		return thisInstance;
+	}
+
+	hideItem(itemID) {
+		//console.log("hide item " + itemID + " in ");
+		for (let i=0; i<this.optionItems.length; i++) {
+			//console.log(this.optionItems[i].objID);
+			if (this.optionItems[i].objID == itemID) {
+				this.hiddenList[i] = 1;
+				//console.log("Item " + itemID + " hidden");
+			}
+		}
+	}
+
+	getSelection() {
+		//console.log(this.selectedArea.payDiv.laborPay.slider.slide.value);
+		let places = [];
+		let objIDS = [];
+		objIDS[0] = 0;
+		console.log(this.optionItems);
+		for (let i=0; i<this.optionStatus.length; i++) {
+			if (this.optionStatus[i] == 1) {
+				//console.log(this.optionItems[i]);
+				//places.push(i);
+				objIDS.push(this.optionItems[i].objID);
+			}
+		}
+		objIDS.push(this.selectedArea.payDiv.laborPay.slider.slide.value)
+		//console.log(places.concat(objIDS));
+		return places.concat(objIDS);
 	}
 }

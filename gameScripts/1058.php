@@ -24,6 +24,7 @@ $laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb'); //r+b
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 $thisFactory = loadObject($postVals[1], $objFile, 1400);
 
+$oldLaborID = 0;
 if (flock($laborPoolFile, LOCK_EX)) {
 	if ($postVals[3] > 99) {
 		// * move a new labor item into this slot * \\
@@ -38,6 +39,7 @@ if (flock($laborPoolFile, LOCK_EX)) {
 			// move the existing labor out of the factory and into the business slot file at the location of the old item
 			fseek($laborPoolFile, $postVals[3]);
 			fwrite($laborPoolFile, $oldLabor->packLabor());
+			$oldLaborID = $postVals[3];
 		} else {
 
 			// No existing labor - delete the reference to this labor from the business labor pool and add it to the empty list
@@ -50,26 +52,31 @@ if (flock($laborPoolFile, LOCK_EX)) {
 					//echo 'Save new labor slot #'.$laborSlot;
 				}
 				$laborList = new itemSlot($laborSlot, $slotFile, 40);
-				$laborList->deleteByValue($oldLabor->laborDat[3]);
+				$laborList->deleteByValue($postVals[3]);
 				flock($slotFile, LOCK_UN);
 			}
 		}
 
 		// save the new labor into the factory
 		$thisFactory->laborItems[$postVals[2]] = $newLabor;
+		$thisFactory->laborItems[$postVals[2]]->laborDat[2] = intval($postVals[4]*100);
+
 		//print_r($thisFactory->laborItems[$postVals[2]]);
 		$thisFactory->saveLabor();
 	}
 	else if ($postVals[3] > 0) {
 		// adjust the existing labor item in the factory slot
 		$oldLabor = $thisFactory->laborItems[$postVals[2]];
+		$oldLabor->laborDat[2] = intval($postVals[4]*100);
+
+		$thisFactory->saveLabor();
 	}
 	else if ($postVals[3] == 0) {
 		// remove an item from the factory with no replacement
 		$newLabor = loadLaborItem(0, $laborPoolFile);
 		$oldLabor = $thisFactory->laborItems[$postVals[2]];
 		if (flock($laborPoolFile, LOCK_EX)) {
-			addLaborToPool($oldLabor, $laborPoolFile, $laborSlotFile);
+			$oldLaborID = addLaborToPool($oldLabor, $laborPoolFile, $laborSlotFile);
 			flock($laborPoolFile, LOCK_UN);
 		}
 
@@ -84,13 +91,16 @@ $productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
 $updatedProductionRates = [0,0,0,0,0];
 for ($i=0; $i<$productionSpots; $i++) {
 	$productionRate = $thisFactory->setProdRate($i);
-	$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];;
+	$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
 	$updatedProductionRates[$i] = $productionRate[0];
 	$thisFactory->productionQuality[$i+1] = $productionRate[1];
 }
 
 $thisFactory->saveProductionRates();
-echo '1,'.implode(',', $updatedProductionRates);
+
+$returnLabor = $thisFactory->laborItems[$postVals[2]]->laborDat;
+
+echo '1,'.implode(',', $updatedProductionRates).','.$postVals[2].','.implode(',',$returnLabor).','.$postVals[3].','.$oldLaborID.','.implode(',',$oldLabor->laborDat);
 
 function addLaborToPool($laborItem, $laborPoolFile, $laborSlotFile) {
 	$useSpot = 0;

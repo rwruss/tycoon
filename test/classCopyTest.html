@@ -1,0 +1,33 @@
+<script>
+
+var itemList = new Array(2);
+
+class testItem {
+  constructor (dat) {
+    this.first = dat[0];
+    this.second = dat[1];
+  }
+}
+
+function initTest() {
+  itemList[0] = new testItem([1,2]);
+  itemList[1] = new testItem([3,4]);
+
+  console.log(itemList);
+  setTimeout(updateVals, 10000)
+
+}
+
+function updateVals() {
+  let tmpList  = itemList;
+  tmpList[0].first = 10;
+  tmpList[0].second = 20;
+  console.log(tmpList);
+  console.log(itemList);
+}
+
+window.addEventListener("load", initTest);
+</script>
+
+<div id="gmPnl" class="container">
+</div>

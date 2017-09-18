@@ -176,11 +176,64 @@ class factory extends object {
 		useDeskTop.newPane("laborItemPane");
 		let thisDiv = useDeskTop.getPane("laborItemPane");
 		thisDiv.innerHTML = "";
-		
+
 		let tmpLabor = companyLabor;
-		tmpLabor.push(new laborItem(this.labor.slice(itemNum*30, itemNum*30+30));
+		//tmpLabor.push(new laborItem(this.labor.slice(itemNum*30, itemNum*30+30)));
+		tmpLabor.push(this.factoryLabor[itemNum]);
 
 		let laborOpts = new laborSelect([tmpLabor.length-1], companyLabor, thisDiv, 1);
+		let saveLabor = newButton(thisDiv);
+		saveLabor.innerHTML = "Save labor";
+		saveLabor.sendStr = "1058," + this.objID + "," + itemNum;
+		saveLabor.parentFactory = this;
+		saveLabor.optionClass = laborOpts;
+		saveLabor.itemNum = itemNum;
+		saveLabor.addEventListener("click", function () {
+			console.log(laborOpts.getSelection().join(","));
+			let tmp = this.optionClass.getSelection();
+			console.log(tmp);
+			let sendStr =  this.sendStr + "," + tmp[1] + "," + tmp[2];
+			getASync(sendStr).then(v => {
+				let r=v.split(",");
+				//console.log(r.length);
+				if (r[0] > -1) {
+					console.log(this.parentFactory);
+					console.log(r[6]);
+					console.log(r.slice(7,37));
+					this.optionClass.hideItem(tmp[1]);
+					this.parentFactory.factoryLabor[r[6]].update(r.slice(6,36));
+					this.optionClass.moveItem(this.optionClass.optionItems.length-1);
+
+					// delete the item from the companyLaborList
+					for (let i=0; i<companyLabor.length; i++) {
+						if (companyLabor[i].objID == tmp[1]) {
+							companyLabor.splice(i, 1);
+						}
+					}
+
+					// if factory item is empty, delete it from the labor list too
+					for (let i=0; i<companyLabor.length; i++) {
+						if (companyLabor[i].objID == r[6]) {
+							companyLabor.splice(i, 1);
+						}
+					}
+					console.log(this.parentFactory.factoryLabor);
+					/*
+					let currentRates = r.slice(1,6);
+					console.log("Labor slot is " + r[6]);
+					console.log("Item to Delete is " + r[36]);
+					console.log("Old labot item is " + r[37]);
+					console.log(this.parentFactory);
+					console.log(this.parentFactory.factoryLabor);
+					if (r[6] > 10) {
+						for (let i=0; i<companyLabor.length; i++) {
+							if (companyLabor[i].objID == r[6]) companyLabor[i].update(r.slice(6,36));
+						}
+					}
+					//this.parentFactory.factoryLabor[r[37]].update(r.slice(6,36));
+				*/}
+			});
+		});
 		/*
 		thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
 
@@ -251,6 +304,7 @@ class factory extends object {
 			//factoryLabor.push(new laborItem({objID:(this.labor[i]/10+1), pay:(this.labor[i+5]), ability:(this.labor[i+8]), laborType:this.labor[i]}));
 		}
 
+
 		trg.innerHTML = "";
 
 		for (var i=0; i<factoryLabor.length; i++) {
@@ -267,6 +321,8 @@ class factory extends object {
 				this.parentFactory.laborDetailOptions(this.laborSpot);
 				});
 		}
+
+		this.factoryLabor = factoryLabor;
 	}
 
 	showProduction(trg) {
@@ -397,7 +453,6 @@ class factory extends object {
 	}
 
 	showProdSkills(trg) {
-		console.log(this.productSkills);
 		trg.innerHTML = this.productSkills;
 	}
 
@@ -418,31 +473,31 @@ class factory extends object {
 	}
 
 	showSales(trg) {
-		console.log("show sales" + this.factorySales.length);
+		//console.log("show sales" + this.factorySales.length);
 		let oList = [];
 		for (var i=0; i<this.factorySales.length; i+=26) {
 			oList.push(new offer(this.factorySales.slice(i, i+26)));
 		}
 		for (var i=0; i<oList.length; i++) {
-			console.log("show offer " + i);
+			//console.log("show offer " + i);
 			oList[i].renderCancel(trg);
 		}
 	}
 
 	showContracts(trg) {
-		console.log("fac contracts size is  " + this.contracts.length);
+		//console.log("fac contracts size is  " + this.contracts.length);
 		let startPos = this.contracts[0]+1;
 		let invCount = 0;
 		for (var i=0; i<this.contracts[0]; i++) {
 			let contractHolder = addDiv("", "facContract", trg);
-			console.log("make con");
+			//console.log("make con");
 			let thisContract = new contract(new Int32Array(this.contracts.slice(startPos, startPos+27)));
-			console.log(thisContract);
+			//console.log(thisContract);
 			thisContract.render(contractHolder);
 
 			let invStart = this.contracts[0]*27+this.contracts[0]+1+invCount*50;
 
-			console.log("invoices from " + invStart + " to " + (invStart + this.contracts[1+i]*50))
+			//console.log("invoices from " + invStart + " to " + (invStart + this.contracts[1+i]*50))
 			contractInvoice(this.contracts.slice(invStart, invStart + this.contracts[1+i]*50), contractHolder);
 			invCount += this.contracts[i+1];
 		}
@@ -1227,14 +1282,56 @@ class labor {
 class laborItem extends labor {
 	constructor(details) {
 		super(details);
-
-		this.pay = details[2];
+		this.instances = [];
+		this.init(details);
 		//console.log(this)
 	}
 
-	renderSummary(target) {
-		var thisDiv = addDiv(null, 'productHolder', target);
+	init(details) {
+		this.details = details;
+		this.pay = details[2];
+	}
 
+	update(dat) {
+		this.init(dat);
+
+		console.log(dat);
+		this.renderUpdate();
+	}
+
+	renderUpdate() {
+		console.log("updating... " + this.instances.length + " items");
+		//console.log(this.instances);
+		for (var i=this.instances.length-1; i>-1; i--) {
+			console.log("(" + i + ") updating... " + this.instances[i]);
+
+			let checkDiv = this.instances[i];
+			while (checkDiv) {
+				let tmp = checkDiv.parentNode;
+				//console.log(checkDiv);
+				if (checkDiv.tagName == "BODY") {
+					this.instances[i].updateFunction(this.instances[i]);
+					//console.log(this.instances[i]);
+					//console.log(this.instances[i].updateFunction);
+					break;
+				}
+				checkDiv = tmp;
+			}
+			if (!checkDiv) {
+				//console.log("delete this instance " + i);
+				this.instances.splice(i, 1);
+				//this.instances = [];
+			}
+		}
+	}
+
+	renderSummary(target) {
+		var thisDiv;
+		if (!target || target.divType != "productHolder") {
+			var thisDiv = addDiv(null, 'productHolder', target);
+			thisDiv.divType = "productHolder";
+		} else thisDiv = target;
+		thisDiv.innerHTML = "";
 		thisDiv.ownerObject = this.objID;
 		thisDiv.parentObj = this;
 
@@ -1259,6 +1356,13 @@ class laborItem extends labor {
 		thisDiv.payDiv.innerHTML = "$"+(this.pay/100).toFixed(2);
 
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType] + "(" +this.laborType+ ")";
+
+		let me = this;
+		thisDiv.updateFunction = function (x) {
+			console.log("update a laborItem");
+			me.renderSummary(x)};
+
+		this.instances.push(thisDiv)
 		return thisDiv;
 	}
 

@@ -990,7 +990,7 @@ slideValBar = function (trg, slideID, low, hi) {
 	contain.minVal.addEventListener("click", function (event) {
 		event.stopPropagation();contain.slide.stepDown(1);
 		contain.setVal.innerHTML = contain.slide.value;
-		console.log(this.parentNode.slide);
+		//console.log(this.parentNode.slide);
 
 		if (document.createEvent) {
 		    event = document.createEvent("HTMLEvents");
@@ -1553,7 +1553,7 @@ factoryLaborDetail = function(thisLabor, factoryID, target) {
 	})
 }
 
-laborPaySettings = function(laborItem, factoryID, target) {
+laborPaySettings = function(laborItem, target) {
 	target.innerHTML = "";
 	textBlob("", target, "Current pay for this employee");
 	target.laborPay = payBox(target, 1000);
