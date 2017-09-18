@@ -636,6 +636,10 @@ class laborSelect extends SLobjectSelect {
 
 		this.init();
 	}
+	
+	emptySelection() {
+		this.selectedArea.innerHTML = "Nothing Selected";
+	}
 
 	selectItem(item, itemNum, divObject) {
 		console.log("draw selected item " + itemNum);
@@ -686,6 +690,11 @@ class laborSelect extends SLobjectSelect {
 			this.optionArea.insertBefore(thisInstance, this.optionArea.childNodes[count]);
 		}
 		this.itemDivs[itemNum] = thisInstance;
+		
+		if (this.optionStatus.reduce(sum, 0) == 0) {
+			this.emptySelection();
+		}
+		
 		return thisInstance;
 	}
 
@@ -706,11 +715,16 @@ class laborSelect extends SLobjectSelect {
 		let objIDS = [];
 		objIDS[0] = 0;
 		console.log(this.optionItems);
-		for (let i=0; i<this.optionStatus.length; i++) {
-			if (this.optionStatus[i] == 1) {
-				//console.log(this.optionItems[i]);
-				//places.push(i);
-				objIDS.push(this.optionItems[i].objID);
+		console.log(this.optionStatus);
+		if (this.optionStatus.reduce(sum, 0) == 0) {
+			objIDS[1] = -1;
+		} else {
+			for (let i=0; i<this.optionStatus.length; i++) {
+				if (this.optionStatus[i] == 1) {
+					//console.log(this.optionItems[i]);
+					//places.push(i);
+					objIDS[1] = this.optionItems[i].objID;
+				}
 			}
 		}
 		objIDS.push(this.selectedArea.payDiv.laborPay.slider.slide.value)

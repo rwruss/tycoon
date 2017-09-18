@@ -94,6 +94,8 @@
 1094 - PROCESS: Save transport options for material delivery to a factory
 
 TO DO:
+Service items (Construction, legal, etc...)
+Update labor skills on work completion (or verify working).
 TUrn script 1023 into a JS factory object script
 VARIABLE RESOURCE PRODUCTION BASED ON MAP LOCATION (Farms, Mines, Etc)
 RESOURCE PRODUCTION BY LABOR SKILL LEVEL

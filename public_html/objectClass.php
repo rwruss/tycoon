@@ -541,38 +541,7 @@ class factory extends object {
 						}
 					}
 				}
-				/*
-				//Find product index
-				for ($i=0; $i<5; $i++){
-					//if ($this->templateDat[11+$i] == $this->get('currentProd')) {
-					if ($this->objDat[$this->currentProductionOffset + $i] == $this->get('currentProd')) {
-						$productIndex = $i;
-						break;
-					}
-				}
 
-				$this->objDat[$this->prodInv+$productIndex] += $this->get('prodQty');
-				$this->objDat[$this->productStats+$productIndex*5+0] += $this->get('prodQuality'); // product quality
-				$this->objDat[$this->productStats+$productIndex*5+1] += $this->get('prodPollution'); // product Pollution
-				$this->objDat[$this->productStats+$productIndex*5+2] += $this->get('prodRights'); // product Rights
-				$this->objDat[$this->productStats+$productIndex*5+3] += $this->get('prodCost'); // product material cost
-				$this->objDat[$this->productStats+$productIndex*5+4] += $this->get('prodLaborCost'); // product labor cost
-
-
-
-				// Update labor experience
-				// load the product information
-				fseek($this->linkFile, $this->get('currentProd')*1000);
-				$thisProduct = new product($this->get('currentProd'), fread($this->linkFile, 1000), $this->linkFile);
-
-
-
-				// create the matrix of learning for the product
-				echo 'ADD LEARNING TO LABOR';
-				$skillMatrix = array_fill(0, 256, 0);
-				for ($i=0; $i<20; $i++) {
-					$skillMatrix[$thisProduct->objDat[$thisProduct->skillOffset+$i]] += $thisProduct->objDat[$thisProduct->learnOffset+$i];
-				}*/
 				$this->set('prodStart', 0);
 				// apply the matrix to each labor item working
 				for ($i=0; $i<10; $i++) {

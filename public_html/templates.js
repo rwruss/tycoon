@@ -1,3 +1,7 @@
+sum = function (a,b) {
+	return a+b;
+}
+
 scrMod = function (val) {
 		params = "val1="+val;
 		var xmlhttp = new XMLHttpRequest();
