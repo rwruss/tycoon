@@ -177,11 +177,12 @@ class factory extends object {
 		let thisDiv = useDeskTop.getPane("laborItemPane");
 		thisDiv.innerHTML = "";
 
-		let tmpLabor = companyLabor;
+		let tmpLabor = companyLabor.slice();
 		//tmpLabor.push(new laborItem(this.labor.slice(itemNum*30, itemNum*30+30)));
 		tmpLabor.push(this.factoryLabor[itemNum]);
+		console.log(tmpLabor);
 
-		let laborOpts = new laborSelect([tmpLabor.length-1], companyLabor, thisDiv, 1);
+		let laborOpts = new laborSelect([tmpLabor.length-1], tmpLabor, thisDiv, 1);
 		let saveLabor = newButton(thisDiv);
 		saveLabor.innerHTML = "Save labor";
 		saveLabor.sendStr = "1058," + this.objID + "," + itemNum;
@@ -198,8 +199,40 @@ class factory extends object {
 				//console.log(r.length);
 				if (r[0] > -1) {
 					console.log(this.parentFactory);
+					console.log(r.length);
 					console.log(r[6]);
-					console.log(r.slice(7,37));
+					console.log(r.slice(6,36));
+
+					//update factory labor item
+					this.parentFactory.factoryLabor[r[6]].update(r.slice(6,36));
+
+
+					// delete old company labor item
+					if (r[36] > 100) {
+
+						console.log(companyLabor);
+						for (let i=0; i<companyLabor.length; i++) {
+							if (companyLabor[i].objID == r[36]) {
+								console.log("delete item " + r[36]);
+								companyLabor.splice(i, 1);
+							}
+						}
+						console.log(companyLabor);
+					}
+
+					// add new company labor item
+					if (r[37] >0) {
+						console.log("add item " + r[37]);
+						console.log(r.slice(37));
+						companyLabor.push(new laborItem(setArrayInts(r.slice(37))));
+					}
+					console.log(companyLabor);
+					this.parentFactory.laborDetailOptions(this.itemNum);
+
+				}
+
+					//update company labor item
+					/*
 					this.optionClass.hideItem(tmp[1]);
 					this.parentFactory.factoryLabor[r[6]].update(r.slice(6,36));
 					this.optionClass.moveItem(this.optionClass.optionItems.length-1);
@@ -218,20 +251,8 @@ class factory extends object {
 						}
 					}
 					console.log(this.parentFactory.factoryLabor);
-					/*
-					let currentRates = r.slice(1,6);
-					console.log("Labor slot is " + r[6]);
-					console.log("Item to Delete is " + r[36]);
-					console.log("Old labot item is " + r[37]);
-					console.log(this.parentFactory);
-					console.log(this.parentFactory.factoryLabor);
-					if (r[6] > 10) {
-						for (let i=0; i<companyLabor.length; i++) {
-							if (companyLabor[i].objID == r[6]) companyLabor[i].update(r.slice(6,36));
-						}
-					}
-					//this.parentFactory.factoryLabor[r[37]].update(r.slice(6,36));
-				*/}
+					*/
+
 			});
 		});
 		/*
@@ -1161,6 +1182,11 @@ class service {
 
 class labor {
 	constructor(details) {
+
+		this.init(details);
+	}
+
+	init(details) {
 		// expect detailsof 29 items
 		//console.log(details);
 		this.objID = details[0],
@@ -1289,6 +1315,15 @@ class laborItem extends labor {
 
 	init(details) {
 		this.details = details;
+		// expect detailsof 29 items
+		//console.log(details);
+		this.objID = details[0],
+		this.objName = "??",
+		//this.qty = details.qty || 0;
+		//this.edClass = details.edClass || "0",
+		this.laborType = details[3],
+		this.details = details;
+		//console.log('create product ' + this.objID);
 		this.pay = details[2];
 	}
 

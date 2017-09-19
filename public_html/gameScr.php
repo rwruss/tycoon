@@ -25,7 +25,7 @@ $postVals = explode(",", $_POST['val1']);
 
 $inputValidate = TRUE;
 foreach ($postVals as $value) {
-	if (!is_numeric ($value) || $value < 0) $inputValidate = FALSE;
+	if (!is_numeric ($value)) $inputValidate = FALSE;
 }
 $gamePath = "../games/".$gameID;
 $scnPath = "../scenarios/".$_SESSION['game_'.$gameID]['scenario'];

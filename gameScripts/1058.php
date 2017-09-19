@@ -66,12 +66,14 @@ if (flock($laborPoolFile, LOCK_EX)) {
 	}
 	else if ($postVals[3] == $postVals[2]) {
 		// adjust the existing labor item in the factory slot
+		//echo 'Adjust existing labor';
 		$oldLabor = $thisFactory->laborItems[$postVals[2]];
 		$oldLabor->laborDat[2] = intval($postVals[4]*100); // set the new pay rate
 
 		$thisFactory->saveLabor();
 	}
 	else if ($postVals[3] == -1) {
+		//echo 'Remove existing labor';
 		// remove an item from the factory with no replacement
 		$newLabor = loadLaborItem(0, $laborPoolFile);
 		$oldLabor = $thisFactory->laborItems[$postVals[2]];

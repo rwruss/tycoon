@@ -594,17 +594,6 @@ class SLobjectSelect {
 				});
 			}
 		}
-		/*
-		//let item;
-		for (let i=0; i<this.selectedItems.length; i++) {
-			//count++
-			item = this.selectItem(this.optionItems[this.selectedItems[i]], this.selectedItems[i], null);
-			item.listClass = this;
-			//item.itemNum = count;
-			item.addEventListener("click", function () {
-				this.listClass.moveItem(this.itemNum, this);
-			});
-		}*/
 	}
 
 	getSelection() {
@@ -636,7 +625,7 @@ class laborSelect extends SLobjectSelect {
 
 		this.init();
 	}
-	
+
 	emptySelection() {
 		this.selectedArea.innerHTML = "Nothing Selected";
 	}
@@ -655,21 +644,22 @@ class laborSelect extends SLobjectSelect {
 			this.itemDivs[itemNum].parentNode.removeChild(this.itemDivs[itemNum]);
 		}
 
+		this.optionStatus[itemNum] = 1;
 		let oldNum = this.selectedObject;
 		if (oldNum > -1) {
 			//console.log("Remove the old item");
 			this.moveItem(oldNum, null);
 		}
 		this.selectedObject = itemNum;
-		this.optionStatus[itemNum] = 1;
+
 		this.optionStatus[oldNum] = 0;
 
 		let newDiv = item.renderSummary(this.selectedArea.item);
 		this.itemDivs[itemNum] = newDiv;
 		laborPaySettings(item, this.selectedArea.payDiv);
 
+		console.log(this.optionStatus);
 		return newDiv;
-
 	}
 
 	unSelectItem(item, itemNum, divObject) {
@@ -690,11 +680,12 @@ class laborSelect extends SLobjectSelect {
 			this.optionArea.insertBefore(thisInstance, this.optionArea.childNodes[count]);
 		}
 		this.itemDivs[itemNum] = thisInstance;
-		
+
+		console.log(this.optionStatus);
 		if (this.optionStatus.reduce(sum, 0) == 0) {
 			this.emptySelection();
 		}
-		
+
 		return thisInstance;
 	}
 
