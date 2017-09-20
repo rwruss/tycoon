@@ -1,0 +1,17 @@
+<?php
+
+$datFile = fopen('./transactions/2016.dat', 'rb');
+
+$data = fread($datFile);
+fclose($datFile);
+
+$items = floor(strlen($data)/50);
+
+for ($i=1; $i<items; $i++) {
+  $head = unpack('i*', substr($data, $i*50, 16));
+  $desc = substr($data, $i*50+16, 34);
+
+  echo $head[0].', '.$head[1].', '.$head[2].', '.$head[3].' --> '.$desc.'<br>';
+}
+
+?>

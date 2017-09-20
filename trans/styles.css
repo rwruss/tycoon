@@ -1,0 +1,35 @@
+.transRow {
+  width:99%;
+  position:relative;
+  height:20;
+}
+
+.transRowDate {
+  position:relative;
+  width:150;
+  float:left;
+}
+
+.transRowCard {
+  position:relative;
+  width:150;
+  float:left;
+}
+
+.transRowAmount {
+  position:relative;
+  width:150;
+  float:left;
+}
+
+.transRowCategory {
+  position:relative;
+  width:150;
+  float:left;
+}
+
+.transRowDesc {
+  position:relative;
+  width:250;
+  float:left;
+}
