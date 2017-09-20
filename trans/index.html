@@ -4,12 +4,21 @@
 <script type="text/javascript">
 
 
-var transactionData, contentDiv;
+var transactionData, contentDiv, categorySelct, monthList;
 var transactions = new Array();
+var categories = new Array();
+var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
 
-window.addEventListener("load", init);
+window.addEventListener("load", initTest);
 </script>
 
 <html>
-  <div id='content'>hello world</div>
+	<div id='container'>
+		<div id="menuBar" class="menuBar">
+			<div id="monthSelect">Selected Month:None</div>
+			<div id="catSelect">Selected Category:None</div>
+		</div>
+		<div id="content">hello world</div>
+	</div>
+  
 </html>

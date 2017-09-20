@@ -1,3 +1,34 @@
+.menuBar {
+	width:99%:
+	border:1px solid black;
+}
+
+.optBoxHidden {
+	height:0;
+	width:0;
+	overflow:hidden;
+}
+
+.optBoxShow {
+	all:initial;
+	position:relative;
+	width:250;
+	float:left;
+}
+
+.optionSel {
+	position:relative;
+	width:250;
+	float:left;
+	border:1px solid red;
+}
+
+.optionUn {
+	position:relative;
+	width:250;
+	float:left;
+}
+
 .transRow {
   width:99%;
   position:relative;
@@ -6,7 +37,7 @@
 
 .transRowDate {
   position:relative;
-  width:150;
+  width:350;
   float:left;
 }
 
