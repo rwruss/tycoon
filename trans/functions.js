@@ -16,6 +16,15 @@ async function getASync(val) {
 	return r;
 }
 
+function getPos(el) {
+    // yay readability
+    for (var lx=0, ly=0;
+         el != null;
+         lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+    //return {x: lx,y: ly};
+	return [lx, ly];
+}
+
 function init() {
 	contentDiv = document.getElementById("content");
   loadData();
@@ -23,10 +32,10 @@ function init() {
 
 function initSort() {
 	let monthBox = document.getElementById("monthSelect");
-	monthBox.desc = addDiv("", "", monthBox);
+	monthBox.desc = addDiv("", "sortBar", monthBox);
 	monthBox.desc.innerHTML = "Selected Month:";
 
-	monthBox.selected = addDiv("", "", monthBox);
+	monthBox.selected = addDiv("", "sortBar", monthBox);
 	monthBox.selected.innerHTML = "None";
 
 	monthBox.addEventListener("click", function () {
@@ -39,11 +48,25 @@ function initSort() {
 		}
 		new sortBox(boxOptions, transactions, "monthNum", this);
 	});
+	
 	let catBox = document.getElementById("catSelect");
+	catBox.desc = addDiv("", "sortBar", catBox);
+	catBox.desc.innerHTML = "Category:";
+
+	catBox.selected = addDiv("", "sortBar", catBox);
+	catBox.selected.innerHTML = "None";
+	
+	catBox.addEventListener("click", function () {
+		let boxOptions = [-1, "None"];
+		for (let i=0; i<categories.length; i++) {
+			boxOptions.push(i, categories[i]);
+		}
+		new sortBox(boxOptions, transactions, "category", this);
+	});
 }
 
 function initTest() {
-	categories[0] = "None";
+	categories[0] = "Unassigned";
 	let timeSpace = 15*24*3600;
 	for (let i=0; i<20; i++) {
 		transactions.push(new transaction ([i, i*timeSpace+1, i, i, i, "item " + i]));
@@ -55,6 +78,22 @@ function initTest() {
 	categorySelect = new optionSelect(categories);
 	loadMonths(transactions);
 	initSort();
+	initViews();
+}
+
+function initViews() {
+	let list = document.getElementById("voList");
+	list.addEventListener("click", function () {
+		contentDiv.innerHTML = "";
+		showData(transactions, contentDiv, null);
+	});
+	
+	let summary = document.getElementById("voSummary");
+	summary.addEventListener("click", function () {
+		console.log("clear div");
+		contentDiv.innerHTML = "";
+		summarize();		
+	})
 }
 
 function loadMonths(itemList) {
@@ -147,4 +186,33 @@ summaryLine = function (count, total, trg) {
 	newRow.date.innerHTML = "SUMMARY:"
 	newRow.card.innerHTML = "."
 	newRow.amount.innerHTML = total.toFixed(2);
+}
+
+summarize = function () {
+	let numMonths = monthList.length;
+	let numCategories = categories.length;
+	let monthTotals = new Array(numMonths*numCategories);
+	monthTotals.fill(0);
+	
+	for (let i=0; i<transactions.length; i++) {
+		monthTotals[transactions[i].monthNum*numCategories + transactions[i].category] += transactions[i].amount;
+	}
+	
+	let newTable = document.createElement("table");
+	contentDiv.appendChild(newTable);
+	
+	console.log(numCategories + " categories and " + numMonths + " months");
+	let newRow, newTD;
+	for (let i=0; i<numCategories; i++) {
+		newRow = document.createElement("tr");
+		newTD = document.createElement("td");
+		newTD.innerHTML = categories[i];
+		newRow.appendChild(newTD);
+		for (let j=0; j<numMonths; j++) {
+			newTD = document.createElement("td");
+			newTD.innerHTML = monthTotals[j*numCategories+i];
+			newRow.appendChild(newTD);
+		}
+	newTable.appendChild(newRow);
+	}
 }

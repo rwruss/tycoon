@@ -31,9 +31,14 @@ class transaction {
     newRow.desc.innerHTML = this.desc;
 
 
-	newRow.addEventListener("click", function () {
+	newRow.category.addEventListener("click", function () {
 		console.log("category selection");
-		categorySelect.showOptions(this.parentObj, this.parentObj.category);
+		let coords = getPos(this);
+		console.log(coords);
+		console.log(this)
+		coords[0] += parseInt(this.offsetWidth);
+		console.log(coords);
+		categorySelect.showOptions(this.parentNode.parentObj, this.parentNode.parentObj.category, coords);
 	});
 	this.rowItem = newRow;
   }
@@ -52,7 +57,7 @@ class optionSelect {
 		this.transaction = null;
 	}
 
-	showOptions(transItem, selected) {
+	showOptions(transItem, selected, coords) {
 		this.selected = selected;
 		//this.subDivs = new Array();
 		this.transaction = transItem;
@@ -67,7 +72,7 @@ class optionSelect {
 			}
 		} else {
 			console.log("make new");
-			newBox = addDiv("", "optionUn", contentDiv);
+			newBox = addDiv("", "optionUn", document.getElementById("container"));
 
 			newBox.parentObj = this;
 			for (let i=0; i<categories.length; i++) {
@@ -85,9 +90,11 @@ class optionSelect {
 			this.holder = newBox;
 		}
 		newBox.className = "optBoxShow";
+		newBox.style.left = coords[0];
+		newBox.style.top = coords[1];
 		//this.subDivs[selected].innerHTML = "SELECTED";
 		this.subDivs[selected].className = "optionSel";
-		console.log(this.subDivs);
+		//console.log(this.subDivs);
 	}
 
 	selectOption(optionNum) {
@@ -102,12 +109,12 @@ class sortBox {
 		this.showOptions();
 		this.baseList = baseList;
 		this.prop = property;
-		console.log(this.optionList);
-    this.returnTarget = returnTrg;
+		//console.log(this.optionList);
+		this.returnTarget = returnTrg;
 	}
 
 	showOptions() {
-		let newBox = addDiv("", "optionUn", contentDiv);
+		let newBox = addDiv("", "optionUn", document.getElementById("container"));
 		newBox.innerHTML = "OPTIONS"
 		for (let i=0; i<this.optionList.length; i+=2) {
 			let tmpDiv = addDiv("", "", newBox);
@@ -125,8 +132,8 @@ class sortBox {
 
     let tmpA;
     let checkVal = this.optionList[itemNum];
-    console.log(this.optionList);
-    console.log("sort based on item num " + checkVal + " --> " + this.optionList[itemNum+1] + " and property " + this.prop);
+    //console.log(this.optionList);
+    //console.log("sort based on item num " + checkVal + " --> " + this.optionList[itemNum+1] + " and property " + this.prop);
     if (checkVal >= 0) {
   		tmpA = [];
   		for (let i=0; i<this.baseList.length; i++) {

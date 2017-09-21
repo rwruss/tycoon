@@ -1,4 +1,5 @@
 .menuBar {
+	height:40;
 	width:99%:
 	border:1px solid black;
 }
@@ -11,9 +12,10 @@
 
 .optBoxShow {
 	all:initial;
-	position:relative;
+	background: white;
+	position:absolute;
 	width:250;
-	float:left;
+	border:2px solid blue;
 }
 
 .optionSel {
@@ -29,6 +31,12 @@
 	float:left;
 }
 
+.sortBar {
+	width:200;
+	position:relative;
+	float:left;
+}
+
 .summaryRow {
   width:99%;
   position:relative;
@@ -37,9 +45,13 @@
 }
 
 .transRow {
-  width:99%;
+	display:inline-block;
   position:relative;
   height:20;
+  border:1px solid blue;
+  border-radius:5px;
+  padding:2px;
+  margin:2px;
 }
 
 .transRowDate {
@@ -70,4 +82,12 @@
   position:relative;
   width:250;
   float:left;
+}
+
+.viewOptions {
+	position:absolute;
+	right:10;
+	top:10;
+	width:200;
+	height:200;
 }
