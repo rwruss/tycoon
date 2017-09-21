@@ -29,6 +29,13 @@
 	float:left;
 }
 
+.summaryRow {
+  width:99%;
+  position:relative;
+  height:20;
+	font-weight: bold;
+}
+
 .transRow {
   width:99%;
   position:relative;
@@ -37,7 +44,7 @@
 
 .transRowDate {
   position:relative;
-  width:350;
+	width:200;
   float:left;
 }
 

@@ -7,7 +7,7 @@ class transaction {
     this.category = dat[4];
     this.desc = dat[5];
 	this.rowItem = null;
-	
+
 	let date = new Date(this.date*1000);
 	this.monthNum = calcMonthNum(date);
   }
@@ -20,7 +20,7 @@ class transaction {
     newRow.amount = addDiv("", "transRowDate", newRow);
     newRow.category = addDiv("", "transRowDate", newRow);
     newRow.desc = addDiv("", "transRowDesc", newRow);
-	newRow.parentObj = this;
+	  newRow.parentObj = this;
 
     let date = new Date(this.date*1000);
 
@@ -29,15 +29,15 @@ class transaction {
     newRow.amount.innerHTML = this.amount.toFixed(2);
     newRow.category.innerHTML = categories[this.category];
     newRow.desc.innerHTML = this.desc;
-	
-	
+
+
 	newRow.addEventListener("click", function () {
 		console.log("category selection");
 		categorySelect.showOptions(this.parentObj, this.parentObj.category);
 	});
 	this.rowItem = newRow;
   }
-  
+
   changeCategory(newCat) {
 	  this.category = newCat;
 	  this.rowItem.category.innerHTML = categories[newCat];
@@ -51,12 +51,12 @@ class optionSelect {
 		this.subDivs = new Array();
 		this.transaction = null;
 	}
-	
+
 	showOptions(transItem, selected) {
 		this.selected = selected;
 		//this.subDivs = new Array();
 		this.transaction = transItem;
-		
+
 		console.log(this.selected);
 		let newBox;
 		if (this.holder) {
@@ -67,8 +67,8 @@ class optionSelect {
 			}
 		} else {
 			console.log("make new");
-			newBox = addDiv("", "optionUn", contentDiv);		
-		
+			newBox = addDiv("", "optionUn", contentDiv);
+
 			newBox.parentObj = this;
 			for (let i=0; i<categories.length; i++) {
 				let catOption = addDiv("", "optionUn", newBox);
@@ -89,29 +89,30 @@ class optionSelect {
 		this.subDivs[selected].className = "optionSel";
 		console.log(this.subDivs);
 	}
-	
+
 	selectOption(optionNum) {
 		this.transaction.changeCategory(optionNum);
 	}
 }
 
 class sortBox {
-	constructor (options, baseList, property) {
+	constructor (options, baseList, property, returnTrg) {
 		this.container = null;
 		this.optionList = options;
 		this.showOptions();
 		this.baseList = baseList;
 		this.prop = property;
 		console.log(this.optionList);
+    this.returnTarget = returnTrg;
 	}
-	
+
 	showOptions() {
 		let newBox = addDiv("", "optionUn", contentDiv);
 		newBox.innerHTML = "OPTIONS"
 		for (let i=0; i<this.optionList.length; i+=2) {
 			let tmpDiv = addDiv("", "", newBox);
 			tmpDiv.innerHTML = this.optionList[i+1];
-			tmpDiv.itemNum = this.optionList[i];
+			tmpDiv.itemNum = i;
 			tmpDiv.parentObj = this;
 			tmpDiv.addEventListener("click", function () {
 				console.log("selected " + this.itemNum);
@@ -119,16 +120,26 @@ class sortBox {
 			})
 		}
 	}
-	
+
 	sortList(itemNum) {
-		console.log("sort based on item num " + itemNum + " --> " + this.optionList[itemNum*2+1] + " and property " + this.prop);
-		let tmpA = [];
-		for (let i=0; i<this.baseList.length; i++) {
-			console.log(this.baseList[i][this.prop] + " vs " + this.optionList[itemNum*2]);
-			if (this.baseList[i][this.prop] == this.optionList[itemNum*2]) {
-				tmpA.push(i);
-			}
-		}
+
+    let tmpA;
+    let checkVal = this.optionList[itemNum];
+    console.log(this.optionList);
+    console.log("sort based on item num " + checkVal + " --> " + this.optionList[itemNum+1] + " and property " + this.prop);
+    if (checkVal >= 0) {
+  		tmpA = [];
+  		for (let i=0; i<this.baseList.length; i++) {
+  			console.log(this.baseList[i][this.prop] + " vs " + checkVal);
+  			if (this.baseList[i][this.prop] == checkVal) {
+  				tmpA.push(i);
+  			}
+  		}
+    } else tmpA = null;
 		console.log(tmpA);
+    showData(transactions, contentDiv, tmpA);
+    console.log(this.returnTarget)
+    this.returnTarget.selected.innerHTML = this.optionList[itemNum+1];
 	}
+
 }

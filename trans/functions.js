@@ -23,17 +23,21 @@ function init() {
 
 function initSort() {
 	let monthBox = document.getElementById("monthSelect");
-	console.log(monthList);
+	monthBox.desc = addDiv("", "", monthBox);
+	monthBox.desc.innerHTML = "Selected Month:";
+
+	monthBox.selected = addDiv("", "", monthBox);
+	monthBox.selected.innerHTML = "None";
+
 	monthBox.addEventListener("click", function () {
-		console.log("create sort box");
-		let boxOptions = [];
+		let boxOptions = [-1, "None"];
 		let monthNum, yearNum;
 		for (let i=0; i<monthList.length; i++) {
 			monthNum = monthList[i]%12;
 			yearNum = Math.floor(monthList[i]/12)+1970;
 			boxOptions.push(monthList[i], monthNames[monthNum] + " " + yearNum);
 		}
-		new sortBox(boxOptions, transactions, "monthNum");
+		new sortBox(boxOptions, transactions, "monthNum", this);
 	});
 	let catBox = document.getElementById("catSelect");
 }
@@ -46,8 +50,8 @@ function initTest() {
 		categories.push("Cat " + i);
 	}
 	contentDiv = document.getElementById("content");
-	showData(transactions, contentDiv);
-	
+	showData(transactions, contentDiv, null);
+
 	categorySelect = new optionSelect(categories);
 	loadMonths(transactions);
 	initSort();
@@ -58,24 +62,19 @@ function loadMonths(itemList) {
 	let monthNum = calcMonthNum(date);
 	let loMonth = monthNum;
 	let hiMonth = monthNum;
-	console.log(itemList[0].date +" = " + monthNum + "//" + (date.getUTCFullYear()-1970)*12)
-	console.log("himonth: " + hiMonth + ", loMonth: " + loMonth);
+
 	for (let i=1; i<itemList.length; i++) {
 		date = new Date(itemList[i].date*1000);
 		monthNum = calcMonthNum(date);
-		
-		console.log(itemList[i].date +" = " + monthNum)
-		
+
 		loMonth = Math.min(loMonth, monthNum);
 		hiMonth = Math.max(hiMonth, monthNum);
 	}
-	console.log("himonth: " + hiMonth + ", loMonth: " + loMonth);
 	let numMonths = hiMonth - loMonth;
 	monthList = new Array(numMonths + 1);
 	for (i=0; i<=numMonths; i++) {
 		monthList[i] = loMonth+i;
 	}
-	console.log(monthList);
 }
 
 function calcMonthNum (date) {
@@ -93,7 +92,7 @@ function loadData () {
 			transactions.push(new transaction(r.slice(i, i+6)));
 		}
 		console.log("transactions loaded");
-		showData(transactions, contentDiv);
+		showData(transactions, contentDiv, null);
 	});
 }
 
@@ -114,11 +113,38 @@ function loadDataPromise(val) {
 	})
 }
 
-function showData (list, trg) {
-	trg.innerHTML = "show Data";
-	for (i=0; i<list.length; i++) {
-		list[i].tableLine(trg);
+function showData (baselist, trg, showItems) {
+	trg.innerHTML = "";
+	let total = 0;
+	let count = 0;
+	if (showItems) {
+		for (i=0; i<showItems.length; i++) {
+			baselist[showItems[i]].tableLine(trg);
+			total += baselist[showItems[i]].amount;
+		}
+		count = showItems.length;
+	} else {
+		for (i=0; i<baselist.length; i++) {
+			baselist[i].tableLine(trg);
+			total += baselist[i].amount;
+		}
+		count = baselist.length;
 	}
+	summaryLine(count, total, trg);
 }
 
 
+summaryLine = function (count, total, trg) {
+	console.log("summary line");
+	let newRow = addDiv("", "summaryRow", trg);
+
+	newRow.date = addDiv("", "transRowDate", newRow);
+	newRow.card = addDiv("", "transRowDate", newRow);
+	newRow.amount = addDiv("", "transRowDate", newRow);
+	newRow.category = addDiv("", "transRowDate", newRow);
+	newRow.desc = addDiv("", "transRowDesc", newRow);
+
+	newRow.date.innerHTML = "SUMMARY:"
+	newRow.card.innerHTML = "."
+	newRow.amount.innerHTML = total.toFixed(2);
+}
