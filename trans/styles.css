@@ -23,12 +23,15 @@
 	width:250;
 	float:left;
 	border:1px solid red;
+	margin: 1px;
+	border-radius: 5px;
 }
 
 .optionUn {
 	position:relative;
 	width:250;
 	float:left;
+	margin: 2px;
 }
 
 .sortBar {
@@ -44,14 +47,57 @@
 	font-weight: bold;
 }
 
-.transRow {
+.summaryTable {
+	border-collapse:collapse;
+	border:1px solid blue;
+}
+
+.summaryTableRow:nth-child(even) {
+}
+
+.summaryTableRow:nth-child(odd) {
+}
+
+.summaryTableItem:nth-child(even) {
+	background: #CCC;
+	border-spacing:8px;
+	border-bottom: 1px solid blue;
+
+	padding-left:25px;
+	padding-right:15px;
+	height:30px;
+	vertical-align:middle;
+}
+
+.summaryTableItem:nth-child(odd) {
+	background: #FFF;
+	border-spacing:8px;
+	border-bottom: 1px solid blue;
+	padding-left:25px;
+	padding-right:15px;
+	height:30px;
+	vertical-align:middle;
+}
+
+.transRow:nth-child(odd) {
 	display:inline-block;
   position:relative;
   height:20;
   border:1px solid blue;
-  border-radius:5px;
+  border-radius:7px;
   padding:2px;
   margin:2px;
+}
+
+.transRow:nth-child(even) {
+	display:inline-block;
+  position:relative;
+  height:20;
+  border:1px solid blue;
+  border-radius:7px;
+  padding:2px;
+  margin:2px;
+  background-color:#CCC
 }
 
 .transRowDate {

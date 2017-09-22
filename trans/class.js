@@ -103,50 +103,127 @@ class optionSelect {
 }
 
 class sortBox {
-	constructor (options, baseList, property, returnTrg) {
+	constructor (options, baseList, property) {
 		this.container = null;
 		this.optionList = options;
-		this.showOptions();
+		
 		this.baseList = baseList;
 		this.prop = property;
-		//console.log(this.optionList);
-		this.returnTarget = returnTrg;
+		this.returnTarget = null;
+		this.selectStatus = new Array(options.length);
+		this.selectStatus.fill(0);
+		this.childDivs = new Array();
+		this.container = null;
+		
+		this.makeBox();
 	}
-
-	showOptions() {
-		let newBox = addDiv("", "optionUn", document.getElementById("container"));
+	
+	makeBox() {
+		let newBox = addDiv("", "optBoxHidden", document.getElementById("container"));
 		newBox.innerHTML = "OPTIONS"
+		newBox.parentObj = this;
+		
 		for (let i=0; i<this.optionList.length; i+=2) {
-			let tmpDiv = addDiv("", "", newBox);
+			let tmpDiv = addDiv("", "optionUn", newBox);
 			tmpDiv.innerHTML = this.optionList[i+1];
 			tmpDiv.itemNum = i;
 			tmpDiv.parentObj = this;
+
+			this.childDivs.push(tmpDiv);
 			tmpDiv.addEventListener("click", function () {
 				console.log("selected " + this.itemNum);
-				this.parentObj.sortList(this.itemNum);
+				this.parentObj.selectItem(this.itemNum, this);
 			})
+		}
+		
+		let tmpDiv = addDiv("", "optionUn", newBox);
+		tmpDiv.parentObj = this;
+		tmpDiv.addEventListener("click", function () {
+			let items = new Array();
+			for (let i=0; i<this.parentObj.selectStatus.length; i++) {
+				
+				if (this.parentObj.selectStatus[i] == 1) {
+					items.push(i);
+				} 
+			}
+			console.log(items);
+			this.parentNode.className = "optBoxHidden";
+			this.parentObj.sortList(items);
+		});
+		tmpDiv.innerHTML = "APPLY FILTER";
+		
+		this.container = newBox;
+	}
+
+	showOptions(returnTrg, coords) {
+		this.container.className = "optBoxShow";
+		this.container.style.left = coords[0];
+		this.container.style.top = coords[1];
+		
+		this.returnTarget = returnTrg;
+		
+	}
+	
+	selectItem(itemNum, div) {
+		if (itemNum == 0) {
+			this.selectStatus.fill(0);
+			for (i=0; i<this.childDivs.length; i++) {
+				this.childDivs[i].className = "optionUn";
+			}
+		return;
+		}
+		
+		if (this.selectStatus[itemNum] == 0) {
+			this.selectStatus[itemNum] = 1;
+			div.className = "optionSel";
+		} else {
+			this.selectStatus[itemNum] = 0;
+			div.className = "optionUn";
 		}
 	}
 
-	sortList(itemNum) {
+	sortList(items) {
+		console.log(items);
+		if (items.length == 0) {
+			sortLists[this.prop] = allItems;
+			//showData(transactions, contentDiv, null);
+		} else {
+		
+			let tmpA = new Array();
+			let checkVals = [];
+			for (let i=0; i<items.length; i++) {
+				checkVals.push(this.optionList[items[i]]);
+			}
 
-    let tmpA;
-    let checkVal = this.optionList[itemNum];
-    //console.log(this.optionList);
-    //console.log("sort based on item num " + checkVal + " --> " + this.optionList[itemNum+1] + " and property " + this.prop);
-    if (checkVal >= 0) {
-  		tmpA = [];
-  		for (let i=0; i<this.baseList.length; i++) {
-  			console.log(this.baseList[i][this.prop] + " vs " + checkVal);
-  			if (this.baseList[i][this.prop] == checkVal) {
-  				tmpA.push(i);
-  			}
-  		}
-    } else tmpA = null;
-		console.log(tmpA);
-    showData(transactions, contentDiv, tmpA);
-    console.log(this.returnTarget)
-    this.returnTarget.selected.innerHTML = this.optionList[itemNum+1];
+			console.log(checkVals);
+			for (let i=0; i<this.baseList.length; i++) {
+				let testVal = checkVals.indexOf(this.baseList[i][this.prop]);
+				//console.log(testVal);
+				if (checkVals.indexOf(this.baseList[i][this.prop]) >= 0) {
+					tmpA.push(i);
+				}
+			}
+			console.log(sortLists);
+			sortLists[this.prop] = tmpA;
+			console.log(sortLists);
+			
+			console.log(allItems);
+			//console.log(tmpA);
+		}
+
+		let useA = allItems;
+		for (let key in sortLists) {
+			console.log(useA);
+			console.log(sortLists[key]);
+			if (sortLists[key].length > 0)	useA = intersect(useA, sortLists[key]);
+		}
+		console.log(useA);
+		
+
+		showData(transactions, contentDiv, useA);
+		
+		console.log(this.returnTarget)
+		//this.returnTarget.selected.innerHTML = this.optionList[itemNum+1];
 	}
 
 }

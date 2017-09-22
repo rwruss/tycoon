@@ -30,23 +30,42 @@ function init() {
   loadData();
 }
 
+function intersect(a, b) {
+	var t;
+    if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
+    return a.filter(function (e) {
+        return b.indexOf(e) > -1;
+    });
+}
+
 function initSort() {
+	sortLists["monthNum"] = [];
+	sortLists["category"] = [];
+	
+	console.log(sortLists);
+	
 	let monthBox = document.getElementById("monthSelect");
 	monthBox.desc = addDiv("", "sortBar", monthBox);
 	monthBox.desc.innerHTML = "Selected Month:";
 
 	monthBox.selected = addDiv("", "sortBar", monthBox);
 	monthBox.selected.innerHTML = "None";
+	
+	let boxOptions = [-1, "All"];
+	let monthNum, yearNum;
+	for (let i=0; i<monthList.length; i++) {
+		monthNum = monthList[i]%12;
+		yearNum = Math.floor(monthList[i]/12)+1970;
+		boxOptions.push(monthList[i], monthNames[monthNum] + " " + yearNum);
+	}
+	sortItems["monthNum"] = new sortBox(boxOptions, transactions, "monthNum");
 
-	monthBox.addEventListener("click", function () {
-		let boxOptions = [-1, "None"];
-		let monthNum, yearNum;
-		for (let i=0; i<monthList.length; i++) {
-			monthNum = monthList[i]%12;
-			yearNum = Math.floor(monthList[i]/12)+1970;
-			boxOptions.push(monthList[i], monthNames[monthNum] + " " + yearNum);
-		}
-		new sortBox(boxOptions, transactions, "monthNum", this);
+	monthBox.selected.addEventListener("click", function () {
+		
+		let coords = getPos(this);
+		coords[1] += parseInt(this.offsetHeight);
+		//new sortBox(this, coords);
+		sortItems["monthNum"].showOptions(this, coords);
 	});
 	
 	let catBox = document.getElementById("catSelect");
@@ -56,12 +75,17 @@ function initSort() {
 	catBox.selected = addDiv("", "sortBar", catBox);
 	catBox.selected.innerHTML = "None";
 	
-	catBox.addEventListener("click", function () {
-		let boxOptions = [-1, "None"];
-		for (let i=0; i<categories.length; i++) {
-			boxOptions.push(i, categories[i]);
-		}
-		new sortBox(boxOptions, transactions, "category", this);
+	boxOptions = [-1, "All"];
+	for (let i=0; i<categories.length; i++) {
+		boxOptions.push(i, categories[i]);
+	}
+	sortItems["category"] = new sortBox(boxOptions, transactions, "category");
+	
+	catBox.selected.addEventListener("click", function () {
+		
+		let coords = getPos(this);
+		coords[1] += parseInt(this.offsetHeight);
+		sortItems["category"].showOptions(this, coords);
 	});
 }
 
@@ -71,9 +95,11 @@ function initTest() {
 	for (let i=0; i<20; i++) {
 		transactions.push(new transaction ([i, i*timeSpace+1, i, i, i, "item " + i]));
 		categories.push("Cat " + i);
+		displayList.push(i);
 	}
+	allItems = displayList;
 	contentDiv = document.getElementById("content");
-	showData(transactions, contentDiv, null);
+	showData(transactions, contentDiv, displayList);
 
 	categorySelect = new optionSelect(categories);
 	loadMonths(transactions);
@@ -85,7 +111,7 @@ function initViews() {
 	let list = document.getElementById("voList");
 	list.addEventListener("click", function () {
 		contentDiv.innerHTML = "";
-		showData(transactions, contentDiv, null);
+		showData(transactions, contentDiv, displayList);
 	});
 	
 	let summary = document.getElementById("voSummary");
@@ -131,7 +157,7 @@ function loadData () {
 			transactions.push(new transaction(r.slice(i, i+6)));
 		}
 		console.log("transactions loaded");
-		showData(transactions, contentDiv, null);
+		showData(transactions, contentDiv, displayList);
 	});
 }
 
@@ -191,28 +217,103 @@ summaryLine = function (count, total, trg) {
 summarize = function () {
 	let numMonths = monthList.length;
 	let numCategories = categories.length;
-	let monthTotals = new Array(numMonths*numCategories);
-	monthTotals.fill(0);
+	let monthCatTotals = new Array(numMonths*numCategories);
+	monthCatTotals.fill(0);
 	
 	for (let i=0; i<transactions.length; i++) {
-		monthTotals[transactions[i].monthNum*numCategories + transactions[i].category] += transactions[i].amount;
+		monthCatTotals[transactions[i].monthNum*numCategories + transactions[i].category] += transactions[i].amount;
 	}
 	
 	let newTable = document.createElement("table");
+	newTable.className = "summaryTable";
 	contentDiv.appendChild(newTable);
 	
 	console.log(numCategories + " categories and " + numMonths + " months");
 	let newRow, newTD;
-	for (let i=0; i<numCategories; i++) {
+	
+	// Create the month header Row and calculate the total amount for each month
+	let monthTotals = new Array(numMonths*numCategories);
+	monthTotals.fill(0);
+	
+	newRow = document.createElement("tr");
+	newRow.className = "summaryTableRow";
+	
+	newTD = document.createElement("td");
+	newTD.innerHTML = "";
+	newTD.className = "summaryTableItem";
+	
+	newRow.appendChild(newTD);
+	for (let i=0; i<numMonths; i++ ) {
+		newTD = document.createElement("td");
+		newTD.innerHTML = monthNames[monthList[i]];
+		newTD.className = "summaryTableItem";
+		
+		newRow.appendChild(newTD);
+	}
+	newTable.appendChild(newRow);
+	
+	// blank TD at the end of the row
+	newTD = document.createElement("td");
+	newTD.innerHTML = "";
+	newTD.className = "summaryTableItem";
+	
+	newRow.appendChild(newTD);
+	
+	for (let i=0; i<numCategories; i++) {	
+		
+		// create a row for this category
 		newRow = document.createElement("tr");
+		newRow.className = "summaryTableRow";
+		
 		newTD = document.createElement("td");
 		newTD.innerHTML = categories[i];
+		newTD.className = "summaryTableItem";
+		
 		newRow.appendChild(newTD);
+		rowTotal = 0;
 		for (let j=0; j<numMonths; j++) {
 			newTD = document.createElement("td");
-			newTD.innerHTML = monthTotals[j*numCategories+i];
+			newTD.innerHTML = monthCatTotals[j*numCategories+i].toFixed(2);
+			newTD.className = "summaryTableItem";
+			
 			newRow.appendChild(newTD);
+			rowTotal += monthCatTotals[j*numCategories+i];
+			
+			monthTotals[j] += monthCatTotals[j*numCategories+i]
 		}
-	newTable.appendChild(newRow);
+		
+		// show the total for the row
+		newTD = document.createElement("td");
+		newTD.innerHTML = rowTotal;
+		newRow.appendChild(newTD);
+		newTD.className = "summaryTableItem";
+		
+		newTable.appendChild(newRow);
 	}
+	
+	// show the total for each month
+	newRow = document.createElement("tr");
+	newRow.className = "summaryTableRow";
+	
+	newTD = document.createElement("td");
+	newTD.innerHTML = "";
+	newTD.className = "summaryTableItem";
+	newRow.appendChild(newTD);
+	
+	for (let i=0; i<numMonths; i++) {
+		newTD = document.createElement("td");
+		newTD.innerHTML = monthTotals[i].toFixed(2);
+		newTD.className = "summaryTableItem";
+		
+		newRow.appendChild(newTD);
+	}
+	
+	// blank TD at the end of the row
+	newTD = document.createElement("td");
+	newTD.innerHTML = "";
+	newTD.className = "summaryTableItem";
+	newRow.appendChild(newTD);
+	
+	// add to the table
+	newTable.appendChild(newRow);
 }

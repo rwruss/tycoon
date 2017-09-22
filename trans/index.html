@@ -4,9 +4,12 @@
 <script type="text/javascript">
 
 
-var transactionData, contentDiv, categorySelct, monthList;
+var transactionData, contentDiv, categorySelct, monthList, allItems;
 var transactions = new Array();
 var categories = new Array();
+var sortItems = new Array();
+var displayList = new Array();
+var sortLists = {};
 var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
 
 window.addEventListener("load", initTest);
