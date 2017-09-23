@@ -16,7 +16,7 @@ for ($i=1; $i<$items; $i++) {
   $desc = substr($data, $i*50+16, 34);
 
   //echo $head[1].', '.$head[2].', '.$head[3].', '.$head[4].','.$desc.'<br>';
-  echo implode(',',$head).','.$desc.',';
+  echo $i.','.implode(',',$head).','.trim($desc).',';
 }
 
 ?>

@@ -2,9 +2,9 @@ class transaction {
   constructor(dat) {
 	this.transID = dat[0];
     this.date = dat[1];
-    this.card = dat[2];
-    this.amount = dat[3]/100;
-    this.category = dat[4];
+    this.card = dat[3];
+    this.amount = dat[2]/100;
+    this.category = parseInt(dat[4]);
     this.desc = dat[5];
 	this.rowItem = null;
 
@@ -106,7 +106,7 @@ class sortBox {
 	constructor (options, baseList, property) {
 		this.container = null;
 		this.optionList = options;
-		
+
 		this.baseList = baseList;
 		this.prop = property;
 		this.returnTarget = null;
@@ -114,15 +114,15 @@ class sortBox {
 		this.selectStatus.fill(0);
 		this.childDivs = new Array();
 		this.container = null;
-		
+
 		this.makeBox();
 	}
-	
+
 	makeBox() {
 		let newBox = addDiv("", "optBoxHidden", document.getElementById("container"));
 		newBox.innerHTML = "OPTIONS"
 		newBox.parentObj = this;
-		
+
 		for (let i=0; i<this.optionList.length; i+=2) {
 			let tmpDiv = addDiv("", "optionUn", newBox);
 			tmpDiv.innerHTML = this.optionList[i+1];
@@ -135,23 +135,23 @@ class sortBox {
 				this.parentObj.selectItem(this.itemNum, this);
 			})
 		}
-		
+
 		let tmpDiv = addDiv("", "optionUn", newBox);
 		tmpDiv.parentObj = this;
 		tmpDiv.addEventListener("click", function () {
 			let items = new Array();
 			for (let i=0; i<this.parentObj.selectStatus.length; i++) {
-				
+
 				if (this.parentObj.selectStatus[i] == 1) {
 					items.push(i);
-				} 
+				}
 			}
 			console.log(items);
 			this.parentNode.className = "optBoxHidden";
 			this.parentObj.sortList(items);
 		});
 		tmpDiv.innerHTML = "APPLY FILTER";
-		
+
 		this.container = newBox;
 	}
 
@@ -159,11 +159,11 @@ class sortBox {
 		this.container.className = "optBoxShow";
 		this.container.style.left = coords[0];
 		this.container.style.top = coords[1];
-		
+
 		this.returnTarget = returnTrg;
-		
+
 	}
-	
+
 	selectItem(itemNum, div) {
 		if (itemNum == 0) {
 			this.selectStatus.fill(0);
@@ -172,7 +172,7 @@ class sortBox {
 			}
 		return;
 		}
-		
+
 		if (this.selectStatus[itemNum] == 0) {
 			this.selectStatus[itemNum] = 1;
 			div.className = "optionSel";
@@ -188,7 +188,7 @@ class sortBox {
 			sortLists[this.prop] = allItems;
 			//showData(transactions, contentDiv, null);
 		} else {
-		
+
 			let tmpA = new Array();
 			let checkVals = [];
 			for (let i=0; i<items.length; i++) {
@@ -198,30 +198,30 @@ class sortBox {
 			console.log(checkVals);
 			for (let i=0; i<this.baseList.length; i++) {
 				let testVal = checkVals.indexOf(this.baseList[i][this.prop]);
-				//console.log(testVal);
+				console.log("Look for value " + testVal + " in property " + this.prop);
 				if (checkVals.indexOf(this.baseList[i][this.prop]) >= 0) {
 					tmpA.push(i);
 				}
 			}
 			console.log(sortLists);
 			sortLists[this.prop] = tmpA;
-			console.log(sortLists);
-			
-			console.log(allItems);
-			//console.log(tmpA);
-		}
 
-		let useA = allItems;
+		}
+    console.log(sortLists);
+		let useA = allItems.slice();
 		for (let key in sortLists) {
 			console.log(useA);
+      console.log(key)
 			console.log(sortLists[key]);
-			if (sortLists[key].length > 0)	useA = intersect(useA, sortLists[key]);
+			if (sortLists[key].length > 0)	{
+        useA = intersect(useA, sortLists[key]);
+      } else useA = [];
 		}
 		console.log(useA);
-		
+
 
 		showData(transactions, contentDiv, useA);
-		
+
 		console.log(this.returnTarget)
 		//this.returnTarget.selected.innerHTML = this.optionList[itemNum+1];
 	}
