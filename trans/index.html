@@ -9,10 +9,11 @@ var transactions = new Array();
 var categories = new Array();
 var sortItems = new Array();
 var displayList = new Array();
-var sortLists = {};
+var currentSort = new Array(-1,"amount");
+var filterLists = {};
 var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
 
-window.addEventListener("load", init);
+window.addEventListener("load", initTest);
 </script>
 
 <html>

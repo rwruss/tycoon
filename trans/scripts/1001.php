@@ -1,6 +1,8 @@
 <?php
 
 $datFile = fopen('./transactions/2016.dat', 'rb');
+$categories = file_get_contents('./transactions/categories.dat');
+$catItems = explode(',', $categories);
 
 fseek($datFile, 0, SEEK_END);
 $fileSize = ftell($datFile);
@@ -10,6 +12,8 @@ fclose($datFile);
 
 $items = floor(strlen($data)/50);
 //echo 'Load '.$items.' items<p>';
+
+echo sizeof($catItems).','.$categoties.',';
 
 for ($i=1; $i<$items; $i++) {
   $head = unpack('i*', substr($data, $i*50, 16));

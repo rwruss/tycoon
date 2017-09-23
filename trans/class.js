@@ -45,7 +45,14 @@ class transaction {
 
   changeCategory(newCat) {
 	  this.category = newCat;
-	  this.rowItem.category.innerHTML = categories[newCat];
+	  
+	  let sendA = [1002, this.transID, newCat, this.amount];
+	  getASync(sendA.join(",")).then(v => {
+		  r = v.split("|");
+		  if (r[0] == 1) {
+			  this.rowItem.category.innerHTML = categories[newCat];
+		  } else console.log("An error has occured")
+	  });
   }
 }
 
@@ -185,7 +192,7 @@ class sortBox {
 	sortList(items) {
 		console.log(items);
 		if (items.length == 0) {
-			sortLists[this.prop] = allItems;
+			filterLists[this.prop] = allItems;
 			//showData(transactions, contentDiv, null);
 		} else {
 
@@ -198,32 +205,78 @@ class sortBox {
 			console.log(checkVals);
 			for (let i=0; i<this.baseList.length; i++) {
 				let testVal = checkVals.indexOf(this.baseList[i][this.prop]);
-				console.log("Look for value " + testVal + " in property " + this.prop);
+				//console.log("Look for value " + testVal + " in property " + this.prop);
 				if (checkVals.indexOf(this.baseList[i][this.prop]) >= 0) {
 					tmpA.push(i);
 				}
 			}
-			console.log(sortLists);
-			sortLists[this.prop] = tmpA;
+			//console.log(filterLists);
+			filterLists[this.prop] = tmpA;
 
 		}
-    console.log(sortLists);
+    console.log(filterLists);
 		let useA = allItems.slice();
-		for (let key in sortLists) {
-			console.log(useA);
-      console.log(key)
-			console.log(sortLists[key]);
-			if (sortLists[key].length > 0)	{
-        useA = intersect(useA, sortLists[key]);
+		for (let key in filterLists) {
+			//console.log(useA);
+			//console.log(key)
+			//console.log(filterLists[key]);
+			if (filterLists[key].length > 0)	{
+        useA = intersect(useA, filterLists[key]);
       } else useA = [];
 		}
-		console.log(useA);
+		//console.log(useA);
 
-
-		showData(transactions, contentDiv, useA);
+		displayList = useA;
+		console.log(displayList);
+		displayList.sort(sortByProp(currentSort));
+		console.log(displayList);
+		showData(transactions, contentDiv, displayList);
 
 		console.log(this.returnTarget)
 		//this.returnTarget.selected.innerHTML = this.optionList[itemNum+1];
 	}
 
+}
+
+class sortBar {
+	constructor() {}
+	
+	render(trg) {
+		let newRow = addDiv("", "transRow", trg);
+		newRow.parentObj = this;
+		this.rowObject = newRow;
+		newRow.parentObj = this;
+
+		newRow.date = addDiv("", "transRowDate", newRow);
+		newRow.card = addDiv("", "transRowDate", newRow);
+		newRow.amount = addDiv("", "transRowDate", newRow);
+		newRow.category = addDiv("", "transRowDate", newRow);
+		newRow.desc = addDiv("", "transRowDesc", newRow);
+		
+		
+		newRow.date.innerHTML = "DATE";
+		newRow.card.innerHTML = "CARD";
+		newRow.amount.innerHTML = "AMOUNT";
+		newRow.category.innerHTML = "TYPE";
+		newRow.desc.innerHTML = "DESCRIPTION";
+		
+		newRow.date.addEventListener("click", function () {
+			this.parentNode.parentObj.sortBy("date");
+		});
+		newRow.amount.addEventListener("click", function () {
+			this.parentNode.parentObj.sortBy("amount");
+		});
+	}
+	
+	sortBy(desc) {
+		if (currentSort[1] == desc) {
+			currentSort[0] *= -1;
+		} else {
+			currentSort = [1, desc];
+		}
+	
+	displayList.sort(sortByProp(currentSort));
+	showData(transactions, contentDiv, displayList);
+	}
+	
 }

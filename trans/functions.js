@@ -63,10 +63,10 @@ function finishInit() {
 }
 
 function initSort() {
-	sortLists["monthNum"] = allItems.slice();
-	sortLists["category"] = allItems.slice();
+	filterLists["monthNum"] = allItems.slice();
+	filterLists["category"] = allItems.slice();
 
-	console.log(sortLists);
+	console.log(filterLists);
 
 	let monthBox = document.getElementById("monthSelect");
 	monthBox.desc = addDiv("", "sortBar", monthBox);
@@ -157,12 +157,13 @@ function loadMonths(itemList) {
 
 function loadData () {
   getASync("1001").then(v => {
-
+		
 		r = v.split(",");
 		console.log(r.length);
+		categories = r.slice(1, r[0]);
 
 		let tmpA = [];
-		let transCount = (r.length-1)/6;
+		let transCount = (r.length - (r[0]+1) - 1)/6;  // subtract the amount of categories plus the category count and the dummy item on the end due to an extra comma
 		for (i=0; i<transCount; i++) {
 			transactions.push(new transaction(r.slice(i*6, i*6+7)));
 			displayList.push(i);
@@ -201,7 +202,10 @@ function showData (baselist, trg, showItems) {
 
 	console.log(baselist);
 	console.log(showItems);
-
+	
+	headerRow = new sortBar();
+	headerRow.render(trg);
+	
 	if (showItems) {
 		for (i=0; i<showItems.length; i++) {
 			baselist[showItems[i]].tableLine(trg);
@@ -342,4 +346,36 @@ summarize = function () {
 
 	// add to the table
 	newTable.appendChild(newRow);
+}
+
+function headerLine() {
+	let newRow = addDiv("", "transRow", null);
+
+    newRow.date = addDiv("", "transRowDate", newRow);
+    newRow.card = addDiv("", "transRowDate", newRow);
+    newRow.amount = addDiv("", "transRowDate", newRow);
+    newRow.category = addDiv("", "transRowDate", newRow);
+    newRow.desc = addDiv("", "transRowDesc", newRow);
+	  newRow.parentObj = this;
+
+	
+	return newRow;
+}
+
+function sortByProp (property) {
+	var sortOrder = 1;
+	console.log(property);
+	sortOrder = property[0];
+	/*
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }*/
+	property = property[1];
+	console.log("sort by " + property);
+    return function (a,b) {
+        var result = (transactions[a][property] < transactions[b][property]) ? -1 : (transactions[a][property] > transactions[b][property]) ? 1 : 0;
+		console.log(transactions[a][property] + " vs " + transactions[b][property] + " = " + result*sortOrder);
+        return result * sortOrder;
+    }
 }
