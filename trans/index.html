@@ -4,13 +4,15 @@
 <script type="text/javascript">
 
 
-var transactionData, contentDiv, categorySelct, monthList, allItems, loMonth;
+var transactionData, contentDiv, categorySelct, monthList, allItems, loMonth, monthCatTotals;
 var transactions = new Array();
 var categories = new Array();
 var sortItems = new Array();
 var displayList = new Array();
 var currentSort = new Array(-1,"amount");
+var currentView = "list";
 var filterLists = {};
+var summaryFilters = {};
 var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
 
 window.addEventListener("load", initTest);
@@ -25,6 +27,7 @@ window.addEventListener("load", initTest);
 		<div id="viewbox" class="viewOptions">
 			<div id="voList">List</div>
 			<div id="voSummary">Summary</div>
+			<div id="voGraph">Graph</div>
 		</div>
 		<div id="content">hello world</div>
 	</div>

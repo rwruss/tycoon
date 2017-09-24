@@ -111,6 +111,7 @@ class optionSelect {
 
 class sortBox {
 	constructor (options, baseList, property) {
+		console.log(options);
 		this.container = null;
 		this.optionList = options;
 
@@ -118,7 +119,7 @@ class sortBox {
 		this.prop = property;
 		this.returnTarget = null;
 		this.selectStatus = new Array(options.length);
-		this.selectStatus.fill(0);
+		this.selectStatus.fill(1);
 		this.childDivs = new Array();
 		this.container = null;
 
@@ -129,10 +130,39 @@ class sortBox {
 		let newBox = addDiv("", "optBoxHidden", document.getElementById("container"));
 		newBox.innerHTML = "OPTIONS"
 		newBox.parentObj = this;
+		
+		let headBar = addDiv("", "optionHead", newBox);
+		
+		let tmpDiv = addDiv("", "optionHeadItem", headBar);
+		tmpDiv.innerHTML = "ALL";
+		tmpDiv.parentObj = this;
 
+		tmpDiv.addEventListener("click", function () {
+			console.log("select All");
+			this.parentObj.selectAll(1);
+		})
+		
+		tmpDiv = addDiv("", "optionHeadItem", headBar);
+		tmpDiv.innerHTML = "None";
+		tmpDiv.parentObj = this;
+
+		tmpDiv.addEventListener("click", function () {
+			console.log("select None");
+			this.parentObj.selectAll(0);
+		})
+		let tmpImg;
+		let tmpText;
 		for (let i=0; i<this.optionList.length; i+=2) {
-			let tmpDiv = addDiv("", "optionUn", newBox);
-			tmpDiv.innerHTML = this.optionList[i+1];
+			tmpDiv = addDiv("", "optionItem", newBox);
+			tmpDiv.img = document.createElement("img");
+			
+			tmpDiv.img.className = "optionImg";
+			tmpDiv.img.src = "./checkMark.png";	
+			
+			tmpDiv.appendChild(tmpDiv.img);
+			tmpDiv.tmpText = addDiv("", "optionText", tmpDiv);
+			
+			tmpDiv.tmpText.innerHTML = this.optionList[i+1];
 			tmpDiv.itemNum = i;
 			tmpDiv.parentObj = this;
 
@@ -142,24 +172,48 @@ class sortBox {
 				this.parentObj.selectItem(this.itemNum, this);
 			})
 		}
+		
+		let footBar = addDiv("", "optionHead", newBox);
 
-		let tmpDiv = addDiv("", "optionUn", newBox);
+		tmpDiv = addDiv("", "optionHeadItem", footBar);
 		tmpDiv.parentObj = this;
 		tmpDiv.addEventListener("click", function () {
 			let items = new Array();
+			console.log(this.parentObj.selectStatus);
 			for (let i=0; i<this.parentObj.selectStatus.length; i++) {
-
+				
 				if (this.parentObj.selectStatus[i] == 1) {
 					items.push(i);
 				}
 			}
 			console.log(items);
-			this.parentNode.className = "optBoxHidden";
+			this.parentNode.parentNode.className = "optBoxHidden";
 			this.parentObj.sortList(items);
 		});
 		tmpDiv.innerHTML = "APPLY FILTER";
+		
+		tmpDiv = addDiv("", "optionHeadItem", footBar);
+		tmpDiv.addEventListener("click", function () {
+			this.parentNode.parentNode.className = "optBoxHidden";
+		});
+		tmpDiv.innerHTML = "HIDE";
+		
 
 		this.container = newBox;
+	}
+	
+	selectAll(newStatus) {
+		console.log("set " + this.childDivs.length + " items");
+		for (let i=0; i<this.childDivs.length; i++) {
+			this.selectStatus[i*2] = newStatus;
+			if (newStatus == 0) {
+				this.childDivs[i].img.src = "";
+			}
+			else {
+				this.childDivs[i].img.src = "./checkMark.png";
+			}
+		}
+		console.log(this.selectStatus);
 	}
 
 	showOptions(returnTrg, coords) {
@@ -172,6 +226,7 @@ class sortBox {
 	}
 
 	selectItem(itemNum, div) {
+		/*
 		if (itemNum == 0) {
 			this.selectStatus.fill(0);
 			for (i=0; i<this.childDivs.length; i++) {
@@ -179,29 +234,34 @@ class sortBox {
 			}
 		return;
 		}
-
+		*/
 		if (this.selectStatus[itemNum] == 0) {
 			this.selectStatus[itemNum] = 1;
-			div.className = "optionSel";
+			div.img.src = "./checkMark.png";
+			//div.className = "optionSel";
 		} else {
 			this.selectStatus[itemNum] = 0;
-			div.className = "optionUn";
+			//div.className = "optionUn";
+			div.img.src = "";
 		}
 	}
 
 	sortList(items) {
 		console.log(items);
 		if (items.length == 0) {
-			filterLists[this.prop] = allItems;
-			//showData(transactions, contentDiv, null);
+			filterLists[this.prop] = [];
+			resetFilters(this.prop);
 		} else {
 
 			let tmpA = new Array();
 			let checkVals = [];
+
 			for (let i=0; i<items.length; i++) {
+				console.log(i + " item " + items[i] + " is " + this.optionList[items[i]]);
 				checkVals.push(this.optionList[items[i]]);
 			}
-
+			console.log(this.optionList);
+			summaryFilters[this.prop] = checkVals;
 			console.log(checkVals);
 			for (let i=0; i<this.baseList.length; i++) {
 				let testVal = checkVals.indexOf(this.baseList[i][this.prop]);
@@ -214,7 +274,7 @@ class sortBox {
 			filterLists[this.prop] = tmpA;
 
 		}
-    console.log(filterLists);
+		console.log(filterLists);
 		let useA = allItems.slice();
 		for (let key in filterLists) {
 			//console.log(useA);
@@ -230,7 +290,8 @@ class sortBox {
 		console.log(displayList);
 		displayList.sort(sortByProp(currentSort));
 		console.log(displayList);
-		showData(transactions, contentDiv, displayList);
+		if (currentView == "list") showData(transactions, contentDiv, displayList);
+		else calcSummary(showSummary);
 
 		console.log(this.returnTarget)
 		//this.returnTarget.selected.innerHTML = this.optionList[itemNum+1];

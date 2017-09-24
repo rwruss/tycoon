@@ -1,13 +1,14 @@
+
+.graphCanvas {
+	width:98%;
+	height:98%;
+	border: 1px solid blue;
+}
+
 .menuBar {
 	height:40;
 	width:99%:
 	border:1px solid black;
-}
-
-.optBoxHidden {
-	height:0;
-	width:0;
-	overflow:hidden;
 }
 
 .optBoxShow {
@@ -16,10 +17,59 @@
 	position:absolute;
 	width:250;
 	border:2px solid blue;
+	border-radius: 10px;
+	background:#DDD;
 }
 
-.optionSel {
+.optBoxHidden {
+	height:0;
+	width:0;
+	overflow:hidden;
+}
+
+.optionHead {
+	background-color:#CCC;
 	position:relative;
+	float:left;
+	width: 98%;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}
+
+.optionHeadItem {
+	background:#DDD;
+	padding:10px;
+	border:1px solid blue;
+	border-radius:5px;
+}
+
+.optionItem {
+	position:relative;	
+	width:248;
+	float:left;
+	margin: 2px;
+}
+
+.optionItem:nth-child(even) {
+	background-color:#AAA;
+}
+.optionItem:nth-child(odd) {
+	background-color:#BBB;
+}
+
+.optionImg {
+	display:inline-block;
+	height:15; 
+	width:15;
+}
+
+.optionText {
+	display:inline-block;
+}
+/*
+.optionSel {
+	position:relative;	
 	width:250;
 	float:left;
 	border:1px solid red;
@@ -33,7 +83,7 @@
 	float:left;
 	margin: 2px;
 }
-
+*/
 .sortBar {
 	width:200;
 	position:relative;
@@ -137,3 +187,4 @@
 	width:200;
 	height:200;
 }
+
