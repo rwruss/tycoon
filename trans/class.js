@@ -45,7 +45,7 @@ class transaction {
 
   changeCategory(newCat) {
 	  this.category = newCat;
-	  
+
 	  let sendA = [1002, this.transID, newCat, this.amount];
 	  getASync(sendA.join(",")).then(v => {
 		  r = v.split("|");
@@ -53,6 +53,13 @@ class transaction {
 			  this.rowItem.category.innerHTML = categories[newCat];
 		  } else console.log("An error has occured")
 	  });
+  }
+}
+
+class categoryItem {
+  constructor(id, desc) {
+    this.id = id;
+    this.desc = desc;
   }
 }
 
@@ -84,8 +91,8 @@ class optionSelect {
 			newBox.parentObj = this;
 			for (let i=0; i<categories.length; i++) {
 				let catOption = addDiv("", "optionUn", newBox);
-				catOption.itemNum = i;
-				catOption.innerHTML = categories[i];
+				catOption.itemNum = categoryOrder[i];
+				catOption.innerHTML = categories[categoryOrder[i]];
 				catOption.addEventListener("click", function () {
 					this.parentNode.parentObj.selectOption(this.itemNum);
 
@@ -95,12 +102,23 @@ class optionSelect {
 				this.subDivs.push(catOption);
 			}
 			this.holder = newBox;
+
+      let footBar = addDiv("", "optionHead", newBox);
+
+  		let tmpDiv = addDiv("", "optionHeadItem", footBar);
+  		tmpDiv.parentObj = this;
+  		tmpDiv.addEventListener("click", function () {
+  			this.parentNode.parentNode.className = "optBoxHidden";
+  		});
+  		tmpDiv.innerHTML = "HIDE";
 		}
 		newBox.className = "optBoxShow";
 		newBox.style.left = coords[0];
 		newBox.style.top = coords[1];
 		//this.subDivs[selected].innerHTML = "SELECTED";
 		this.subDivs[selected].className = "optionSel";
+
+
 		//console.log(this.subDivs);
 	}
 
@@ -130,9 +148,9 @@ class sortBox {
 		let newBox = addDiv("", "optBoxHidden", document.getElementById("container"));
 		newBox.innerHTML = "OPTIONS"
 		newBox.parentObj = this;
-		
+
 		let headBar = addDiv("", "optionHead", newBox);
-		
+
 		let tmpDiv = addDiv("", "optionHeadItem", headBar);
 		tmpDiv.innerHTML = "ALL";
 		tmpDiv.parentObj = this;
@@ -141,7 +159,7 @@ class sortBox {
 			console.log("select All");
 			this.parentObj.selectAll(1);
 		})
-		
+
 		tmpDiv = addDiv("", "optionHeadItem", headBar);
 		tmpDiv.innerHTML = "None";
 		tmpDiv.parentObj = this;
@@ -155,13 +173,13 @@ class sortBox {
 		for (let i=0; i<this.optionList.length; i+=2) {
 			tmpDiv = addDiv("", "optionItem", newBox);
 			tmpDiv.img = document.createElement("img");
-			
+
 			tmpDiv.img.className = "optionImg";
-			tmpDiv.img.src = "./checkMark.png";	
-			
+			tmpDiv.img.src = "./checkMark.png";
+
 			tmpDiv.appendChild(tmpDiv.img);
 			tmpDiv.tmpText = addDiv("", "optionText", tmpDiv);
-			
+
 			tmpDiv.tmpText.innerHTML = this.optionList[i+1];
 			tmpDiv.itemNum = i;
 			tmpDiv.parentObj = this;
@@ -172,7 +190,7 @@ class sortBox {
 				this.parentObj.selectItem(this.itemNum, this);
 			})
 		}
-		
+
 		let footBar = addDiv("", "optionHead", newBox);
 
 		tmpDiv = addDiv("", "optionHeadItem", footBar);
@@ -181,7 +199,7 @@ class sortBox {
 			let items = new Array();
 			console.log(this.parentObj.selectStatus);
 			for (let i=0; i<this.parentObj.selectStatus.length; i++) {
-				
+
 				if (this.parentObj.selectStatus[i] == 1) {
 					items.push(i);
 				}
@@ -191,17 +209,17 @@ class sortBox {
 			this.parentObj.sortList(items);
 		});
 		tmpDiv.innerHTML = "APPLY FILTER";
-		
+
 		tmpDiv = addDiv("", "optionHeadItem", footBar);
 		tmpDiv.addEventListener("click", function () {
 			this.parentNode.parentNode.className = "optBoxHidden";
 		});
 		tmpDiv.innerHTML = "HIDE";
-		
+
 
 		this.container = newBox;
 	}
-	
+
 	selectAll(newStatus) {
 		console.log("set " + this.childDivs.length + " items");
 		for (let i=0; i<this.childDivs.length; i++) {
@@ -301,7 +319,7 @@ class sortBox {
 
 class sortBar {
 	constructor() {}
-	
+
 	render(trg) {
 		let newRow = addDiv("", "transRow", trg);
 		newRow.parentObj = this;
@@ -313,14 +331,14 @@ class sortBar {
 		newRow.amount = addDiv("", "transRowDate", newRow);
 		newRow.category = addDiv("", "transRowDate", newRow);
 		newRow.desc = addDiv("", "transRowDesc", newRow);
-		
-		
+
+
 		newRow.date.innerHTML = "DATE";
 		newRow.card.innerHTML = "CARD";
 		newRow.amount.innerHTML = "AMOUNT";
 		newRow.category.innerHTML = "TYPE";
 		newRow.desc.innerHTML = "DESCRIPTION";
-		
+
 		newRow.date.addEventListener("click", function () {
 			this.parentNode.parentObj.sortBy("date");
 		});
@@ -328,16 +346,16 @@ class sortBar {
 			this.parentNode.parentObj.sortBy("amount");
 		});
 	}
-	
+
 	sortBy(desc) {
 		if (currentSort[1] == desc) {
 			currentSort[0] *= -1;
 		} else {
 			currentSort = [1, desc];
 		}
-	
+
 	displayList.sort(sortByProp(currentSort));
 	showData(transactions, contentDiv, displayList);
 	}
-	
+
 }

@@ -1,8 +1,8 @@
 <?php
-
+ /* PURPOSELY TURNED OFF - THIS WILL OVERWRITE DATA!
 $maxLen = 0;
-$transFile = fopen('C:\Users\Rhodes Russell\Documents\Capital One\2016.csv', 'r');
-$datFile = fopen('./transactions/2016.dat', 'wb');
+$transFile = fopen('C:\Users\Rhodes Russell\Documents\Capital One\2017.csv', 'r');
+$datFile = fopen('./transactions/2017.dat', 'wb');
 $count = 1;
 $line = fgets($transFile); // Read the header line
 
@@ -18,10 +18,7 @@ while (($line = fgets($transFile)) !== false) {
     for ($i=4; $i<$checkSize-3; $i++) {
       $lineItems[3] .= $lineItems[$i];
     }
-    /*
-    echo 'item 4 = item '.($checkSize-1).'<br>';
-    echo 'item 5 = item '.($checkSize-1).'<br>';
-    echo 'item 6 = item '.($checkSize-1).'<br>';*/
+
     $lineItems[4] = $lineItems[$checkSize-3];
     $lineItems[5] = $lineItems[$checkSize-2];
     $lineItems[6] = $lineItems[$checkSize-1];

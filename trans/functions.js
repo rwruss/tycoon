@@ -35,7 +35,7 @@ function intersect(a, b) {
 
 function init() {
 	contentDiv = document.getElementById("content");
-	
+
   loadData();
 }
 
@@ -52,13 +52,13 @@ function initTest() {
 }
 
 function finishInit() {
-	
-	
+
+
 	allItems = displayList;
 	//console.log("finish init");
 	contentDiv = document.getElementById("content");
 	showData(transactions, contentDiv, displayList);
-	
+
 	let newHeight = parseInt(window.innerHeight) - 100;
 	console.log(newHeight);
 	contentDiv.style.height = parseInt(window.innerHeight) - 100;
@@ -72,7 +72,7 @@ function finishInit() {
 function initSort() {
 	filterLists["monthNum"] = allItems.slice();
 	filterLists["category"] = allItems.slice();
-	
+
 	summaryFilters["monthNum"] = monthList;
 	summaryFilters["category"] = [];
 
@@ -141,7 +141,7 @@ function initViews() {
 		currentView = "summary";
 		calcSummary(showSummary);
 	})
-	
+
 	let graph = document.getElementById("voGraph");
 	graph.addEventListener("click", function () {
 		contentDiv.innerHTML = "";
@@ -169,6 +169,7 @@ function loadMonths(itemList) {
 		hiMonth = Math.max(hiMonth, monthNum);
 	}
 	let numMonths = hiMonth - loMonth;
+	console.log(numMonths + " = " + hiMonth + " - " + loMonth)
 	//console.log("numMOnths " + numMonths + "(" + hiMonth +"- " + loMonth + ")");
 	monthList = new Array(numMonths + 1);
 	for (i=0; i<=numMonths; i++) {
@@ -178,20 +179,35 @@ function loadMonths(itemList) {
 
 function loadData () {
   getASync("1001").then(v => {
-		
-		r = v.split(",");
-		console.log(r.length);
-		categories = r.slice(1, r[0]);
 
+		r = v.split("|");
+		console.log(r.length);
+		//categories = r.slice(1, r[0]);
+		console.log(r[0] + " categories ");
 		let tmpA = [];
 		let transCount = (r.length - (r[0]+1) - 1)/6;  // subtract the amount of categories plus the category count and the dummy item on the end due to an extra comma
+		let offset = parseInt(r[0])+1;
 		for (i=0; i<transCount; i++) {
-			transactions.push(new transaction(r.slice(i*6, i*6+7)));
+
+			transactions.push(new transaction(r.slice(offset+i*6, offset+i*6+7)));
 			displayList.push(i);
 			//categories.push("Cat " + i);
 		}
-		categories = ["Unassigned"];
-		console.log(transactions);
+		//categories = ["Unassigned"];
+		categories = r.slice(1, parseInt(r[0])+1);
+		//console.log(transactions);
+
+		categorySorted = [];
+		categoryOrder = [];
+		for (let i=0; i<categories.length; i++) {
+			categoryOrder.push(i);
+			categorySorted.push(new categoryItem(i, categories[i]));
+		}
+		console.log(categoryOrder);
+		console.log(categorySorted);
+		categoryOrder.sort(categorySort);
+
+		console.log(categoryOrder);
 
 		finishInit();
 
@@ -223,10 +239,10 @@ function showData (baselist, trg, showItems) {
 
 	//console.log(baselist);
 	//console.log(showItems);
-	
+
 	headerRow = new sortBar();
 	headerRow.render(trg);
-	
+
 	if (showItems) {
 		for (i=0; i<showItems.length; i++) {
 			baselist[showItems[i]].tableLine(trg);
@@ -260,7 +276,7 @@ summaryLine = function (count, total, trg) {
 
 calcSummary = function (callback) {
 	console.log(summaryFilters);
-	
+
 	let numMonths = monthList.length;
 	let numCategories = categories.length;
 	monthCatTotals = new Array(numMonths*numCategories);
@@ -269,7 +285,7 @@ calcSummary = function (callback) {
 	for (let i=0; i<transactions.length; i++) {
 		monthCatTotals[(transactions[i].monthNum - loMonth)*numCategories + transactions[i].category] += transactions[i].amount;
 	}
-	
+
 	callback();
 }
 
@@ -278,7 +294,7 @@ function showSummary() {
 	let newTable = document.createElement("table");
 	newTable.className = "summaryTable";
 	contentDiv.appendChild(newTable);
-	
+
 	let newRow, newTD;
 
 	// Create the month header Row and calculate the total amount for each month
@@ -303,7 +319,7 @@ function showSummary() {
 
 			newTD = document.createElement("td");
 			newTD.innerHTML = monthNames[monthList[i]%12] + " - " + year;
-			newTD.className = "summaryTableItem";
+			newTD.className = "summaryTableHead";
 
 			newRow.appendChild(newTD);
 			colCount++;
@@ -311,13 +327,20 @@ function showSummary() {
 	}
 	newTable.appendChild(newRow);
 
-	// blank TD at the end of the row
+	// Total TD at the end of the row
 	newTD = document.createElement("td");
-	newTD.innerHTML = "";
-	newTD.className = "summaryTableItem";
+	newTD.innerHTML = "Total";
+	newTD.className = "summaryTableHead";
 
 	newRow.appendChild(newTD);
-	
+
+	// Average TD at the end of the row
+	newTD = document.createElement("td");
+	newTD.innerHTML = "Average";
+	newTD.className = "summaryTableHead";
+
+	newRow.appendChild(newTD);
+
 	console.log("looking in this array:");
 	console.log(summaryFilters["category"]);
 	for (let i=0; i<numCategories; i++) {
@@ -351,6 +374,12 @@ function showSummary() {
 			newRow.appendChild(newTD);
 			newTD.className = "summaryTableItem";
 
+			// show the average for the row
+			newTD = document.createElement("td");
+			newTD.innerHTML = (rowTotal/numMonths).toFixed(2);
+			newRow.appendChild(newTD);
+			newTD.className = "summaryTableItem";
+
 			newTable.appendChild(newRow);
 		}
 	}
@@ -364,19 +393,27 @@ function showSummary() {
 	newTD.className = "summaryTableItem";
 	newRow.appendChild(newTD);
 
+	let totalSum = 0;
 	for (let i=0; i<numMonths; i++) {
 		if (summaryFilters["monthNum"].indexOf(monthList[i]) > -1) {
 			newTD = document.createElement("td");
 			newTD.innerHTML = monthTotals[i].toFixed(2);
+			totalSum += monthTotals[i];
 			newTD.className = "summaryTableItem";
 
 			newRow.appendChild(newTD);
 		}
 	}
 
-	// blank TD at the end of the row
+	// total TD at the end of the row
 	newTD = document.createElement("td");
-	newTD.innerHTML = "";
+	newTD.innerHTML = totalSum.toFixed(2);
+	newTD.className = "summaryTableItem";
+	newRow.appendChild(newTD);
+
+	// average TD at the end of the row
+	newTD = document.createElement("td");
+	newTD.innerHTML = (totalSum/numMonths).toFixed(2);
 	newTD.className = "summaryTableItem";
 	newRow.appendChild(newTD);
 
@@ -394,7 +431,7 @@ function headerLine() {
     newRow.desc = addDiv("", "transRowDesc", newRow);
 	  newRow.parentObj = this;
 
-	
+
 	return newRow;
 }
 
@@ -410,6 +447,10 @@ function sortByProp (property) {
     }
 }
 
+function categorySort (a,b) {
+	return (categorySorted[a].desc < categorySorted[b].desc) ? -1 : (categorySorted[b].desc < categorySorted[a].desc) ? 1 : 0;
+}
+
 function resetFilters(property) {
 	console.log("reset fitlers"  + property);
 	if (property == "monthNum") {
@@ -417,7 +458,7 @@ function resetFilters(property) {
 	}
 	else if (property == "category") {
 		summaryFilters["category"] = [];
-		for (let i=0; i<categories.length; i++) {		
+		for (let i=0; i<categories.length; i++) {
 			summaryFilters["category"].push(i);
 		}
 	}
@@ -426,25 +467,25 @@ function resetFilters(property) {
 function drawGraph() {
 	contentDiv.innerHTML = "";
 	c = document.createElement("canvas");
-	
+
 	var ctx = c.getContext("2d");
 	console.log(parseInt(contentDiv.offsetHeight*0.98))
 	ctx.canvas.width = parseInt(contentDiv.offsetWidth*0.98);
 	ctx.canvas.height = parseInt(contentDiv.offsetHeight*0.98);
-	
+
 	//ctx.canvas.width = 500;
 	//ctx.canvas.height = 500;
-	
+
 	contentDiv.appendChild(c);
-	
+
 	ctx.moveTo(0,0);
 	ctx.lineTo(200,100);
 	ctx.stroke();
-	
+
 	let numMonths = monthList.length;
 	let numCategories = categories.length;
 	//monthCatTotals = new Array(numMonths*numCategories);
-	
+
 	let maxMonth = 0;
 	let monthTotals = [];
 	for (let i=0; i<numMonths; i++) {
@@ -454,26 +495,26 @@ function drawGraph() {
 			tmpTotal += monthCatTotals[i*numCategories+j];
 			monthTotals.push(tmpTotal);
 		}
-		
+
 		maxMonth = Math.max(maxMonth, tmpTotal);
 	}
 	console.log("max month is " + maxMonth);
-	
+
 	let colorStepSize = Math.floor(255/Math.ceil(numCategories/7));
 	let hStepSize = (ctx.canvas.width - 100)/numMonths;
-	
+
 	let colorSwitchR = [1,1,0,1,1,0,0];
 	let colorSwitchG = [1,1,1,0,0,1,0];
 	let colorSwitchB = [1,0,1,1,0,0,1];
-	
+
 	ctx.fillStyle = "#000";
 	console.log(monthCatTotals);
 	let startPoint;
 	let x0, x1, y0, y1, y2, y3, r, g, b, colorStep, colorBlend;
-	
+
 	for (let j=0; j<3; j++) {
 		for (let i=0; i<numMonths-1; i++) {
-			
+
 		}
 	}
 	/*
@@ -487,7 +528,7 @@ function drawGraph() {
 			y1 = (maxMonth - monthCatTotals[(i+1)*numCategories+j])/maxMonth*ctx.canvas.height;
 			y2 = (maxMonth - monthCatTotals[(i+1)*numCategories+j+1])/maxMonth*ctx.canvas.height;
 			y3 = (maxMonth - monthCatTotals[(i)*numCategories+j+1])/maxMonth*ctx.canvas.height;
-			
+
 			colorStep = Math.floor(j/7);
 			colorBlend = j%7;
 			r = 255 - colorSwitchR[colorBlend]*colorStepSize;
@@ -497,16 +538,16 @@ function drawGraph() {
 			ctx.beginPath();
 			ctx.moveTo(x0, y0);
 			console.log(x0 + ", " + y0);
-			
+
 			ctx.lineTo(x1,y1);
 			console.log(x1 + ", " + y1);
-			
+
 			ctx.lineTo(x1, y2);
 			console.log(x1 + ", " +y2);
-			
+
 			ctx.lineTo(x0, y3);
 			console.log(x0 + ", " + y3);
-			
+
 			ctx.closePath();
 			startPoint = [startPoint[0], y3]
 			ctx.fill();
