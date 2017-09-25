@@ -477,11 +477,11 @@ function drawGraph() {
 	//ctx.canvas.height = 500;
 
 	contentDiv.appendChild(c);
-
+	/*
 	ctx.moveTo(0,0);
 	ctx.lineTo(200,100);
 	ctx.stroke();
-
+	*/
 	let numMonths = monthList.length;
 	let numCategories = categories.length;
 	//monthCatTotals = new Array(numMonths*numCategories);
@@ -511,46 +511,72 @@ function drawGraph() {
 	console.log(monthCatTotals);
 	let startPoint;
 	let x0, x1, y0, y1, y2, y3, r, g, b, colorStep, colorBlend;
-
-	for (let j=0; j<3; j++) {
-		for (let i=0; i<numMonths-1; i++) {
-
-		}
+	
+	let xOffsets = new Array(numMonths*2);
+	let yOffsets = new Array(numMonths*2);
+	for (let i=0; i<numMonths; i++) {
+		xOffsets[i] = i*hStepSize;
+		xOffsets[numMonths+i] = (numMonths-i-1)*hStepSize;
+		
+		yOffsets[i] = i*(numCategories+1);
+		yOffsets[numMonths*2-i-1] = 1+i*(numCategories+1);
 	}
-	/*
-	for (i=0; i<numMonths-1; i++) {
-		startPoint = [hStepSize*i, ctx.canvas.height];
-		for (j=0; j<3; j++) {
-			console.log(i + " / " + j + " start at " + startPoint[0] + ", " + startPoint[1] + " with a value of " + monthCatTotals[(i+1)*numCategories+j]);
-			x0 = startPoint[0],
-			x1 = startPoint[0] + hStepSize;
-			y0 = startPoint[1];
-			y1 = (maxMonth - monthCatTotals[(i+1)*numCategories+j])/maxMonth*ctx.canvas.height;
-			y2 = (maxMonth - monthCatTotals[(i+1)*numCategories+j+1])/maxMonth*ctx.canvas.height;
-			y3 = (maxMonth - monthCatTotals[(i)*numCategories+j+1])/maxMonth*ctx.canvas.height;
+	console.log(numMonths + " months and " + numCategories + " categories");
+	console.log(xOffsets);
+	console.log(yOffsets);
+	console.log(monthTotals);
 
-			colorStep = Math.floor(j/7);
-			colorBlend = j%7;
-			r = 255 - colorSwitchR[colorBlend]*colorStepSize;
-			g = 255 - colorSwitchG[colorBlend]*colorStepSize;
-			b = 255 - colorSwitchB[colorBlend]*colorStepSize;
-			ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-			ctx.beginPath();
-			ctx.moveTo(x0, y0);
-			console.log(x0 + ", " + y0);
-
-			ctx.lineTo(x1,y1);
-			console.log(x1 + ", " + y1);
-
-			ctx.lineTo(x1, y2);
-			console.log(x1 + ", " +y2);
-
-			ctx.lineTo(x0, y3);
-			console.log(x0 + ", " + y3);
-
-			ctx.closePath();
-			startPoint = [startPoint[0], y3]
-			ctx.fill();
+	let yVal, yFactor, baseY;
+	yFactor = ctx.canvas.height/maxMonth;
+	for (let j=0; j<numCategories; j++) {
+		colorStep = Math.floor(j/7)+1;
+		colorBlend = j%7;
+		r = 255 - colorSwitchR[colorBlend]*colorStepSize*colorStep;
+		g = 255 - colorSwitchG[colorBlend]*colorStepSize*colorStep;
+		b = 255 - colorSwitchB[colorBlend]*colorStepSize*colorStep;
+		ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+		console.log(colorStep + "/" + colorBlend + " = " + ctx.fillStyle);
+		//ctx.fillStyle = "#CCC";
+		
+		ctx.beginPath();		
+		baseY = j;
+		
+		yVal = (maxMonth - monthTotals[baseY+yOffsets[0]])*yFactor;
+		ctx.moveTo(xOffsets[0], yVal);
+		//console.log("Start at " + xOffsets[0] + ", " + yVal);
+		for (let i=1; i<numMonths*2; i++) {
+			//console.log("item " + (baseY+yOffsets[i]) + " gives " +monthTotals[baseY+yOffsets[i]]);
+			yVal = (maxMonth - monthTotals[baseY+yOffsets[i]])*yFactor;
+			ctx.lineTo(xOffsets[i], yVal);
+			//console.log(xOffsets[i] + ", " + yVal)
 		}
-	}*/
+		//ctx.stroke();
+		ctx.closePath();
+		ctx.fill();
+	}
+	
+	
+	// Draw the month lines and amount lines
+	ctx.strokeStyle = "#000";
+	for (let i=0; i<numMonths; i++) {
+		ctx.beginPath();
+		ctx.moveTo(xOffsets[i], 0);
+		ctx.lineTo(xOffsets[i], ctx.canvas.height);
+		ctx.stroke();
+		
+		
+	}
+	
+	ctx.font = "30px Arial black";
+	ctx.fillStyle = "#000";
+
+	let oneTenth = ctx.canvas.height/10;
+	for (let i=0; i<11; i++) {
+		ctx.beginPath();
+		ctx.moveTo(0, i*oneTenth);
+		ctx.lineTo(ctx.canvas.width-100, i*oneTenth);
+		ctx.stroke();
+		
+		ctx.fillText((maxMonth*(10-i)/10).toFixed(2),ctx.canvas.width-90,i*oneTenth);
+	}
 }

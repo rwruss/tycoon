@@ -1,3 +1,13 @@
+.button {
+	border:2px solid black;
+	background:#DDF;
+	border-radius: 5px;
+	padding:8px;
+	cursor:pointer;
+	text-align:center;
+	margin:3px;
+	float:left;
+}
 
 .graphCanvas {
 	width:98%;
@@ -6,7 +16,7 @@
 }
 
 .menuBar {
-	height:40;
+	height:75;
 	width:99%:
 	border:1px solid black;
 }
@@ -209,6 +219,6 @@
 	position:absolute;
 	right:10;
 	top:10;
-	width:200;
 	height:200;
+	display:inline-block;
 }

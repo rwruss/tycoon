@@ -15,7 +15,7 @@ var filterLists = {};
 var summaryFilters = {};
 var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
 
-window.addEventListener("load", init);
+window.addEventListener("load", initTest);
 </script>
 
 <html>
@@ -25,9 +25,9 @@ window.addEventListener("load", init);
 			<div id="catSelect"></div>
 		</div>
 		<div id="viewbox" class="viewOptions">
-			<div id="voList">List</div>
-			<div id="voSummary">Summary</div>
-			<div id="voGraph">Graph</div>
+			<div id="voList" class="button"">List</div>
+			<div id="voSummary" class="button">Summary</div>
+			<div id="voGraph" class="button">Graph</div>
 		</div>
 		<div id="content">hello world</div>
 	</div>
