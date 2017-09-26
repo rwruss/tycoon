@@ -475,6 +475,7 @@ function drawGraph() {
 
 	//ctx.canvas.width = 500;
 	//ctx.canvas.height = 500;
+	let useHeight = ctx.canvas.height - 100;
 
 	contentDiv.appendChild(c);
 	/*
@@ -501,7 +502,7 @@ function drawGraph() {
 	console.log("max month is " + maxMonth);
 
 	let colorStepSize = Math.floor(255/Math.ceil(numCategories/7));
-	let hStepSize = (ctx.canvas.width - 100)/numMonths;
+	let hStepSize = (ctx.canvas.width - 175)/numMonths;
 
 	let colorSwitchR = [1,1,0,1,1,0,0];
 	let colorSwitchG = [1,1,1,0,0,1,0];
@@ -511,13 +512,13 @@ function drawGraph() {
 	console.log(monthCatTotals);
 	let startPoint;
 	let x0, x1, y0, y1, y2, y3, r, g, b, colorStep, colorBlend;
-	
+
 	let xOffsets = new Array(numMonths*2);
 	let yOffsets = new Array(numMonths*2);
 	for (let i=0; i<numMonths; i++) {
 		xOffsets[i] = i*hStepSize;
 		xOffsets[numMonths+i] = (numMonths-i-1)*hStepSize;
-		
+
 		yOffsets[i] = i*(numCategories+1);
 		yOffsets[numMonths*2-i-1] = 1+i*(numCategories+1);
 	}
@@ -527,7 +528,7 @@ function drawGraph() {
 	console.log(monthTotals);
 
 	let yVal, yFactor, baseY;
-	yFactor = ctx.canvas.height/maxMonth;
+	yFactor = useHeight/maxMonth;
 	for (let j=0; j<numCategories; j++) {
 		colorStep = Math.floor(j/7)+1;
 		colorBlend = j%7;
@@ -535,18 +536,18 @@ function drawGraph() {
 		g = 255 - colorSwitchG[colorBlend]*colorStepSize*colorStep;
 		b = 255 - colorSwitchB[colorBlend]*colorStepSize*colorStep;
 		ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-		console.log(colorStep + "/" + colorBlend + " = " + ctx.fillStyle);
+		//console.log(colorStep + "/" + colorBlend + " = " + ctx.fillStyle);
 		//ctx.fillStyle = "#CCC";
-		
-		ctx.beginPath();		
+
+		ctx.beginPath();
 		baseY = j;
-		
-		yVal = (maxMonth - monthTotals[baseY+yOffsets[0]])*yFactor;
+
+		yVal = (maxMonth - Math.max(0, monthTotals[baseY+yOffsets[0]]))*yFactor;
 		ctx.moveTo(xOffsets[0], yVal);
 		//console.log("Start at " + xOffsets[0] + ", " + yVal);
 		for (let i=1; i<numMonths*2; i++) {
 			//console.log("item " + (baseY+yOffsets[i]) + " gives " +monthTotals[baseY+yOffsets[i]]);
-			yVal = (maxMonth - monthTotals[baseY+yOffsets[i]])*yFactor;
+			yVal = (maxMonth - Math.max(0,monthTotals[baseY+yOffsets[i]]))*yFactor;
 			ctx.lineTo(xOffsets[i], yVal);
 			//console.log(xOffsets[i] + ", " + yVal)
 		}
@@ -554,29 +555,48 @@ function drawGraph() {
 		ctx.closePath();
 		ctx.fill();
 	}
-	
-	
+
+
 	// Draw the month lines and amount lines
 	ctx.strokeStyle = "#000";
 	for (let i=0; i<numMonths; i++) {
 		ctx.beginPath();
 		ctx.moveTo(xOffsets[i], 0);
-		ctx.lineTo(xOffsets[i], ctx.canvas.height);
+		ctx.lineTo(xOffsets[i], useHeight);
 		ctx.stroke();
-		
-		
+
+
 	}
-	
+
 	ctx.font = "30px Arial black";
 	ctx.fillStyle = "#000";
 
-	let oneTenth = ctx.canvas.height/10;
+	let oneTenth = useHeight/10;
 	for (let i=0; i<11; i++) {
 		ctx.beginPath();
 		ctx.moveTo(0, i*oneTenth);
-		ctx.lineTo(ctx.canvas.width-100, i*oneTenth);
+		ctx.lineTo(ctx.canvas.width-175, i*oneTenth);
 		ctx.stroke();
-		
-		ctx.fillText((maxMonth*(10-i)/10).toFixed(2),ctx.canvas.width-90,i*oneTenth);
+
+		ctx.fillText((maxMonth*(10-i)/10).toFixed(2),ctx.canvas.width-150,i*oneTenth);
+	}
+
+	// draw the legend
+	let row, col;
+	ctx.font = "8px Arial black";
+	for (let i=0; i<numCategories; i++) {
+		colorStep = Math.floor(i/7)+1;
+		colorBlend = i%7;
+		r = 255 - colorSwitchR[colorBlend]*colorStepSize*colorStep;
+		g = 255 - colorSwitchG[colorBlend]*colorStepSize*colorStep;
+		b = 255 - colorSwitchB[colorBlend]*colorStepSize*colorStep;
+		ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+
+		row = Math.floor(i/5);
+		col = i%5;
+		ctx.fillRect(col*200,ctx.canvas.height-row*30-30,20,20);
+
+		ctx.fillStyle = "#000";
+		ctx.fillText(categories[i],col*200+25,ctx.canvas.height-row*30-15);
 	}
 }
