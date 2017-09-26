@@ -36,6 +36,7 @@ contractsButton.addEventListener("click", function (e) {
 	cSearch = newButton(thisDiv, function (e) {
 		e.stopPropagation();
 		contractBids = useDeskTop.newPane("contractBids");
+		
 		contractBids.innerHTML = "Select what product to bid on";
 		let selectList = arrayToSelect(contractBids, objNames);
 		contractBids.results = addDiv("", "stdFloatDiv", contractBids);
@@ -70,6 +71,12 @@ contractsButton.addEventListener("click", function (e) {
 	})
 });
 contractsButton.innerHTML = "Company Contracts";
+
+let projectsButton = newButton(headSection);
+projectButton.innerHTML = "Company Projects";
+projectButton.addEventListener("click", function () {
+})
+
 
 bidButton = newButton(headSection);
 bidButton.addEventListener("click", function (e) {

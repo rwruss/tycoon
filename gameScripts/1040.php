@@ -1,7 +1,5 @@
 <?php
 
-
-
 // Search for services to buy
 echo '<script>
 useDeskTop.newPane("dialogPane");
@@ -14,7 +12,7 @@ targetPane.results = addDiv("", "stdFloatDiv", targetPane);
 textBlob("", targetPane, "Output Inventory");
 for (var i=0; i<20; i++) {
   let thisService = serviceArray[i].renderSummary(targetPane.options);
-  thisService.addEventListener("click", function () {scrMod("1048,"+i)});
+  thisService.addEventListener("click", function () {scrMod()});
 }
 </script>';
 
