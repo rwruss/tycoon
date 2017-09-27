@@ -1,6 +1,7 @@
 <?php
 
-// Search for services to buy
+// Search for services to buy 
+/*
 echo '<script>
 useDeskTop.newPane("dialogPane");
 var targetPane = useDeskTop.getPane("dialogPane");

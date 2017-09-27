@@ -23,6 +23,7 @@ for (let i=0; i<playerFactories.length; i++) {
 }
 
 contractsButton = newButton(headSection);
+contractsButton.innerHTML = "Company Contracts";
 contractsButton.addEventListener("click", function (e) {
 	e.stopPropagation();
 	thisDiv = useDeskTop.newPane("companyContracts");
@@ -32,8 +33,10 @@ contractsButton.addEventListener("click", function (e) {
 
 	thisDiv.buyContracts.innerHTML = "Buyinh";
 	thisDiv.sellContracts.innerHTML = "<span style=\"float:left\">Sellin</span>";
-
-	cSearch = newButton(thisDiv, function (e) {
+	
+	cSearch = newButton(thisDiv);
+	cSearch.innerHTML = "Bid on contracts";
+	cSearch.addEventListener("click", function (e) {
 		e.stopPropagation();
 		contractBids = useDeskTop.newPane("contractBids");
 		
@@ -50,14 +53,16 @@ contractsButton.addEventListener("click", function (e) {
 				for (var i=0; i<test.byteLength; i+=108) {
 					let thisContract = new contract(x.slice(i, i+108));
 					let contractItem = thisContract.render(contractBids.results);
+					contractItem.addEventListener("click", function () {
+						
+					});
 				}
 			})
 		});
 		searchButton.innerHTML = "search";
-
 	});
-	cSearch.innerHTML = "Bid on contracts";
-
+	
+	
 	loadBuffer("1071,'.$pGameID.'", function (x) {
 		let test = new Int32Array(x);
 		console.log(test);
@@ -69,16 +74,21 @@ contractsButton.addEventListener("click", function (e) {
 			else if (thisContract.seller == thisPlayer.playerID) thisContract.render(thisDiv.sellContracts);
 		}
 	})
+	/*
+	let projectsButton = newButton(headSection);
+	projectButton.innerHTML = "Company Projects";
+	projectButton.addEventListener("click", function (e) {
+		e.stopPropagation();
+		let serviceContracts = useDeskTop.newPane("serviceContracts");
+		getASync().then(v=>{
+			
+		});
+	})*/
 });
-contractsButton.innerHTML = "Company Contracts";
-
-let projectsButton = newButton(headSection);
-projectButton.innerHTML = "Company Projects";
-projectButton.addEventListener("click", function () {
-})
 
 
 bidButton = newButton(headSection);
+bidButton.innerHTML = "Company Bids";
 bidButton.addEventListener("click", function (e) {
 	e.stopPropagation();
 	thisDiv = useDeskTop.newPane("companyBids");
@@ -87,9 +97,10 @@ bidButton.addEventListener("click", function (e) {
 
 	scrMod("1073," + thisPlayer.playerID);
 	});
-bidButton.innerHTML = "Company Bids";
+
 
 invoiceButton = newButton(headSection);
+invoiceButton.innerHTML = "Open Invoices";
 invoiceButton.addEventListener("click", function (e) {
 	e.stopPropagation();
 	thisDiv = useDeskTop.newPane("companyInvoices");
@@ -102,7 +113,7 @@ invoiceButton.addEventListener("click", function (e) {
 			invoiceItems[i].renderFSum(thisDiv);
 		}
 	})});
-invoiceButton.innerHTML = "Open Invoices";
+
 
 sendButton = newButton(headSection);
 sendButton.addEventListener("click", function (e) {

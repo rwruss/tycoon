@@ -92,6 +92,7 @@
 1092 - PROCESS: Show purchase options for a selected vehicle type
 1093 - PROCESS: Get transport options for a factory order
 1094 - PROCESS: Save transport options for material delivery to a factory
+1095 - PROCESS: Get route options for selling/sending products to an open contract
 
 TO DO:
 Service items (Construction, legal, etc...)

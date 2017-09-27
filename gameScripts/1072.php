@@ -9,6 +9,7 @@ PVS
 4 - product QTY
 */
 
+/* !!! TURNED OFF UNTIL PROCESSING FOR SHIPMENTS AND OPEN CONTRACTS IS FINALIZED
 require_once('./slotFunctions.php');
 require_once('./taxCalcs.php');
 require_once('./objectClass.php');
@@ -188,5 +189,5 @@ $sellingNation->save('pDGP', $sellingNation->get('pGDP')+$gdpGain);
 
 fclose($slotFile);
 fclose($objFile);
-
+*/
 ?>

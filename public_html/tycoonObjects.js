@@ -74,6 +74,7 @@ class factory extends object {
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
 		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID;
 		thisDiv.divType = "factorySummary";
+		thisDiv.parentObj = this;
 
 		return thisDiv;
 	}
@@ -2007,12 +2008,102 @@ class contract {
 				claimButton.innerHTML = "File a claim";
 			}
 		}
+	}
+}
 
-		/*
-		let leaveButton = newButton(contain, function () {
-			scrMod("1065," + this.parentContract.contractID);
-		})
-		leaveButton.innerHTML = "Leave the Contract";*/
+class openContract extends contract {
+	constructor(dat) {
+		super(dat);
+	}
+	
+	renderActive(trg, contain) {
+		productArray[this.productID].renderSummary(contain);
+
+		let summArea = addDiv("", "contractSummary", contain);
+		summArea.innerHTML = "C#" + this.contractID +"<br>Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
+		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
+		 this.sentPol + "/" + this.maxPol + "<br>Status:" + this.status;
+
+		contain.addEventListener("click", function (e) {
+			e.stopPropagation();
+			this.item.renderDetail();
+		});		
+	}
+	
+	renderDetail() {
+		let thisDetail = useDeskTop.newPane("contractDetail");
+		thisDetail.innerHTML = "";
+		thisDetail.optionArea = null;
+
+		let contain = addDiv("", "contractDetail", thisDetail);
+		productArray[this.productID].renderSummary(contain);
+
+		contain.parentContract = this;
+
+		let summArea = addDiv("", "contractSummary", contain);
+		summArea.innerHTML = "Price: " + this.price/100 + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
+		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
+		 this.sentPol + "/" + this.maxPol + "<br>Status: " + this.status;
+
+		 // check player factories that provide this item
+		if (this.owner == thisPlayer.playerID) {
+			let closeButton = newButton(contain);
+			closeButton.innerHTML = "Close this contract";
+			this.sendStr = "";
+			closeButton.addEventListener("click", function (e) {
+				e.stopPropagation();
+				console.log("Need to figure out where this goes")
+			})
+		} else {
+			if (this.status == 1) { 
+				thisDetail.detailArea = addDiv("", "", thisDetail);
+				thisDetail.detailArea.amount = addDiv("", "", thisDetail);
+				thisDetail.optionArea = addDiv("", "", thisDetail);
+				thisDetail.shippingArea = addDiv("", "", thisDetail);
+				
+				// find factories that can send product
+				console.log("# checks:" + playerFactories.length);
+				for (var i=0; i<playerFactories.length; i++) {
+					let check = playerFactories[i].prod.indexOf(this.parentContract.productID);
+					console.log("Check factory " + i + "for product " + this.parentContract.productID + " with a result of " + check);
+					console.log(playerFactories[i].prod);
+					if (check > -1) {
+						// show the factories that provide this with an option to send
+						//playerFactories[i].itemBar(thisDetail.optionArea, check, "1072," + playerFactories[i].objID + "," + check + "," + this.parentContract.contractID);
+						let factoryOption = playerFactories[i].renderSummary(thisDetail.optionArea);
+						factoryOption.addEventListener("click", function (e) {
+							e.stopPropagation();
+							
+							// draw a detail for the selected factory
+							thisDetail.detailArea.innerHTML = "";
+							let detailObj = this.parentObj.renderDetail(thisDetail.detailArea);
+							
+							
+							/*
+							this.prod = [dat[4], dat[5], dat[6], dat[7], dat[8]];
+							this.prodInv = [dat[9], dat[10], dat[11], dat[12], dat[13]];
+							*/
+							
+							thisDetail.detailArea.amount.innerHTML = "";
+							let thisDetail.detailArea.amount.slide = slideValBar(thisDetail.detailArea.amount, "", 0, detailObj.prodInv[check]);
+							
+							let sendButton = newButton(thisDetail.detailArea.amount.slide);
+							sendButton.innerHTML = "SEND";
+							sendButton.sendStr = this.parentObj.objID + "," + 
+							sendButton.prodID = check;
+							sendButton.factoryID = this.parentObj.objID;
+							sendButton.addEventListener("click", function () {
+								saleWindow(this.prodID, this.parenNode.slide.slide.value, this.factoryID, "");  //prodIndex, saleQty, factoryID, sendStr)
+							});
+							)
+						)
+					}
+				}
+			}
+			else if (this.status == 2) {
+			}
+		}
+		
 	}
 }
 
