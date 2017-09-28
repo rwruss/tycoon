@@ -20,14 +20,22 @@ if ($thisObj->get('factoryLevel') == 0) {
 		factoryDiv = useDeskTop.newPane("factoryInfo");
 		factoryDiv.innerHTML = "";
 		textBlob("", factoryDiv, "This facility is still being built ('.$thisObj->get('constStatus').').  Construction is '.$pctComplete.'% complete ('.$ptsRrm.' points remaining).");
-		textBlob("", factoryDiv, "You are currently offering '.$thisObj->get('upgradePrice').' for each unit of new construction.  Adjust this price below.");
+		textBlob("", factoryDiv, "You are currently offering '.$thisObj->get('upgradePrice').' for each unit of new construction.  Adjust this price below.");';
 
-		let priceBar = slideValBar(factoryDiv, "", 0, 10000);
-		let priceButton = newButton(factoryDiv);
-		priceButton.innerHTML = "Set new price";
-		priceButton.sendStr = "1082,'.$postVals[1].',";
-		priceButton.addEventListener("click", function () {scrMod(this.sendStr + priceBar.slide.value)});
-
+		if ($thisProject->get('status') == 6) { // an open project
+			echo '
+			let priceBar = slideValBar(factoryDiv, "", 0, 10000);
+			let priceButton = newButton(factoryDiv);
+			priceButton.innerHTML = "Set new price";
+			priceButton.sendStr = "1082,'.$postVals[1].',";
+			priceButton.addEventListener("click", function () {scrMod(this.sendStr + priceBar.slide.value)});';
+		}
+		else if ($thisProject->get('status') == 6) { // an un bid project
+			echo '
+			';
+		}
+		
+		echo '
 		textBlob("", factoryDiv, "Or, use independent construction...");
 		let indLaborBar = slideValBar(factoryDiv, "", 0, '.$ptsRrm.');
 		let indLaborButton = newButton(factoryDiv);
@@ -44,7 +52,9 @@ if ($thisObj->get('factoryLevel') == 0) {
 
 
 if ($thisObj->get('constStatus') > 0) {
-	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  '.($constructDelta).' remaining to complete;';
+	$pctComplete = $thisProject->get('currPoints')/$thisProject->get('totalPoints') * 100;
+	$ptsRrm = $thisProject->get('totalPoints') - $thisProject->get('currPoints');
+	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  It is '.($pctComplete).'% complete and there are '.$ptsRrm.' points remaining to complete;';
 }
 if ($thisObj->get('groupType') == 1) {
 	$productionOpts = implode(',', $thisObj->tempList);

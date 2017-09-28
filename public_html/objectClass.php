@@ -872,8 +872,8 @@ class project extends object {
 		$this->attrList['totalPoints'] = 4;
 		$this->attrList['currPoints'] = 5;
 
-		$this->attrList['currPrice'] = 6;
 		$this->attrList['status'] = 6;
+		$this->attrList['setPrice'] = 16;
 
 		$this->attrList['nextProj'] = 24;
 		$this->attrList['pvsProj'] = 25;
