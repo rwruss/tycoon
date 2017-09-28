@@ -33,13 +33,13 @@ contractsButton.addEventListener("click", function (e) {
 
 	thisDiv.buyContracts.innerHTML = "Buyinh";
 	thisDiv.sellContracts.innerHTML = "<span style=\"float:left\">Sellin</span>";
-	
+
 	cSearch = newButton(thisDiv);
 	cSearch.innerHTML = "Bid on contracts";
 	cSearch.addEventListener("click", function (e) {
 		e.stopPropagation();
 		contractBids = useDeskTop.newPane("contractBids");
-		
+
 		contractBids.innerHTML = "Select what product to bid on";
 		let selectList = arrayToSelect(contractBids, objNames);
 		contractBids.results = addDiv("", "stdFloatDiv", contractBids);
@@ -50,19 +50,23 @@ contractsButton.addEventListener("click", function (e) {
 				let test = new Int32Array(x);
 				console.log(test);
 				console.log(test.byteLength);
-				for (var i=0; i<test.byteLength; i+=108) {
-					let thisContract = new contract(x.slice(i, i+108));
-					let contractItem = thisContract.render(contractBids.results);
-					contractItem.addEventListener("click", function () {
-						
-					});
+				if (test.byteLength == 0) {
+					contractBids.results.innerHTML = "No options";
+				} else {
+					for (var i=0; i<test.byteLength; i+=108) {
+						let thisContract = new contract(x.slice(i, i+108));
+						let contractItem = thisContract.render(contractBids.results);
+						contractItem.addEventListener("click", function () {
+
+						});
+					}
 				}
 			})
 		});
 		searchButton.innerHTML = "search";
 	});
-	
-	
+
+
 	loadBuffer("1071,'.$pGameID.'", function (x) {
 		let test = new Int32Array(x);
 		console.log(test);
@@ -81,7 +85,7 @@ contractsButton.addEventListener("click", function (e) {
 		e.stopPropagation();
 		let serviceContracts = useDeskTop.newPane("serviceContracts");
 		getASync().then(v=>{
-			
+
 		});
 	})*/
 });

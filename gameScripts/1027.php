@@ -85,7 +85,7 @@ productSales.addEventListener("change", function () {
 	let thisRev;
 	cityTabs.renderKids[4].factoryBar.innerHTML = "";
 	console.log("load facs that make this (" + this.value + ")");
-	let tmpList = getFactoriesByProduct(playerFactories, this.value);
+	let tmpList = getFactoriesByProduct(playerFactories, playerProducts[this.value]);
 
 	console.log("show price updates");
 	console.log(document.getElementById("cityIncome"));
@@ -101,7 +101,6 @@ productSales.addEventListener("change", function () {
 				let thisPrice;
 				var getPrice = function (x, y) {
 					return new Promise(resolve => {
-
 						resolve(showCity.demandPrice(x, y));
 					}, reject => {
 						console.log("rpice failed");

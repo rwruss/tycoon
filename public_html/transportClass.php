@@ -151,7 +151,7 @@ function loadRouteOptions($pathRoute, $transportFile) {
 	return $legInfo;
 }
 
-function loadPath($routeFile, $routeNum) {
+function loadPath($routeNum, $routeFile) {
 	$pathHead = loadPathHead($routeFile, $routeNum);
 	//print_r($pathHead);
 
@@ -160,15 +160,7 @@ function loadPath($routeFile, $routeNum) {
 
 	return unpack('i*', $routeDat);
 }
-/*
-function packArray($data, $type='i') {
-  $str = '';
-  foreach ($data as $value) {
-    $str .= pack($type, $value);
-  }
-  return $str;
-}
-*/
+
 function processRouteCosts($thisPlayer, $legCosts, $routeObjects, $legCaps, $objFile) {
 	// deduct the shipping cost from the selling player
 	$totalCost = array_sum($legCosts);
@@ -184,13 +176,7 @@ function processRouteCosts($thisPlayer, $legCosts, $routeObjects, $legCaps, $obj
 			$rotueObjects[$i]->saveAll();
 		}
 	}
-	/*
-	for ($i=0; $i<sizeof($legOwners); $i++) {
-		if ($legOwners[$i] > 0) {
-			$transportingPlayer = loadObject($legOwners[$i], $objFile, 400);
-			$transportingPlayer->save('money', $transportingPlayer->get('money') + $legCosts[$i]);
-		}
-	}*/
+
 }
 
 function processRouteStats() {

@@ -361,7 +361,7 @@ class factory extends object {
 		for (var i=0; i<5; i++) {
 			if (this.productStores[i]>0) {
 				//productArray[this.productStores[i]].renderQty(trg, this.productStores[i+5]);
-				productArray[this.prod[i]].renderDtls(trg, this.productStores[5+i], this.prodDtls[i*5+4], this.prodDtls[i*5+3], 0, 0);
+				productArray[this.prod[i]].renderDtls(trg, this.productStores[i], this.prodDtls[i*5+4], this.prodDtls[i*5+3], 0, 0);
 			}
 		}
 	}
@@ -2015,7 +2015,7 @@ class openContract extends contract {
 	constructor(dat) {
 		super(dat);
 	}
-	
+
 	renderActive(trg, contain) {
 		productArray[this.productID].renderSummary(contain);
 
@@ -2027,9 +2027,9 @@ class openContract extends contract {
 		contain.addEventListener("click", function (e) {
 			e.stopPropagation();
 			this.item.renderDetail();
-		});		
+		});
 	}
-	
+
 	renderDetail() {
 		let thisDetail = useDeskTop.newPane("contractDetail");
 		thisDetail.innerHTML = "";
@@ -2055,12 +2055,12 @@ class openContract extends contract {
 				console.log("Need to figure out where this goes")
 			})
 		} else {
-			if (this.status == 1) { 
+			if (this.status == 1) {
 				thisDetail.detailArea = addDiv("", "", thisDetail);
 				thisDetail.detailArea.amount = addDiv("", "", thisDetail);
 				thisDetail.optionArea = addDiv("", "", thisDetail);
 				thisDetail.shippingArea = addDiv("", "", thisDetail);
-				
+
 				// find factories that can send product
 				console.log("# checks:" + playerFactories.length);
 				for (var i=0; i<playerFactories.length; i++) {
@@ -2073,37 +2073,33 @@ class openContract extends contract {
 						let factoryOption = playerFactories[i].renderSummary(thisDetail.optionArea);
 						factoryOption.addEventListener("click", function (e) {
 							e.stopPropagation();
-							
+
 							// draw a detail for the selected factory
 							thisDetail.detailArea.innerHTML = "";
 							let detailObj = this.parentObj.renderDetail(thisDetail.detailArea);
-							
-							
+
+
 							/*
 							this.prod = [dat[4], dat[5], dat[6], dat[7], dat[8]];
 							this.prodInv = [dat[9], dat[10], dat[11], dat[12], dat[13]];
 							*/
-							
+
 							thisDetail.detailArea.amount.innerHTML = "";
-							let thisDetail.detailArea.amount.slide = slideValBar(thisDetail.detailArea.amount, "", 0, detailObj.prodInv[check]);
-							
+							//let thisDetail.detailArea.amount.slide = slideValBar(thisDetail.detailArea.amount, "", 0, detailObj.prodInv[check]);
+							/*
 							let sendButton = newButton(thisDetail.detailArea.amount.slide);
 							sendButton.innerHTML = "SEND";
-							sendButton.sendStr = this.parentObj.objID + "," + 
+							sendButton.sendStr = this.parentObj.objID + ",";
 							sendButton.prodID = check;
 							sendButton.factoryID = this.parentObj.objID;
 							sendButton.addEventListener("click", function () {
 								saleWindow(this.prodID, this.parenNode.slide.slide.value, this.factoryID, "");  //prodIndex, saleQty, factoryID, sendStr)
-							});
-							)
-						)
+							});*/
+						});
 					}
 				}
 			}
-			else if (this.status == 2) {
-			}
 		}
-		
 	}
 }
 

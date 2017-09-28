@@ -15,10 +15,10 @@ pvs
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb'); //r+b
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'r+b'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); //r+b
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b'); //r+b
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b'); //r+b
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
@@ -73,7 +73,7 @@ if (flock($laborPoolFile, LOCK_EX)) {
 		$thisFactory->saveLabor();
 	}
 	else if ($postVals[3] == -1) {
-		//echo 'Remove existing labor';
+		echo 'Remove existing labor';
 		// remove an item from the factory with no replacement
 		$newLabor = loadLaborItem(0, $laborPoolFile);
 		$oldLabor = $thisFactory->laborItems[$postVals[2]];
@@ -81,7 +81,19 @@ if (flock($laborPoolFile, LOCK_EX)) {
 			$oldLaborID = addLaborToPool($oldLabor, $laborPoolFile, $laborSlotFile);
 			flock($laborPoolFile, LOCK_UN);
 		}
-
+		// record the labor in the company labor list
+		if (flock($slotFile, LOCK_EX)) {
+			$laborSlot = $thisBusiness->get('laborSlot');
+			if ($laborSlot == 0) {
+				$laborSlot = newSlot($slotFile);
+				$thisBusiness->save('laborSlot', $laborSlot);
+				//echo 'Save new labor slot #'.$laborSlot;
+			}
+			$laborList = new itemSlot($laborSlot, $slotFile, 40);
+			$laborList->addItem($oldLaborID);
+			flock($slotFile, LOCK_UN);
+		}
+		// record the empty labor in the old slot
 		$thisFactory->laborItems[$postVals[2]] = $newLabor;
 		$thisFactory->saveLabor();
 	}

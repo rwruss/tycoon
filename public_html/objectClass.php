@@ -379,10 +379,11 @@ class factory extends object {
 		$prodStr = '';
 		$qualStr = '';
 		for ($i=0; $i<5; $i++) {
-			$prodStr .= pack('i', $this->objDat[$this->productionRateOffset+$i]);
+			//echo 'Save rate of '.$this->objDat[$this->currentProductionRateOffset+$i].' and quality of '.$this->productionQuality[$i+1].'<br>';
+			$prodStr .= pack('i', $this->objDat[$this->currentProductionRateOffset+$i]);
 			$qualStr .= pack('S', $this->productionQuality[$i+1]);
 		}
-		$this->saveBlock($this->productionRateOffset*4, $prodStr);
+		$this->saveBlock($this->currentProductionRateOffset*4, $prodStr);
 		$this->saveBlock($this->productionQualityOffset*4, $qualStr);
 	}
 
@@ -522,17 +523,19 @@ class factory extends object {
 
 				$skillMatrix = array_fill(0, 256, 0);
 				for ($i=0; $i<5; $i++ ){
-					if ($this->objDat[$this->currentProductionOffset] > 0) {
-						$this->objDat[$this->prodInv+$i] += $this->get('prodQty');
+					if ($this->objDat[$this->currentProductionOffset+$i] > 0) {
+						//$this->objDat[$this->prodInv+$i] += $this->get('prodQty');
+						$this->objDat[$this->prodInv+$i] += $this->get('prodLength')*$this->objDat[$this->currentProductionRateOffset+$i];
 						$this->objDat[$this->productStats+$i*5+0] += $this->get('prodQuality')*$productionPct[$i]; // product quality
 						$this->objDat[$this->productStats+$i*5+1] += $this->get('prodPollution')*$productionPct[$i]; // product Pollution
 						$this->objDat[$this->productStats+$i*5+2] += $this->get('prodRights')*$productionPct[$i]; // product Rights
 						$this->objDat[$this->productStats+$i*5+3] += $this->get('prodCost')*$productionPct[$i]; // product material cost
 						$this->objDat[$this->productStats+$i*5+4] += $this->get('prodLaborCost')*$productionPct[$i]; // product labor cost
 
+
 						// load the product information
-						fseek($this->linkFile, $this->get('currentProd')*1000);
-						$thisProduct = new product($this->get('currentProd'), fread($this->linkFile, 1000), $this->linkFile);
+						fseek($this->linkFile, $this->objDat[$this->currentProductionOffset+$i]*1000);
+						$thisProduct = new product($this->objDat[$this->currentProductionOffset+$i], fread($this->linkFile, 1000), $this->linkFile);
 
 						// create the matrix of learning for the product
 						echo 'ADD LEARNING TO LABOR';

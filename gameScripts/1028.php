@@ -49,19 +49,21 @@ for ($i=0; $i<sizeof($thisFactory->resourceStores); $i+=2) {
 
 $rscFail = [];
 $usageList=[];
-for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
-	if ($productInfo[$i+18] > 0) {
-		//echo 'Look for resource '.$productInfo[$i+18];
-		for ($j=0; $j<$limit = 16; $j++) {  // j is the index of the storage location at the factory
-			if ($thisFactory->resourceStores[$j*2] == $productInfo[$i+18]) {
-				//echo 'Resources spot '.$j.' (type '.$thisFactory->resourceStores[$j*2].') which has a stock of '.$thisFactory->resourceStores[$j*2+1].' has a usage rate of '.$productInfo[$i+28].' Need '.($production*$productInfo[$i+28]).'<br>';
-				if ($production*$productInfo[$i+28] <= $thisFactory->resourceStores[$j*2+1]) {
-					//echo $production*$productInfo[$i+28].' <= '.$thisFactory->resourceStores[$j*2+1];
-					$usageList[$j] = $production*$productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
-				} else {
-					$rscFail[$j*2] = $production*$productInfo[$i+28] - $thisFactory->resourceStores[$j*2+1];
+for ($p=0; $p<5; $p++) {
+	for ($i=0; $i<10; $i++) { // i is the index of the resource required by the product
+		if ($productInfo[$i+18] > 0) {
+			//echo 'Look for resource '.$productInfo[$i+18];
+			for ($j=0; $j<$limit = 16; $j++) {  // j is the index of the storage location at the factory
+				if ($thisFactory->resourceStores[$j*2] == $productInfo[$i+18]) {
+					//echo 'Resources spot '.$j.' (type '.$thisFactory->resourceStores[$j*2].') which has a stock of '.$thisFactory->resourceStores[$j*2+1].' has a usage rate of '.$productInfo[$i+28].' Need '.($production*$productInfo[$i+28]).'<br>';
+					if ($production[$p]*$productInfo[$i+28] <= $thisFactory->resourceStores[$j*2+1]) {
+						//echo $production*$productInfo[$i+28].' <= '.$thisFactory->resourceStores[$j*2+1];
+						$usageList[$j] = $production[$p]*$productInfo[$i+28];  // Record the usage rate for the store location (units per item produced)
+					} else {
+						$rscFail[$j*2] = $production[$p]*$productInfo[$i+28] - $thisFactory->resourceStores[$j*2+1];
+					}
+					break;
 				}
-				break;
 			}
 		}
 	}
@@ -136,7 +138,7 @@ $productRights += $durations[$postVals[2]]/86400 * $thisFactory->get('rtsPerDay'
 $overRideDurs = [0, 10, 10, 10, 10];
 $thisFactory->set('prodLength', $overRideDurs[$postVals[2]]);
 $thisFactory->set('prodStart', $now);
-$thisFactory->set('prodQty', $production);
+//$thisFactory->set('prodQty', $production);
 $thisFactory->set('initProdDuration', $overRideDurs[$postVals[2]]);
 $thisFactory->set('prodRights', $productRights);
 $thisFactory->set('prodPollution', $productPollution);
@@ -157,9 +159,9 @@ $currentProduction = ', {setVal:'.$thisFactory->get('currentProd').'}';
 $returnArray = [];
 $returnArray[0] = $postVals[1];  // This factory ID
 $returnArray[1] = ($thisFactory->get('prodLength') + $thisFactory->get('prodStart'));  // Completion Time
-for ($i=0; $i<$productionSpots; $i++) {}
+for ($i=0; $i<$productionSpots; $i++) {
 	$returnArray[2+$i*2] = $thisFactory->objDat[$thisFactory->currentProductionOffset]; // Product ID
-	$returnArray[3+$i*2] = $production;  // Qty to be produced
+	$returnArray[3+$i*2] = $production[$i];  // Qty to be produced
 }
 
 echo implode(',', array_merge($returnArray, $thisFactory->resourceInv()));
