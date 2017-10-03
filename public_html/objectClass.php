@@ -872,8 +872,8 @@ class project extends object {
 		$this->attrList['totalPoints'] = 4;
 		$this->attrList['currPoints'] = 5;
 
-		$this->attrList['status'] = 6;
-		$this->attrList['setPrice'] = 16;
+		$this->attrList['status'] = 7;
+		$this->attrList['contractID'] = 8;
 
 		$this->attrList['nextProj'] = 24;
 		$this->attrList['pvsProj'] = 25;
@@ -898,7 +898,9 @@ class offer extends object {
 }
 
 
-
+function newContract($contractDat, $contractFile) {
+	
+}
 
 function loadProduct($id, $file) {
 	fseek($file, $id*1000);

@@ -2442,3 +2442,36 @@ objectSelection = function (selectList, optionList, selectTrg, optionTrg) {
 		optionTrg.appendChild(optionList[i]);
 	}
 }
+
+contractOptions = function (sendStr, trg, params) {
+	let qtyMax = params.qtyMax || 1000;
+
+	trg.innerHTML = "";
+	trg.qtyBar = addDiv("", "stdFloatDiv", trg);
+	trg.qtyBar.innerHTML = "Quantity";
+	
+	trg.qualBar = addDiv("", "stdFloatDiv", trg);
+	trg.qualBar.innerHTML = "Quality";
+
+	trg.priceBar = addDiv("", "stdFloatDiv", trg);
+	trg.priceBar.innerHTML = "Price";
+
+	trg.pollutionBar = addDiv("", "stdFloatDiv", trg);
+	trg.pollutionBar.innerHTML = "Pollution";
+
+	trg.rightsBar = addDiv("", "stdFloatDiv", trg);
+	trg.rightsBar.innerHTML = "rights";
+
+	trg.qtySlide = slideValBar(trg.qtyBar, "", 0, qtyMax);
+	trg.qualSlide = slideValBar(trg.qualBar, "", 0, 100);
+	trg.priceSlide = slideValBar(trg.priceBar, "", 0, 1000);
+	trg.pollutionSlide = slideValBar(trg.pollutionBar, "", 0, 100);
+	trg.rightsSlide = slideValBar(trg.rightsBar, "", 0, 100);
+
+	sendButton = newButton(trg);;
+	sendButton.innerHTML = "Update Contract";
+	sendButton.sendStr = sendStr;
+	sendButton.addEventListener("click", function () {
+		scrMod(sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value + "," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value)
+	});
+}

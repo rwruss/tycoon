@@ -5,7 +5,7 @@ if ($thisObj->get('constStatus') > 0) {
 	echo 'Load project '.$thisObj->get('constStatus');
 	$thisProject = loadProject($thisObj->get('constStatus'), $projectsFile);
 	fclose($projectsFile);
-	//print_r($thisProject->objDat);
+	print_r($thisProject);
 }
 
 
@@ -19,22 +19,42 @@ if ($thisObj->get('factoryLevel') == 0) {
 		selectedFactory = '.$postVals[1].';
 		factoryDiv = useDeskTop.newPane("factoryInfo");
 		factoryDiv.innerHTML = "";
-		textBlob("", factoryDiv, "This facility is still being built ('.$thisObj->get('constStatus').').  Construction is '.$pctComplete.'% complete ('.$ptsRrm.' points remaining).");
+		textBlob("", factoryDiv, "This facility is still being built ('.$thisObj->get('constStatus').').  Construction is '.$pctComplete.'% complete ('.$ptsRrm.' points remaining).");';
+		/*
 		textBlob("", factoryDiv, "You are currently offering '.$thisObj->get('upgradePrice').' for each unit of new construction.  Adjust this price below.");';
 
-		if ($thisProject->get('status') == 6) { // an open project
+		echo '
+		let priceBar = slideValBar(factoryDiv, "", 0, 10000);
+		let priceButton = newButton(factoryDiv);
+		priceButton.innerHTML = "Set new price";
+		priceButton.sendStr = "1082,'.$postVals[1].',";
+		priceButton.addEventListener("click", function () {scrMod(this.sendStr + priceBar.slide.value)});';
+		*/
+		if ($thisProject->get('contractID') == 0) { // an open project
 			echo '
-			let priceBar = slideValBar(factoryDiv, "", 0, 10000);
-			let priceButton = newButton(factoryDiv);
-			priceButton.innerHTML = "Set new price";
-			priceButton.sendStr = "1082,'.$postVals[1].',";
-			priceButton.addEventListener("click", function () {scrMod(this.sendStr + priceBar.slide.value)});';
-		}
-		else if ($thisProject->get('status') == 6) { // an un bid project
-			echo '
+			factoryDiv.contractDiv = addDiv("", "stdFloatDiv", factoryDiv);
+			let bidButton = newButton(factoryDiv);
+			bidButton.innerHTML = "take bids for this project";
+			bidButton.sendStr = "1096,'.$postVals[1].','.$thisProject->get('contractID').'";
+			bidButton.params = {qtyMax:'.$thisProject->get('totalPoints').'};
+			bidButton.addEventListener("click", function () {
+				let objItem = null;
+				for (i=0; i<objNames.length; i++) {
+					console.log(objNames[i]);
+					if (objNames[i] == "Construction Services") {
+						console.log("Use item " + i + " for construction");
+						objItem = i;
+					}
+				}
+
+				if (objItem) contractOptions(this.sendStr+","+objItem, this.parentNode, this.params);
+			});
 			';
 		}
-		
+		else if ($thisProject->get('contractID') == 7) { // an un bid project
+
+		}
+
 		echo '
 		textBlob("", factoryDiv, "Or, use independent construction...");
 		let indLaborBar = slideValBar(factoryDiv, "", 0, '.$ptsRrm.');
@@ -43,8 +63,6 @@ if ($thisObj->get('factoryLevel') == 0) {
 		indLaborButton.sendStr = "1083,'.$thisObj->get('constStatus').',";
 		indLaborButton.addEventListener("click", function () {scrMod(this.sendStr + indLaborBar.slide.value)})
 
-		//thisUpgrade = new factoryUpgrade('.$postVals[1].', '.($thisObj->get('constructCompleteTime')).');
-		//thisUpgrade.render(factoryDiv);
 		</script>';
 		exit();
 	}

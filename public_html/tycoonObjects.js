@@ -2223,6 +2223,7 @@ class legRoute {
 	}
 
 	renderOption (trg) {
+
 		let thisOpt = addDiv("", "routeOpt", trg);
 		thisOpt.dtl = addDiv("", "", thisOpt);
 		thisOpt.dist = addDiv("", "", thisOpt);

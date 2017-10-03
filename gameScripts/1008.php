@@ -127,6 +127,7 @@ $projectDat[4] = 100; //Points required
 $projectDat[5] = 0; // points applied
 $projectDat[6] = 0; // current price
 $projectDat[7] = 1; // status
+$projectDat[8] = 0; // status
 
 echo '<p>Project Data for project '.$newProjID.'<p>';
 print_r($projectDat);
