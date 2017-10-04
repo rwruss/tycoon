@@ -185,8 +185,11 @@ function loadData () {
 		//categories = r.slice(1, r[0]);
 		console.log(r[0] + " categories ");
 		let tmpA = [];
-		let transCount = (r.length - (r[0]+1) - 1)/6;  // subtract the amount of categories plus the category count and the dummy item on the end due to an extra comma
+		let transCount = (r.length - (parseInt(r[0])+1) - 1)/6;  // subtract the amount of categories plus the category count and the dummy item on the end due to an extra comma
 		let offset = parseInt(r[0])+1;
+		console.log(r.length + " - (" + r[0] + " + 1) - 1" );
+		console.log(r.length - (r[0]+1))
+		console.log(r.length + " gives Load " + transCount + " transactions");
 		for (i=0; i<transCount; i++) {
 
 			transactions.push(new transaction(r.slice(offset+i*6, offset+i*6+7)));

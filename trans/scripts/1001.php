@@ -10,7 +10,7 @@ fseek($datFile, 0);
 $data = fread($datFile, $fileSize);
 fclose($datFile);
 
-$items = floor(strlen($data)/50);
+$items = ceil(strlen($data)/50);
 //echo 'Load '.$items.' items<p>';
 
 echo sizeof($catItems).'|'.$categories.'|';

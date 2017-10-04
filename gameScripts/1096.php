@@ -86,12 +86,14 @@ fclose($contractFile);
 // add to the contract list
 // save the contract in the list of bidding contracts for this material
 
-$productContracts = new itemSlot($postVals[2], $contractListFile, 40);
-$productContracts->addItem($newLoc, $contractListFile);
+echo 'Load  item slot '.$productID.' for product cotnracts';
+$productContracts = new itemSlot($productID, $contractListFile, 40);
+print_r($productContracts);
+//$productContracts->addItem($newLoc, $contractListFile);
 fclose($contractListFile);
 
 // save the contract to the player's list of open contracts
-
+/*
 $thisPlayer = loadObject($pGameID, $objFile, 400);
 if ($thisPlayer->get('contractList') == 0) {
 	$newSlot = newSlot($slotFile, 40);
@@ -104,5 +106,5 @@ echo 'contract #'.$newLoc.' created and added to slot '.$thisPlayer->get('contra
 
 fclose($slotFile);
 fclose($objFile);
-
+*/
 ?>
