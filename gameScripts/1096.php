@@ -33,6 +33,8 @@ $thisFactory = loadObject($postVals[1], $objFile, 1600);
 
 if ($thisFactory->get('owner') != $pGameID) exit ('error 6601-1');
 
+echo 'This Factory has project '.$thisFactory->get('constStatus').' in progress';
+
 $contractListFile = fopen($gamePath.'/contractList.clf', 'rb'); //r+b
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
 
@@ -71,40 +73,45 @@ for ($i=1; $i<26; $i++) {
 }
 
 // save the data for the new contract in the contract file
-if (flock($contractFile, LOCK_EX)) {
-	fseek($contractFile, 0, SEEK_END);
-	$cfSize = ftell($contractFile);
-	$newLoc = max(100,ceil($cfSize/100)*100);
-
-	fseek($contractFile, $newLoc);
+if ($contractID > 0) {
+	fseek($contractFile, $contractID);
 	fwrite($contractFile, $cfDat);
+} else {
+	if (flock($contractFile, LOCK_EX)) {
+		fseek($contractFile, 0, SEEK_END);
+		$cfSize = ftell($contractFile);
+		$newLoc = max(100,ceil($cfSize/100)*100);
 
-	flock($contractFile, LOCK_UN);
+		fseek($contractFile, $newLoc);
+		fwrite($contractFile, $cfDat);
+
+		flock($contractFile, LOCK_UN);
+	}
+	// save the contract in the list of bidding contracts for this material
+	echo 'Load  item slot '.$productID.' for product cotnracts';
+	$productContracts = new itemSlot($productID, $contractListFile, 40);
+	$productContracts->addItem($newLoc, $contractListFile);
+
+	// save the contract to the player's list of open contracts
+	$thisPlayer = loadObject($pGameID, $objFile, 400);
+	if ($thisPlayer->get('contractList') == 0) {
+		$newSlot = newSlot($slotFile, 40);
+		$thisPlayer->save('contractList', $newSlot);
+	}
+	$contractList = new itemSlot($thisPlayer->get('contractList'), $slotFile, 40);
+	$contractList->addItem($newLoc, $slotFile);
+
+	echo 'contract #'.$newLoc.' created and added to slot '.$thisPlayer->get('contractList');
 }
 fclose($contractFile);
 
 // add to the contract list
-// save the contract in the list of bidding contracts for this material
 
-echo 'Load  item slot '.$productID.' for product cotnracts';
-$productContracts = new itemSlot($productID, $contractListFile, 40);
-print_r($productContracts);
-//$productContracts->addItem($newLoc, $contractListFile);
 fclose($contractListFile);
 
-// save the contract to the player's list of open contracts
-/*
-$thisPlayer = loadObject($pGameID, $objFile, 400);
-if ($thisPlayer->get('contractList') == 0) {
-	$newSlot = newSlot($slotFile, 40);
-	$thisPlayer->save('contractList', $newSlot);
-}
-$contractList = new itemSlot($thisPlayer->get('contractList'), $slotFile, 40);
-$contractList->addItem($newLoc, $slotFile);
 
-echo 'contract #'.$newLoc.' created and added to slot '.$thisPlayer->get('contractList');
 
 fclose($slotFile);
 fclose($objFile);
-*/
+
 ?>
