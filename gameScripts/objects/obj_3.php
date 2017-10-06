@@ -34,7 +34,7 @@ if ($thisObj->get('factoryLevel') == 0) {
 			echo '
 			factoryDiv.contractDiv = addDiv("", "stdFloatDiv", factoryDiv);
 			let bidButton = newButton(factoryDiv);
-			bidButton.innerHTML = "take bids for this project";
+			bidButton.innerHTML = "Open a Construction Contract";
 			bidButton.sendStr = "1096,'.$postVals[1].','.$thisProject->get('contractID').'";
 			bidButton.params = {qtyMax:'.$thisProject->get('totalPoints').'};
 			bidButton.addEventListener("click", function () {

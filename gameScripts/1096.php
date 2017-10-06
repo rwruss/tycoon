@@ -27,6 +27,7 @@ echo 'Change the project for factory '.$postVals[1].' to accepting bids';
 
 $objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
 $contractFile = fopen($gamePath.'/contracts.ctf', 'rb'); //r+b
+$projectsFile = fopen($gamePath.'/projects.prj', 'rb'); //r+b
 
 // verify that the player is authorized to make this contract
 $thisFactory = loadObject($postVals[1], $objFile, 1600);
@@ -34,6 +35,8 @@ $thisFactory = loadObject($postVals[1], $objFile, 1600);
 if ($thisFactory->get('owner') != $pGameID) exit ('error 6601-1');
 
 echo 'This Factory has project '.$thisFactory->get('constStatus').' in progress';
+
+
 
 $contractListFile = fopen($gamePath.'/contractList.clf', 'rb'); //r+b
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
@@ -72,6 +75,11 @@ for ($i=1; $i<26; $i++) {
 	$cfDat.= pack('i', $contractInfo[$i]);
 }
 
+// get contract ID for this factory
+$factoryProject = loadProject($thisFactory->get('constStatus'), $projectsFile);
+$contractID = $factoryProject->get('contractID');
+echo '<p>Linked contract value is '.$contractID;
+
 // save the data for the new contract in the contract file
 if ($contractID > 0) {
 	fseek($contractFile, $contractID);
@@ -81,6 +89,10 @@ if ($contractID > 0) {
 		fseek($contractFile, 0, SEEK_END);
 		$cfSize = ftell($contractFile);
 		$newLoc = max(100,ceil($cfSize/100)*100);
+
+		$contractID = $newLoc;
+		echo 'save new contract '.$contractID.' to project';		
+		$factoryProject->save('contractID', $contractID);
 
 		fseek($contractFile, $newLoc);
 		fwrite($contractFile, $cfDat);
@@ -103,6 +115,10 @@ if ($contractID > 0) {
 
 	echo 'contract #'.$newLoc.' created and added to slot '.$thisPlayer->get('contractList');
 }
+
+// verify that the project has a linked contract
+
+
 fclose($contractFile);
 
 // add to the contract list
@@ -113,5 +129,5 @@ fclose($contractListFile);
 
 fclose($slotFile);
 fclose($objFile);
-
+fclose($projectsFile);
 ?>

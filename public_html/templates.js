@@ -2449,7 +2449,7 @@ contractOptions = function (sendStr, trg, params) {
 	trg.innerHTML = "";
 	trg.qtyBar = addDiv("", "stdFloatDiv", trg);
 	trg.qtyBar.innerHTML = "Quantity";
-	
+
 	trg.qualBar = addDiv("", "stdFloatDiv", trg);
 	trg.qualBar.innerHTML = "Quality";
 
@@ -2468,10 +2468,22 @@ contractOptions = function (sendStr, trg, params) {
 	trg.pollutionSlide = slideValBar(trg.pollutionBar, "", 0, 100);
 	trg.rightsSlide = slideValBar(trg.rightsBar, "", 0, 100);
 
-	sendButton = newButton(trg);;
-	sendButton.innerHTML = "Update Contract";
-	sendButton.sendStr = sendStr;
-	sendButton.addEventListener("click", function () {
+	trg.optionBoxes = addDiv("", "stdFloatDiv", trg);
+	let radio = document.createElement("input");
+	radio.type = "radio";
+	radio.value = 1;
+	radio.name = "contractSel"
+	trg.optionBoxes.appendChild(radio);
+	radio = document.createElement("input");
+	radio.type = "radio";
+	radio.value = 2;
+	radio.name = "contractSel"
+	trg.optionBoxes.appendChild(radio);
+
+	trg.sendButton = newButton(trg);;
+	trg.sendButton.innerHTML = "Update Contract";
+	trg.sendButton.sendStr = sendStr;
+	trg.sendButton.addEventListener("click", function () {
 		scrMod(sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value + "," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value)
 	});
 }
