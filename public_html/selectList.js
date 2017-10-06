@@ -723,3 +723,52 @@ class laborSelect extends SLobjectSelect {
 		return places.concat(objIDS);
 	}
 }
+
+class buttonSelect {
+	constructor(itemList, selectedClass, unselectedClass, maxSelected) {
+
+		this.itemList = itemList;
+		this.selected = selectedClass;
+		this.unselected = unselectedClass;
+		this.maxSelected = maxSelected;
+		this.itemStatus = new Array(itemList.length);
+		this.itemStatus.fill(0);
+		this.selectCount = 0;
+		
+		for (let i=0; i<this.itemList.length; i++) {
+			this.itemList[i].listObj = this;
+			this.itemList[i].listID = i;
+			this.itemList[i].addEventListener("click", function () {
+				this.listObj.itemClick(this.listID);
+			});
+		}
+	}
+	
+	itemClick (itemNum) {
+		if (this.itemStatus[itemNum] == 0) {
+			if (this.selectCount < this.maxSelected) {
+				// add this item to selection
+				this.selectCount++;
+				this.itemStatus[itemNum] = 1;
+				this.itemList[itemNum].className = this.selected;
+			}					
+		} else {
+			this.selectCount--;
+			this.itemStatus[itemNum] = 0;
+			this.itemList[itemNum].className = this.unselected;
+		}
+	}
+	
+	getSelection() {
+		let returnA = new Array(this.maxSelected);
+		returnA.fill(0);
+		let count = 0;
+		for (let i=0; i<this.itemStatus.length; i++) {
+			if (this.itemStatus[i] == 1) {
+				returnA[count] = i;
+				count++;
+			}
+		}
+		return returnA;
+	}
+}

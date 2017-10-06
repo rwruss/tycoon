@@ -7,16 +7,29 @@
 }
 
 .button {
-		border-collapse: separate;
-		position:relative;
-		padding: 5px;
-		display:inline-block;
-		text-align: center;
-		border: 2px solid black;
-		color:white;
-		border-radius:10px;
-		background:blue;
-		cursor:pointer;
+	border-collapse: separate;
+	position:relative;
+	padding: 5px;
+	display:inline-block;
+	text-align: center;
+	border: 2px solid black;
+	color:white;
+	border-radius:10px;
+	background:blue;
+	cursor:pointer;
+}
+
+.buttonSel {
+	border-collapse: separate;
+	position:relative;
+	padding: 5px;
+	display:inline-block;
+	text-align: center;
+	border: 2px solid black;
+	color:white;
+	border-radius:10px;
+	background:green;
+	cursor:pointer;
 }
 
 .hireContain {

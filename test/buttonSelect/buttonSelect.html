@@ -1,0 +1,46 @@
+<link rel="stylesheet" type="text/css" href="e:/websites/tycoon/public_html/gameStyles.css">
+<script src="e:/websites/tycoon/public_html/templates.js"></script>
+<script src="e:/websites/tycoon/public_html/selectList.js"></script>
+<script>
+
+class testObject {
+	constructor(val) {
+		this.testVal = val[0],
+		this.price = val[1];
+		this.qty = val[2];
+	}
+	
+	renderSummary(trg) {
+		let thisSummary = addDiv("", "button", trg);
+		thisSummary.style.backgroundColor = "white";
+		thisSummary.innerHTML = this.testVal + ' -> ' + this.price;
+		return thisSummary;
+	}
+}
+
+function initTest() {
+	
+	let objectList = [];
+	let newItem;
+	let trg = document.getElementById("gmPnl");
+	for (let i=0; i<10; i++) {
+		newItem = addDiv("", "button", trg);
+		newItem.innerHTML = "option " + i;
+		objectList.push(newItem);
+	}
+	
+	let selectObject = new buttonSelect(objectList, "buttonSel", "button", 3);
+	let sendButton = newButton(trg);
+	sendButton.innerHTML = "Send Selections";
+	sendButton.trgObject = selectObject;
+	sendButton.addEventListener("click", function () {
+		console.log(this.trgObject.getSelection());
+	});
+}
+
+window.addEventListener("load", initTest);
+</script>
+
+<div id="gmPnl" class="container"></div>
+
+
