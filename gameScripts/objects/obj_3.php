@@ -40,9 +40,9 @@ if ($thisObj->get('factoryLevel') == 0) {
 			bidButton.addEventListener("click", function () {
 				let objItem = null;
 				for (i=0; i<objNames.length; i++) {
-					console.log(objNames[i]);
+					//console.log(objNames[i]);
 					if (objNames[i] == "Construction Services") {
-						console.log("Use item " + i + " for construction");
+						//console.log("Use item " + i + " for construction");
 						objItem = i;
 					}
 				}

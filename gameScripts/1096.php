@@ -19,6 +19,7 @@ $quality = $postVals[5];
 $price = $postVals[6];
 $maxPollution = $postVals[7];
 $maxRights = $postVals[8];
+$contractType = $postVals[9]; // 0 = open contract, 1 = bid contract
 
 require_once('./objectClass.php');
 require_once('./slotFunctions.php');
@@ -42,8 +43,9 @@ $contractListFile = fopen($gamePath.'/contractList.clf', 'rb'); //r+b
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
 
 // create a new contract
+$typeMatrix = [6, 1];
+
 $now = time();
-$contractInfo = [];
 $contractInfo[1] = $pGameID; // owner/buyer
 $contractInfo[2] = $now;
 $contractInfo[3] = $postVals[2]; // item being purchased
@@ -51,7 +53,7 @@ $contractInfo[4] = $postVals[3]; // quantity
 $contractInfo[5] = $postVals[4]; // quality
 $contractInfo[6] = $postVals[6]; // Max Pollution
 $contractInfo[7] = $postVals[7]; // max Rights
-$contractInfo[8] = 6; // status (6= open contract)
+$contractInfo[8] = 0; // status (6= open contract)
 $contractInfo[9] = 0; // accepted price
 $contractInfo[10] = 0; // completion time
 $contractInfo[11] = 0; // bid link
@@ -69,6 +71,10 @@ $contractInfo[22] = 0;
 $contractInfo[23] = 0;
 $contractInfo[24] = 0;
 $contractInfo[25] = 0;
+
+if ($contractType == 0) {
+	$contractInfo[8] = 6; // status (6= open contract)
+}
 
 $cfDat = '';
 for ($i=1; $i<26; $i++) {
@@ -91,7 +97,7 @@ if ($contractID > 0) {
 		$newLoc = max(100,ceil($cfSize/100)*100);
 
 		$contractID = $newLoc;
-		echo 'save new contract '.$contractID.' to project';		
+		echo 'save new contract '.$contractID.' to project';
 		$factoryProject->save('contractID', $contractID);
 
 		fseek($contractFile, $newLoc);

@@ -725,7 +725,7 @@ class laborSelect extends SLobjectSelect {
 }
 
 class buttonSelect {
-	constructor(itemList, selectedClass, unselectedClass, maxSelected) {
+	constructor(itemList, selectedClass, unselectedClass, maxSelected, selectedList) {
 
 		this.itemList = itemList;
 		this.selected = selectedClass;
@@ -734,7 +734,7 @@ class buttonSelect {
 		this.itemStatus = new Array(itemList.length);
 		this.itemStatus.fill(0);
 		this.selectCount = 0;
-		
+
 		for (let i=0; i<this.itemList.length; i++) {
 			this.itemList[i].listObj = this;
 			this.itemList[i].listID = i;
@@ -742,23 +742,33 @@ class buttonSelect {
 				this.listObj.itemClick(this.listID);
 			});
 		}
+
+		for (let i=0; i<selectedList.length; i++) {
+			console.log("set item " + selectedList[i])
+			this.itemStatus[selectedList[i]] = 1;
+			this.selectCount++;
+			this.itemList[selectedList[i]].className = this.selected;
+		}
 	}
-	
+
 	itemClick (itemNum) {
+		console.log("clicked item " + itemNum + " which has a status of " + this.itemStatus[itemNum]);
+
 		if (this.itemStatus[itemNum] == 0) {
+			console.log(this.selectCount + " vs " + this.maxSelected)
 			if (this.selectCount < this.maxSelected) {
 				// add this item to selection
 				this.selectCount++;
 				this.itemStatus[itemNum] = 1;
 				this.itemList[itemNum].className = this.selected;
-			}					
+			}
 		} else {
 			this.selectCount--;
 			this.itemStatus[itemNum] = 0;
 			this.itemList[itemNum].className = this.unselected;
 		}
 	}
-	
+
 	getSelection() {
 		let returnA = new Array(this.maxSelected);
 		returnA.fill(0);
