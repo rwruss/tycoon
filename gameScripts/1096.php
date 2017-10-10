@@ -42,6 +42,7 @@ echo 'This Factory has project '.$thisFactory->get('constStatus').' in progress'
 $contractListFile = fopen($gamePath.'/contractList.clf', 'rb'); //r+b
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
 
+<<<<<<< HEAD
 // create a new contract
 $typeMatrix = [6, 1];
 
@@ -74,6 +75,43 @@ $contractInfo[25] = 0;
 
 if ($contractType == 1) {
 	$contractInfo[8] = 6; // status (6= open contract)
+=======
+if ($contractID > 0) {
+	fseek($contractFile, $contractID);
+	$contractInfo = unpack('i*', fread($contractFile, 100));
+} else {
+	// create a new contract
+	$now = time();
+	$contractInfo[1] = $pGameID; // owner/buyer
+	$contractInfo[2] = $now;
+	$contractInfo[3] = $postVals[2]; // item being purchased
+	$contractInfo[4] = $quantity; // quantity
+	$contractInfo[5] = $quality; // quality
+	$contractInfo[6] = $postVals[6]; // Max Pollution
+	$contractInfo[7] = $postVals[7]; // max Rights
+	$contractInfo[8] = 1; // status (6 = open contract)
+	$contractInfo[9] = 0; // accepted price
+	$contractInfo[10] = 0; // completion time
+	$contractInfo[11] = 0; // bid link
+	$contractInfo[12] = $postVals[1]; // traget factory
+	$contractInfo[13] = 0;
+	$contractInfo[14] = 0;
+	$contractInfo[15] = 0;
+	$contractInfo[16] = $postVals[5];
+	$contractInfo[17] = 0;
+	$contractInfo[18] = 0;
+	$contractInfo[19] = 0;
+	$contractInfo[20] = 0;
+	$contractInfo[21] = 0;
+	$contractInfo[22] = 0;
+	$contractInfo[23] = 0;
+	$contractInfo[24] = 0;
+	$contractInfo[25] = 0;
+
+	if ($contractType == 0) {
+		$contractInfo[8] = 6; // status (6= open contract)
+	}
+>>>>>>> origin/master
 }
 
 $cfDat = '';
