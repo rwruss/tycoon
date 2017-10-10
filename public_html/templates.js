@@ -2444,6 +2444,27 @@ objectSelection = function (selectList, optionList, selectTrg, optionTrg) {
 }
 
 contractOptions = function (sendStr, trg, params) {
+	trg.optionBoxes = addDiv("", "stdFloatDiv", trg);
+	trg.trg.settingArea = addDiv("", "stdFloatDiv", trg);
+	
+	trg.optionBoxes.target = trg.settingArea;
+	trg.optionBoxes.params = params;
+	trg.optionBoxes.sendStr = sendStr;
+	
+	trg.optionBoxes.openContract = newButton(trg.optionBoxes);
+	trg.optionBoxes.openContract.innerHTML = "Open Contract";	
+	trg.optionBoxes.openContract.addEventListener("click", function () {
+		openContractOptions(this.parentNode.sendStr, this.parentNode.target, this.parentNode.params);
+	});
+	
+	trg.optionBoxes.closedContract = newButton(trg.optionBoxes);
+	trg.optionBoxes.closedContract.innerHTML = "Open Contract";	
+	trg.optionBoxes.closedContract.addEventListener("click", function () {
+		closedContractOptions(this.parentNode.sendStr, this.parentNode.target, this.parentNode.params);
+	});
+}
+
+openContractOptions = function (sendStr, trg, params) {
 	let qtyMax = params.qtyMax || 1000;
 
 	trg.innerHTML = "";
@@ -2468,24 +2489,44 @@ contractOptions = function (sendStr, trg, params) {
 	trg.pollutionSlide = slideValBar(trg.pollutionBar, "", 0, 100);
 	trg.rightsSlide = slideValBar(trg.rightsBar, "", 0, 100);
 
-	trg.optionBoxes = addDiv("", "stdFloatDiv", trg);
-	let options = [];
-	let newOption = addDiv("", "button", trg.optionBoxes);
-	newOption.innerHTML = "Open Contract";
-	options.push(newOption);
+	trg.sendButton = newButton(trg);;
+	trg.sendButton.innerHTML = "Update Contract";
+	trg.sendButton.sendStr = sendStr;
+	trg.sendButton.addEventListener("click", function () {
+		scrMod(sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value +
+		"," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value + ",1");
+	});
+}
 
-	newOption = addDiv("", "button", trg.optionBoxes);
-	newOption.innerHTML = "Bid Contract";
-	options.push(newOption);
+closedContractOptions = function () {
+	let qtyMax = params.qtyMax || 1000;
 
-	let theseOptions = new buttonSelect(options, "buttonSel", "button", 1, [0]);
+	trg.innerHTML = "";
+	trg.qtyBar = addDiv("", "stdFloatDiv", trg);
+	trg.qtyBar.innerHTML = "Quantity";
+
+	trg.qualBar = addDiv("", "stdFloatDiv", trg);
+	trg.qualBar.innerHTML = "Quality";
+
+	trg.priceBar = addDiv("", "stdFloatDiv", trg);
+	trg.priceBar.innerHTML = "Price";
+
+	trg.pollutionBar = addDiv("", "stdFloatDiv", trg);
+	trg.pollutionBar.innerHTML = "Pollution";
+
+	trg.rightsBar = addDiv("", "stdFloatDiv", trg);
+	trg.rightsBar.innerHTML = "rights";
+
+	trg.qtySlide = slideValBar(trg.qtyBar, "", 0, qtyMax);
+	trg.qualSlide = slideValBar(trg.qualBar, "", 0, 100);
+	trg.priceSlide = slideValBar(trg.priceBar, "", 0, 1000);
+	trg.pollutionSlide = slideValBar(trg.pollutionBar, "", 0, 100);
+	trg.rightsSlide = slideValBar(trg.rightsBar, "", 0, 100);
 
 	trg.sendButton = newButton(trg);;
 	trg.sendButton.innerHTML = "Update Contract";
 	trg.sendButton.sendStr = sendStr;
-	trg.sendButton.trgObject = theseOptions;
 	trg.sendButton.addEventListener("click", function () {
-		scrMod(sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value +
-		"," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value + ","  + this.trgObject.getSelection().join(","));
+		scrMod(sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + ",0," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value + ",2");
 	});
 }

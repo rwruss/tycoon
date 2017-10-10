@@ -16,10 +16,10 @@ $contractID = $postVals[2];
 $productID = $postVals[3];
 $quantity = $postVals[4];
 $quality = $postVals[5];
-$price = $postVals[6];
+$price = $postVals[6]; // 0 if a closed contract
 $maxPollution = $postVals[7];
 $maxRights = $postVals[8];
-$contractType = $postVals[9]; // 0 = open contract, 1 = bid contract
+$contractType = $postVals[9]; // 1 = open contract, 2 = bid contract
 
 require_once('./objectClass.php');
 require_once('./slotFunctions.php');
@@ -72,7 +72,7 @@ $contractInfo[23] = 0;
 $contractInfo[24] = 0;
 $contractInfo[25] = 0;
 
-if ($contractType == 0) {
+if ($contractType == 1) {
 	$contractInfo[8] = 6; // status (6= open contract)
 }
 
