@@ -42,7 +42,7 @@ echo 'This Factory has project '.$thisFactory->get('constStatus').' in progress'
 $contractListFile = fopen($gamePath.'/contractList.clf', 'rb'); //r+b
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
 
-<<<<<<< HEAD
+
 // create a new contract
 $typeMatrix = [6, 1];
 
@@ -75,7 +75,7 @@ $contractInfo[25] = 0;
 
 if ($contractType == 1) {
 	$contractInfo[8] = 6; // status (6= open contract)
-=======
+}
 if ($contractID > 0) {
 	fseek($contractFile, $contractID);
 	$contractInfo = unpack('i*', fread($contractFile, 100));
@@ -111,7 +111,6 @@ if ($contractID > 0) {
 	if ($contractType == 0) {
 		$contractInfo[8] = 6; // status (6= open contract)
 	}
->>>>>>> origin/master
 }
 
 $cfDat = '';

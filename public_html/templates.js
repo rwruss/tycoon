@@ -2445,20 +2445,20 @@ objectSelection = function (selectList, optionList, selectTrg, optionTrg) {
 
 contractOptions = function (sendStr, trg, params) {
 	trg.optionBoxes = addDiv("", "stdFloatDiv", trg);
-	trg.trg.settingArea = addDiv("", "stdFloatDiv", trg);
-	
+	trg.settingArea = addDiv("", "stdFloatDiv", trg);
+
 	trg.optionBoxes.target = trg.settingArea;
 	trg.optionBoxes.params = params;
 	trg.optionBoxes.sendStr = sendStr;
-	
+
 	trg.optionBoxes.openContract = newButton(trg.optionBoxes);
-	trg.optionBoxes.openContract.innerHTML = "Open Contract";	
+	trg.optionBoxes.openContract.innerHTML = "Open Contract";
 	trg.optionBoxes.openContract.addEventListener("click", function () {
 		openContractOptions(this.parentNode.sendStr, this.parentNode.target, this.parentNode.params);
 	});
-	
+
 	trg.optionBoxes.closedContract = newButton(trg.optionBoxes);
-	trg.optionBoxes.closedContract.innerHTML = "Open Contract";	
+	trg.optionBoxes.closedContract.innerHTML = "Bid Contract";
 	trg.optionBoxes.closedContract.addEventListener("click", function () {
 		closedContractOptions(this.parentNode.sendStr, this.parentNode.target, this.parentNode.params);
 	});
@@ -2498,7 +2498,7 @@ openContractOptions = function (sendStr, trg, params) {
 	});
 }
 
-closedContractOptions = function () {
+closedContractOptions = function (sendStr, trg, params) {
 	let qtyMax = params.qtyMax || 1000;
 
 	trg.innerHTML = "";
@@ -2508,9 +2508,6 @@ closedContractOptions = function () {
 	trg.qualBar = addDiv("", "stdFloatDiv", trg);
 	trg.qualBar.innerHTML = "Quality";
 
-	trg.priceBar = addDiv("", "stdFloatDiv", trg);
-	trg.priceBar.innerHTML = "Price";
-
 	trg.pollutionBar = addDiv("", "stdFloatDiv", trg);
 	trg.pollutionBar.innerHTML = "Pollution";
 
@@ -2519,7 +2516,6 @@ closedContractOptions = function () {
 
 	trg.qtySlide = slideValBar(trg.qtyBar, "", 0, qtyMax);
 	trg.qualSlide = slideValBar(trg.qualBar, "", 0, 100);
-	trg.priceSlide = slideValBar(trg.priceBar, "", 0, 1000);
 	trg.pollutionSlide = slideValBar(trg.pollutionBar, "", 0, 100);
 	trg.rightsSlide = slideValBar(trg.rightsBar, "", 0, 100);
 
