@@ -30,12 +30,12 @@ if ($thisObj->get('factoryLevel') == 0) {
 		priceButton.sendStr = "1082,'.$postVals[1].',";
 		priceButton.addEventListener("click", function () {scrMod(this.sendStr + priceBar.slide.value)});';
 		*/
-		if ($thisProject->get('contractID') == 0) { // an open project
+		if ($thisProject->get('contractID') == 0) { // project does not have contract
 			echo '
 			factoryDiv.contractDiv = addDiv("", "stdFloatDiv", factoryDiv);
 			let bidButton = newButton(factoryDiv);
 			bidButton.innerHTML = "Open a Construction Contract";
-			bidButton.sendStr = "1096,'.$postVals[1].','.$thisProject->get('contractID').'";
+			bidButton.sendStr = "1096,'.$postVals[1].',0";
 			bidButton.params = {qtyMax:'.$thisProject->get('totalPoints').'};
 			bidButton.addEventListener("click", function () {
 				let objItem = null;
@@ -51,8 +51,12 @@ if ($thisObj->get('factoryLevel') == 0) {
 			});
 			';
 		}
-		else if ($thisProject->get('contractID') == 7) { // an un bid project
-
+		else if ($thisProject->get('contractID') > 0) { // this project has a contract
+			// Load the contract inforamtion
+			$contractFile = fopen($gamePath.'/contracts.ctf', 'rb'); //rb
+			fseek($contractFile, $thisProject->get('contractID'));
+			$contractInfo = unpack('i*', fread($contractFile, 100));
+			fclose($contractFile);
 		}
 
 		echo '

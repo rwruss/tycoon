@@ -93,7 +93,8 @@
 1093 - PROCESS: Get transport options for a factory order
 1094 - PROCESS: Save transport options for material delivery to a factory
 1095 - PROCESS: Get route options for selling/sending products to an open contract
-1096 - PROCESS: Set factory construction contract open for bids/Update an open contract
+1096 - PROCESS: Create a contract for construction of a factory
+1097
 
 TO DO:
 Service items (Construction, legal, etc...)
