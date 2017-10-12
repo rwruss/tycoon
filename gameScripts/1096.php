@@ -26,9 +26,9 @@ require_once('./slotFunctions.php');
 
 echo 'Change the project for factory '.$postVals[1].' to accepting bids';
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
-$contractFile = fopen($gamePath.'/contracts.ctf', 'rb'); //r+b
-$projectsFile = fopen($gamePath.'/projects.prj', 'rb'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'r+b'); //r+b
+$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b'); //r+b
+$projectsFile = fopen($gamePath.'/projects.prj', 'r+b'); //r+b
 
 // verify that the player is authorized to make this contract
 $thisFactory = loadObject($postVals[1], $objFile, 1600);
@@ -40,8 +40,8 @@ $factoryProject = loadProject($thisFactory->get('constStatus'), $projectsFile);
 if ($factoryProject->get('contractID') > 0) exit ('error 6901-2');
 $contractID = $factoryProject->get('contractID');
 
-$contractListFile = fopen($gamePath.'/contractList.clf', 'rb'); //r+b
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
+$contractListFile = fopen($gamePath.'/contractList.clf', 'r+b'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); //r+b
 
 // create a new contract
 $typeMatrix = [6, 1];
@@ -49,20 +49,20 @@ $typeMatrix = [6, 1];
 $now = time();
 $contractInfo[1] = $pGameID; // owner/buyer
 $contractInfo[2] = $now;
-$contractInfo[3] = $postVals[2]; // item being purchased
-$contractInfo[4] = $postVals[3]; // quantity
-$contractInfo[5] = $postVals[4]; // quality
-$contractInfo[6] = $postVals[6]; // Max Pollution
-$contractInfo[7] = $postVals[7]; // max Rights
+$contractInfo[3] = $productID; // item being purchased
+$contractInfo[4] = $quantity; // quantity
+$contractInfo[5] = $quality; // quality
+$contractInfo[6] = $maxPollution; // Max Pollution
+$contractInfo[7] = $maxRights; // max Rights
 $contractInfo[8] = 0; // status (6= open contract)
 $contractInfo[9] = 0; // accepted price
 $contractInfo[10] = 0; // completion time
 $contractInfo[11] = 0; // bid link
-$contractInfo[12] = $postVals[1]; // traget factory
+$contractInfo[12] = $factoryID; // traget factory
 $contractInfo[13] = 0;
 $contractInfo[14] = 0;
 $contractInfo[15] = 0;
-$contractInfo[16] = $postVals[5];
+$contractInfo[16] = $price;
 $contractInfo[17] = 0;
 $contractInfo[18] = 0;
 $contractInfo[19] = 0;
