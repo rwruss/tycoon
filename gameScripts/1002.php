@@ -72,7 +72,8 @@ contractsButton.addEventListener("click", function (e) {
 		console.log(test);
 		console.log(test.byteLength);
 		for (var i=0; i<test.byteLength; i+=108) {
-			let thisContract = new contract(x.slice(i, i+108));
+			let thisContract = newContract(x.slice(i, i+108));
+			//let thisContract = new contract(x.slice(i, i+108));
 			//let contractItem = thisContract.render(thisDiv.buyContracts);
 			if (thisContract.owner == thisPlayer.playerID) thisContract.render(thisDiv.buyContracts);
 			else if (thisContract.seller == thisPlayer.playerID) thisContract.render(thisDiv.sellContracts);

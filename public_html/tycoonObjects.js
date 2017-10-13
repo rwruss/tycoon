@@ -1839,8 +1839,8 @@ class school {
 }
 
 class contract {
-	constructor(buffer) {
-		var dat = new Int32Array(buffer);
+	constructor(dat) {
+		//var dat = new Int32Array(buffer);
 		this.spot = dat[0];
 		this.owner = dat[1];
 		this.time = dat[2];

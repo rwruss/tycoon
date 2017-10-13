@@ -2526,3 +2526,14 @@ closedContractOptions = function (sendStr, trg, params) {
 		scrMod(sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + ",0," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value + ",2");
 	});
 }
+
+newContract = function (buffer) {
+	var dat = new Int32Array(buffer);
+	if (dat[8] == 6) {
+		console.log("new open contract");
+		return new openContract(dat);
+	}	else {
+		console.log("new regular contract");
+		return new contract(dat);
+	}
+}

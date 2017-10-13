@@ -57,6 +57,9 @@ if ($thisObj->get('factoryLevel') == 0) {
 			fseek($contractFile, $thisProject->get('contractID'));
 			$contractInfo = unpack('i*', fread($contractFile, 100));
 			fclose($contractFile);
+
+			echo 'factoryDiv.contractDiv = addDiv("", "stdFloatDiv", factoryDiv);
+			factoryDiv.innerHTML = "You have a contract in progress for construction"';
 		}
 
 		echo '
