@@ -117,8 +117,8 @@ setSlideQty = function(trg, max) {
 
 setSlideVal = function (trg, val) {
 	console.log(trg.slider);
-	trg.slider.slide.value = val;
-	trg.slider.setVal.innerHTML = val;
+	trg.slide.value = val;
+	trg.setVal.innerHTML = val;
 }
 
 addDiv = function(id, useClassName, target) {

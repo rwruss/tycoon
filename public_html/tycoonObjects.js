@@ -2035,7 +2035,7 @@ class openContract extends contract {
 		this.seller = dat[21];
 		this.contractID = dat[26];*/
 	}
-	
+
 	adjustOptions(trg, params) {
 		trg.innerHTML = "";
 		trg.qtyBar = addDiv("", "stdFloatDiv", trg);
@@ -2053,20 +2053,27 @@ class openContract extends contract {
 		trg.rightsBar = addDiv("", "stdFloatDiv", trg);
 		trg.rightsBar.innerHTML = "rights";
 
+		this.maxQty = 100;
 		trg.qtySlide = slideValBar(trg.qtyBar, "", 0, this.maxQty);
+		//trg.qtySlide.slide.value = this.quantity;
+		//console.log(trg.qtySlide.slide);
 		setSlideVal(trg.qtySlide, this.quantity) // trg, val
-		
+
 		trg.qualSlide = slideValBar(trg.qualBar, "", 0, 100);
+		//trg.qualSlide.slide.value = this.minQual;
 		setSlideVal(trg.qualSlide, this.minQual) // trg, val
-		
+
 		trg.priceSlide = slideValBar(trg.priceBar, "", 0, 1000);
+		//trg.priceSlide.slide.value = this.price;
 		setSlideVal(trg.priceSlide, this.price) // trg, val
-		
+
 		trg.pollutionSlide = slideValBar(trg.pollutionBar, "", 0, 100);
+		//trg.pollutionSlide.slide.value = this.maxPol;
 		setSlideVal(trg.pollutionSlide, this.maxPol) // trg, val
-		
+
 		trg.rightsSlide = slideValBar(trg.rightsBar, "", 0, 100);
-		setSlideVal(trg.rightsSlide, this.maxRights) // trg, val		
+		//trg.rightsSlide.slide.value = this.maxRights;
+		setSlideVal(trg.rightsSlide, this.maxRights) // trg, val
 
 		trg.sendButton = newButton(trg);;
 		trg.sendButton.innerHTML = "Update Contract";
@@ -2115,11 +2122,11 @@ class openContract extends contract {
 				e.stopPropagation();
 				console.log("Need to figure out where this goes")
 			})
-			
+
 			let adjustButton = newButton(contain);
 			adjustButton.parentObj = this;
 			adjustButton.innerHTML = "Adjust this contract";
-			adjustButton.addEventListener("click", funciton () {				
+			adjustButton.addEventListener("click", function () {
 				this.parentObj.adjustOptions(thisDetail.adjustArea);
 			});
 		} else {
