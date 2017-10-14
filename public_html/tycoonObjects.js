@@ -20,7 +20,7 @@ class object {
 			if (!checkDiv) {
 				//console.log("delete this instance " + i);
 				this.instances.splice(i, 1);
-				//this.instances = [];
+				//this.instances = [];c
 			}
 		}
 	}
@@ -60,11 +60,11 @@ class factory extends object {
 		if (target.divType != "factorySummary") {
 			thisDiv = addDiv(null, 'udHolder', target);
 			this.instances.push(thisDiv);
-			let me = this;
+			//let me = this;
 			thisDiv.updateFunction = function (x) {
-				console.log("update summary");
-				me.renderSummary(x)};
-
+				//console.log("update summary");
+				//me.renderSummary(x)};
+				this.parentObj.renderSummary(this);
 		}
 		else {
 			thisDiv = target;
@@ -1838,10 +1838,15 @@ class school {
 	}
 }
 
-class contract {
+class contract extends object {
 	constructor(dat) {
-		//var dat = new Int32Array(buffer);
+		this.init(dat);
 		this.spot = dat[0];
+		this.contractID = dat[26];
+		this.instances = [];
+	}
+	
+	init(dat) {		
 		this.owner = dat[1];
 		this.time = dat[2];
 		this.productID = dat[3];
@@ -1857,24 +1862,35 @@ class contract {
 		this.sentQual = dat[18];
 		this.sentPol = dat[19];
 		this.sentRights = dat[20];
-		this.seller = dat[21];
-		this.contractID = dat[26];
+		this.seller = dat[21];		
 	}
 
 	render(trg) {
-		var contractContain = addDiv("", "contractSummary", trg);
-		contractContain.parentContract = this;
-		if (this.contractID == 0) {
-			this.renderEmpty(trg, contractContain);
-		} else {
-			this.renderActive(trg, contractContain);
-			contractContain.item = this;
-		}
+		let contractContain;
+		if (trg.divType != "contractDiv") {
+			contractContain = addDiv("", "contractSummary", trg);
+			contractContain.parentContract = this;
+			if (this.contractID == 0) {
+				this.renderEmpty(trg, contractContain);
+			} else {
+				this.renderActive(contractContain);
+				contractContain.item = this;
+			}
+			
+			contractContain.parentObj = this;
+			container.updateFunction = function () {
+				this.parentObj.render(this);
+			}
 
+			this.instances.push(contractContain);
+		} else {
+			contractContain = trg;
+		}		
+		
 		return contractContain;
 	}
 
-	renderActive(trg, contain) {
+	renderActive(contain) {
 		productArray[this.productID].renderSummary(contain);
 
 		let summArea = addDiv("", "contractSummary", contain);
@@ -2014,7 +2030,8 @@ class contract {
 class openContract extends contract {
 	constructor(dat) {
 		super(dat);
-		this.maxQty = dat[17];
+		this.init();
+		
 		/*
 		this.spot = dat[0];
 		this.owner = dat[1];
@@ -2035,8 +2052,24 @@ class openContract extends contract {
 		this.seller = dat[21];
 		this.contractID = dat[26];*/
 	}
+	
+	update(dat) {
+		this.init(dat);
+		this.renderUpdate();
+	}
+	
+	init(dat) {
+		super.init(dat);
+		this.maxQty = dat[17];
+		
+	}
 
-	adjustOptions(trg, params) {
+	adjustOptions(contractContainer, params) {
+		if (!contractContainer.adjustBox) {
+			contractContainer.adjustBox = addDiv("", "", contractContainer);
+		}
+		contractContainer.className = ""
+		let trg = contractContainer.adjustBox;
 		trg.innerHTML = "";
 		trg.qtyBar = addDiv("", "stdFloatDiv", trg);
 		trg.qtyBar.innerHTML = "Quantity";
@@ -2055,44 +2088,48 @@ class openContract extends contract {
 
 		this.maxQty = 100;
 		trg.qtySlide = slideValBar(trg.qtyBar, "", 0, this.maxQty);
-		//trg.qtySlide.slide.value = this.quantity;
-		//console.log(trg.qtySlide.slide);
 		setSlideVal(trg.qtySlide, this.quantity) // trg, val
 
 		trg.qualSlide = slideValBar(trg.qualBar, "", 0, 100);
-		//trg.qualSlide.slide.value = this.minQual;
 		setSlideVal(trg.qualSlide, this.minQual) // trg, val
 
 		trg.priceSlide = slideValBar(trg.priceBar, "", 0, 1000);
-		//trg.priceSlide.slide.value = this.price;
 		setSlideVal(trg.priceSlide, this.price) // trg, val
 
 		trg.pollutionSlide = slideValBar(trg.pollutionBar, "", 0, 100);
-		//trg.pollutionSlide.slide.value = this.maxPol;
 		setSlideVal(trg.pollutionSlide, this.maxPol) // trg, val
 
 		trg.rightsSlide = slideValBar(trg.rightsBar, "", 0, 100);
-		//trg.rightsSlide.slide.value = this.maxRights;
 		setSlideVal(trg.rightsSlide, this.maxRights) // trg, val
 
 		trg.sendButton = newButton(trg);;
 		trg.sendButton.innerHTML = "Update Contract";
 		trg.sendButton.sendStr = "1097,"+this.contractID;
+		trg.sendButton.parentObj = this;
 		trg.sendButton.addEventListener("click", function () {
-			scrMod(sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value +
-			"," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value + ",1");
+			let sendDat = sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value +
+			"," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value + ",1";
+			getASync(sendDat).then(v => {
+				if (v==1) {
+					r = v.split("|");
+					this.parentObj.update(r);
+				}
+			});
+			
 		});
 	}
 
-	renderActive(trg, contain) {
-		productArray[this.productID].renderSummary(contain);
+	renderActive(contain) {
+		let trgDiv = contain;
 
-		let summArea = addDiv("", "contractSummary", contain);
+		productArray[this.productID].renderSummary(trgDiv);
+
+		let summArea = addDiv("", "contractSummary", trgDiv);
 		summArea.innerHTML = "C#" + this.contractID +"<br>Price: " + (this.price/100) + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		this.sentPol + "/" + this.maxPol + "<br>Status:" + this.status;
 
-		contain.addEventListener("click", function (e) {
+		trgDiv.addEventListener("click", function (e) {
 			e.stopPropagation();
 			this.item.renderDetail();
 		});
@@ -2125,9 +2162,10 @@ class openContract extends contract {
 
 			let adjustButton = newButton(contain);
 			adjustButton.parentObj = this;
+			adjustButton.parentDiv = contain;
 			adjustButton.innerHTML = "Adjust this contract";
 			adjustButton.addEventListener("click", function () {
-				this.parentObj.adjustOptions(thisDetail.adjustArea);
+				this.parentObj.adjustOptions(this.parentDiv);
 			});
 		} else {
 			if (this.status == 1) {

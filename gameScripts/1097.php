@@ -37,4 +37,7 @@ fseek($contractFile, $contractID);
 fwrite($contractFile, $cfDat);
 fclose($contractFile);
 
+$contractInfo[0] = 0;
+echo implode('|', $contractInfo);
+
 ?>

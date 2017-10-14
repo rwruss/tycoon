@@ -1,0 +1,21 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="e:/websites/tycoon/public_html/gameStyles.css">
+
+
+<script>
+function initTest() {
+	let divItem = document.getElementById("testBox");
+	console.log(divItem);
+	divItem.addEventListener("click", function () {
+		this.classList.toggle("adjustOptions");
+	});
+}
+window.addEventListener("load", initTest);
+</script>
+</head>
+
+<body>
+	<div class="contractSummary" id="testBox">Hello</div>
+</body>
+</html>

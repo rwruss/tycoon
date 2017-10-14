@@ -57,9 +57,14 @@ if ($thisObj->get('factoryLevel') == 0) {
 			fseek($contractFile, $thisProject->get('contractID'));
 			$contractInfo = unpack('i*', fread($contractFile, 100));
 			fclose($contractFile);
+			
+			$contractInfo[0] = 0;
+			$contractInfo[] = $thisProject->get('contractID');
 
 			echo 'factoryDiv.contractDiv = addDiv("", "stdFloatDiv", factoryDiv);
-			factoryDiv.innerHTML = "You have a contract in progress for construction"';
+			factoryDiv.innerHTML = "You have a contract in progress for construction"
+			let factoryContract = loadContract(['.implode(',', $contractInfo).']);
+			factoryContract.render(factoryDiv);';
 		}
 
 		echo '
