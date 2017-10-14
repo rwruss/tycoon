@@ -1878,7 +1878,7 @@ class contract {
 		productArray[this.productID].renderSummary(contain);
 
 		let summArea = addDiv("", "contractSummary", contain);
-		summArea.innerHTML = "C#" + this.contractID +"<br>Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
+		summArea.innerHTML = "C#" + this.contractID + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
 		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
 		 this.sentPol + "/" + this.maxPol + "<br>Status:" + this.status;
 
@@ -2014,15 +2014,76 @@ class contract {
 class openContract extends contract {
 	constructor(dat) {
 		super(dat);
+		this.maxQty = dat[17];
+		/*
+		this.spot = dat[0];
+		this.owner = dat[1];
+		this.time = dat[2];
+		this.productID = dat[3];
+		this.quantity = dat[4];
+		this.minQual = dat[5];
+		this.maxPol = dat[6];
+		this.maxRights = dat[7];
+		this.status = dat[8];
+		this.bidLink = dat[11];
+		this.price = dat[16];
+		this.targetFactory = dat[12];
+		this.sentAmt = dat[17];
+		this.sentQual = dat[18];
+		this.sentPol = dat[19];
+		this.sentRights = dat[20];
+		this.seller = dat[21];
+		this.contractID = dat[26];*/
+	}
+	
+	adjustOptions(trg, params) {
+		trg.innerHTML = "";
+		trg.qtyBar = addDiv("", "stdFloatDiv", trg);
+		trg.qtyBar.innerHTML = "Quantity";
+
+		trg.qualBar = addDiv("", "stdFloatDiv", trg);
+		trg.qualBar.innerHTML = "Quality";
+
+		trg.priceBar = addDiv("", "stdFloatDiv", trg);
+		trg.priceBar.innerHTML = "Price";
+
+		trg.pollutionBar = addDiv("", "stdFloatDiv", trg);
+		trg.pollutionBar.innerHTML = "Pollution";
+
+		trg.rightsBar = addDiv("", "stdFloatDiv", trg);
+		trg.rightsBar.innerHTML = "rights";
+
+		trg.qtySlide = slideValBar(trg.qtyBar, "", 0, this.maxQty);
+		setSlideVal(trg.qtySlide, this.quantity) // trg, val
+		
+		trg.qualSlide = slideValBar(trg.qualBar, "", 0, 100);
+		setSlideVal(trg.qualSlide, this.minQual) // trg, val
+		
+		trg.priceSlide = slideValBar(trg.priceBar, "", 0, 1000);
+		setSlideVal(trg.priceSlide, this.price) // trg, val
+		
+		trg.pollutionSlide = slideValBar(trg.pollutionBar, "", 0, 100);
+		setSlideVal(trg.pollutionSlide, this.maxPol) // trg, val
+		
+		trg.rightsSlide = slideValBar(trg.rightsBar, "", 0, 100);
+		setSlideVal(trg.rightsSlide, this.maxRights) // trg, val		
+
+		trg.sendButton = newButton(trg);;
+		trg.sendButton.innerHTML = "Update Contract";
+		trg.sendButton.sendStr = "1097,"+this.contractID;
+		trg.sendButton.addEventListener("click", function () {
+			scrMod(sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value +
+			"," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value + ",1");
+		});
 	}
 
 	renderActive(trg, contain) {
 		productArray[this.productID].renderSummary(contain);
 
 		let summArea = addDiv("", "contractSummary", contain);
-		summArea.innerHTML = "C#" + this.contractID +"<br>Price: " + this.price + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
-		 this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
-		 this.sentPol + "/" + this.maxPol + "<br>Status:" + this.status;
+		summArea.innerHTML = "C#" + this.contractID +"<br>Price: " + (this.price/100) + "<br>" + "Qty: " + this.sentAmt + "/" + this.quantity + "<br>Qual: " +
+		this.sentQual + "/" + this.minQual + "<br>Rights: " + this.sentRights + "/" + this.maxRights + "<br>Pollution: " +
+		this.sentPol + "/" + this.maxPol + "<br>Status:" + this.status;
 
 		contain.addEventListener("click", function (e) {
 			e.stopPropagation();
@@ -2033,7 +2094,7 @@ class openContract extends contract {
 	renderDetail() {
 		let thisDetail = useDeskTop.newPane("contractDetail");
 		thisDetail.innerHTML = "";
-		thisDetail.optionArea = null;
+		thisDetail.adjustArea = addDiv("", "", thisDetail);
 
 		let contain = addDiv("", "contractDetail", thisDetail);
 		productArray[this.productID].renderSummary(contain);
@@ -2054,6 +2115,13 @@ class openContract extends contract {
 				e.stopPropagation();
 				console.log("Need to figure out where this goes")
 			})
+			
+			let adjustButton = newButton(contain);
+			adjustButton.parentObj = this;
+			adjustButton.innerHTML = "Adjust this contract";
+			adjustButton.addEventListener("click", funciton () {				
+				this.parentObj.adjustOptions(thisDetail.adjustArea);
+			});
 		} else {
 			if (this.status == 1) {
 				thisDetail.detailArea = addDiv("", "", thisDetail);
@@ -2078,23 +2146,7 @@ class openContract extends contract {
 							thisDetail.detailArea.innerHTML = "";
 							let detailObj = this.parentObj.renderDetail(thisDetail.detailArea);
 
-
-							/*
-							this.prod = [dat[4], dat[5], dat[6], dat[7], dat[8]];
-							this.prodInv = [dat[9], dat[10], dat[11], dat[12], dat[13]];
-							*/
-
 							thisDetail.detailArea.amount.innerHTML = "";
-							//let thisDetail.detailArea.amount.slide = slideValBar(thisDetail.detailArea.amount, "", 0, detailObj.prodInv[check]);
-							/*
-							let sendButton = newButton(thisDetail.detailArea.amount.slide);
-							sendButton.innerHTML = "SEND";
-							sendButton.sendStr = this.parentObj.objID + ",";
-							sendButton.prodID = check;
-							sendButton.factoryID = this.parentObj.objID;
-							sendButton.addEventListener("click", function () {
-								saleWindow(this.prodID, this.parenNode.slide.slide.value, this.factoryID, "");  //prodIndex, saleQty, factoryID, sendStr)
-							});*/
 						});
 					}
 				}
