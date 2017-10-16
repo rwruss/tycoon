@@ -65,6 +65,7 @@ class factory extends object {
 				//console.log("update summary");
 				//me.renderSummary(x)};
 				this.parentObj.renderSummary(this);
+			}
 		}
 		else {
 			thisDiv = target;
@@ -1840,13 +1841,16 @@ class school {
 
 class contract extends object {
 	constructor(dat) {
+		console.log(dat);
+		super();
 		this.init(dat);
 		this.spot = dat[0];
 		this.contractID = dat[26];
 		this.instances = [];
 	}
-	
-	init(dat) {		
+
+	init(dat) {
+		console.log(dat);
 		this.owner = dat[1];
 		this.time = dat[2];
 		this.productID = dat[3];
@@ -1862,7 +1866,7 @@ class contract extends object {
 		this.sentQual = dat[18];
 		this.sentPol = dat[19];
 		this.sentRights = dat[20];
-		this.seller = dat[21];		
+		this.seller = dat[21];
 	}
 
 	render(trg) {
@@ -1876,17 +1880,18 @@ class contract extends object {
 				this.renderActive(contractContain);
 				contractContain.item = this;
 			}
-			
+
 			contractContain.parentObj = this;
-			container.updateFunction = function () {
+			contractContain.updateFunction = function () {
 				this.parentObj.render(this);
 			}
 
 			this.instances.push(contractContain);
 		} else {
 			contractContain = trg;
-		}		
-		
+			contractContain.innerHTML = "";
+		}
+
 		return contractContain;
 	}
 
@@ -1947,8 +1952,15 @@ class contract extends object {
 		let thisDetail = useDeskTop.newPane("contractDetail");
 		thisDetail.innerHTML = "";
 		thisDetail.optionArea = null;
+		this.instances.push(thisDetail);
+		thisDetail.updateFunction = function () {
+			console.log("update a detail");
+			this.parentObj.renderDetail();
+		}
+
 
 		let contain = addDiv("", "contractDetail", thisDetail);
+
 		productArray[this.productID].renderSummary(contain);
 
 		contain.parentContract = this;
@@ -2030,8 +2042,8 @@ class contract extends object {
 class openContract extends contract {
 	constructor(dat) {
 		super(dat);
-		this.init();
-		
+		this.init(dat);
+
 		/*
 		this.spot = dat[0];
 		this.owner = dat[1];
@@ -2052,23 +2064,26 @@ class openContract extends contract {
 		this.seller = dat[21];
 		this.contractID = dat[26];*/
 	}
-	
+
 	update(dat) {
+		console.log("update an open contract");
 		this.init(dat);
 		this.renderUpdate();
 	}
-	
+
 	init(dat) {
 		super.init(dat);
 		this.maxQty = dat[17];
-		
 	}
 
 	adjustOptions(contractContainer, params) {
+		console.log(contractContainer)
 		if (!contractContainer.adjustBox) {
-			contractContainer.adjustBox = addDiv("", "", contractContainer);
+			console.log("make a new mox");
+			contractContainer.adjustBox = addDiv("", "stFloatDiv", contractContainer);
 		}
-		contractContainer.className = ""
+		contractContainer.classList.toggle("adjustOptions");
+		//contractContainer.className = ""
 		let trg = contractContainer.adjustBox;
 		trg.innerHTML = "";
 		trg.qtyBar = addDiv("", "stdFloatDiv", trg);
@@ -2107,21 +2122,26 @@ class openContract extends contract {
 		trg.sendButton.sendStr = "1097,"+this.contractID;
 		trg.sendButton.parentObj = this;
 		trg.sendButton.addEventListener("click", function () {
-			let sendDat = sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value +
+			let sendDat = this.sendStr + "," + this.parentNode.qtySlide.slide.value + "," + this.parentNode.qualSlide.slide.value + "," + this.parentNode.priceSlide.slide.value +
 			"," + this.parentNode.pollutionSlide.slide.value + "," + this.parentNode.rightsSlide.slide.value + ",1";
 			getASync(sendDat).then(v => {
-				if (v==1) {
-					r = v.split("|");
-					this.parentObj.update(r);
+				console.log(v);
+				let r = v.split("|");
+				if (r[0]==1) {
+					console.log(this.parentObj);
+					console.log("start update");
+					this.parentObj.update(r.slice(1));
 				}
 			});
-			
+
 		});
 	}
 
 	renderActive(contain) {
 		let trgDiv = contain;
-
+		trgDiv.innerHTML = "";
+		console.log(trgDiv);
+		console.log("show product " + this.productID);
 		productArray[this.productID].renderSummary(trgDiv);
 
 		let summArea = addDiv("", "contractSummary", trgDiv);
@@ -2138,6 +2158,13 @@ class openContract extends contract {
 	renderDetail() {
 		let thisDetail = useDeskTop.newPane("contractDetail");
 		thisDetail.innerHTML = "";
+		thisDetail.optionArea = null;
+		thisDetail.parentObj = this;
+		this.instances.push(thisDetail);
+		thisDetail.updateFunction = function () {
+			console.log("update a detail");
+			this.parentObj.renderDetail();
+		}
 		thisDetail.adjustArea = addDiv("", "", thisDetail);
 
 		let contain = addDiv("", "contractDetail", thisDetail);
