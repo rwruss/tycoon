@@ -3,7 +3,7 @@
 $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
 $numProducts = 43;
-$numFactories = 11;
+$numFactories = 13;
 $supplyBlockSize = 360000;
 
 require_once('./slotFunctions.php');

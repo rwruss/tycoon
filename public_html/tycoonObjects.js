@@ -1874,12 +1874,9 @@ class contract extends object {
 		if (trg.divType != "contractDiv") {
 			contractContain = addDiv("", "contractSummary", trg);
 			contractContain.parentContract = this;
-			if (this.contractID == 0) {
-				this.renderEmpty(trg, contractContain);
-			} else {
-				this.renderActive(contractContain);
-				contractContain.item = this;
-			}
+			contractContain.divType = "contractDiv";
+			this.instances.push(contractContain);
+
 
 			contractContain.parentObj = this;
 			contractContain.updateFunction = function () {
@@ -1888,14 +1885,24 @@ class contract extends object {
 
 			this.instances.push(contractContain);
 		} else {
+			console.log("update an existing");
+			console.log(trg);
 			contractContain = trg;
 			contractContain.innerHTML = "";
+		}
+
+		if (this.contractID == 0) {
+			this.renderEmpty(trg, contractContain);
+		} else {
+			this.renderActive(contractContain);
+			contractContain.item = this;
 		}
 
 		return contractContain;
 	}
 
 	renderActive(contain) {
+		console.log("show product " + this.productID);
 		productArray[this.productID].renderSummary(contain);
 
 		let summArea = addDiv("", "contractSummary", contain);
@@ -2082,7 +2089,10 @@ class openContract extends contract {
 			console.log("make a new mox");
 			contractContainer.adjustBox = addDiv("", "stFloatDiv", contractContainer);
 		}
-		contractContainer.classList.toggle("adjustOptions");
+		if (contractContainer.className != "adjustOptions")	{
+			console.log(contractContainer.className)
+			contractContainer.classList.toggle("adjustOptions");
+		}
 		//contractContainer.className = ""
 		let trg = contractContainer.adjustBox;
 		trg.innerHTML = "";

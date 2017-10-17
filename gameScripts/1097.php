@@ -19,7 +19,7 @@ $newPrice = $postVals[4];
 $maxPol = $postVals[5];
 $maxRights = $postVals[6];
 
-$contractFile = fopen($gamePath.'/contracts.ctf', 'rb'); //r+b
+$contractFile = fopen($gamePath.'/contracts.ctf', 'r+b'); //r+b
 fseek($contractFile, $contractID);
 $contractInfo = unpack('i*', fread($contractFile, 100));
 

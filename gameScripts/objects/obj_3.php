@@ -57,20 +57,31 @@ if ($thisObj->get('factoryLevel') == 0) {
 			fseek($contractFile, $thisProject->get('contractID'));
 			$contractInfo = unpack('i*', fread($contractFile, 100));
 			fclose($contractFile);
-			
-			$contractInfo[0] = 0;
+
+			//$contractInfo[0] = 0;
 			$contractInfo[] = $thisProject->get('contractID');
 
 			echo 'factoryDiv.contractDiv = addDiv("", "stdFloatDiv", factoryDiv);
-			factoryDiv.innerHTML = "You have a contract in progress for construction"
-			let factoryContract = loadContract(['.implode(',', $contractInfo).']);
+			factoryDiv.contractDiv.innerHTML = "You have a contract in progress for construction";
+			console.log([0,'.implode(',', $contractInfo).']);
+			let tmpInfo = [0,'.implode(',', $contractInfo).'];
+			let factoryContract;
+			if (tmpInfo[8] == 6)  {
+				console.log("open contract");
+				factoryContract = new openContract(tmpInfo);
+			}	else {
+				console.log("closed contract");
+				factoryContract = new contract(tmpInfo);
+			}
 			factoryContract.render(factoryDiv);';
 		}
 
 		echo '
-		textBlob("", factoryDiv, "Or, use independent construction...");
-		let indLaborBar = slideValBar(factoryDiv, "", 0, '.$ptsRrm.');
-		let indLaborButton = newButton(factoryDiv);
+		let indOption = addDiv("", "stdFloatDiv", factoryDiv);
+		indOption.slideArea = addDiv("", "stdFloatDiv", indOption);
+		textBlob("", indOption.slideArea, "Or, use independent construction...");
+		let indLaborBar = slideValBar(indOption.slideArea, "", 0, '.$ptsRrm.');
+		let indLaborButton = newButton(indOption);
 		indLaborButton.innerHTML = "Use local services ($100/point)";
 		indLaborButton.sendStr = "1083,'.$thisObj->get('constStatus').',";
 		indLaborButton.addEventListener("click", function () {scrMod(this.sendStr + indLaborBar.slide.value)})

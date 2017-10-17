@@ -1990,8 +1990,10 @@ buildOptionList = function(trg, detailTrg, bldgList) {
 	bldgSelect.addEventListener("change", function () {
 		console.log(this.value)
 		detailTrg.innerHTML = "";
-		let item = factoryList[this.value-numProducts].renderDetail(detailTrg);
 		console.log(factoryList);
+		console.log(this.value-numProducts);
+		let item = factoryList[this.value-numProducts].renderDetail(detailTrg);
+
 		let buildButton = newButton(item.buttonDiv);
 		buildButton.innerHTML = "build this factory";
 		let trgSelect = this;
