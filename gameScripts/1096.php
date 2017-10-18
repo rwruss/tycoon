@@ -75,7 +75,7 @@ $contractInfo[25] = 0;
 
 if ($contractType == 1) {
 	$contractInfo[8] = 6; // status (6= open contract)
-}
+} else $contractInfo[8] = 1;
 
 $cfDat = '';
 for ($i=1; $i<26; $i++) {
