@@ -97,6 +97,7 @@
 1097 - PROCESS: Adjust the parameters for an open contract
 
 TO DO:
+Show labor skills in labor detail box
 Verify labor skills are working for prod rates
 Service items (Construction, legal, etc...)
 Update labor skills on work completion (or verify working).

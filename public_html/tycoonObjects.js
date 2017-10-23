@@ -234,68 +234,9 @@ class factory extends object {
 
 				}
 
-					//update company labor item
-					/*
-					this.optionClass.hideItem(tmp[1]);
-					this.parentFactory.factoryLabor[r[6]].update(r.slice(6,36));
-					this.optionClass.moveItem(this.optionClass.optionItems.length-1);
-
-					// delete the item from the companyLaborList
-					for (let i=0; i<companyLabor.length; i++) {
-						if (companyLabor[i].objID == tmp[1]) {
-							companyLabor.splice(i, 1);
-						}
-					}
-
-					// if factory item is empty, delete it from the labor list too
-					for (let i=0; i<companyLabor.length; i++) {
-						if (companyLabor[i].objID == r[6]) {
-							companyLabor.splice(i, 1);
-						}
-					}
-					console.log(this.parentFactory.factoryLabor);
-					*/
-
 			});
 		});
-		/*
-		thisDiv.laborDescArea = addDiv("", "stdFloatDiv", thisDiv);
-
-		//selectedLaborItem = new laborItem([itemNum, LABOR DATA FOR THIS ITEM]);
-		selectedLaborItem = new laborItem(this.labor.slice(itemNum*30, itemNum*30+30));
-		factoryLaborDetail(selectedLaborItem, this.objID, thisDiv.laborDescArea);
-
-		thisDiv.payArea = addDiv("", "stdFloatDiv", thisDiv);
-		laborPaySettings(selectedLaborItem, this.objID, thisDiv.payArea);
-		thisDiv.promotionArea = addDiv("", "stdFloatDiv", thisDiv);
-		textBlob("", thisDiv.promotionArea, "Promotion options");
-
-
-		let saveSettings = newButton(thisDiv.promotionArea);
-		saveSettings.addEventListener("click", function(e) {
-			e.stopPropagation();
-			//scrMod("1058,'.$postVals[1].','.$postVals[2].',"+selectedLaborItem.objID+","+thisDiv.laborPay.slider.slide.value)
-			let sendStr = "1058," + this.objID + "," + itemNum + "," +selectedLaborItem.objID + "," + thisDiv.laborPay.slider.slide.value;
-			console.log(sendStr);
-			getASync(sendStr).then(v => {
-				let r=v.split(",");
-				if (r[0] > -1) {
-					let currentRates = r.slice(1,6);
-					console.log(currentRates);
-				}
-			});
-		});
-
-		saveSettings.innerHTML = "Save Settings";
-		thisDiv.laborArea = addDiv("", "stdFloatDiv", thisDiv);
-		textBlob("", thisDiv.laborArea, "Other Labor Options");
-		let laborTabs = new tabMenu(["Company Labor", "Hire Labor"]);
-		laborTabs.renderTabs(thisDiv.laborArea);
-
-		companyLaborOptions(this.objID, laborTabs.renderKids[0], thisDiv.laborDescArea);
-		factoryHireMenu(laborTabs.renderKids[1], this.objID);
-		laborTabs.renderKids[1].subTarget = addDiv("", "stdFloatDiv", laborTabs.renderKids[1]);
-		*/
+		
 	}
 
 	prodDetail(target, prodIndex) {
@@ -325,7 +266,6 @@ class factory extends object {
 		for (var i=0; i<this.labor.length; i+=30) {
 			//console.log(this.labor.slice(i, i+30));
 			factoryLabor.push(new laborItem(this.labor.slice(i, i+30)));
-			//factoryLabor.push(new laborItem({objID:(this.labor[i]/10+1), pay:(this.labor[i+5]), ability:(this.labor[i+8]), laborType:this.labor[i]}));
 		}
 
 
@@ -336,8 +276,7 @@ class factory extends object {
 			if (factoryLabor[i].laborType > 0) {
 				} else {
 				}
-			//let itemNum = i;
-			//laborItem.sendStr = "1023,"+this.objID+","+i
+			
 			laborItem.parentFactory = this;
 			laborItem.laborSpot = i;
 			laborItem.addEventListener("click", function (e) {
@@ -1228,23 +1167,13 @@ class labor {
 		thisDiv.ownerObject = this.objID;
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
+		thisDiv.expand = addDiv("laborExpand", "laborHolder", thisDiv);
+		thisDiv.expand.addEventListener("click", function () {
+			//contractContainer.classList.toggle("adjustOptions");
+			this.parentNode.classList.toggle("laborHolderLg");
+		});
 
 		addImg("asdf", "laborImg", thisDiv); // labor image
-		/*
-		thisDiv.qualBar = addDiv("asdf", "laborQualBar", thisDiv); // labor quality bar;
-		let qualPct = (this.quality%3600)/3600;
-		thisDiv.qualBar.style.width = 10 + 65*qualPct;
-		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
-		*/
-		/*
-		thisDiv.qualNum = addDiv("asdf", "laborQualNum", thisDiv);
-		thisDiv.qualNum.innerHTML = this.quality;
-		*/
-		/*
-		thisDiv.eduDiv = addDiv("asdf", "laborEd", thisDiv);
-		thisDiv.eduDiv.innerHTML = this.edClass;
-		*/
-
 		thisDiv.nameDiv.innerHTML = laborNames[this.laborType];
 		return thisDiv;
 	}

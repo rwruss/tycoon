@@ -622,9 +622,7 @@ echo '
 		nationList = new Array("Canada", "Mexico", "United States");
 
 		// initialize windows
-		//useDeskTop.newPane("dialogPane");
-		companyLabor = loadCompanyLabor(['.implode(',', $companyLabor).']);
-		//loadCompanyLabor(['.implode(',', $companyLabor).']);
+		companyLabor = loadCompanyLabor(['.implode(',', $companyLabor).']);		
 		canvasInit();
 	}
 

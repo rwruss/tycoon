@@ -1,0 +1,218 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../public_html/gameStyles.css">
+
+
+<script>
+	class loan {
+		constructor (pv,term, rate, ap=0) {
+			this.pv = pv;
+			this.rate = rate;
+			this.pRate = this.rate/12;
+			this.term = term;
+			this.ap = parseFloat(ap) || 0;
+			this.pmt = (this.pRate)*this.pv/(1-Math.pow((1+this.pRate), -this.term));
+			console.log((this.pRate) + " * " + this.pv + " / " + (1-Math.pow((1+this.pRate), -this.term)));
+		}
+		
+		drawTable (trg) {
+			console.log("draw loan table");
+			let container = addDiv("", "loanDetail", trg);
+			let summary = addDiv("", "", container);
+			let tableBox = addDiv("", "", container);
+			
+			let table = document.createElement("table");
+			let presValTot = 0;
+			let totalPMT = 0;
+			let presVal, pPMT, iPMT;
+			let remPrincipal = loans[0].pv;
+			let actualRemPrin = remPrincipal;
+			
+			let row = document.createElement("tr");
+			let pNum = document.createElement("td");
+			let pPmt = document.createElement("td");
+			let pAP = document.createElement("td");
+			let pPV = document.createElement("td");
+			let remP = document.createElement("td");
+			let aRemP = document.createElement("td");
+			
+			pNum.innerHTML = "PER";
+			pPmt.innerHTML = "PMT";
+			pAP.innerHTML = "AP";
+			pPV.innerHTML = "PV";
+			remP.innerHTML = "RP";
+			aRemP.innerHTML = "ARP";
+			
+			row.appendChild(pNum);
+			row.appendChild(pPmt);
+			row.appendChild(pAP);
+			row.appendChild(pPV);
+			row.appendChild(remP);
+			row.appendChild(aRemP);
+			
+			table.appendChild(row);
+			
+			for (let i=0; i<360; i++) {
+				if (actualRemPrin > 1) {
+					iPMT = remPrincipal*this.pRate;
+					pPMT = this.pmt - iPMT;
+					remPrincipal -= pPMT;
+					actualRemPrin -= (pPMT + this.ap);
+					presVal = (this.pmt + this.ap)/Math.pow(monthlyReturn, i);
+					presValTot += presVal;
+					totalPMT += this.pmt + this.ap;
+				
+					row = document.createElement("tr");
+					pNum = document.createElement("td");
+					pPmt = document.createElement("td");
+					pAP = document.createElement("td");
+					pPV = document.createElement("td");
+					remP = document.createElement("td");
+					aRemP = document.createElement("td");
+					
+					pNum.innerHTML = (i+1);
+					pPmt.innerHTML = formatter.format(this.pmt);
+					pAP.innerHTML = formatter.format(this.ap);
+					pPV.innerHTML = formatter.format(presVal);
+					remP.innerHTML = formatter.format(remPrincipal);
+					aRemP.innerHTML = formatter.format(actualRemPrin);
+					
+					row.appendChild(pNum);
+					row.appendChild(pPmt);
+					row.appendChild(pAP);
+					row.appendChild(pPV);
+					row.appendChild(remP);
+					row.appendChild(aRemP);
+					
+					table.appendChild(row);
+				} else break;
+				
+				
+				}
+				
+			trg.appendChild(container);
+			tableBox.appendChild(table);
+			summary.innerHTML = "TOTAL PV: " + formatter.format(presValTot) + " / TOTAL PAYMENTS " + formatter.format(totalPMT);
+		}
+	}
+
+	let loans;
+	let returnRate, monthlyReturn;
+	
+	var formatter = new Intl.NumberFormat();
+	function init() {
+		document.getElementById("headButton").addEventListener("click", function () {
+			console.log("calculate loans");
+			
+			loans = new Array();
+			loans.push(new loan(document.getElementById("L1principal").value, document.getElementById("L1term").value, document.getElementById("L1rate").value, document.getElementById("L1ap").value));
+			loans.push(new loan(document.getElementById("L2principal").value, document.getElementById("L2term").value, document.getElementById("L2rate").value, document.getElementById("L2ap").value));
+			returnRate = 1+parseFloat(document.getElementById("mktRate").value);
+			monthlyReturn = Math.pow(returnRate, (1/12));
+			
+			console.log("Return rate of " + returnRate + " is " + monthlyReturn);
+			
+			console.log(loans[0].pmt + " and " + loans[1].pmt);
+			console.log(loans);
+			
+			let trg = document.getElementById("loanDetails");
+			trg.innerHTML = "";
+			
+			loans[0].drawTable(trg);
+			loans[1].drawTable(trg);
+		});
+		
+	}
+	
+	function addDiv(id, className, trg) {
+		let tmp = document.createElement("div");
+		tmp.className = className;
+		tmp.id = id;
+		
+		trg.appendChild(tmp);
+		return tmp;
+	}
+
+	
+	window.addEventListener("load", init);
+</script>
+
+<style>
+	.head {
+		position:relative;
+		float:left;
+		width:99%;
+		border:1px solid blue;
+	}
+	
+	.headBar {
+		position:relative;
+		float:left;
+		width:99%;
+		border:1px solid blue;
+	}
+	
+	.loanInfo {
+		position:relative;
+		float:left;
+		border:1px solid red;
+	}
+	
+	.loanDetail {
+		position:relative;
+		float:left;
+		border: 3px solid red;
+	}
+	
+	.details {
+		position:relative;
+		float:left;
+		width:99%;
+		border:1px solid blue;
+	}
+	
+	table, tr, td {
+		border:1px solid green;
+	}
+	td {
+		padding:5px;
+	}
+</style>
+</head>
+
+<body>
+	<div class="head">
+		<div class="loanInfo">
+			<table>
+				<tr><td colspan=2>Loan 1</td></tr>
+				<tr><td>Principal</td><td><input id="L1principal" value="233642"></td></tr>
+				<tr><td>Term</td><td><input id="L1term" value="320"></td></tr>
+				<tr><td>Rate</td><td><input id="L1rate" value="0.04375"></td></tr>
+				<tr><td>AP:</td><td><input id="L1ap" value="0.00"></td></tr>
+			</table>
+		</div>
+		<div class="loanInfo">
+			<table>
+				<tr><td colspan=2>Loan 2</td></tr>
+				<tr><td>Principal</td><td><input id="L2principal" value="1000"></td></tr>
+				<tr><td>Term</td><td><input id="L2term" value="360"></td></tr>
+				<tr><td>Rate</td><td><input id="L2rate" value="0.05"></td></tr>
+				<tr><td>AP:</td><td><input id="L2ap" value="0.00"></td></tr>
+			</table>
+		</div>
+		<div class="loanInfo">
+			<table>
+				<tr><td colspan=2>Other</td></tr>
+				<tr><td>Mkt Retrun</td><td><input id="mktRate" value="0.07"></td></tr>
+			</table>
+		</div>
+		<div class="headBar" id="headButton">
+			Submit
+		</div>
+	</div>
+	
+	<div class="details" id="loanDetails">
+		Loan Details
+	</div>
+</body>
+</html>

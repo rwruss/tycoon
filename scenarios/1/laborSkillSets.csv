@@ -14,8 +14,8 @@ Brewer,Logistics,Chemistry,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0
 Electrical Engineer,Engineering,Electronics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
 Petroleum Engineer,Engineering,Chemistry,Geology,you,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
 Chemist,Cheistry,Physics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
-Oil Hand,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
-Roughneck,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
+Oil Hand,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,100,100,200,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
+Roughneck,Strength,Dexterity,Mechanical,None,None,None,None,None,None,None,150,150,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
 Computer Tech,Electronics,Dexterity,Mechanical,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
 Factory Worker,None,None,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
 Project Manager,Management,Logistics,None,None,None,None,None,None,None,None,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,1,2,0,0,0,0,0,0,0,0
