@@ -97,7 +97,9 @@ if ($thisObj->get('constStatus') > 0) {
 	$ptsRrm = $thisProject->get('totalPoints') - $thisProject->get('currPoints');
 	echo 'Upgrade to level '.($thisObj->get('factoryLevel') + 1).' is in progress.  It is '.($pctComplete).'% complete and there are '.$ptsRrm.' points remaining to complete;';
 }
-if ($thisObj->get('groupType') == 1) {
+echo 'Group Type '.$thisObj->get('groupType');
+if ($thisObj->get('groupType') == 1 || $thisObj->get('groupType') == 0) {
+
 	$productionOpts = implode(',', $thisObj->tempList);
 }
 if ($thisObj->get('groupType') == 2) {
@@ -333,7 +335,7 @@ startButton4 = newButton(factoryDiv.headSection, function () {
 });
 startButton4.innerHTML = "Work for - 8 hour";
 
-factoryDiv.prodContain = addDiv("", "stdFloatDiv", factoryDiv.headSection);
+factoryDiv.prodContain = addDiv("ProductionContainer", "stdFloatDiv", factoryDiv.headSection);
 selFactory.production = new factoryProduction('.$postVals[1].', '.($thisObj->get('prodLength') + $thisObj->get('prodStart')).', '.$thisObj->get('currentProd').', 100, '.$thisObj->get('currentProd').');
 /*
 console.log(prodList);
@@ -344,12 +346,12 @@ for (let i=0; i<selFactory.productionSpots; i++) {
 }
 */
 
-factoryDiv.prodContain.prodDtl = addDiv("", "", factoryDiv.prodContain);
+factoryDiv.prodContain.prodDtl = addDiv("prodDetails", "", factoryDiv.prodContain);
 selFactory.showProduction(factoryDiv.prodContain.prodDtl);
 factoryDiv.prodContain.prodDtl.parentFactory = selFactory;
 factoryDiv.prodContain.prodDtl.addEventListener("click", function (e) {
 	e.stopPropagation();
-	this.parentFactory.productionOptions(this);
+	this.parentFactory.productionOptions(this.parentNode.parentNode.parentNode);
 })
 
 upgradeButton = newButton(factoryDiv.headSection, function () {
@@ -373,7 +375,7 @@ textBlob("", factoryDiv.laborSection.aassigned, "Labor working here");
 
 selFactory.showLabor(factoryDiv.laborSection.aassigned);
 
-factoryDiv.reqBox = addDiv("", "stdFloatDiv", factoryDiv);
+factoryDiv.reqBox = addDiv("prodReq", "stdFloatDiv", factoryDiv);
 textBlob("", factoryDiv.reqBox, "Per unit of production, this requires:");
 
 factoryDiv.reqBox.materials = addDiv("", "stdFloatDiv", factoryDiv.reqBox);

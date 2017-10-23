@@ -46,7 +46,7 @@ class factory extends object {
 		this.prodDtls = dat.slice(16, 41);
 		this.taxes = dat.slice(41,72) || this.taxes;
 		this.taxes.push(6,1,2,25);  // test sting
-		console.log(this.prodDtls);
+		//console.log(this.prodDtls);
 	}
 
 	update(dat) {
@@ -185,6 +185,7 @@ class factory extends object {
 		console.log(tmpLabor);
 
 		let laborOpts = new laborSelect([tmpLabor.length-1], tmpLabor, thisDiv, 1);
+		console.log(laborOpts);
 		let saveLabor = newButton(thisDiv);
 		saveLabor.innerHTML = "Save labor";
 		saveLabor.sendStr = "1058," + this.objID + "," + itemNum;
@@ -349,9 +350,9 @@ class factory extends object {
 	}
 
 	showProduction(trg) {
-		trg.innerHTML = this.currentProduction;
+		trg.innerHTML = "PRODUCTIONOPTIONS " + this.currentProduction;
 		for (let i=2; i<this.currentProduction.length; i++) {
-			productArray[this.currentProduction[i]].renderDtls(trg, 0, 0, 0, 0, 0); //(target, qty, mCost, lCost, qual, pol)
+			if (this.currentProduction[i] > -1) productArray[this.currentProduction[i]].renderDtls(trg, 0, 0, 0, 0, 0); //(target, qty, mCost, lCost, qual, pol)
 		}
 	}
 
@@ -368,17 +369,22 @@ class factory extends object {
 	}
 
 	productionOptions(trgParent) {
+
 		let thisDiv = useDeskTop.newPane("productionOptions");
 		thisDiv.innerHTML = "production options";
 		thisDiv.currentProd = addDiv("", "stdFloatDiv", thisDiv);
 		thisDiv.availableProd = addDiv("", "stdFloatDiv", thisDiv);
 
-		thisDiv.currentProd.innerHTML = "current";
-		thisDiv.availableProd.innerHTML = "options";
+		textBlob("", thisDiv.currentProd, "current");
+		//thisDiv.currentProd.innerHTML = "current";
+
+		textBlob("", thisDiv.availableProd, "options");
+		//thisDiv.availableProd.innerHTML = "options";
 
 		thisDiv.submitButton = newButton(thisDiv);
 		thisDiv.submitButton.parentObj = this;
 		thisDiv.submitButton.refreshTarget = trgParent;
+		thisDiv.submitButton.innerHTML = "Set Production";
 		thisDiv.submitButton.addEventListener("click", function () {
 			//console.log(this.parentObj.prodSelect.getSelection());
 			let sendStr = "1005,"+this.parentObj.objID+",";
@@ -395,9 +401,12 @@ class factory extends object {
 				if (r[0] > -1) {
 					this.parentObj.currentProduction = r.slice(1,8);
 					this.parentObj.currentRates = r.slice(8,13);
+					this.parentObj.productSkills = r.slice(13, 23);
+
 					console.log(this.parentObj);
 					console.log(this.refreshTarget);
-					this.parentObj.showProduction(this.refreshTarget);
+					this.parentObj.showProduction(this.refreshTarget.prodContain.prodDtl);
+					this.parentObj.showProdSkills(this.refreshTarget.reqBox.skills);
 
 					//let oldPane = useDeskTop.getPane("productionOptions");
 					useDeskTop.removePaneByDesc("productionOptions");
@@ -409,22 +418,20 @@ class factory extends object {
 		let optionsArray = [];
 
 		for (let i=2; i<this.currentProduction.length; i++) {
-			//selectedArray.push(productArray[this.currentProduction[i]].renderSummary(null));
-			//console.log(this.currentProduction[i]);
-			//console.log(this.productionOpts.indexOf(this.currentProduction[i]));
 			selectedArray.push(this.productionOpts.indexOf(this.currentProduction[i]));
-			//selectedArray[i-2] = this.currentProduction[i];
 		}
 		console.log(this.currentProduction);
 		console.log(selectedArray);
+		console.log(this.productionOpts);
 		for (let i=0; i<this.productionOpts.length; i++) {
 			/*
 			if (this.currentProduction.indexOf(this.productionOpts[i]) == -1) {
 				let tmpItem = productArray[this.productionOpts[i]].renderSummary(null);
 				optionsArray.push(tmpItem);
 			}*/
-			if (this.productionOpts[i] > 0) {
 
+			if (this.productionOpts[i] > 0) {
+				console.log("Add option for item " + i + " which is " + this.productionOpts[i]);
 				let tmpItem = productArray[this.productionOpts[i]].renderSummary(null);
 				optionsArray.push(tmpItem);
 			}
@@ -469,14 +476,24 @@ class factory extends object {
 	}
 
 	showProdRequirements(trg) {
+		console.log("show product Requirements");
+		console.log(this.productMaterial);
 		trg.innerHTML = "";
-		for (var i=0; i<this.productMaterial.length; i+=2) {
-			materialBox(this.productMaterial[i], this.productMaterial[i+1], trg);
+		if (this.productMaterial.length == 0) {
+			materialBox(0, 0, trg);
+		} else {
+			for (var i=0; i<this.productMaterial.length; i+=2) {
+				console.log("show prod " + this.productMaterial[i]);
+				materialBox(this.productMaterial[i], this.productMaterial[i+1], trg);
+			}
 		}
 	}
 
 	showProdSkills(trg) {
-		trg.innerHTML = this.productSkills;
+		trg.innerHTML = "Skills: " + this.productSkills;
+		for (let i=0; i<this.productSkills.length; i++) {
+			if (this.productSkills[i]>0) skillIcon(this.productSkills[i]-1, 0, trg);
+		}
 	}
 
 	showReqLabor(trg) {
@@ -548,6 +565,11 @@ setBar = function (id, desc, pct) {
 			thisList[n].style.backgroundColor = "rgb("+parseInt((100-pct)*2.55)+", "+parseInt(pct*2.55)+", 0)";
 		}
 	}
+}
+
+skillIcon = function (skillNum, qty, trg) {
+	let skillBox = addDiv("", "skillBox", trg);
+	skillBox.innerHTML = "(" + skillNum +")" + skillList[skillNum];
 }
 
 class shipment {

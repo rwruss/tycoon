@@ -2,6 +2,7 @@
 
 $namesList = explode(',', file_get_contents('../scenarios/1/objNames.dat'));
 $laborNameList = file_get_contents('../scenarios/1/laborNames.dat');
+$skillList = file_get_contents('../scenarios/1/skillNames.dat');
 $numProducts = 43;
 $numFactories = 13;
 $supplyBlockSize = 360000;
@@ -87,7 +88,6 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 		}
 	}
 }
-
 
 echo '<p>Factory LIST:';
 //print_r($factoryList);
@@ -611,6 +611,9 @@ echo '
 			factoryList.push(new factory([0,0,0,i+numProducts,0,0,0,0,0,0,0,0,0,0,0,i+numProducts]))
 		}
 		defaultBuildings = new uList(factoryList);
+
+		skillList = new Array('.$skillList.');
+		console.log(skillList);
 
 		shipmentList = [];
 		loadShipments(['.implode(',', $shipmentList).'], shipmentList); // shipmentList

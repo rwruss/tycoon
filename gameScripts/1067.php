@@ -17,6 +17,8 @@ for ($i=1; $i<sizeof($contractList->slotData); $i++) {
 		fseek($contractFile, $contractList->slotData[$i]);
 		$contractRead = fread($contractFile, 100); // contract data
 		$contractDat = unpack('i*', $contractRead);
+
+		//echo 'Item '.$contractList->slotData[$i].'<br>';
 		/*
 		$sendDat[] = 0;
 		$sendDat = array_merge($sendDat, $contractDat);

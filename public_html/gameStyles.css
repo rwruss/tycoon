@@ -752,3 +752,13 @@
 	right:0;
 	border: 1px solid green;
 }
+
+.skillBox {
+	position:relative;
+	float:left;
+	width:50;
+	height:50;
+	border-radius: 10px;
+	border: 1px solid blue;
+	background:grey;
+}

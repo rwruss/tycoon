@@ -1558,11 +1558,13 @@ factoryLaborDetail = function(thisLabor, factoryID, target) {
 }
 
 laborPaySettings = function(laborItem, target) {
+	console.log("labor pay settings");
 	target.innerHTML = "";
 	textBlob("", target, "Current pay for this employee");
 	target.laborPay = payBox(target, 1000);
 	target.laborPay.slider.slide.step = ".01";
-	setSlideVal(target.laborPay, laborItem.pay/100);
+	console.log(target.laborPay.slider);
+	setSlideVal(target.laborPay.slider, laborItem.pay/100);
 }
 
 companyLaborOptions = function(factoryID, trg, selectedLaborBox) {

@@ -480,7 +480,6 @@ class SLoptionSelect {
 	}
 
 	moveItem(itemNum) {
-
 		if (this.optionStatus[itemNum] == 1) {
 			// move back in to options
 			this.optionStatus[itemNum] = 0;

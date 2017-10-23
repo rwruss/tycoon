@@ -54,7 +54,7 @@ contractsButton.addEventListener("click", function (e) {
 					contractBids.results.innerHTML = "No options";
 				} else {
 					for (var i=0; i<test.byteLength; i+=108) {
-						let thisContract = new contract(x.slice(i, i+108));
+						let thisContract = newContract(x.slice(i, i+108));
 						let contractItem = thisContract.render(contractBids.results);
 						contractItem.addEventListener("click", function () {
 

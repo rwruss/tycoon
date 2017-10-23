@@ -16,12 +16,14 @@ $laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w');
 
 // load skills
 $skillFile = fopen('../scenarios/'.$scenario.'/skillList.csv', 'rb');
+$skillNamesFile = fopen('../scenarios/'.$scenario.'/skillNames.dat', 'wb');
 $skillCount = 1;
 $skillList = [];
 while(($line = fgets($skillFile)) !== false) {
 	$lineItems = explode(',', $line);
 	$skillList[trim($lineItems[0])] = $skillCount;
 	$skillCount++;
+	fwrite($skillNamesFile, '"'.trim($lineItems[0]).'",');
 }
 fclose($skillFile);
 
@@ -301,7 +303,7 @@ while (($line = fgets($factoryFile)) !== false) {
   //$factoryBitScreens[$lineItems[0]] = [0,0,0,0,0];
   $factoryObj = array_fill(1, 250, 0);
   // set object type and subtype
-  
+
   $factoryObj[4] = 7; // factory template type
   $factoryObj[6] = $lineItems[12]; // factory class / group type
   $factoryObj[8] = $lineItems[6]; // Cost to build initial factory

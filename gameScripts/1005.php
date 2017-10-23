@@ -76,9 +76,9 @@ $thisFactory->updateStocks($offerDatFile);
 
 $productSkillList = [];
 $productMatList = [];
-$currentProductionList = [];
-$currentProductionRate = [];
-$productionSpots = 5;
+$currentProductionList = [-1,-1,-1,-1,-1];
+$currentProductionRate = [-1,-1,-1,-1,-1];
+$productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];;
 for ($i=0; $i<$productionSpots; $i++) {
 	$productID = $postVals[2+$i];
 	//echo '<p>Set factory production item '.$i.' ('.$productID.')';
@@ -114,6 +114,7 @@ for ($i=0; $i<$productionSpots; $i++) {
 
 		$currentProductionList[$i] = 0;
 		$currentProductionRate[$i] = 0;
+		$productSkillList = [0,0,0,0,0,0,0,0,0];
 	}
 }
 
@@ -125,6 +126,6 @@ fclose($slotFile);
 fclose($offerDatFile);
 //fclose($laborEqFile);
 
-echo '1,'.$postVals[1].','.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).','.implode(',', $currentProductionList).','.implode(',', $currentProductionRate);
+echo '1,'.$postVals[1].','.($thisFactory->get('prodLength') + $thisFactory->get('prodStart')).','.implode(',', $currentProductionList).','.implode(',', $currentProductionRate).','.implode(',', $productSkillList);
 
 ?>

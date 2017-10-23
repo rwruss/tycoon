@@ -97,6 +97,7 @@
 1097 - PROCESS: Adjust the parameters for an open contract
 
 TO DO:
+Verify labor skills are working for prod rates
 Service items (Construction, legal, etc...)
 Update labor skills on work completion (or verify working).
 TUrn script 1023 into a JS factory object script
