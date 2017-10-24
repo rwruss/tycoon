@@ -771,13 +771,12 @@
 	float:left;
 	background:pink;
 	border-radius:10px;
-	transition: 2s;
 }
 
 .laborHolderLg {
 	position:relative;
-	width:100;
-	height:120;
+	width:200;
+	height:200;
 	border: 1px solid pink;
 	float:left;
 	background:pink;

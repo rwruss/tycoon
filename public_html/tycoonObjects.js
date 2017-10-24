@@ -236,7 +236,7 @@ class factory extends object {
 
 			});
 		});
-		
+
 	}
 
 	prodDetail(target, prodIndex) {
@@ -276,7 +276,7 @@ class factory extends object {
 			if (factoryLabor[i].laborType > 0) {
 				} else {
 				}
-			
+
 			laborItem.parentFactory = this;
 			laborItem.laborSpot = i;
 			laborItem.addEventListener("click", function (e) {
@@ -1162,12 +1162,13 @@ class labor {
 	}
 
 	renderSummary(target) {
-		var thisDiv = addDiv(null, 'productHolder', target);
+		var thisDiv = addDiv(null, 'laborHolder', target);
 
 		thisDiv.ownerObject = this.objID;
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
-		thisDiv.expand = addDiv("laborExpand", "laborHolder", thisDiv);
+		thisDiv.expand = addDiv("laborExpand", "laborExButton", thisDiv);
+		thisDiv.expand.innerHTML = "E";
 		thisDiv.expand.addEventListener("click", function () {
 			//contractContainer.classList.toggle("adjustOptions");
 			this.parentNode.classList.toggle("laborHolderLg");
@@ -1316,12 +1317,23 @@ class laborItem extends labor {
 	renderSummary(target) {
 		var thisDiv;
 		if (!target || target.divType != "productHolder") {
-			var thisDiv = addDiv(null, 'productHolder', target);
+			var thisDiv = addDiv(null, "productHolder", target);
 			thisDiv.divType = "productHolder";
 		} else thisDiv = target;
 		thisDiv.innerHTML = "";
 		thisDiv.ownerObject = this.objID;
 		thisDiv.parentObj = this;
+
+		thisDiv.expand = addDiv(null, "laborExButton", thisDiv);
+		thisDiv.expand.innerHTML = "E";
+		thisDiv.expand.addEventListener("click", function (e) {
+			//contractContainer.classList.toggle("adjustOptions");
+			e.stopPropagation();
+			console.log(this.parentNode);
+			console.log(this.parentNode.classList);
+			this.parentNode.classList.toggle("laborHolderLg");
+			console.log(this.parentNode.classList);
+		});
 
 		thisDiv.nameDiv = addDiv("asdf", "laborName", thisDiv);
 		//thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
