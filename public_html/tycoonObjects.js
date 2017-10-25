@@ -1270,14 +1270,13 @@ class laborItem extends labor {
 	init(details) {
 		this.details = details;
 		// expect detailsof 29 items
-		//console.log(details);
+
 		this.objID = details[0],
 		this.objName = "??",
-		//this.qty = details.qty || 0;
-		//this.edClass = details.edClass || "0",
+
 		this.laborType = details[3],
 		this.details = details;
-		//console.log('create product ' + this.objID);
+
 		this.pay = details[2];
 	}
 
@@ -1315,6 +1314,7 @@ class laborItem extends labor {
 	}
 
 	renderSummary(target) {
+		console.log(this);
 		var thisDiv;
 		if (!target || target.divType != "productHolder") {
 			var thisDiv = addDiv(null, "productHolder", target);
@@ -1346,7 +1346,11 @@ class laborItem extends labor {
 		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
 
 		thisDiv.skills = addDiv("asdf", "laborQualNum", thisDiv);
-		thisDiv.skills.innerHTML = "skills";
+		//thisDiv.skills.innerHTML = "skills";
+		for (let i=9; i<29; i+=2) {
+			//skillIcon = function (skillNum, qty, trg)
+			if (this.details[i] > 0) skillIcon(this.details[i], this.details[i+1], thisDiv.skills);
+		}
 
 		/*
 		thisDiv.fireDiv = addDiv("asdf", "laborFire", thisDiv);
