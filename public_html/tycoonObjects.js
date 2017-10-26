@@ -1317,7 +1317,7 @@ class laborItem extends labor {
 		console.log(this);
 		var thisDiv;
 		if (!target || target.divType != "productHolder") {
-			var thisDiv = addDiv(null, "productHolder", target);
+			var thisDiv = addDiv(null, "laborHolder", target);
 			thisDiv.divType = "productHolder";
 		} else thisDiv = target;
 		thisDiv.innerHTML = "";
@@ -1345,7 +1345,7 @@ class laborItem extends labor {
 		thisDiv.qualBar.style.width = 10 + 65*qualPct;
 		thisDiv.qualBar.style.backgroundColor = "rgb(" + parseInt(255*(1-qualPct)) + ", " + parseInt(255*qualPct) + ", 0)";
 
-		thisDiv.skills = addDiv("asdf", "laborQualNum", thisDiv);
+		thisDiv.skills = addDiv("asdf", "laborSkillBox", thisDiv);
 		//thisDiv.skills.innerHTML = "skills";
 		for (let i=9; i<29; i+=2) {
 			//skillIcon = function (skillNum, qty, trg)

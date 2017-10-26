@@ -17,7 +17,7 @@ $laborDetailFile = fopen('../scenarios/'.$scenario.'/laborDetails.dat', 'w');
 // load skills
 $skillFile = fopen('../scenarios/'.$scenario.'/skillList.csv', 'rb');
 $skillNamesFile = fopen('../scenarios/'.$scenario.'/skillNames.dat', 'wb');
-$skillCount = 1;
+$skillCount = 0;
 $skillList = [];
 while(($line = fgets($skillFile)) !== false) {
 	$lineItems = explode(',', $line);
@@ -26,15 +26,16 @@ while(($line = fgets($skillFile)) !== false) {
 	fwrite($skillNamesFile, '"'.trim($lineItems[0]).'",');
 }
 fclose($skillFile);
+print_R($skillList);
 
 $now = time();
 // Load labor descriptions and equivalancies
 $laborDescFile = fopen('../scenarios/'.$scenario.'/laborSkillSets.csv', 'rb');
-$skillCount = 1;
+$laborCount = 0;
 while (($line = fgets($laborDescFile)) !== false) {
 	$lineItems = explode(',', $line);
-  $laborItems[trim($lineItems[0])] = $skillCount;
-  $skillCount++;
+  $laborItems[trim($lineItems[0])] = $laborCount;
+  $laborCount++;
 }
 foreach ($laborItems as $key => $value) {
   echo 'Key '.$key.' has a length of '.strlen($key).' and a value of '.$value.'<br>';
