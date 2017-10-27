@@ -431,7 +431,7 @@ class factory extends object {
 	showProdSkills(trg) {
 		trg.innerHTML = "Skills: " + this.productSkills;
 		for (let i=0; i<this.productSkills.length; i++) {
-			if (this.productSkills[i]>0) skillIcon(this.productSkills[i]-1, 0, trg);
+			if (this.productSkills[i]>0) skillIcon(this.productSkills[i], 0, trg);
 		}
 	}
 
