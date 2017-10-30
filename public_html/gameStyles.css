@@ -770,6 +770,12 @@
 	border-radius: 10px;
 	border: 1px solid blue;
 	background:grey;
+		overflow: hidden;
+}
+
+.skillLevel {
+	position:absolute;
+	height:10px;
 }
 
 .laborHolder {

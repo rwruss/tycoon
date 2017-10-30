@@ -554,6 +554,15 @@ class SLobjectSelect {
 			//this.optionStatus[itemNum] = 0;
 			this.selectedQty--;
 			item = this.unSelectItem(this.optionItems[itemNum], itemNum, divObject);
+
+			// select the empty item
+			/*
+			let empty = this.selectItem(this.optionItems[this.optionItems.length-1], this.optionItems.length-1);
+			empty.listClass = this;
+			empty.itemNum = this.optionItems.length-1;
+			empty.addEventListener("click", function () {
+				this.listClass.moveItem(this.itemNum, this);
+			});*/
 		} else {
 			// move in to selected
 			console.log("SELECT an item " + itemNum);
@@ -576,7 +585,7 @@ class SLobjectSelect {
 		console.log(this.optionItems);
 		let item;
 
-		for (let i=0; i<this.optionItems.length; i++) {
+		for (let i=0; i<this.optionItems.length-1; i++) {
 			if (this.optionStatus[i] == 0) {
 				item = this.unSelectItem(this.optionItems[i], i, null);
 				item.listClass = this;
@@ -606,10 +615,11 @@ class SLobjectSelect {
 }
 
 class laborSelect extends SLobjectSelect {
-	constructor (selectedList, optionList, selectTrg, maxSelected, params) {
+	constructor (selectedList, optionList, selectTrg, maxSelected, callback, callbackObj, params) {
 		super(selectedList, optionList, selectTrg, maxSelected);
 		this.selectedArea = addDiv("", "stdFloatDiv", selectTrg);
 		this.optionArea = addDiv("", "stdFloatDiv", selectTrg);
+		this.container = selectTrg;
 
 		this.selectedArea.innerHTML = "SELECTIONS";
 		this.optionArea.innerHTML = "OPTIONS";
@@ -619,6 +629,9 @@ class laborSelect extends SLobjectSelect {
 		this.displayList.fill(1);
 		this.hiddenList.fill(0);
 		this.selectedObject = -1;
+		console.log(callback);
+		this.callback = callback;
+		this.callbackObj = callbackObj;
 
 		this.itemDivs = new Array(optionList.length);;
 
@@ -629,12 +642,21 @@ class laborSelect extends SLobjectSelect {
 		this.selectedArea.innerHTML = "Nothing Selected";
 	}
 
+	selectEmpty(item) {
+		console.log(item);
+		this.selectedArea.innerHTML = "";
+		this.selectedArea.item = addDiv("", "", this.selectedArea);
+		//this.selectedArea.payDiv = addDiv("", "", this.selectedArea);
+		let newDiv = item.renderSummary(this.selectedArea.item);
+	}
+
 	selectItem(item, itemNum, divObject) {
 		console.log("draw selected item " + itemNum);
 		this.selectedArea.innerHTML = "";
 		this.selectedArea.item = addDiv("", "", this.selectedArea);
 		this.selectedArea.payDiv = addDiv("", "", this.selectedArea);
 		this.displayList[itemNum] = 0;
+
 		/*
 		if (divObject) {
 			divObject.parentNode.removeChild(divObject);
@@ -656,6 +678,7 @@ class laborSelect extends SLobjectSelect {
 		let newDiv = item.renderSummary(this.selectedArea.item);
 		this.itemDivs[itemNum] = newDiv;
 		laborPaySettings(item, this.selectedArea.payDiv);
+		this.callback.apply(this.callbackObj, [itemNum, item, this.container]);
 
 		console.log(this.optionStatus);
 		return newDiv;
@@ -685,6 +708,11 @@ class laborSelect extends SLobjectSelect {
 			this.emptySelection();
 		}
 
+		// show an empty spot
+		this.selectEmpty(this.optionItems[this.optionItems.length-1]);
+
+		// update the labor skills
+		this.callback.apply(this.callbackObj, [itemNum, this.optionItems[this.optionItems.length-1], this.container]);
 		return thisInstance;
 	}
 

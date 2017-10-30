@@ -670,32 +670,6 @@ class city extends object {
 			return false;
 		}
 
-	/*
-	function loadDemands() {
-		fseek($this->linkFile, $this->get('fileBaseSize')+$this->id*1000);
-		$this->demandDat = unpack('s*', fread($this->linkFile, 40000));
-	}*/
-	/*
-	function demandRate($productID) {
-		return $this->objDat[$this->dRateOffset+$productID];
-		}
-	*/
-	/*
-	function saveDLevel($productID, $newLevel) {
-		$areaHeader = 730200;
-		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
-		fwrite($this->linkFile, pack('i', $newLevel));
-		echo 'Town ID: '.$this->unitID.', Product ID: '.$productID.', ';
-		echo 'Save '.$newLevel.' at spot '.($this->unitID*$this->itemBlockSize + ($this->dLevelOffset+$productID)*4-4 + $areaHeader);
-		$this->objDat[$this->dLevelOffset+$productID] = $newLevel;
-	}*/
-
-
-	/*
-	function demandLevel($productID) {
-		return $this->objDat[$this->dLevelOffset+$productID];
-	}
-	*/
 	}
 
 	function baseDemand($productNumber) {
@@ -715,17 +689,6 @@ class city extends object {
 		$this->saveBlock($fileOffset, $datStr);
 	}
 
-	/*
-	function availableLabor() {
-		return array_slice($this->objDat, $this->laborStoreOffset, 1000);
-	}
-
-	function saveLabor($id, $delta) {
-		$loc = $this->laborStoreOffset + $id;
-		$newVal = $this->objDat[$loc] + $delta;
-		$this->saveItem($loc, $newVal);
-	}
-	*/
 }
 
 
@@ -783,10 +746,15 @@ class product extends object {
 
 
 	function productSkills() {
-		$tmpArray = array_fill(0, 20, 0);
+		$tmpArray = array_fill(0, 40, 0);
+		echo 'PROD SKILLS';
+		print_r($this->objDat);
 		for ($i= 0; $i<20; $i++) {
 			$tmpArray[$i] = $this->objDat[$this->skillOffset+$i];
+			echo ($this->objDat[$this->skillRateOffset+$i]).'<br>';
+			$tmpArray[$i+20] = $this->objDat[$this->skillRateOffset+$i];
 		}
+		print_r($tmpArray);
 		return $tmpArray;
 	}
 
