@@ -42,7 +42,7 @@ loadDataPromise = function (val) {
 			xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					console.log(xmlhttp.response);
+					//console.log(xmlhttp.response);
 					resolve(xmlhttp.response);
 					}
 				}
@@ -1994,11 +1994,12 @@ buildOptionList = function(trg, detailTrg, bldgList) {
 		buildButton.innerHTML = "build this factory";
 		let trgSelect = this;
 		buildButton.addEventListener("click", function () {
-			console.log(trgSelect.value+","+document.getElementById("location_3").value);
+			//console.log(trgSelect.value+","+document.getElementById("location_3").value);
 			getASync("1008,"+trgSelect.value+","+document.getElementById("location_3").value).then(v => {
-				let r = v.split(",");
-				if (r[0] == -1) {
-					errorAlert("error in buildOptionList");
+				let r = v.split("|");
+				console.log(r);
+				if (r[0] != 1) {
+					errorAlert(r[1]);
 					return;
 				} else {
 					thisPlayer.money = r[1];

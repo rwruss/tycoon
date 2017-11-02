@@ -25,8 +25,8 @@ $templateDat = unpack('i*', fread($objFile, $templateBlockSize));
 $factoryCost = $templateDat[8];
 $thisBusiness = loadObject($pGameID, $objFile, 400);
 if ($factoryCost > $thisBusiness->get('money')) {
-	echo 'You do not have enough money to build this type of factory.  You need '.$factoryCost.' - '.$thisBusiness->get('money').' = '.($factoryCost - $thisBusiness->get('money')).' to start construction.';
-	exit();
+	//echo 'You do not have enough money to build this type of factory.  You need '.$factoryCost.' - '.$thisBusiness->get('money').' = '.($factoryCost - $thisBusiness->get('money')).' to start construction.';
+	exit("-1|Not enough Money");
 }
 
 // Deduct the cost of the factory
@@ -47,7 +47,7 @@ if ($newProjID == 0) {
 
 		fseek($projectFile, 0, SEEK_END);
 		$newProjID = max(ceil(ftell($projectFile)/100),2);
-		echo '<p>NEW PROJECT ID IS '.$newProjID.'<p>';
+		//echo '<p>NEW PROJECT ID IS '.$newProjID.'<p>';
 		if ($newProjID > 0) {
 			fseek($projectFile, $newProjID*100+96);
 			fwrite($projectFile, pack('i', 0));
@@ -71,7 +71,7 @@ if (flock($objFile, LOCK_EX)) {
 	fseek($objFile, $newID*$defaultBlockSize + 1596);
 	fwrite($objFile, pack('i', 0));
 
-	echo 'Template type: '.$factoryType.' for new object '.$newID;
+	//echo 'Template type: '.$factoryType.' for new object '.$newID;
 	$newObjDat = array_fill(1, 400, 0);
 	$newObj = new factory($newID, packArray($newObjDat), $objFile);
 
@@ -94,22 +94,22 @@ if (flock($objFile, LOCK_EX)) {
 	$newObj->saveAll($objFile);
 
 	$testDat = unpack('i*', fread($slotFile, 40));
-	echo 'Prelim slot check:';
+	//echo 'Prelim slot check:';
 	print_r($testDat);
 
 	// Add unit to player's list of objects
 	if ($thisBusiness->get('ownedObjects') == 0) {
 		$thisBusiness->save('ownedObjects', newSlot($slotFile));
 	}
-	echo 'Load slot '.$thisBusiness->get('ownedObjects');
+	//echo 'Load slot '.$thisBusiness->get('ownedObjects');
 	$ownedObjects = new itemSlot($thisBusiness->get('ownedObjects'), $slotFile, 40);
 	$ownedObjects->addItem($newID, $slotFile);
 
 	// Add to list of factories at the city
-	echo '<p>LOAD AND SAVE THE CITY:<br>';
+	//echo '<p>LOAD AND SAVE THE CITY:<br>';
 	$buildCity = loadCity($cityLoc, $cityFile);
 	if ($buildCity->get('factoryList') == 0) {
-		echo 'New factory slot for the city'.
+		//echo 'New factory slot for the city'.
 		$newSlot = newSlot($slotFile, 40);
 		$buildCity->save('factoryList', $newSlot);
 	}
@@ -129,11 +129,11 @@ $projectDat[6] = 0; // current price
 $projectDat[7] = 1; // status
 $projectDat[8] = 0; // status
 
-echo '<p>Project Data for project '.$newProjID.'<p>';
-print_r($projectDat);
+//echo '<p>Project Data for project '.$newProjID.'<p>';
+//print_r($projectDat);
 
 $thisProject = new project($newProjID, packArray($projectDat), $projectFile);
-print_r($thisProject->objDat);
+//print_r($thisProject->objDat);
 $thisProject->saveAll();
 
 // Add to the list of open projects
@@ -144,7 +144,7 @@ fclose($projectFile);
 fclose($objFile);
 fclose($slotFile);
 
-echo '1,'.$thisBusiness->get('money').','.implode(',', $newObj->overViewInfo());
+echo '1|'.$thisBusiness->get('money').'|'.implode('|', $newObj->overViewInfo());
 
 /*
 echo '<script>

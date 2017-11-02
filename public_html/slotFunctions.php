@@ -159,7 +159,7 @@ class itemSlot extends dataSlot {
 		$writeSlot = floor(($emptySpot*4-1)/($this->size-4));
 		$writePos = 4*$emptySpot - $writeSlot*($this->size-4);
 
-		echo 'Sub Slot #'.$writeSlot.' ('.$this->slotList[$writeSlot].').  Write Spot is '.$writePos.'<p>';
+		//echo 'Sub Slot #'.$writeSlot.' ('.$this->slotList[$writeSlot].').  Write Spot is '.$writePos.'<p>';
 		$this->slotData[$emptySpot] = $value;
 
 		fseek($file, $this->slotList[$writeSlot]*$this->size+$writePos);
@@ -308,7 +308,7 @@ function newSlot($slotFile, $size=40) {
 	if ($check_slot[1] == 0) // Need to create a new slot
 		{
 		if (flock($slotFile, LOCK_EX)) {
-			echo "create new slot<br>";
+			//echo "create new slot<br>";
 			clearstatcache();
 			fseek($slotFile, 0, SEEK_END);
 			$use_slot = max(1, ceil((ftell($slotFile))/ $size));
@@ -321,7 +321,7 @@ function newSlot($slotFile, $size=40) {
 		{
 		echo 'something else ('.$check_slot[1].')';
 		}
-	echo 'Create slot #'.$use_slot;
+	//echo 'Create slot #'.$use_slot;
 	return $use_slot;
 }
 
@@ -331,12 +331,12 @@ function startASlot($slot_file, $slot_handle)
 	// Check for abandoned slots first
 	fseek($slot_file, 0);
 	$slot_list_dat = fread($slot_file, 40);
-	echo 'Size of read dat:'.strlen($slot_list_dat);
+	//echo 'Size of read dat:'.strlen($slot_list_dat);
 	$check_slot = unpack("N", substr($slot_list_dat, 0, 4));
 	if ($check_slot[1] == 0) // Need to create a new slot
 		{
 		if (flock($slot_file, LOCK_EX)) {
-			echo "create new slot<br>";
+			//echo "create new slot<br>";
 			clearstatcache();
 			$use_slot = max(1, (filesize($slot_handle))/40);
 			fseek($slot_file, $use_slot*40 +39);

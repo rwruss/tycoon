@@ -69,8 +69,8 @@ class object {
 		fseek($this->linkFile, $this->unitID*$this->itemBlockSize + $loc*4-4);
 		fwrite($this->linkFile, pack('i', $val));
 		$this->objDat[$loc] = $val;
-		echo 'ID: '.$this->unitID;
-		echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $loc*4-4);
+		//echo 'ID: '.$this->unitID;
+		//echo 'Save '.$val.' at spot '.($this->unitID*$this->itemBlockSize + $loc*4-4);
 	}
 
 	function saveBlock($loc, $str) {
@@ -970,7 +970,7 @@ function loadObject($id, $file, $size) {
 
 		default:
 			print_r($dat);
-			exit('error '.$dat[4].' OCH 877');
+			exit('error '.$dat[4].' OCH 973');
 		break;
 	}
 

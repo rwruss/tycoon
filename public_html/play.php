@@ -56,7 +56,7 @@ $defaultBlockSize = 100;
 $unitFile = fopen($gamePath."/objects.dat", "rb");
 $slotFile = fopen($gamePath.'/gameSlots.slt', 'rb');
 
-echo 'Load player '.$pGameID;
+//echo 'Load player '.$pGameID;
 $thisPlayer = loadObject($pGameID, $unitFile, 400);
 $_SESSION['game_'.$gameID]['business'] = $thisPlayer->objDat;
 
@@ -72,7 +72,7 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 
 	for ($i=1; $i<=sizeof($ownedObjects->slotData); $i++) {
 		if ($ownedObjects->slotData[$i] > 0) {
-			echo 'Object '.$ownedObjects->slotData[$i].'<br>';
+			//echo 'Object '.$ownedObjects->slotData[$i].'<br>';
 			$thisObject = loadObject($ownedObjects->slotData[$i], $unitFile, 1600);
 			if ($thisObject->get('oType') == 3) {
 				// calculate selling taxes for this factory
@@ -88,16 +88,16 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 		}
 	}
 }
-
+/*
 echo '<p>Factory LIST:';
 //print_r($factoryList);
 echo '<p>';
-
+*/
 // Load company labor
 $companyLabor = [];
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
 $laborSlot = new itemSlot($thisPlayer->get('laborSlot'), $slotFile, 40);
-print_r($laborSlot->slotData);
+//print_r($laborSlot->slotData);
 $laborCount = 0;
 for ($i=1; $i<=sizeof($laborSlot->slotData); $i++) {
 	if ($laborSlot->slotData[$i] > 0) {
@@ -622,7 +622,7 @@ echo '
 		nationList = new Array("Canada", "Mexico", "United States");
 
 		// initialize windows
-		companyLabor = loadCompanyLabor(['.implode(',', $companyLabor).']);		
+		companyLabor = loadCompanyLabor(['.implode(',', $companyLabor).']);
 		canvasInit();
 	}
 
