@@ -43,8 +43,9 @@ class factory extends object {
 		this.nextUpdate = dat[14];
 		this.currentPrd = dat[1];
 		this.currentRate = dat[2];
-		this.prodDtls = dat.slice(16, 41);
-		this.taxes = dat.slice(41,72) || this.taxes;
+		this.prodDtls = dat.slice(17, 42);
+		this.city = dat[16]
+		this.taxes = dat.slice(42,73) || this.taxes;
 		this.taxes.push(6,1,2,25);  // test sting
 		this.tmpLabor = null;
 		//console.log(this.prodDtls);
@@ -74,7 +75,7 @@ class factory extends object {
 
 		thisDiv.innerHTML = "";
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID;
+		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID + " - " + this.city;
 		thisDiv.divType = "factorySummary";
 		thisDiv.parentObj = this;
 
@@ -818,15 +819,10 @@ class city {
 		//thisDiv.setAttribute("data-unitid", this.unitID);
 
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
-		thisDiv.nameDiv.setAttribute("data-boxName", "unitName");
 
 		thisDiv.actDiv = addDiv("asdf", "sumAct", thisDiv);
-		thisDiv.actDiv.setAttribute("data-boxName", "apBar");
-		thisDiv.actDiv.setAttribute("data-boxunitid", this.unitID);
 
 		thisDiv.expDiv = addDiv("asdf", "sumStr", thisDiv);
-		thisDiv.expDiv.setAttribute("data-boxName", "strBar");
-		thisDiv.expDiv.setAttribute("data-boxunitid", this.unitID);
 
 		thisDiv.nameDiv.innerHTML = this.objName + " - " + this.objID;
 		return thisDiv;

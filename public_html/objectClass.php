@@ -352,6 +352,7 @@ class factory extends object {
 		$tmpA[13] = $this->get('prodInv5');
 		$tmpA[14] = 0; // next update ?
 		$tmpA[15] = $this->get('subType');
+		$tmpA[16] = $this->get('region_3');
 
 		// add product parameters - material costs
 		//print_r(array_slice($this->objDat, 239, 25));

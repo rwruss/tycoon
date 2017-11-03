@@ -80,19 +80,12 @@ if ($thisPlayer->get('ownedObjects') > 0) {
 				$taxRates = taxRates(0, $thisObject, null, $sellingCity, $thisPlayer, $slotFile);
 
 				$factoryList = array_merge($factoryList, $thisObject->overViewInfo(), $taxRates);
-				//print_r($thisObject->overViewInfo());
-				//$factoryList = array_merge($factoryList, $thisObject->overViewInfo());
-				//array_push($factoryList, $thisObject->get('subType'), $thisObject->get('currentProd'), $thisObject->get('prodRate'), $ownedObjects->slotData[$i]);
 			}
 			else echo 'Cull object type '.$thisObject->get('oType');
 		}
 	}
 }
-/*
-echo '<p>Factory LIST:';
-//print_r($factoryList);
-echo '<p>';
-*/
+
 // Load company labor
 $companyLabor = [];
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
@@ -562,9 +555,9 @@ echo '
 
 
 		playerFactories = new Array(';
-		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',', array_slice($factoryList, 0, 72)).'])';
-		for ($i=72; $i<sizeof($factoryList); $i+=72) {
-			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 72)).'])';
+		if (sizeof($factoryList) > 0) echo 'new factory(['.implode(',', array_slice($factoryList, 0, 73)).'])';
+		for ($i=73; $i<sizeof($factoryList); $i+=73) {
+			echo ', new factory(['.implode(',',array_slice($factoryList, $i, 73)).'])';
 		}
 		echo ');
 
