@@ -213,7 +213,7 @@ echo '
 	var businessDiv;
 	var nationList;
 
-	var cityList = new Array(new city([1, "Austin"], [], []),
+	var cityList = new Array(0, new city([1, "Austin"], [], []),
 		new city([2, "Birmingham"], [], []),
 		new city([3, "Anchorage"], [], [])
 	);

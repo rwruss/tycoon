@@ -11,7 +11,7 @@ $thisBusiness = loadObject($pGameID, $objFile, 400);
 echo '<script>
 thisDiv = useDeskTop.newPane("hireLabor");
 thisDiv.innerHTML = "";
-for (var i=0; i<cityList.length; i++) {
+for (var i=1; i<=cityList.length; i++) {
   let thisCity = cityList[i].renderSummary(thisDiv);
   let cityNum = cityList[i].objID;
   thisCity.addEventListener("click", function () {scrMod("1027,"+cityNum)});

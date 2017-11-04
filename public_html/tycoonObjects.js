@@ -74,6 +74,8 @@ class factory extends object {
 		}
 
 		thisDiv.innerHTML = "";
+		thisDiv.cityDiv = addDiv("asdf", "sumName", thisDiv);
+		thisDiv.cityDiv.innerHTML = cityList[this.city].objName;
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
 		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID + " - " + this.city;
 		thisDiv.divType = "factorySummary";
