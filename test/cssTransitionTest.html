@@ -1,14 +1,35 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="../public_html/gameStyles.css">
+<style>
+.startBox {
+	width:100px;
+	height:100px;
+	border:3px solid red;
+	transition: background 10s, width 2s;
+	
+}
+
+.endBox {
+	width:200px;
+	height:200px;
+	border:5px solid blue;
+}
+
+</style>
 
 
 <script>
 function initTest() {
 	let divItem = document.getElementById("testBox");
+	divItem.status = 1;
 	console.log(divItem);
 	divItem.addEventListener("click", function () {
-		this.classList.toggle("adjustOptions");
+		//this.classList.toggle("endBox");
+		if (this.status == 1) this.style.background = "rgb(255,0,0)";
+		else this.style.background = "rgb(0,255,0)";
+		
+		this.style.width = 100 + Math.random()*500;
+		this.status *= -1;
 	});
 }
 window.addEventListener("load", initTest);
@@ -16,6 +37,6 @@ window.addEventListener("load", initTest);
 </head>
 
 <body>
-	<div class="contractSummary" id="testBox">Hello</div>
+	<div class="startBox" id="testBox">Hello</div>
 </body>
 </html>
