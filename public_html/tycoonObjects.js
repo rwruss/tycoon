@@ -457,7 +457,7 @@ class factory extends object {
 		console.log(newItem);
 		console.log(this.tmpLabor);
 		for (let i=0; i<20; i++) {
-			this.tmpLabor[start+i] = newItem.details[9+i];
+			this.tmpLabor[start+i] = newItem.details[9+i]+100;
 		}
 		console.log(this.tmpLabor);
 		this.showSkillLevels(trg.prodSkills);
@@ -475,9 +475,13 @@ class factory extends object {
 			//factoryLabor.push(new laborItem(this.labor.slice(i, i+30)));
 			for (var j=9; j<29; j+=2) {
 				skillLevels[this.labor[i+j]] += this.labor[i+j+1];
+				console.log("Add " + this.tmpLabor[i+j+1] + " to index " + (i+j))
 				tmpLevels[this.tmpLabor[i+j]] += this.tmpLabor[i+j+1];
+				console.log(tmpLevels[this.tmpLabor[i+j]]);
 			}
 		}
+		console.log(skillLevels);
+		console.log(tmpLevels);
 		console.log(this.productSkills);
 		for (let i=0; i<20; i++) {
 			trg.skillBoxes = new Array(10);
@@ -491,15 +495,16 @@ class factory extends object {
 				trg.skillBoxes[i].currentLvl = addDiv("", "skillLevel", trg.skillBoxes[i]);
 				trg.skillBoxes[i].newLvl = addDiv("", "skillLevel", trg.skillBoxes[i]);
 
-				trg.skillBoxes[i].currentLvl.style.width = skillLevels[this.productSkills[i]];
+				console.log("old skill: " + (100+ skillLevels[this.productSkills[i]]));
+				trg.skillBoxes[i].currentLvl.style.width = 100 + skillLevels[this.productSkills[i]];
 				trg.skillBoxes[i].currentLvl.style.top = 5;
 				trg.skillBoxes[i].currentLvl.style.left = 100;
 				trg.skillBoxes[i].currentLvl.style.background = color;
 
-
+				console.log("new skill: " + (100 + tmpLevels[this.productSkills[i]]));
 				if (tmpLevels[this.productSkills[i]] > skillLevels[this.productSkills[i]]) color = "rgb(0,255,0)";
 				else if (tmpLevels[this.productSkills[i]] < skillLevels[this.productSkills[i]]) color = "rgb(255,0,0)";
-				trg.skillBoxes[i].newLvl.style.width = tmpLevels[this.productSkills[i]];
+				trg.skillBoxes[i].newLvl.style.width = 100 + tmpLevels[this.productSkills[i]];
 				trg.skillBoxes[i].newLvl.style.top = 25;
 				trg.skillBoxes[i].newLvl.style.left = 100;
 				trg.skillBoxes[i].newLvl.style.background = color;

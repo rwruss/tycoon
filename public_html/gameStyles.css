@@ -776,6 +776,7 @@
 .skillLevel {
 	position:absolute;
 	height:10px;
+	transition:2s;
 }
 
 .laborHolder {
