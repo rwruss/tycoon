@@ -74,8 +74,11 @@ class factory extends object {
 		}
 
 		thisDiv.innerHTML = "";
-		thisDiv.cityDiv = addDiv("asdf", "sumName", thisDiv);
-		thisDiv.cityDiv.innerHTML = cityList[this.city].objName;
+		if (this.city > 0) {
+			thisDiv.cityDiv = addDiv("asdf", "sumName", thisDiv);
+			console.log(this.city);
+			thisDiv.cityDiv.innerHTML = cityList[this.city].objName;
+		}
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
 		thisDiv.nameDiv.innerHTML = factoryNames[this.factoryType] + " - " + this.objID + " - " + this.city;
 		thisDiv.divType = "factorySummary";
@@ -457,7 +460,8 @@ class factory extends object {
 		console.log(newItem);
 		console.log(this.tmpLabor);
 		for (let i=0; i<20; i++) {
-			this.tmpLabor[start+i] = newItem.details[9+i]+100;
+			//console.log("set index " + (start+i) + " to " + (newItem.details[9+i]));
+			this.tmpLabor[start+i] = newItem.details[9+i];
 		}
 		console.log(this.tmpLabor);
 		this.showSkillLevels(trg.prodSkills);
@@ -475,9 +479,9 @@ class factory extends object {
 			//factoryLabor.push(new laborItem(this.labor.slice(i, i+30)));
 			for (var j=9; j<29; j+=2) {
 				skillLevels[this.labor[i+j]] += this.labor[i+j+1];
-				console.log("Add " + this.tmpLabor[i+j+1] + " to index " + (i+j))
+				//console.log("Add " + this.tmpLabor[i+j+1] + " to index " + (i+j))
 				tmpLevels[this.tmpLabor[i+j]] += this.tmpLabor[i+j+1];
-				console.log(tmpLevels[this.tmpLabor[i+j]]);
+				//console.log(tmpLevels[this.tmpLabor[i+j]]);
 			}
 		}
 		console.log(skillLevels);
