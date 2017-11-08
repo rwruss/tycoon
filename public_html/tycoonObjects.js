@@ -487,31 +487,45 @@ class factory extends object {
 		console.log(skillLevels);
 		console.log(tmpLevels);
 		console.log(this.productSkills);
+		if (!trg.skillBoxes) {
+			for (let i=0; i<20; i++) {
+				trg.skillBoxes = new Array(10);
+				trg.skillBoxes[i] = addDiv("", "stdFloatDiv", trg);
+				if (this.productSkills[i]>0) {
+					let color = "rgb(0,0,0)";
+
+					trg.skillBoxes[i].innerHTML = "(" + (tmpLevels[this.productSkills[i]] - skillLevels[this.productSkills[i]]) + ")"
+					skillIcon(this.productSkills[i], 0, trg.skillBoxes[i]);
+
+					trg.skillBoxes[i].currentLvl = addDiv("", "skillLevel", trg.skillBoxes[i]);
+					trg.skillBoxes[i].newLvl = addDiv("", "skillLevel", trg.skillBoxes[i]);
+
+					//console.log("old skill: " + (100+ skillLevels[this.productSkills[i]]));
+					//trg.skillBoxes[i].currentLvl.style.width = 100 + skillLevels[this.productSkills[i]];
+					trg.skillBoxes[i].currentLvl.style.width = 10;
+					trg.skillBoxes[i].currentLvl.style.top = 5;
+					trg.skillBoxes[i].currentLvl.style.left = 100;
+					trg.skillBoxes[i].currentLvl.style.background = color;
+
+					//console.log("new skill: " + (100 + tmpLevels[this.productSkills[i]]));
+					//if (tmpLevels[this.productSkills[i]] > skillLevels[this.productSkills[i]]) color = "rgb(0,255,0)";
+					//else if (tmpLevels[this.productSkills[i]] < skillLevels[this.productSkills[i]]) color = "rgb(255,0,0)";
+					//trg.skillBoxes[i].newLvl.style.width = 100 + tmpLevels[this.productSkills[i]];
+					trg.skillBoxes[i].newLvl.style.width = 10;
+					trg.skillBoxes[i].newLvl.style.top = 25;
+					trg.skillBoxes[i].newLvl.style.left = 100;
+					trg.skillBoxes[i].newLvl.style.background = color;
+				}
+			}
+		}
 		for (let i=0; i<20; i++) {
-			trg.skillBoxes = new Array(10);
-			trg.skillBoxes[i] = addDiv("", "stdFloatDiv", trg);
-			if (this.productSkills[i]>0) {
-				let color = "rgb(0,0,0)";
-
-				trg.skillBoxes[i].innerHTML = "(" + (tmpLevels[this.productSkills[i]] - skillLevels[this.productSkills[i]]) + ")"
-				skillIcon(this.productSkills[i], 0, trg.skillBoxes[i]);
-
-				trg.skillBoxes[i].currentLvl = addDiv("", "skillLevel", trg.skillBoxes[i]);
-				trg.skillBoxes[i].newLvl = addDiv("", "skillLevel", trg.skillBoxes[i]);
-
-				console.log("old skill: " + (100+ skillLevels[this.productSkills[i]]));
+			if (this.productSkills[i] > 0) {
 				trg.skillBoxes[i].currentLvl.style.width = 100 + skillLevels[this.productSkills[i]];
-				trg.skillBoxes[i].currentLvl.style.top = 5;
-				trg.skillBoxes[i].currentLvl.style.left = 100;
-				trg.skillBoxes[i].currentLvl.style.background = color;
-
-				console.log("new skill: " + (100 + tmpLevels[this.productSkills[i]]));
+			
 				if (tmpLevels[this.productSkills[i]] > skillLevels[this.productSkills[i]]) color = "rgb(0,255,0)";
 				else if (tmpLevels[this.productSkills[i]] < skillLevels[this.productSkills[i]]) color = "rgb(255,0,0)";
+			
 				trg.skillBoxes[i].newLvl.style.width = 100 + tmpLevels[this.productSkills[i]];
-				trg.skillBoxes[i].newLvl.style.top = 25;
-				trg.skillBoxes[i].newLvl.style.left = 100;
-				trg.skillBoxes[i].newLvl.style.background = color;
 			}
 		}
 	}
