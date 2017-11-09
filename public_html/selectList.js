@@ -615,7 +615,7 @@ class SLobjectSelect {
 }
 
 class laborSelect extends SLobjectSelect {
-	constructor (selectedList, optionList, selectTrg, maxSelected, callback, callbackObj, params) {
+	constructor (selectedList, optionList, selectTrg, maxSelected, callback, callbackObj, itemTargetNum) {
 		super(selectedList, optionList, selectTrg, maxSelected);
 		this.selectedArea = addDiv("", "stdFloatDiv", selectTrg);
 		this.optionArea = addDiv("", "stdFloatDiv", selectTrg);
@@ -632,6 +632,7 @@ class laborSelect extends SLobjectSelect {
 		console.log(callback);
 		this.callback = callback;
 		this.callbackObj = callbackObj;
+		this.itemTargetNum = itemTargetNum;
 
 		this.itemDivs = new Array(optionList.length);;
 
@@ -678,7 +679,7 @@ class laborSelect extends SLobjectSelect {
 		let newDiv = item.renderSummary(this.selectedArea.item);
 		this.itemDivs[itemNum] = newDiv;
 		laborPaySettings(item, this.selectedArea.payDiv);
-		this.callback.apply(this.callbackObj, [itemNum, item, this.container]);
+		this.callback.apply(this.callbackObj, [this.itemTargetNum, item, this.container]);
 
 		console.log(this.optionStatus);
 		return newDiv;
@@ -703,7 +704,7 @@ class laborSelect extends SLobjectSelect {
 		}
 		this.itemDivs[itemNum] = thisInstance;
 
-		console.log(this.optionStatus);
+		//console.log(this.optionStatus);
 		if (this.optionStatus.reduce(sum, 0) == 0) {
 			this.emptySelection();
 		}
@@ -712,7 +713,7 @@ class laborSelect extends SLobjectSelect {
 		this.selectEmpty(this.optionItems[this.optionItems.length-1]);
 
 		// update the labor skills
-		this.callback.apply(this.callbackObj, [itemNum, this.optionItems[this.optionItems.length-1], this.container]);
+		this.callback.apply(this.callbackObj, [this.itemTargetNum, this.optionItems[this.optionItems.length-1], this.container]);
 		return thisInstance;
 	}
 
