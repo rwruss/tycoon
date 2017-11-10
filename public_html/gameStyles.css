@@ -775,8 +775,16 @@
 
 .skillLevel {
 	position:absolute;
-	height:10px;
+	height:15px;
+	spacing:5px;
 	transition:2s;
+	left:75;
+}
+
+.skillQty {
+	position:relative;
+	float:left;
+	height:50px;
 }
 
 .laborHolder {

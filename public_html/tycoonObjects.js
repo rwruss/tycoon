@@ -200,34 +200,34 @@ class factory extends object {
 		show production and skill requirements
 		*/
 
-		let tmpLabor = companyLabor.slice();
+		let tmpLabor = (this.factoryLabor.slice()).concat(companyLabor.slice());
 		if (this.factoryLabor[itemNum].objID > 0) {
 			tmpLabor.push(this.factoryLabor[itemNum]);
 		}
 		let emptyA = new Array(30);
 		emptyA.fill(0);
 		let emptyItem = new laborItem(emptyA);
-		tmpLabor.push(emptyItem);
+		//tmpLabor.push(emptyItem);
 
-		console.log(tmpLabor);
+		console.log(emptyItem);
 
-		let laborOpts = new laborSelect([tmpLabor.length-1], tmpLabor, thisDiv, 1, this.updateLaborSkills, this, itemNum);
+		let laborOpts = new laborSelect([tmpLabor.length-1], tmpLabor, thisDiv, 1, this.updateLaborSkills, this, emptyItem);
 		//console.log(laborOpts);
 		let saveLabor = newButton(thisDiv);
 		saveLabor.innerHTML = "Save labor";
-		saveLabor.sendStr = "1058," + this.objID + "," + itemNum;
+		//saveLabor.sendStr = "1058," + this.objID + "," + itemNum;
+		saveLabor.sendStr = "1058," + this.objID;
 		saveLabor.parentFactory = this;
 		saveLabor.optionClass = laborOpts;
 		saveLabor.itemNum = itemNum;
 		saveLabor.addEventListener("click", function () {
 
-			console.log(laborOpts.getSelection().join(","));
+			//console.log(laborOpts.getSelection().join(","));
 			let tmp = this.optionClass.getSelection();
 			console.log(tmp);
 			let sendStr =  this.sendStr + "," + tmp[1] + "," + tmp[2];
 			getASync(sendStr).then(v => {
 				let r=v.split(",");
-				//console.log(r.length);
 				if (r[0] > -1) {
 					//update factory labor item
 					this.parentFactory.factoryLabor[r[6]].update(r.slice(6,36));
@@ -454,13 +454,13 @@ class factory extends object {
 	}
 
 	updateLaborSkills(spotNum, newItem, trg) {
-		//console.log("update labor skills")
+		console.log("update labor skills at spot " + spotNum);
 		//trg.prodSkills.innerHTML = "";
 		let start = spotNum*30+9;
 		//console.log(newItem);
 		//console.log(this.tmpLabor);
 		for (let i=0; i<20; i++) {
-			console.log("spot " + spotNum + " set index " + (start+i) + " to " + (newItem.details[9+i]));
+			//console.log("spot " + spotNum + " set index " + (start+i) + " to " + (newItem.details[9+i]));
 			this.tmpLabor[start+i] = newItem.details[9+i];
 		}
 		console.log(this.tmpLabor);
@@ -500,42 +500,40 @@ class factory extends object {
 				if (this.productSkills[i]>0) {
 					let color = "rgb(0,0,0)";
 
-					trg.skillBoxes[i].innerHTML = "(" + (tmpLevels[this.productSkills[i]] - skillLevels[this.productSkills[i]]) + ")"
+					//trg.skillBoxes[i].innerHTML = "(" + (tmpLevels[this.productSkills[i]] - skillLevels[this.productSkills[i]]) + ")"
 					skillIcon(this.productSkills[i], 0, trg.skillBoxes[i]);
 
+					let newItem = addDiv("", "skillQty", trg.skillBoxes[i]);
+					newItem.innerHTML = this.productSkills[i+20];
 					trg.skillBoxes[i].currentLvl = addDiv("", "skillLevel", trg.skillBoxes[i]);
 					trg.skillBoxes[i].newLvl = addDiv("", "skillLevel", trg.skillBoxes[i]);
 
-					//console.log("old skill: " + (100+ skillLevels[this.productSkills[i]]));
-					//trg.skillBoxes[i].currentLvl.style.width = 100 + skillLevels[this.productSkills[i]];
 					trg.skillBoxes[i].currentLvl.style.width = 10;
 					trg.skillBoxes[i].currentLvl.style.top = 5;
 					trg.skillBoxes[i].currentLvl.style.left = 100;
 					trg.skillBoxes[i].currentLvl.style.background = color;
 
-					//console.log("new skill: " + (100 + tmpLevels[this.productSkills[i]]));
-					//if (tmpLevels[this.productSkills[i]] > skillLevels[this.productSkills[i]]) color = "rgb(0,255,0)";
-					//else if (tmpLevels[this.productSkills[i]] < skillLevels[this.productSkills[i]]) color = "rgb(255,0,0)";
-					//trg.skillBoxes[i].newLvl.style.width = 100 + tmpLevels[this.productSkills[i]];
 					trg.skillBoxes[i].newLvl.style.width = 10;
 					trg.skillBoxes[i].newLvl.style.top = 25;
 					trg.skillBoxes[i].newLvl.style.left = 100;
 					trg.skillBoxes[i].newLvl.style.background = color;
 				}
-				console.log(trg.skillBoxes[i]);
+				//console.log(trg.skillBoxes[i]);
+
 			}
+			console.log(this.productSkills);
 		}
 		//console.log(trg.skillBoxes)
 		for (let i=0; i<20; i++) {
 			if (this.productSkills[i] > 0) {
 
-				trg.skillBoxes[i].currentLvl.style.width = 100 + skillLevels[this.productSkills[i]];
+				trg.skillBoxes[i].currentLvl.style.width = 10 + skillLevels[this.productSkills[i]]/this.productSkills[i+20];
 
 				if (tmpLevels[this.productSkills[i]] > skillLevels[this.productSkills[i]]) trg.skillBoxes[i].newLvl.style.background = "rgb(0,255,0)";
 				else if (tmpLevels[this.productSkills[i]] < skillLevels[this.productSkills[i]]) trg.skillBoxes[i].newLvl.style.background = "rgb(255,0,0)";
 				else trg.skillBoxes[i].newLvl.style.background = "rgb(0,0,0)";
 
-				trg.skillBoxes[i].newLvl.style.width = 100 + tmpLevels[this.productSkills[i]];
+				trg.skillBoxes[i].newLvl.style.width = 10 + tmpLevels[this.productSkills[i]]/this.productSkills[i+20];
 			}
 		}
 	}

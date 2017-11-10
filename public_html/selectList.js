@@ -521,22 +521,28 @@ class SLoptionSelect {
 }
 
 class SLobjectSelect {
-	constructor(selectedList, optionList, selectTrg, maxSelected) {
-		this.selectedItems = selectedList;
+	constructor(selectedList, optionList, selectTrg, maxSelected, emptyItem) {
+		this.selectedItems = [0,1,2,3,4,5,6,7,8,9];
 		this.optionItems = optionList;
-		this.optionStatus = new Array(this.optionItems.length);
+		this.optionStatus = new Array(10);
+		this.selectStatus = new Array(optionList.length);
 		this.maxSelected = maxSelected;
 		this.selectedQty = selectedList.length;
 		this.lastItemSlected = 0;
 
-		this.optionStatus.fill(0, 0, this.optionItems.length);
+		this.optionStatus.fill(0);
+		this.selectStatus.fill(1,0,10);
+		this.selectStatus.fill(0,10);
+
+		this.emptyItem = emptyItem;
+		console.log(emptyItem);
 
 		return this;
 	}
 
 	init() {
-		for (let i=0; i<this.selectedItems.length; i++) {
-			this.optionStatus[this.selectedItems[i]] = 1;
+		for (let i=0; i<10; i++) {
+			if (this.optionItems[i].laborType > 0) this.optionStatus[i] = i+1;
 		}
 
 		for (let i=0; i<this.optionItems.length; i++) {
@@ -546,61 +552,43 @@ class SLobjectSelect {
 	}
 
 	moveItem(itemNum, divObject) {
-		console.log("move item " + itemNum);
-		let item;
-		if (this.optionStatus[itemNum] == 1) {
-			// move back in to options
-			console.log("unselet an item");
-			//this.optionStatus[itemNum] = 0;
-			this.selectedQty--;
-			item = this.unSelectItem(this.optionItems[itemNum], itemNum, divObject);
-
-			// select the empty item
-			/*
-			let empty = this.selectItem(this.optionItems[this.optionItems.length-1], this.optionItems.length-1);
-			empty.listClass = this;
-			empty.itemNum = this.optionItems.length-1;
-			empty.addEventListener("click", function () {
-				this.listClass.moveItem(this.itemNum, this);
-			});*/
+		if (this.optionItems[itemNum].laborType > 0) {
+			if (this.selectStatus[itemNum] > 0) {
+				console.log("unselect an item");
+				this.unSelectItem(itemNum, divObject);
+			} else {
+				console.log("select an item");
+				this.selectItem(itemNum, divObject);
+			}
 		} else {
-			// move in to selected
-			console.log("SELECT an item " + itemNum);
-			//this.optionStatus[this.lastItemSlected] = 0;
-			//this.optionStatus[itemNum] = 1;
-
-			this.selectedQty++;
-			item = this.selectItem(this.optionItems[itemNum], itemNum, divObject);
 
 		}
-		item.listClass = this;
-		item.itemNum = itemNum;
-		item.addEventListener("click", function () {
-			this.listClass.moveItem(this.itemNum, this);
-		});
-		//console.log(this.optionStatus);
+
 	}
 
 	showItems() {
 		console.log(this.optionItems);
 		let item;
+		for (let i=0; i<10; i++) {
+			//item = this.selectItem(this.optionItems[i], i, null);
+			item = this.optionItems[i].renderSummary(this.selectedArea);
+			//this.selectedArea.insertBefore(newDiv, this.selectedArea.childNodes[i]);
+			item.listClass = this;
+			item.itemNum = i;
+			item.addEventListener("click", function () {
+				this.listClass.moveItem(this.itemNum, this);
+			});
+		}
+		for (let i=10; i<this.optionItems.length; i++) {
 
-		for (let i=0; i<this.optionItems.length-1; i++) {
-			if (this.optionStatus[i] == 0) {
-				item = this.unSelectItem(this.optionItems[i], i, null);
-				item.listClass = this;
-				item.itemNum = i;
-				item.addEventListener("click", function () {
-					this.listClass.moveItem(this.itemNum, this);
-				});
-			} else {
-				item = this.selectItem(this.optionItems[i], i, null);
-				item.listClass = this;
-				item.itemNum = i;
-				item.addEventListener("click", function () {
-					this.listClass.moveItem(this.itemNum, this);
-				});
-			}
+			//item = this.unSelectItem(this.optionItems[i], i, null);
+			item = this.optionItems[i].renderSummary(this.optionArea);
+			//this.selectedArea.insertBefore(newDiv, this.selectedArea.childNodes[i]);
+			item.listClass = this;
+			item.itemNum = i;
+			item.addEventListener("click", function () {
+				this.listClass.moveItem(this.itemNum, this);
+			});
 		}
 	}
 
@@ -615,14 +603,14 @@ class SLobjectSelect {
 }
 
 class laborSelect extends SLobjectSelect {
-	constructor (selectedList, optionList, selectTrg, maxSelected, callback, callbackObj, itemTargetNum) {
-		super(selectedList, optionList, selectTrg, maxSelected);
+	constructor (selectedList, optionList, selectTrg, maxSelected, callback, callbackObj, emptyItem) {
+		super(selectedList, optionList, selectTrg, maxSelected, emptyItem);
 		this.selectedArea = addDiv("", "stdFloatDiv", selectTrg);
 		this.optionArea = addDiv("", "stdFloatDiv", selectTrg);
 		this.container = selectTrg;
 
-		this.selectedArea.innerHTML = "SELECTIONS";
-		this.optionArea.innerHTML = "OPTIONS";
+		//this.selectedArea.innerHTML = "SELECTIONS";
+		//this.optionArea.innerHTML = "OPTIONS";
 
 		this.displayList = new Array(optionList.length);
 		this.hiddenList = new Array(optionList.length);
@@ -632,7 +620,7 @@ class laborSelect extends SLobjectSelect {
 		console.log(callback);
 		this.callback = callback;
 		this.callbackObj = callbackObj;
-		this.itemTargetNum = itemTargetNum;
+		//this.itemTargetNum = itemTargetNum;
 
 		this.itemDivs = new Array(optionList.length);;
 
@@ -651,19 +639,38 @@ class laborSelect extends SLobjectSelect {
 		let newDiv = item.renderSummary(this.selectedArea.item);
 	}
 
-	selectItem(item, itemNum, divObject) {
+	initSelect() {
+
+	}
+
+	selectItem(itemNum, divObject) {
 		console.log("draw selected item " + itemNum);
-		this.selectedArea.innerHTML = "";
-		this.selectedArea.item = addDiv("", "", this.selectedArea);
-		this.selectedArea.payDiv = addDiv("", "", this.selectedArea);
-		this.displayList[itemNum] = 0;
+
+		// look for a spot in the list of selected items
+		//let newDiv
+		for (let i=0; i<10; i++) {
+			if (this.optionStatus[i] == 0) {
+				//let newDiv = item.renderSummary(this.selectedArea.item);
+				//newDiv = item.renderSummary(null);
+				let emptyItem = this.selectedArea.childNodes[i];
+
+				this.selectedArea.insertBefore(divObject, emptyItem);
+				this.selectedArea.removeChild(emptyItem)
+				this.optionStatus[i] = this.optionItems[itemNum].objID;
+
+				// make the select status greater than 0 to show it is selected.  THe number is the spot it holds
+				this.selectStatus[itemNum] = i+1;
+				console.log(this.selectStatus);
+
+				this.callback.apply(this.callbackObj, [i, this.optionItems[itemNum], this.container]);
+				break;
+			}
+		}
+
 
 		/*
-		if (divObject) {
-			divObject.parentNode.removeChild(divObject);
-		}*/
 		if (this.itemDivs[itemNum]) {
-			this.itemDivs[itemNum].parentNode.removeChild(this.itemDivs[itemNum]);
+			//this.itemDivs[itemNum].parentNode.removeChild(this.itemDivs[itemNum]);
 		}
 
 		this.optionStatus[itemNum] = 1;
@@ -679,13 +686,24 @@ class laborSelect extends SLobjectSelect {
 		let newDiv = item.renderSummary(this.selectedArea.item);
 		this.itemDivs[itemNum] = newDiv;
 		laborPaySettings(item, this.selectedArea.payDiv);
-		this.callback.apply(this.callbackObj, [this.itemTargetNum, item, this.container]);
-
-		console.log(this.optionStatus);
-		return newDiv;
+		//this.callback.apply(this.callbackObj, [this.itemTargetNum, item, this.container]);
+		*/
+		//console.log(newDiv);
+		//return newDiv;
 	}
 
-	unSelectItem(item, itemNum, divObject) {
+	unSelectItem(itemNum, divObject) {
+		let emptyItem = this.emptyItem.renderSummary(null);
+		this.selectedArea.insertBefore(emptyItem, divObject);
+		//this.selectedArea.removeChild(divObject);
+		let revisedSpot = this.selectStatus[itemNum]-1;
+		this.optionArea.insertBefore(divObject, this.optionArea.childNodes[0]);
+		this.optionStatus[this.selectStatus[itemNum]-1] = 0;
+		this.selectStatus[itemNum] = 0;
+
+		this.callback.apply(this.callbackObj, [revisedSpot, this.emptyItem, this.container]);
+		console.log(this.selectStatus);
+		/*
 		console.log("unselect " + itemNum);
 		this.selectedObject = -1;
 		//this.selectedArea.innerHTML = "";
@@ -713,8 +731,8 @@ class laborSelect extends SLobjectSelect {
 		this.selectEmpty(this.optionItems[this.optionItems.length-1]);
 
 		// update the labor skills
-		this.callback.apply(this.callbackObj, [this.itemTargetNum, this.optionItems[this.optionItems.length-1], this.container]);
-		return thisInstance;
+		//this.callback.apply(this.callbackObj, [this.itemTargetNum, this.optionItems[this.optionItems.length-1], this.container]);
+		return thisInstance;*/
 	}
 
 	hideItem(itemID) {
@@ -729,7 +747,9 @@ class laborSelect extends SLobjectSelect {
 	}
 
 	getSelection() {
+		return this.optionStatus;
 		//console.log(this.selectedArea.payDiv.laborPay.slider.slide.value);
+		/*
 		let places = [];
 		let objIDS = [];
 		objIDS[0] = 0;
@@ -748,7 +768,7 @@ class laborSelect extends SLobjectSelect {
 		}
 		objIDS.push(this.selectedArea.payDiv.laborPay.slider.slide.value)
 		//console.log(places.concat(objIDS));
-		return places.concat(objIDS);
+		return places.concat(objIDS);*/
 	}
 }
 
