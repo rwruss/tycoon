@@ -38,6 +38,7 @@ if ($inputValidate) {
 	} else {
 	echo 'Validation error';
 	print_r($postVals);
+	exit();
 	}
 }
 ?>

@@ -225,14 +225,19 @@ class factory extends object {
 			//console.log(laborOpts.getSelection().join(","));
 			let tmp = this.optionClass.getSelection();
 			console.log(tmp);
-			let sendStr =  this.sendStr + "," + tmp[1] + "," + tmp[2];
+			let sendStr =  this.sendStr + "," + tmp.join(",");
 			getASync(sendStr).then(v => {
-				let r=v.split(",");
-				if (r[0] > -1) {
+				let t = v.split("<--!-->");
+				let r=t[1].split("|");
+				console.log(r);
+				if (r[0] == 1) {
 					//update factory labor item
-					this.parentFactory.factoryLabor[r[6]].update(r.slice(6,36));
+					for (let i=0; i<10; i++) {
+						this.parentFactory.factoryLabor[i].updateFromChange(r.slice(6+i*29,35 + i*29));
+					}
 
 
+					/*
 					// delete old company labor item
 					if (r[36] > 100) {
 
@@ -250,7 +255,7 @@ class factory extends object {
 					if (r[37] >0) {
 						companyLabor.push(new laborItem(setArrayInts(r.slice(37))));
 					}
-					this.parentFactory.laborDetailOptions(this.itemNum);
+					this.parentFactory.laborDetailOptions(this.itemNum);*/
 				}
 			});
 		});
@@ -1385,11 +1390,26 @@ class laborItem extends labor {
 		this.renderUpdate();
 	}
 
+	updateFromChange(dat) {
+		this.details = dat;
+		// expect detailsof 29 items
+
+		this.objID = dat[0],
+		this.objName = "??",
+
+		this.laborType = dat[2],
+		this.details = dat;
+
+		this.pay = dat[1];
+		console.log(dat);
+		this.renderUpdate();
+	}
+
 	renderUpdate() {
-		console.log("updating... " + this.instances.length + " items");
+		//console.log("updating... " + this.instances.length + " items");
 		//console.log(this.instances);
 		for (var i=this.instances.length-1; i>-1; i--) {
-			console.log("(" + i + ") updating... " + this.instances[i]);
+			//console.log("(" + i + ") updating... " + this.instances[i]);
 
 			let checkDiv = this.instances[i];
 			while (checkDiv) {
