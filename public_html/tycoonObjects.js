@@ -233,7 +233,7 @@ class factory extends object {
 				if (r[0] == 1) {
 					//update factory labor item
 					for (let i=0; i<10; i++) {
-						this.parentFactory.factoryLabor[i].updateFromChange(r.slice(6+i*29,35 + i*29));
+						this.parentFactory.factoryLabor[i].updateFromChange(r.slice(6+i*30,36 + i*30));
 					}
 
 

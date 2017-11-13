@@ -84,10 +84,10 @@ for ($i=0; $i<$productionSpots; $i++) {
 
 echo '<p>Factory items:';
 print_r($thisFactory->laborItems);
-$returnStr = implode('|', $thisFactory->laborItems[0]->laborDat);
+$returnStr = '0|'.implode('|', $thisFactory->laborItems[0]->laborDat);
 for ($i=1; $i<10; $i++) {
 	//print_r($thisFactory->laborItems[$i]->laborDat);
-	$returnStr .= '|'.implode('|', $thisFactory->laborItems[$i]->laborDat);
+	$returnStr .= '|'.$i.'|'.implode('|', $thisFactory->laborItems[$i]->laborDat);
 }
 $updatedProductionRates = [0,0,0,0,0];
 echo '<--!-->1|'.implode('|', $updatedProductionRates).'|'.$returnStr;
