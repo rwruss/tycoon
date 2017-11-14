@@ -370,6 +370,8 @@ class factory extends object {
 	function saveLabor() {
 		$str = '';
 		for ($i=0; $i<10; $i++) {
+			echo '<P>Pack labor '.$i.'<br>';
+			print_r($this->laborItems[$i]);
 			$str .= $this->laborItems[$i]->packLabor();
 		}
 		//print_r($this->laborItems);
@@ -406,20 +408,22 @@ class factory extends object {
 
 		// load the product information
 		$prodDat = loadProduct($this->objDat[$this->currentProductionOffset+$productionSpot], $this->linkFile);
-		//echo 'Checkt product '.$this->objDat[$this->currentProductionOffset+$productionSpot];
-		//print_r($prodDat);
+		echo '<p>Checkt product '.$this->objDat[$this->currentProductionOffset+$productionSpot];
+		print_r($prodDat);
+		print_r($prodDat->objDat);
 		$totalProdSkill = 0;
 		$skillsRequired = 0;
 		for ($i=0; $i<20; $i++) {
+			echo $totalProdSkill.' += '.$prodDat->objDat[$prodDat->skillRateOffset+$i].'<Br>';
 			if ($prodDat->objDat[$prodDat->skillOffset+$i] > 0) {
-				//echo $totalProdSkill.' += '.$prodDat->objDat[$prodDat->skillRateOffset+$i].'<Br>';
+
 				$totalProdSkill += $prodDat->objDat[$prodDat->skillRateOffset+$i];
 				$skillsRequired++;
 			}
 		}
-
-		$baseProduction = ($totalLaborSkill/$totalProdSkill);
-		echo 'Base production is '.$baseProduction.' ('.$totalLaborSkill.' / '.$totalProdSkill.')';
+		if ($totalProdSkill == 0) $baseProduction = 1;
+		else $baseProduction = ($totalLaborSkill/$totalProdSkill);
+		echo '<p>Base production is '.$baseProduction.' ('.$totalLaborSkill.' / '.$totalProdSkill.')';
 
 		if ($baseProduction > 0) {
 			// get the % required for each skill
@@ -699,6 +703,8 @@ class product extends object {
 	function __construct($id, $dat, $file) {
 		parent::__construct($id, $dat, $file);
 
+		echo '<p>Loaded product '.$id.'<br>';
+		echo $dat;
 		$this->objDat = unpack('i*', $dat);
 
 		$this->itemBlockSize = 100;
@@ -807,6 +813,13 @@ class labor {
 		//print_r($this->laborDat);
 		return pack($this->packFormat, ...$this->laborDat);
 	}
+
+	function clear() {
+		foreach ($this->laborDat as &$value) {
+			$value = 0;
+		}
+		unset($value);
+	}
 }
 
 class factoryTemplate extends object {
@@ -873,7 +886,7 @@ function newContract($contractDat, $contractFile) {
 
 function loadProduct($id, $file) {
 	fseek($file, $id*1000);
-	//$dat = unpack('i*', fread($file, $size));
+
 	$dat = fread($file, 1000);
 
 	return new product($id, $dat, $file);

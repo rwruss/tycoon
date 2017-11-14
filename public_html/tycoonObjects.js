@@ -233,7 +233,7 @@ class factory extends object {
 				if (r[0] == 1) {
 					//update factory labor item
 					for (let i=0; i<10; i++) {
-						this.parentFactory.factoryLabor[i].updateFromChange(r.slice(6+i*30,36 + i*30));
+						this.parentFactory.factoryLabor[i].update(r.slice(6+i*30,36 + i*30));
 					}
 
 
@@ -1389,7 +1389,7 @@ class laborItem extends labor {
 		console.log(dat);
 		this.renderUpdate();
 	}
-
+	/*
 	updateFromChange(dat) {
 		this.details = dat;
 		// expect detailsof 29 items
@@ -1403,7 +1403,7 @@ class laborItem extends labor {
 		this.pay = dat[1];
 		console.log(dat);
 		this.renderUpdate();
-	}
+	}*/
 
 	renderUpdate() {
 		//console.log("updating... " + this.instances.length + " items");
