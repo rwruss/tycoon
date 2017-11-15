@@ -953,6 +953,12 @@ function loadLaborItem($id, $file) {
 	}
 }
 
+function clearLaborItem($id, $file) {
+	fseek($file, $id);
+	$emptyA = [0,0,0,0,0,0,0,0,0,0,0,0];
+	fwrite($file, packArray($emptyA));
+}
+
 function loadObject($id, $file, $size) {
 	global $defaultBlockSize;
 	//echo 'Seek to '.($id*$defaultBlockSize);

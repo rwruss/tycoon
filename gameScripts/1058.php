@@ -38,10 +38,11 @@ for ($i=0; $i<10; $i++) {
 }
 
 // determine which labor units stay at the factory and which need to be remove
-$laborStatus = array_fill(0,9,-1);
+$laborStatus = array_fill(0,10,-1);
 for ($i=0; $i<10; $i++) {
 	if ($postVals[2+$i] < 10 && $postVals[2+$i] > 0) $laborStatus[$i] = $postVals[2+$i];
 }
+echo '<p>LABOR STATUS:<br>';
 print_r($laborStatus);
 // remove the unused labor items
 for ($i=0; $i<10; $i++) {
@@ -64,11 +65,28 @@ for ($i=0; $i<10; $i++) {
 }
 
 // add the moved items from the labor pool
+
+$laborSlot = $thisBusiness->get('laborSlot');
+if ($laborSlot == 0) {
+	$laborSlot = newSlot($slotFile);
+	$thisBusiness->save('laborSlot', $laborSlot);
+	//echo 'Save new labor slot #'.$laborSlot;
+}
+$laborList = new itemSlot($laborSlot, $slotFile, 40);
+$laborList = new itemSlot($laborSlot, $slotFile, 40);
+$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 for ($i=1; $i<12; $i++) {
+
 	if ($postVals[1+$i] > 10) {
 		echo '<br>Move item '.$postVals[1+$i].' from the labor pool to spot '.$i;
 		$newLabor = loadLaborItem($postVals[1+$i], $laborPoolFile);
 		$thisFactory->laborItems[$i-1] = $newLabor;
+
+		// clear this labor item from the pool and free up the labor spot
+		deleteLabor($postVals[1+$i], $laborPoolFile, $emptySpots);
+
+		// remove from player labor list
+		$laborList->deleteByValue($postVals[1+$i]);
 	}
 }
 echo '<p>Save the labor';
@@ -78,8 +96,6 @@ for ($i=0; $i<10; $i++) {
 }
 
 $thisFactory->saveLabor();
-
-
 
 $productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
 $updatedProductionRates = [0,0,0,0,0];
@@ -112,7 +128,7 @@ function addLaborToPool($laborItem, $laborPoolFile, $laborSlotFile) {
 	$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
 	for ($i=1; $i<$z = sizeof($emptySpots->slotData); $i++) {
 		if ($emptySpots->slotData[$i] > 0) {
-			$useSpot = $emptySpots[$i];
+			$useSpot = $emptySpots->slotData[$i];
 			$emptySpots->deleteByValue($useSpot);
 
 			fseek($laborPoolFile, $useSpot);
@@ -126,6 +142,15 @@ function addLaborToPool($laborItem, $laborPoolFile, $laborSlotFile) {
 	}
 
 	return $useSpot;
+}
+
+function deleteLabor($id, $laborPoolFile, $emptySpots) {
+	$emptyLabor = loadLaborItem(0, NULL);
+	fseek($laborPoolFile, $id);
+	fwrite($laborPoolFile, $emptyLabor->packLabor());
+
+	//$emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
+	$emptySpots->addItem($id);
 }
 /*
 $oldLaborID = 0;

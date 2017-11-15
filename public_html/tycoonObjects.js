@@ -76,7 +76,7 @@ class factory extends object {
 		thisDiv.innerHTML = "";
 		if (this.city > 0) {
 			thisDiv.cityDiv = addDiv("asdf", "sumName", thisDiv);
-			console.log(this.city);
+			//console.log(this.city);
 			thisDiv.cityDiv.innerHTML = cityList[this.city].objName;
 		}
 		thisDiv.nameDiv = addDiv("asdf", "sumName", thisDiv);
@@ -193,7 +193,6 @@ class factory extends object {
 		thisDiv.prodSkills.innerHTML = "prod Detail";
 
 		this.tmpLabor = this.labor.slice();
-		console.log(this.tmpLabor);
 		this.showSkillLevels(thisDiv.prodSkills);
 
 		/*
@@ -209,7 +208,7 @@ class factory extends object {
 		let emptyItem = new laborItem(emptyA);
 		//tmpLabor.push(emptyItem);
 
-		console.log(emptyItem);
+		//console.log(emptyItem);
 
 		let laborOpts = new laborSelect([tmpLabor.length-1], tmpLabor, thisDiv, 1, this.updateLaborSkills, this, emptyItem);
 		//console.log(laborOpts);
@@ -319,8 +318,7 @@ class factory extends object {
 
 	showOutputs(trg) {
 		trg.innerHTML = "";
-		console.log(this.productStores);
-		console.log(this.prodDtls);
+
 		for (var i=0; i<5; i++) {
 			if (this.productStores[i]>0) {
 				//productArray[this.productStores[i]].renderQty(trg, this.productStores[i+5]);
@@ -439,7 +437,6 @@ class factory extends object {
 
 	showProdRequirements(trg) {
 		console.log("show product Requirements");
-		console.log(this.productMaterial);
 		trg.innerHTML = "";
 		if (this.productMaterial.length == 0) {
 			materialBox(0, 0, trg);
@@ -459,7 +456,7 @@ class factory extends object {
 	}
 
 	updateLaborSkills(spotNum, newItem, trg) {
-		console.log("update labor skills at spot " + spotNum);
+		//console.log("update labor skills at spot " + spotNum);
 		//trg.prodSkills.innerHTML = "";
 		let start = spotNum*30+9;
 		//console.log(newItem);
@@ -468,12 +465,12 @@ class factory extends object {
 			//console.log("spot " + spotNum + " set index " + (start+i) + " to " + (newItem.details[9+i]));
 			this.tmpLabor[start+i] = newItem.details[9+i];
 		}
-		console.log(this.tmpLabor);
+		//console.log(this.tmpLabor);
 		this.showSkillLevels(trg.prodSkills);
 	}
 
 	showSkillLevels(trg) {
-		console.log("showSkillLevels")
+		//console.log("showSkillLevels")
 		//console.log(trg)
 		// calc total skills in current labor
 		let skillLevels = new Array(256);
@@ -495,7 +492,6 @@ class factory extends object {
 		//console.log(tmpLevels);
 		//console.log(this.productSkills);
 		if (!trg.skillBoxes) {
-			console.log("create skill boxes ");
 			trg.skillBoxes = new Array(20);
 			for (let i=0; i<20; i++) {
 
@@ -526,7 +522,6 @@ class factory extends object {
 				//console.log(trg.skillBoxes[i]);
 
 			}
-			console.log(this.productSkills);
 		}
 		//console.log(trg.skillBoxes)
 		for (let i=0; i<20; i++) {
@@ -1385,8 +1380,6 @@ class laborItem extends labor {
 
 	update(dat) {
 		this.init(dat);
-
-		console.log(dat);
 		this.renderUpdate();
 	}
 	/*
@@ -1480,7 +1473,6 @@ class laborItem extends labor {
 
 		let me = this;
 		thisDiv.updateFunction = function (x) {
-			console.log("update a laborItem");
 			me.renderSummary(x)};
 
 		this.instances.push(thisDiv)

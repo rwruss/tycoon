@@ -522,7 +522,7 @@ class SLoptionSelect {
 
 class SLobjectSelect {
 	constructor(selectedList, optionList, selectTrg, maxSelected, emptyItem) {
-		this.selectedItems = [0,1,2,3,4,5,6,7,8,9];
+		//this.selectedItems = [0,1,2,3,4,5,6,7,8,9];
 		this.optionItems = optionList;
 		this.optionStatus = new Array(10);
 		this.selectStatus = new Array(optionList.length);
@@ -531,33 +531,41 @@ class SLobjectSelect {
 		this.lastItemSlected = 0;
 
 		this.optionStatus.fill(0);
-		this.selectStatus.fill(1,0,10);
-		this.selectStatus.fill(0,10);
+		//this.selectStatus.fill(1,0,10);
+		//this.selectStatus.fill(0,10);
+		this.selectStatus.fill(-1);
+
 
 		this.emptyItem = emptyItem;
-		console.log(emptyItem);
+		//console.log(emptyItem);
 
 		return this;
 	}
 
 	init() {
 		for (let i=0; i<10; i++) {
-			if (this.optionItems[i].laborType > 0) this.optionStatus[i] = i+1;
+			if (this.optionItems[i].laborType > 0) {
+				console.log("set item " + i + " to " + (i+1) + " based on type " + (this.optionItems[i].laborType));
+				this.optionStatus[i] = i+1;
+			}
+			this.selectStatus[i] = i;
 		}
 
 		for (let i=0; i<this.optionItems.length; i++) {
+
 		}
 		console.log(this.optionStatus);
 		this.showItems();
 	}
 
 	moveItem(itemNum, divObject) {
+		console.log(this.optionItems[itemNum]);
 		if (this.optionItems[itemNum].laborType > 0) {
-			if (this.selectStatus[itemNum] > 0) {
-				console.log("unselect an item");
+			if (this.selectStatus[itemNum] > -1) {
+				console.log("unselect an item (#" + itemNum + ") of status " + this.selectStatus[itemNum]);
 				this.unSelectItem(itemNum, divObject);
 			} else {
-				console.log("select an item");
+				console.log("select an item (#" + itemNum + ")");
 				this.selectItem(itemNum, divObject);
 			}
 		} else {
@@ -567,7 +575,7 @@ class SLobjectSelect {
 	}
 
 	showItems() {
-		console.log(this.optionItems);
+		//console.log(this.optionItems);
 		let item;
 		for (let i=0; i<10; i++) {
 			//item = this.selectItem(this.optionItems[i], i, null);
@@ -617,7 +625,6 @@ class laborSelect extends SLobjectSelect {
 		this.displayList.fill(1);
 		this.hiddenList.fill(0);
 		this.selectedObject = -1;
-		console.log(callback);
 		this.callback = callback;
 		this.callbackObj = callbackObj;
 		//this.itemTargetNum = itemTargetNum;
@@ -659,7 +666,7 @@ class laborSelect extends SLobjectSelect {
 				this.optionStatus[i] = this.optionItems[itemNum].objID;
 
 				// make the select status greater than 0 to show it is selected.  THe number is the spot it holds
-				this.selectStatus[itemNum] = i+1;
+				this.selectStatus[itemNum] = i;
 				console.log(this.selectStatus);
 
 				this.callback.apply(this.callbackObj, [i, this.optionItems[itemNum], this.container]);
@@ -667,29 +674,6 @@ class laborSelect extends SLobjectSelect {
 			}
 		}
 
-
-		/*
-		if (this.itemDivs[itemNum]) {
-			//this.itemDivs[itemNum].parentNode.removeChild(this.itemDivs[itemNum]);
-		}
-
-		this.optionStatus[itemNum] = 1;
-		let oldNum = this.selectedObject;
-		if (oldNum > -1) {
-			//console.log("Remove the old item");
-			this.moveItem(oldNum, null);
-		}
-		this.selectedObject = itemNum;
-
-		this.optionStatus[oldNum] = 0;
-
-		let newDiv = item.renderSummary(this.selectedArea.item);
-		this.itemDivs[itemNum] = newDiv;
-		laborPaySettings(item, this.selectedArea.payDiv);
-		//this.callback.apply(this.callbackObj, [this.itemTargetNum, item, this.container]);
-		*/
-		//console.log(newDiv);
-		//return newDiv;
 	}
 
 	unSelectItem(itemNum, divObject) {
@@ -698,41 +682,12 @@ class laborSelect extends SLobjectSelect {
 		//this.selectedArea.removeChild(divObject);
 		let revisedSpot = this.selectStatus[itemNum]-1;
 		this.optionArea.insertBefore(divObject, this.optionArea.childNodes[0]);
-		this.optionStatus[this.selectStatus[itemNum]-1] = 0;
-		this.selectStatus[itemNum] = 0;
+		console.log("set option stat " + (this.selectStatus[itemNum]) + " to zero");
+		this.optionStatus[this.selectStatus[itemNum]] = 0;
+		this.selectStatus[itemNum] = -1;
 
 		this.callback.apply(this.callbackObj, [revisedSpot, this.emptyItem, this.container]);
 		console.log(this.selectStatus);
-		/*
-		console.log("unselect " + itemNum);
-		this.selectedObject = -1;
-		//this.selectedArea.innerHTML = "";
-		if (divObject) divObject.parentNode.removeChild(divObject);
-		this.displayList[itemNum] = 1;
-		this.optionStatus[itemNum] = 0;
-
-		let thisInstance = item.renderSummary(null);
-		if (!this.hiddenList[itemNum]) {
-
-			let count = 0;
-			for (let i=0; i<itemNum; i++) {
-				count += this.displayList[i];
-			}
-			this.optionArea.insertBefore(thisInstance, this.optionArea.childNodes[count]);
-		}
-		this.itemDivs[itemNum] = thisInstance;
-
-		//console.log(this.optionStatus);
-		if (this.optionStatus.reduce(sum, 0) == 0) {
-			this.emptySelection();
-		}
-
-		// show an empty spot
-		this.selectEmpty(this.optionItems[this.optionItems.length-1]);
-
-		// update the labor skills
-		//this.callback.apply(this.callbackObj, [this.itemTargetNum, this.optionItems[this.optionItems.length-1], this.container]);
-		return thisInstance;*/
 	}
 
 	hideItem(itemID) {
@@ -747,28 +702,10 @@ class laborSelect extends SLobjectSelect {
 	}
 
 	getSelection() {
-		return this.optionStatus;
-		//console.log(this.selectedArea.payDiv.laborPay.slider.slide.value);
-		/*
-		let places = [];
-		let objIDS = [];
-		objIDS[0] = 0;
-		console.log(this.optionItems);
+		console.log("laborSelect get selection");
 		console.log(this.optionStatus);
-		if (this.optionStatus.reduce(sum, 0) == 0) {
-			objIDS[1] = -1;
-		} else {
-			for (let i=0; i<this.optionStatus.length; i++) {
-				if (this.optionStatus[i] == 1) {
-					//console.log(this.optionItems[i]);
-					//places.push(i);
-					objIDS[1] = this.optionItems[i].objID;
-				}
-			}
-		}
-		objIDS.push(this.selectedArea.payDiv.laborPay.slider.slide.value)
-		//console.log(places.concat(objIDS));
-		return places.concat(objIDS);*/
+		return this.optionStatus;
+
 	}
 }
 
@@ -818,6 +755,7 @@ class buttonSelect {
 	}
 
 	getSelection() {
+		console.log("buttonSelect get selection");
 		let returnA = new Array(this.maxSelected);
 		returnA.fill(0);
 		let count = 0;
