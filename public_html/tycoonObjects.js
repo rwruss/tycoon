@@ -220,7 +220,6 @@ class factory extends object {
 		saveLabor.optionClass = laborOpts;
 		saveLabor.itemNum = itemNum;
 		saveLabor.addEventListener("click", function () {
-
 			//console.log(laborOpts.getSelection().join(","));
 			let tmp = this.optionClass.getSelection();
 			console.log(tmp);
@@ -234,27 +233,10 @@ class factory extends object {
 					for (let i=0; i<10; i++) {
 						this.parentFactory.factoryLabor[i].update(r.slice(6+i*30,36 + i*30));
 					}
-
-
-					/*
-					// delete old company labor item
-					if (r[36] > 100) {
-
-						console.log(companyLabor);
-						for (let i=0; i<companyLabor.length; i++) {
-							if (companyLabor[i].objID == r[36]) {
-								console.log("delete item " + r[36]);
-								companyLabor.splice(i, 1);
-							}
-						}
-						console.log(companyLabor);
-					}
-
-					// add new company labor item
-					if (r[37] >0) {
-						companyLabor.push(new laborItem(setArrayInts(r.slice(37))));
-					}
-					this.parentFactory.laborDetailOptions(this.itemNum);*/
+					
+					// update the general labor list
+					
+					// reset the laborSelect item
 				}
 			});
 		});
