@@ -200,9 +200,10 @@ class factory extends object {
 		*/
 
 		let tmpLabor = (this.factoryLabor.slice()).concat(companyLabor.slice());
+		/*
 		if (this.factoryLabor[itemNum].objID > 0) {
 			tmpLabor.push(this.factoryLabor[itemNum]);
-		}
+		}*/
 		let emptyA = new Array(30);
 		emptyA.fill(0);
 		let emptyItem = new laborItem(emptyA);
@@ -210,7 +211,7 @@ class factory extends object {
 
 		//console.log(emptyItem);
 
-		let laborOpts = new laborSelect([tmpLabor.length-1], tmpLabor, thisDiv, 1, this.updateLaborSkills, this, emptyItem);
+		let laborOpts = new laborSelect(tmpLabor, thisDiv, 1, this.updateLaborSkills, this, emptyItem);
 		//console.log(laborOpts);
 		let saveLabor = newButton(thisDiv);
 		saveLabor.innerHTML = "Save labor";
@@ -233,10 +234,16 @@ class factory extends object {
 					for (let i=0; i<10; i++) {
 						this.parentFactory.factoryLabor[i].update(r.slice(6+i*30,36 + i*30));
 					}
-					
+
 					// update the general labor list
-					
+					for (let i=306; i<r.length; i+=30) {
+						//this.parentFactory.factoryLabor[i].update(r.slice(6+i*30,36 + i*30));
+						updateLabor(companyLabor, r.slice(i,i+30));
+					}
+
 					// reset the laborSelect item
+					let tmpLabor = (this.parentFactory.factoryLabor.slice()).concat(companyLabor.slice());
+					this.optionClass.reset(tmpLabor);
 				}
 			});
 		});

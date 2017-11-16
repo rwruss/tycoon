@@ -521,18 +521,15 @@ class SLoptionSelect {
 }
 
 class SLobjectSelect {
-	constructor(selectedList, optionList, selectTrg, maxSelected, emptyItem) {
+	constructor(optionList, selectTrg, maxSelected, emptyItem) {
 		//this.selectedItems = [0,1,2,3,4,5,6,7,8,9];
 		this.optionItems = optionList;
 		this.optionStatus = new Array(10);
 		this.selectStatus = new Array(optionList.length);
 		this.maxSelected = maxSelected;
-		this.selectedQty = selectedList.length;
-		this.lastItemSlected = 0;
+		//this.lastItemSlected = 0;
 
 		this.optionStatus.fill(0);
-		//this.selectStatus.fill(1,0,10);
-		//this.selectStatus.fill(0,10);
 		this.selectStatus.fill(-1);
 
 
@@ -543,6 +540,8 @@ class SLobjectSelect {
 	}
 
 	init() {
+		this.selectedArea.innerHTML = "";
+		this.optionArea.innerHTML = "";
 		for (let i=0; i<10; i++) {
 			if (this.optionItems[i].laborType > 0) {
 				console.log("set item " + i + " to " + (i+1) + " based on type " + (this.optionItems[i].laborType));
@@ -611,8 +610,8 @@ class SLobjectSelect {
 }
 
 class laborSelect extends SLobjectSelect {
-	constructor (selectedList, optionList, selectTrg, maxSelected, callback, callbackObj, emptyItem) {
-		super(selectedList, optionList, selectTrg, maxSelected, emptyItem);
+	constructor (optionList, selectTrg, maxSelected, callback, callbackObj, emptyItem) {
+		super(optionList, selectTrg, maxSelected, emptyItem);
 		this.selectedArea = addDiv("", "stdFloatDiv", selectTrg);
 		this.optionArea = addDiv("", "stdFloatDiv", selectTrg);
 		this.container = selectTrg;
@@ -620,22 +619,32 @@ class laborSelect extends SLobjectSelect {
 		//this.selectedArea.innerHTML = "SELECTIONS";
 		//this.optionArea.innerHTML = "OPTIONS";
 
-		this.displayList = new Array(optionList.length);
-		this.hiddenList = new Array(optionList.length);
-		this.displayList.fill(1);
-		this.hiddenList.fill(0);
-		this.selectedObject = -1;
+		//this.hiddenList = new Array(optionList.length);
+		//this.hiddenList.fill(0);
+		//this.selectedObject = -1;
 		this.callback = callback;
 		this.callbackObj = callbackObj;
 		//this.itemTargetNum = itemTargetNum;
 
-		this.itemDivs = new Array(optionList.length);;
+		//this.itemDivs = new Array(optionList.length);;
 
 		this.init();
 	}
 
 	emptySelection() {
 		this.selectedArea.innerHTML = "Nothing Selected";
+	}
+
+	reset(optionList) {
+		this.optionItems = optionList;
+		this.optionStatus = new Array(10);
+		this.selectStatus = new Array(optionList.length);
+		//this.lastItemSlected = 0;
+
+		this.optionStatus.fill(0);
+		this.selectStatus.fill(-1);
+
+		this.init();
 	}
 
 	selectEmpty(item) {
@@ -689,7 +698,7 @@ class laborSelect extends SLobjectSelect {
 		this.callback.apply(this.callbackObj, [revisedSpot, this.emptyItem, this.container]);
 		console.log(this.selectStatus);
 	}
-
+	/*
 	hideItem(itemID) {
 		//console.log("hide item " + itemID + " in ");
 		for (let i=0; i<this.optionItems.length; i++) {
@@ -699,7 +708,7 @@ class laborSelect extends SLobjectSelect {
 				//console.log("Item " + itemID + " hidden");
 			}
 		}
-	}
+	}*/
 
 	getSelection() {
 		console.log("laborSelect get selection");

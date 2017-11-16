@@ -2536,3 +2536,21 @@ newContract = function (buffer) {
 		return new contract(dat);
 	}
 }
+
+updateLabor = function (list, item) {
+	console.log("update labor");
+	let newItem = true;
+	for (let i=0; i<list.length; i++) {
+		if (list[i].objID == item[0]) {
+			if (item[1] == -1) {
+				list.splice(i,1);
+			} else {
+				list[i].update(item.slice(1));
+			}
+			newItem = false;
+		}
+	}
+	if (newItem) {
+		list.push(new laborItem(item.slice(1)));
+	}
+}

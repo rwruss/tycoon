@@ -14,10 +14,10 @@ print_r($postVals);
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b'); //r+b
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); //r+b
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b'); //r+b
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb'); //r+b
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb'); //r+b
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
@@ -44,18 +44,25 @@ for ($i=0; $i<10; $i++) {
 }
 echo '<p>LABOR STATUS:<br>';
 print_r($laborStatus);
+
 // remove the unused labor items
+$poolStr = '';
 for ($i=0; $i<10; $i++) {
 	if ($laborStatus[$i] < 0) {
 		if ($thisFactory->laborItems[$i]->laborDat[3] == 0) {
+			// No action needed - already empty at factory
 			echo '<br>Item '.$i.' is already empty';
 		} else {
+			// Remove labor item from the factory and add to the pool
 			echo '<br>Remove item '.$i.' type '.$thisFactory->laborItems[$i]->laborDat[3];
 			$oldLaborID = addLaborToPool($thisFactory->laborItems[$i], $laborPoolFile, $laborSlotFile);
-			$laborList->addItem($oldLaborID);
+			$newID = $laborList->addItem($oldLaborID);
 
 			// need to make empty labor dat for this one
 			$thisFactory->laborItems[$i]->clear();
+
+			// add the labor item to the new list for the labor pool
+			$poolStr .= '|'.$newID.'|'.implode('|',$newLabor->laborDat);
 		}
 	}
 	else if ($laborStatus[$i] != $i+1) {
@@ -75,6 +82,7 @@ if ($laborSlot == 0) {
 $laborList = new itemSlot($laborSlot, $slotFile, 40);
 $laborList = new itemSlot($laborSlot, $slotFile, 40);
 $emptySpots = new itemSlot(0, $laborSlotFile, 40, TRUE);
+$emptyLabor = array_fill(0,29,-1);
 for ($i=1; $i<12; $i++) {
 
 	if ($postVals[1+$i] > 10) {
@@ -87,6 +95,8 @@ for ($i=1; $i<12; $i++) {
 
 		// remove from player labor list
 		$laborList->deleteByValue($postVals[1+$i]);
+
+		$poolStr .= '|'.$postVals[1+$i].'|'.implode('|',$emptyLabor);
 	}
 }
 echo '<p>Save the labor';
@@ -113,8 +123,12 @@ for ($i=1; $i<10; $i++) {
 	//print_r($thisFactory->laborItems[$i]->laborDat);
 	$returnStr .= '|'.$i.'|'.implode('|', $thisFactory->laborItems[$i]->laborDat);
 }
+
+// create list of items to adjust in labor pool
+
+// return updates
 $updatedProductionRates = [0,0,0,0,0];
-echo '<--!-->1|'.implode('|', $updatedProductionRates).'|'.$returnStr;
+echo '<--!-->1|'.implode('|', $updatedProductionRates).'|'.$returnStr.$poolStr;
 
 fclose($objFile);
 fclose($slotFile);
