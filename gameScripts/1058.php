@@ -31,12 +31,12 @@ if ($laborSlot == 0) {
 	//echo 'Save new labor slot #'.$laborSlot;
 }
 $laborList = new itemSlot($laborSlot, $slotFile, 40);
-
+/*
 for ($i=0; $i<10; $i++) {
 		echo '<P>LABOR ITEM '.$i.'<br>';
 		print_r($thisFactory->laborItems[$i]);
 }
-
+*/
 // determine which labor units stay at the factory and which need to be remove
 $laborStatus = array_fill(0,10,-1);
 for ($i=0; $i<10; $i++) {
@@ -48,6 +48,7 @@ print_r($laborStatus);
 // remove the unused labor items
 $poolStr = '';
 for ($i=0; $i<10; $i++) {
+	echo 'Item '.$i;
 	if ($laborStatus[$i] < 0) {
 		if ($thisFactory->laborItems[$i]->laborDat[3] == 0) {
 			// No action needed - already empty at factory
@@ -59,16 +60,26 @@ for ($i=0; $i<10; $i++) {
 			$newID = $laborList->addItem($oldLaborID);
 
 			// need to make empty labor dat for this one
+			echo 'Clear item '.$i;
 			$thisFactory->laborItems[$i]->clear();
 
 			// add the labor item to the new list for the labor pool
-			$poolStr .= '|'.$newID.'|'.implode('|',$newLabor->laborDat);
+			$poolStr .= '|'.$newID.'|'.implode('|',$thisFactory->laborItems[$i]->laborDat);
 		}
 	}
 	else if ($laborStatus[$i] != $i+1) {
 		echo '<br>Item '.$postVals[2+$i].' move to spot '.$i;
-		$thisFactory->laborItems[$i] = $thisFactory->laborItems[$postVals[2+$i]-1]; // adjust for +1 offset in post vals
+		$thisFactory->laborItems[$i] = $thisFactory->laborItems[$postVals[2+$i]]; // adjust for +1 offset in post vals
+		echo '<p>OLD ITEM:';
+		print_R($thisFactory->laborItems[$postVals[2+$i]]);
+		echo '<p>NEW ITEM ('.$i.'):';
+		print_R($thisFactory->laborItems[$i]);
 	}
+}
+echo 'WHAT THE FUCK???';
+for ($i=0; $i<10; $i++) {
+	echo 'LABOR ITEM '.$i;
+	print_R($thisFactory->laborItems[$i]);
 }
 
 // add the moved items from the labor pool
@@ -99,12 +110,15 @@ for ($i=1; $i<12; $i++) {
 		$poolStr .= '|'.$postVals[1+$i].'|'.implode('|',$emptyLabor);
 	}
 }
+/*
 echo '<p>Save the labor';
 for ($i=0; $i<10; $i++) {
 		echo '<P>LABOR ITEM '.$i.'<br>';
 		print_r($thisFactory->laborItems[$i]);
-}
+}*/
 
+echo '<p>FINAL FACTORY LABOR:<p>';
+print_r($thisFactory->laborItems);
 $thisFactory->saveLabor();
 
 $productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
