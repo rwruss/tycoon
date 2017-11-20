@@ -60,7 +60,7 @@ for ($i=0; $i<10; $i++) {
 			$newID = $laborList->addItem($oldLaborID);
 
 			// need to make empty labor dat for this one
-			echo 'Clear item '.$i;
+			echo 'Clear item '.$i.'<br>';
 			$thisFactory->laborItems[$i]->clear();
 
 			// add the labor item to the new list for the labor pool
@@ -69,7 +69,8 @@ for ($i=0; $i<10; $i++) {
 	}
 	else if ($laborStatus[$i] != $i+1) {
 		echo '<br>Item '.$postVals[2+$i].' move to spot '.$i;
-		$thisFactory->laborItems[$i] = $thisFactory->laborItems[$postVals[2+$i]]; // adjust for +1 offset in post vals
+		//$thisFactory->laborItems[$i] = clone $thisFactory->laborItems[$postVals[2+$i]]; // adjust for +1 offset in post vals
+		$thisFactory->laborItems[$i]->laborDat = $thisFactory->laborItems[$postVals[2+$i]]->laborDat; // adjust for +1 offset in post vals
 		echo '<p>OLD ITEM:';
 		print_R($thisFactory->laborItems[$postVals[2+$i]]);
 		echo '<p>NEW ITEM ('.$i.'):';

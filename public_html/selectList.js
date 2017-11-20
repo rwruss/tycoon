@@ -641,7 +641,7 @@ class laborSelect extends SLobjectSelect {
 		this.selectStatus = new Array(optionList.length);
 		//this.lastItemSlected = 0;
 
-		this.optionStatus.fill(0);
+		this.optionStatus.fill(-1);
 		this.selectStatus.fill(-1);
 
 		this.init();
@@ -660,12 +660,12 @@ class laborSelect extends SLobjectSelect {
 	}
 
 	selectItem(itemNum, divObject) {
-		console.log("draw selected item " + itemNum);
+		//console.log("draw selected item " + itemNum);
 
 		// look for a spot in the list of selected items
 		//let newDiv
 		for (let i=0; i<10; i++) {
-			if (this.optionStatus[i] == 0) {
+			if (this.optionStatus[i] == -1) {
 				//let newDiv = item.renderSummary(this.selectedArea.item);
 				//newDiv = item.renderSummary(null);
 				let emptyItem = this.selectedArea.childNodes[i];
@@ -676,7 +676,7 @@ class laborSelect extends SLobjectSelect {
 
 				// make the select status greater than 0 to show it is selected.  THe number is the spot it holds
 				this.selectStatus[itemNum] = i;
-				console.log(this.selectStatus);
+				//console.log(this.selectStatus);
 
 				this.callback.apply(this.callbackObj, [i, this.optionItems[itemNum], this.container]);
 				break;
@@ -689,14 +689,14 @@ class laborSelect extends SLobjectSelect {
 		let emptyItem = this.emptyItem.renderSummary(null);
 		this.selectedArea.insertBefore(emptyItem, divObject);
 		//this.selectedArea.removeChild(divObject);
-		let revisedSpot = this.selectStatus[itemNum]-1;
+		let pvsSpot = this.selectStatus[itemNum];
 		this.optionArea.insertBefore(divObject, this.optionArea.childNodes[0]);
-		console.log("set option stat " + (this.selectStatus[itemNum]) + " to zero");
-		this.optionStatus[this.selectStatus[itemNum]] = 0;
+		//console.log("set option stat " + (this.selectStatus[itemNum]) + " to zero");
+		this.optionStatus[this.selectStatus[itemNum]] = -1;
 		this.selectStatus[itemNum] = -1;
 
-		this.callback.apply(this.callbackObj, [revisedSpot, this.emptyItem, this.container]);
-		console.log(this.selectStatus);
+		this.callback.apply(this.callbackObj, [pvsSpot, this.emptyItem, this.container]);
+		//console.log(this.selectStatus);
 	}
 	/*
 	hideItem(itemID) {

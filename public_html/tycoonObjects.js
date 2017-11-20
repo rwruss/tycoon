@@ -445,7 +445,7 @@ class factory extends object {
 	}
 
 	updateLaborSkills(spotNum, newItem, trg) {
-		//console.log("update labor skills at spot " + spotNum);
+		console.log("update labor skills at spot " + spotNum);
 		//trg.prodSkills.innerHTML = "";
 		let start = spotNum*30+9;
 		//console.log(newItem);
