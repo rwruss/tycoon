@@ -4,8 +4,8 @@ if (sizeof($postVals) != 3) exit('error 8201-0');
 
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'r+b'); // r+b
-$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'r+b'); // r+b
+$objFile = fopen($gamePath.'/objects.dat', 'rb'); // r+b
+$offerDatFile = fopen($gamePath.'/saleOffers.dat', 'rb'); // r+b
 
 // Load target factory
 $thisFactory = loadObject($postVals[1], $objFile, 1600);

@@ -268,7 +268,7 @@ factoryDiv.infoSection = addDiv("", "stdFloatDiv", factoryDiv);
 textBlob("", factoryDiv.infoSection, "Location: City #'.$thisObj->get('region_3').'");
 factoryDiv.headSection = addDiv("", "stdFloatDiv", factoryDiv);
 factoryDiv.headSection.style.height = 250;
-factoryDiv.headSection.rate = textBlob("", factoryDiv.headSection, "Rate: " + selFactory.currentRates[2] + " <br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
+factoryDiv.headSection.rate = textBlob("", factoryDiv.headSection, "Rate: " + (selFactory.currentRates[2]/10000).toFixed(2) + " <br>Lifetime Earnings: $'.($thisObj->get('totalSales')/100).'<br>Period Earnings: $'.($thisObj->get('periodSales')/100).'");
 
 contractsButton = newButton(factoryDiv.headSection, function () {
 	event.stopPropagation();

@@ -371,7 +371,7 @@ class factory extends object {
 		$str = '';
 		for ($i=0; $i<10; $i++) {
 			echo '<P>Pack labor '.$i.'<br>';
-			print_r($this->laborItems[$i]);
+			//print_r($this->laborItems[$i]);
 			$str .= $this->laborItems[$i]->packLabor();
 		}
 		//print_r($this->laborItems);
@@ -398,7 +398,7 @@ class factory extends object {
 		for ($i=0; $i<10; $i++) {
 
 			if ($this->laborItems[$i]->laborDat[3] > 0) {
-				print_r($this->laborItems[$i]);
+				//print_r($this->laborItems[$i]);
 				for ($j=0; $j<10; $j++) {
 					$skillLevels[$this->laborItems[$i]->laborDat[$j*2+9]] += $this->laborItems[$i]->laborDat[$j*2+10];
 					$totalLaborSkill += $this->laborItems[$i]->laborDat[$j*2+10];;
@@ -409,8 +409,8 @@ class factory extends object {
 		// load the product information
 		$prodDat = loadProduct($this->objDat[$this->currentProductionOffset+$productionSpot], $this->linkFile);
 		echo '<p>Checkt product '.$this->objDat[$this->currentProductionOffset+$productionSpot];
-		print_r($prodDat);
-		print_r($prodDat->objDat);
+		//print_r($prodDat);
+		//print_r($prodDat->objDat);
 		$totalProdSkill = 0;
 		$skillsRequired = 0;
 		for ($i=0; $i<20; $i++) {
@@ -436,8 +436,8 @@ class factory extends object {
 				//echo 'Skill '.$i.' pct is '.$laborPcts[$i].': '.$skillLevels[$prodDat->objDat[$prodDat->skillOffset+$i]].' / ('.$baseProduction.' * '.$prodDat->objDat[$prodDat->skillRateOffset+$i].')<br>';
 			}
 
-			$productionRate = floor($baseProduction * $totalPct*100);
-			//echo '<br>Final production is '.$productionRate.' = '.$baseProduction.' * '.$totalPct;
+			$productionRate = floor($baseProduction*100 * $totalPct*100);
+			echo '<br>Final production is '.$productionRate.' = '.$baseProduction.' * '.$totalPct;
 			return [$productionRate, $totalPct];
 		} else return [0,0];
 	}

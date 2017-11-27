@@ -10,14 +10,14 @@ pvs
 2+ installed labor IDs
 */
 
-print_r($postVals);
+//print_r($postVals);
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
 
-$objFile = fopen($gamePath.'/objects.dat', 'rb'); //r+b
-$slotFile = fopen($gamePath.'/gameSlots.slt', 'rb'); //r+b
-$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb'); //r+b
-$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb'); //r+b
+$objFile = fopen($gamePath.'/objects.dat', 'r+b'); //r+b
+$slotFile = fopen($gamePath.'/gameSlots.slt', 'r+b'); //r+b
+$laborPoolFile = fopen($gamePath.'/laborPool.dat', 'r+b'); //r+b
+$laborSlotFile = fopen($gamePath.'/laborLists.slt', 'r+b'); //r+b
 
 // Load the business & factory
 $thisBusiness = loadObject($pGameID, $objFile, 400);
@@ -43,7 +43,7 @@ for ($i=0; $i<10; $i++) {
 	if ($postVals[2+$i] < 10 && $postVals[2+$i] > 0) $laborStatus[$i] = $postVals[2+$i];
 }
 echo '<p>LABOR STATUS:<br>';
-print_r($laborStatus);
+//print_r($laborStatus);
 
 // remove the unused labor items
 $poolStr = '';
@@ -72,15 +72,15 @@ for ($i=0; $i<10; $i++) {
 		//$thisFactory->laborItems[$i] = clone $thisFactory->laborItems[$postVals[2+$i]]; // adjust for +1 offset in post vals
 		$thisFactory->laborItems[$i]->laborDat = $thisFactory->laborItems[$postVals[2+$i]]->laborDat; // adjust for +1 offset in post vals
 		echo '<p>OLD ITEM:';
-		print_R($thisFactory->laborItems[$postVals[2+$i]]);
+		//print_R($thisFactory->laborItems[$postVals[2+$i]]);
 		echo '<p>NEW ITEM ('.$i.'):';
-		print_R($thisFactory->laborItems[$i]);
+		//print_R($thisFactory->laborItems[$i]);
 	}
 }
 echo 'WHAT THE FUCK???';
 for ($i=0; $i<10; $i++) {
 	echo 'LABOR ITEM '.$i;
-	print_R($thisFactory->laborItems[$i]);
+	//print_R($thisFactory->laborItems[$i]);
 }
 
 // add the moved items from the labor pool
@@ -119,20 +119,22 @@ for ($i=0; $i<10; $i++) {
 }*/
 
 echo '<p>FINAL FACTORY LABOR:<p>';
-print_r($thisFactory->laborItems);
+//print_r($thisFactory->laborItems);
 $thisFactory->saveLabor();
 
 $productionSpots = $thisFactory->objDat[$thisFactory->productionSpotQty];
 $updatedProductionRates = [0,0,0,0,0];
 for ($i=0; $i<$productionSpots; $i++) {
+	echo '<p>UPDATE PRODUCTION FOR ITEM '.$i;
 	$productionRate = $thisFactory->setProdRate($i);
 	$thisFactory->objDat[$thisFactory->currentProductionRateOffset+$i] = $productionRate[0];
 	$updatedProductionRates[$i] = $productionRate[0];
 	$thisFactory->productionQuality[$i+1] = $productionRate[1];
 }
+$thisFactory->saveProductionRates();
 
 echo '<p>Factory items:';
-print_r($thisFactory->laborItems);
+//print_r($thisFactory->laborItems);
 $returnStr = '0|'.implode('|', $thisFactory->laborItems[0]->laborDat);
 for ($i=1; $i<10; $i++) {
 	//print_r($thisFactory->laborItems[$i]->laborDat);

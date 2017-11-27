@@ -529,7 +529,7 @@ class SLobjectSelect {
 		this.maxSelected = maxSelected;
 		//this.lastItemSlected = 0;
 
-		this.optionStatus.fill(0);
+		this.optionStatus.fill(-1);
 		this.selectStatus.fill(-1);
 
 
@@ -660,7 +660,7 @@ class laborSelect extends SLobjectSelect {
 	}
 
 	selectItem(itemNum, divObject) {
-		//console.log("draw selected item " + itemNum);
+		console.log("draw selected item " + itemNum);
 
 		// look for a spot in the list of selected items
 		//let newDiv
@@ -676,7 +676,7 @@ class laborSelect extends SLobjectSelect {
 
 				// make the select status greater than 0 to show it is selected.  THe number is the spot it holds
 				this.selectStatus[itemNum] = i;
-				//console.log(this.selectStatus);
+				console.log(this.selectStatus);
 
 				this.callback.apply(this.callbackObj, [i, this.optionItems[itemNum], this.container]);
 				break;
