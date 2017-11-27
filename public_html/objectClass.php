@@ -436,7 +436,7 @@ class factory extends object {
 				//echo 'Skill '.$i.' pct is '.$laborPcts[$i].': '.$skillLevels[$prodDat->objDat[$prodDat->skillOffset+$i]].' / ('.$baseProduction.' * '.$prodDat->objDat[$prodDat->skillRateOffset+$i].')<br>';
 			}
 
-			$productionRate = floor($baseProduction*100 * $totalPct*100);
+			$productionRate = floor($baseProduction * $totalPct*1000);
 			echo '<br>Final production is '.$productionRate.' = '.$baseProduction.' * '.$totalPct;
 			return [$productionRate, $totalPct];
 		} else return [0,0];
@@ -530,7 +530,7 @@ class factory extends object {
 				for ($i=0; $i<5; $i++ ){
 					if ($this->objDat[$this->currentProductionOffset+$i] > 0) {
 						//$this->objDat[$this->prodInv+$i] += $this->get('prodQty');
-						$this->objDat[$this->prodInv+$i] += $this->get('prodLength')*$this->objDat[$this->currentProductionRateOffset+$i];
+						$this->objDat[$this->prodInv+$i] += $this->get('prodLength')*$this->objDat[$this->currentProductionRateOffset+$i]/1000;
 						$this->objDat[$this->productStats+$i*5+0] += $this->get('prodQuality')*$productionPct[$i]; // product quality
 						$this->objDat[$this->productStats+$i*5+1] += $this->get('prodPollution')*$productionPct[$i]; // product Pollution
 						$this->objDat[$this->productStats+$i*5+2] += $this->get('prodRights')*$productionPct[$i]; // product Rights
