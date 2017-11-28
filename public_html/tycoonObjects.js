@@ -187,10 +187,14 @@ class factory extends object {
 		thisDiv.innerHTML = "";
 
 		thisDiv.prodDetail = addDiv("", "stdFloatDiv", thisDiv);
-		thisDiv.prodDetail.innerHTML = "prod Detail";
+		//thisDiv.prodDetail.innerHTML = "prod Detail";
+		console.log(productArray[this.currentProduction[2]]);
+		console.log(this.currentProduction);
+		productArray[this.currentProduction[2]].renderSummary(thisDiv.prodDetail);
+		//this.currentProduction.renderSummary(thisDiv.prodDetail);
 
 		thisDiv.prodSkills = addDiv("", "stdFloatDiv", thisDiv);
-		thisDiv.prodSkills.innerHTML = "prod Detail";
+		//thisDiv.prodSkills.innerHTML = "prod Detail";
 
 		this.tmpLabor = this.labor.slice();
 		this.showSkillLevels(thisDiv.prodSkills);
@@ -1879,6 +1883,13 @@ class school {
 
 	renderCitySchools(trg, cityID, factoryID, lvl, schStatus, price) {
 		let contain = this.renderSummary(trg);
+
+		contain.upButton = addDiv("", "schoolUp", contain);
+		contain.upButton.innerHTML = "Upgrade";
+		contain.upButton.sendStr = cityID+","+this.schoolID;
+		contain.upButton.addEventListener("click", function () {
+			getASync("1098,"+this.sendStr).then(v => {});
+		});
 
 		contain.hireButton = addDiv("", "schoolHire", contain);
 		contain.hireButton.innerHTML = "hire from here";

@@ -95,6 +95,7 @@
 1095 - PROCESS: Get route options for selling/sending products to an open contract
 1096 - PROCESS: Create a contract for construction of a factory
 1097 - PROCESS: Adjust the parameters for an open contract
+1098 - PROCESS: Load current upgrade status for city school
 
 TO DO:
 Contracts for building and upgrading schools at cities

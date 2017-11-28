@@ -594,6 +594,11 @@
 	float:right;
 }
 
+.schoolUp {
+	position:relative;
+	float:left;
+}
+
 .schoolLevel {
 	position:relative;
 	float:left;
