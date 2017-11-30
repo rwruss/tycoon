@@ -581,12 +581,13 @@ class factory extends object {
 
 class city extends object {
 	private $dRateOffset, $dLevelOffset, $demandDat, $binDat, $supplyBlockSize;
-	public $laborStoreOffset, $laborDemandOffset;
+	public $laborStoreOffset, $laborDemandOffset, $schoolDat;
 
 	function __construct($id, $dat, $file, $binDat) {
 		parent::__construct($id, $dat, $file);
 
 		$this->objDat = unpack('i*', $dat);
+		$this->schoolDat = array_slice($this->objDat, 91, 30);
 
 		//echo 'Bin dat length of '.strlen($binDat);
 		$this->binDat = $dat;

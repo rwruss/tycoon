@@ -1888,7 +1888,16 @@ class school {
 		contain.upButton.innerHTML = "Upgrade";
 		contain.upButton.sendStr = cityID+","+this.schoolID;
 		contain.upButton.addEventListener("click", function () {
-			getASync("1098,"+this.sendStr).then(v => {});
+			getASync("1098,"+this.sendStr).then(v => {
+				let r = v.split("|");
+				let trg = useDeskTop.newPane("schoolDtl");
+				trg.summary = addDiv("", "stdFloatDiv", trg);
+				trg.upgrade = addDiv("", "stdFloatDiv", trg);
+				schoolList[r[1]].renderSummary(trg.summary);
+				if (r[2] == 0) {
+					trg.upgrade.innerHTML = "No upgrade in progress";
+				}
+			});
 		});
 
 		contain.hireButton = addDiv("", "schoolHire", contain);

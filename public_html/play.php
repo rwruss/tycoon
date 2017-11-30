@@ -546,12 +546,12 @@ echo '
 		factoryNames = ['.implode(',', array_slice($namesList, $numProducts)).'];
 		laborNames = ['.$laborNameList.'];
 		schoolList = new Array();
-		schoolList[0] = new school([1, "Primary Schools"], [1,2,3]);
-		schoolList[1] = new school([2, "Trade School"], [1,2,3]);
-		schoolList[2] = new school([3, "Community College"], [1,2,3]);
-		schoolList[3] = new school([4, "University"], [1,2,3]);
-		schoolList[4] = new school([5, "Technical University"], [1,2,3]);
-		schoolList[5] = new school([6, "Business School"], [1,2,3]);
+		schoolList[0] = new school([0, "Primary Schools"], [1,2,3]);
+		schoolList[1] = new school([1, "Trade School"], [1,2,3]);
+		schoolList[2] = new school([2, "Community College"], [1,2,3]);
+		schoolList[3] = new school([3, "University"], [1,2,3]);
+		schoolList[4] = new school([4, "Technical University"], [1,2,3]);
+		schoolList[5] = new school([5, "Business School"], [1,2,3]);
 
 
 		playerFactories = new Array(';
