@@ -618,6 +618,7 @@ class city extends object {
 		$this->attrList['factoryList'] = 25;
 		$this->attrList['money'] = 26;
 		$this->attrList['cityLaborSlot'] = 27;
+		$this->attrList['govtActions'] = 28;
 
 		$this->attrList['cTax'] = 31;
 		$this->attrList['rTax'] = 32;

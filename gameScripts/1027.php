@@ -6,6 +6,7 @@ require_once('./objectClass.php');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
 $laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
+$govtFile = fopen($gamePath.'/govActions.dat', 'rb');
 
 // Load the city information
 $thisCity = loadCity($postVals[1], $cityFile);
@@ -24,6 +25,10 @@ if ($thisCity->get('cityLaborSlot')>0) {
 		}
 	}
 }
+
+// Load government actions
+fseek($govtFile, $thisCity->get('govtActions'));
+
 
 // load city demographics
 
