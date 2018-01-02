@@ -3,6 +3,7 @@
 //print_R($postVals);
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
+require_once('./govt.php');
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
 $laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
@@ -27,8 +28,16 @@ if ($thisCity->get('cityLaborSlot')>0) {
 }
 
 // Load government actions
-fseek($govtFile, $thisCity->get('govtActions'));
-
+//$govtInfo = loadGovtInfo($govtFile, $thisCity->get('govtActions'));
+$govtInfo = loadGovtInfo($govtFile, 1000);
+$govtObj = json_decode($govtInfo);
+$json = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
+echo 'Raw info:<br>';
+echo $govtInfo.'<br>';
+echo $json;
+echo '<br>parsed array';
+var_dump($govtObj);
+var_dump(json_decode($json));
 
 // load city demographics
 
