@@ -28,16 +28,8 @@ if ($thisCity->get('cityLaborSlot')>0) {
 }
 
 // Load government actions
-//$govtInfo = loadGovtInfo($govtFile, $thisCity->get('govtActions'));
 $govtInfo = loadGovtInfo($govtFile, 1000);
-$govtObj = json_decode($govtInfo);
-$json = '{"a":1,"b":2,"c":3,"d":4,"e":5}';
-echo 'Raw info:<br>';
-echo $govtInfo.'<br>';
-echo $json;
-echo '<br>parsed array';
-var_dump($govtObj);
-var_dump(json_decode($json));
+$govtActions = explode('<-!->', $govtInfo);
 
 // load city demographics
 
