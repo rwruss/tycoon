@@ -28,8 +28,22 @@ if ($thisCity->get('cityLaborSlot')>0) {
 }
 
 // Load government actions
-$govtInfo = loadGovtInfo($govtFile, 1000);
-$govtActions = explode('<||>', $govtInfo);
+fseek($govtFile, 0, SEEK_END);
+$govtSize = ftell($govtFile);
+fseek($govtFile, 0);
+$govtInfo = fread($govtFile, $govtSize);
+//$govtInfo = loadGovtInfo($govtFile, 0);
+$splitStr = pack("N", 0);
+$list = explode($splitStr, $govtInfo);
+print_r($list);
+
+foreach($list as $value) {
+  echo '<hr>';
+  $itemHead = unpack("Cid/Csw/iamt/iPID", $value);
+  print_r($itemHead);
+  echo substr($value, 10);
+}
+//$govtActions = explode('<||>', $govtInfo);
 
 // load city demographics
 
