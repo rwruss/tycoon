@@ -42,6 +42,7 @@ foreach($list as $value) {
   $itemHead = unpack("Cid/Csw/iamt/iPID", $value);
   print_r($itemHead);
   echo substr($value, 10);
+	$returnStr = $itemHead['id'].','.$itemHead['sw'].','.$itemHead['amt'].','.$itemHead['PID'].',"'.substr($value, 10).'"';
 }
 //$govtActions = explode('<||>', $govtInfo);
 
@@ -74,13 +75,11 @@ cityTabs = new tabMenu(["Overview", "Government", "Labor", "Schools", "Markets"]
 cityTabs.renderTabs(detailSection);
 
 cityTabs.tabFunction(0, function() {console.log("i select u")});
+cityTabs.tabFunction(1, function() {console.log("govt info")});
+govtAction(['.$returnStr.'], cityTabs.renderKids[1]);
 
 textBlob("", cityTabs.renderKids[1], "Government and demographic information");
-/*
-showCity.renderDemos(cityTabs.renderKids[1]);
-buildParks(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2]);
-edictDetail(cityTabs.renderKids[1], '.$postVals[1].', [1, -1, 2, 2], "Adjust Taxes", ["Increase 1%", "Decrease 1%"]);
-*/
+
 cityTabs.renderKids[2].subTarget = addDiv("", "stdFloatDiv", cityTabs.renderKids[2]);
 laborTypeMenu(cityTabs.renderKids[2], 0);
 showCityLabor(cityTabs.renderKids[2], '.$postVals[1].', ['.implode(',', $laborPool).']);
@@ -98,7 +97,6 @@ cityTabs.renderKids[4].invDiv = addDiv("", "stdFloatDiv", cityTabs.renderKids[4]
 cityTabs.renderKids[4].invHead = addDiv("", "stdFloatDiv", cityTabs.renderKids[4].invDiv);
 cityTabs.renderKids[4].invBody = addDiv("", "stdFloatDiv", cityTabs.renderKids[4].invDiv);
 cityTabs.renderKids[4].invHead.innerHTML = "inventory here";
-
 
 productSales.addEventListener("change", function () {
 	let thisPrice;

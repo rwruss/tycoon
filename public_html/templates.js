@@ -2554,3 +2554,8 @@ updateLabor = function (list, item) {
 		list.push(new laborItem(item.slice(1)));
 	}
 }
+
+govtAction = function (data, trg) {
+	let newDiv = addDiv("", "", trg);
+	newDiv.innerHTML = data;
+}
