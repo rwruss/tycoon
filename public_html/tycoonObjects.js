@@ -2469,3 +2469,25 @@ class legRoute {
 		return thisOpt;
 	}
 }
+
+class govtAction {
+	constructor (obj) {
+		this.law = obj.law;
+		this.supDir = obj.supDir;
+		this.amount = obj.amount;
+		this.pID = obj.pID;
+		this.pName = obj.pName;
+	}
+	
+	renderSumamry(trg) {
+		let container = addDiv("", "", trg);
+		container.law = addDiv("", "", container);
+		container.amount = addDiv("", "", container);
+		container.supDir = addDiv("", "", container);
+		container.pName = addDiv("", "", container);
+
+		container.law.innerHTML = this.law;
+		container.amount.innerHTML = this.amount;
+		container.pName.innerHTML = this.pName;
+	}
+}
