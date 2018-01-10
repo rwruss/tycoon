@@ -96,6 +96,7 @@
 1096 - PROCESS: Create a contract for construction of a factory
 1097 - PROCESS: Adjust the parameters for an open contract
 1098 - PROCESS: Load current upgrade status for city school
+1099 - PROCESS: Load govt information for a city
 
 TO DO:
 Contracts for building and upgrading schools at cities

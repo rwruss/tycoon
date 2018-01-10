@@ -3,11 +3,11 @@
 //print_R($postVals);
 require_once('./slotFunctions.php');
 require_once('./objectClass.php');
-require_once('./govt.php');
+
 $cityFile = fopen($gamePath.'/cities.dat', 'rb');
 $laborPoolFile = fopen($gamePath.'/laborPool.dat', 'rb');
 $laborSlotFile = fopen($gamePath.'/laborLists.slt', 'rb');
-$govtFile = fopen($gamePath.'/govActions.dat', 'rb');
+
 
 // Load the city information
 $thisCity = loadCity($postVals[1], $cityFile);
@@ -27,23 +27,6 @@ if ($thisCity->get('cityLaborSlot')>0) {
 	}
 }
 
-// Load government actions
-fseek($govtFile, 0, SEEK_END);
-$govtSize = ftell($govtFile);
-fseek($govtFile, 0);
-$govtInfo = fread($govtFile, $govtSize);
-//$govtInfo = loadGovtInfo($govtFile, 0);
-$splitStr = pack("N", 0);
-$list = explode($splitStr, $govtInfo);
-print_r($list);
-
-foreach($list as $value) {
-  echo '<hr>';
-  $itemHead = unpack("Cid/Csw/iamt/iPID", $value);
-  print_r($itemHead);
-  echo substr($value, 10);
-	$returnStr = $itemHead['id'].','.$itemHead['sw'].','.$itemHead['amt'].','.$itemHead['PID'].',"'.substr($value, 10).'"';
-}
 //$govtActions = explode('<||>', $govtInfo);
 
 // load city demographics
@@ -75,7 +58,13 @@ cityTabs = new tabMenu(["Overview", "Government", "Labor", "Schools", "Markets"]
 cityTabs.renderTabs(detailSection);
 
 cityTabs.tabFunction(0, function() {console.log("i select u")});
-cityTabs.tabFunction(1, function() {console.log("govt info")});
+cityTabs.tabFunction(1, function() {
+	getASync("1099").then(v => {
+		let r = v.split("<|>");
+		cityTabs.renderKids[1].innerHTML = r;
+		console.log(r);
+	});
+});
 govtAction(['.$returnStr.'], cityTabs.renderKids[1]);
 
 textBlob("", cityTabs.renderKids[1], "Government and demographic information");

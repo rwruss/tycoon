@@ -21,13 +21,13 @@ print_r(unpack('N', $packDat));
 */
 
 $splitStr = pack("N", 0);
-$headDat = pack("C*", 1, 1);
+$headDat = pack("C*", 1, 1, 1);
 $headDat.= pack("i*", 1000, 123456);
 
-fwrite($govtFile, $headDat."Some shit that the player is called");
-fwrite($govtFile, $splitStr.$headDat."Some shit that the player is called");
-fwrite($govtFile, $splitStr.$headDat."Some shit that the player is called");
-fwrite($govtFile, $splitStr.$headDat."Some shit that the player is called");
+fwrite($govtFile, $headDat."Player Name");
+fwrite($govtFile, $splitStr.$headDat."Player Name");
+fwrite($govtFile, $splitStr.$headDat."Player Name");
+fwrite($govtFile, $splitStr.$headDat."Player Name");
 
 fflush($govtFile);
 fseek($govtFile, 0, SEEK_END);
@@ -42,7 +42,7 @@ print_r($list);
 
 foreach($list as $value) {
   echo '<hr>';
-  $itemHead = unpack("Cid/Csw/iamt/iPID", $value);
+  $itemHead = unpack("Ctype/Cid/Csw/iamt/iPID", $value);
   print_r($itemHead);
   echo substr($value, 10);
 }
