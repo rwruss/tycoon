@@ -2472,14 +2472,16 @@ class legRoute {
 
 class govtAction {
 	constructor (obj) {
-		this.law = obj.law;
-		this.supDir = obj.supDir;
-		this.amount = obj.amount;
-		this.pID = obj.pID;
-		this.pName = obj.pName;
+		this.law = obj[0];
+		this.supDir = obj[1];
+		this.amount = obj[2];
+		this.pID = obj[3];
+		this.pName = obj[4];
+
+		console.log(this);
 	}
-	
-	renderSumamry(trg) {
+
+	renderSummary(trg) {
 		let container = addDiv("", "", trg);
 		container.law = addDiv("", "", container);
 		container.amount = addDiv("", "", container);

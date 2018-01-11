@@ -60,12 +60,17 @@ cityTabs.renderTabs(detailSection);
 cityTabs.tabFunction(0, function() {console.log("i select u")});
 cityTabs.tabFunction(1, function() {
 	getASync("1099").then(v => {
-		let r = v.split("<|>");
-		cityTabs.renderKids[1].innerHTML = r;
-		console.log(r);
+
+		let result = loadGovtItems(v);
+		console.log(result);
+		for (let i=0; i<result.length; i++) {
+			console.log(result[i]);
+			//result[i].renderSummary(cityTabs.renderKids[1]);
+		}
+		result[0].renderSummary(cityTabs.renderKids[1]);
 	});
 });
-govtAction(['.$returnStr.'], cityTabs.renderKids[1]);
+
 
 textBlob("", cityTabs.renderKids[1], "Government and demographic information");
 

@@ -2555,7 +2555,13 @@ updateLabor = function (list, item) {
 	}
 }
 
-govtAction = function (data, trg) {
-	let newDiv = addDiv("", "", trg);
-	newDiv.innerHTML = data;
+loadGovtItems = function (datString) {
+	let a = datString.split(",");
+
+	let itemList = new Array();
+	for (i=0; i<a.length; i+=5) {
+		itemList.push(new govtAction(a.slice(i, i+5)));
+	}
+
+	return itemList;
 }

@@ -13,13 +13,20 @@ $govtInfo = fread($govtFile, $govtSize);
 $splitStr = pack("N", 0);
 $list = explode($splitStr, $govtInfo);
 
-foreach($list as $value) {
+// send the first case
+$itemHead = unpack("Ctype/Cid/Csw/iamt/iPID", $list[0]);
+echo $itemHead['id'].','.$itemHead['sw'].','.$itemHead['amt'].','.$itemHead['PID'].',"'.substr($list[0], 10).'"';
+
+// send the remaining cases
+for ($i=1; $i<sizeof($list); $i++) {
   //echo '<hr>';
-  $itemHead = unpack("Cid/Csw/iamt/iPID", $value);
+  $itemHead = unpack("Ctype/Cid/Csw/iamt/iPID", $list[$i]);
   //print_r($itemHead);
   //echo substr($value, 10);
-	echo $itemHead['id'].','.$itemHead['sw'].','.$itemHead['amt'].','.$itemHead['PID'].',"'.substr($value, 10).'"<|>';
+  echo ','.$itemHead['id'].','.$itemHead['sw'].','.$itemHead['amt'].','.$itemHead['PID'].',"'.substr($list[$i], 10).'"';
 }
+
+
 
 fclose($govtFile);
 
