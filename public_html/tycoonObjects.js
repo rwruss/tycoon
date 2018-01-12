@@ -2482,14 +2482,15 @@ class govtAction {
 	}
 
 	renderSummary(trg) {
-		let container = addDiv("", "", trg);
+		let container = addDiv("", "govtAction", trg);
+		container.pName = addDiv("", "", container);
 		container.law = addDiv("", "", container);
 		container.amount = addDiv("", "", container);
 		container.supDir = addDiv("", "", container);
-		container.pName = addDiv("", "", container);
 
 		container.law.innerHTML = this.law;
 		container.amount.innerHTML = this.amount;
-		container.pName.innerHTML = this.pName;
+		container.pName.innerHTML = "Player " + this.pName + " made a contibution.";
+		container.supDir.innerHTML = this.supDir;
 	}
 }

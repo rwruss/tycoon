@@ -822,3 +822,8 @@
 	width:10;
 	border:2px solid red;
 }
+
+.govtAction {
+	border:1px solid red;
+	float: left;
+}
