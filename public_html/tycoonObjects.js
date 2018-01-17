@@ -2488,9 +2488,9 @@ class govtAction {
 		container.amount = addDiv("", "", container);
 		container.supDir = addDiv("", "", container);
 
-		container.law.innerHTML = this.law;
-		container.amount.innerHTML = this.amount;
+		container.law.innerHTML = "Law ID " + this.law;
+		container.amount.innerHTML = "Amount " + this.amount;
 		container.pName.innerHTML = "Player " + this.pName + " made a contibution.";
-		container.supDir.innerHTML = this.supDir;
+		container.supDir.innerHTML = "Dir: " + this.supDir;
 	}
 }
