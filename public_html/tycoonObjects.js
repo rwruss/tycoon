@@ -2494,3 +2494,26 @@ class govtAction {
 		container.supDir.innerHTML = "Dir: " + this.supDir;
 	}
 }
+
+
+class tierMenu() {
+	constructor(trg) {
+		trg.tierMenu = addDiv("", "stdFloatDiv", trg);
+		trg.tierMenu.tiers[0] = addDiv("", "stdFloatDiv", trg.tierMenu);
+		
+		this.container = trg.tierMenu;
+	}
+	
+	addTier (items) {
+		// delete the old submenu items
+		trg.tierMenu.tiers.slice(items.tierNum);
+		trg.tierMenu.tiers[items.tierNum].innerHTML = "an updated menu";
+		
+		// create/clear the current tier level and place the new items
+		trg.tierMenu.tiers[items.tierNum] = addDiv("", "stdFloatDiv", trg);
+		for (let i=0; i<items.list.length; i++) {
+			let newDiv = addDiv("", "", trg.tierMenu.tiers[items.tierNum]);
+			newDiv.innerHTML = "items.list[i"
+		}
+	}
+}
