@@ -59,6 +59,16 @@ cityTabs.renderTabs(detailSection);
 
 cityTabs.tabFunction(0, function() {console.log("i select u")});
 cityTabs.tabFunction(1, function() {
+	let addLaw = addDiv("", "stdFloatDiv", cityTabs.renderKids[1]);
+	addLaw.innerHTML = "Propose new Law";
+	addLaw.addEventListener("click", function (e) {
+		e.stopPropagation();
+		let lawPane = useDeskTop.newPane("lawPane");
+		lawPane.innerHTML = "";
+		getASync("1100,'.$postVals[1].'").then(v => {
+			lawPane.innerHTML = v;
+		})
+	});
 	getASync("1099").then(v => {
 
 		let result = loadGovtItems(v);
